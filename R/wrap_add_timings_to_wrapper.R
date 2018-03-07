@@ -10,7 +10,7 @@ add_timings_to_wrapper <- function(
   data_wrapper,
   timings
 ) {
-  testthat::expect_is(data_wrapper, "dynutils::data_wrapper")
+  testthat::expect_true(is_data_wrapper(data_wrapper))
 
   testthat::expect_is(timings, "list")
 
@@ -19,7 +19,7 @@ add_timings_to_wrapper <- function(
     data_wrapper,
     list(timings = timings)
   )
-  class(out) <- c("dynutils::with_timings", class(data_wrapper))
+  class(out) <- c("dynwrap::with_timings", class(data_wrapper))
   out
 }
 
@@ -29,7 +29,7 @@ add_timings_to_wrapper <- function(
 #'
 #' @export
 is_wrapper_with_timings <- function(object) {
-  is_data_wrapper(object) && "dynutils::with_timings" %in% class(object)
+  is_data_wrapper(object) && any(c("dynutils::with_timings", "dynwrap::with_timings") %in% class(object))
 }
 
 #' Helper function for storing timings information.

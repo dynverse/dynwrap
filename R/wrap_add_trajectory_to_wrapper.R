@@ -26,7 +26,7 @@ add_trajectory_to_wrapper <- function(
   progressions = NULL,
   ...
 ) {
-  testthat::expect_is(data_wrapper, "dynutils::data_wrapper")
+  testthat::expect_true(is_data_wrapper(data_wrapper))
 
   cell_ids <- data_wrapper$cell_ids
 
@@ -128,7 +128,7 @@ add_trajectory_to_wrapper <- function(
       trajectory_type = trajectory_type,
       ...
     ))
-  class(out) <- c("dynutils::with_trajectory", class(data_wrapper))
+  class(out) <- c("dynwrap::with_trajectory", class(data_wrapper))
   out
 }
 
@@ -138,7 +138,7 @@ add_trajectory_to_wrapper <- function(
 #'
 #' @export
 is_wrapper_with_trajectory <- function(object) {
-  is_data_wrapper(object) && "dynutils::with_trajectory" %in% class(object)
+  is_data_wrapper(object) && any(c("dynutils::with_trajectory", "dynwrap::with_trajectory") %in% class(object))
 }
 
 

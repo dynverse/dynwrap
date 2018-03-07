@@ -16,7 +16,7 @@ add_expression_to_wrapper <- function(
   feature_info = NULL,
   ...
 ) {
-  testthat::expect_is(data_wrapper, "dynutils::data_wrapper")
+  testthat::expect_true(is_data_wrapper(data_wrapper))
 
   cell_ids <- data_wrapper$cell_ids
 
@@ -41,7 +41,7 @@ add_expression_to_wrapper <- function(
       feature_info = feature_info,
       ...
     ))
-  class(out) <- c("dynutils::with_expression", class(data_wrapper))
+  class(out) <- c("dynwrap::with_expression", class(data_wrapper))
   out
 }
 
@@ -51,5 +51,5 @@ add_expression_to_wrapper <- function(
 #'
 #' @export
 is_wrapper_with_expression <- function(object) {
-  is_data_wrapper(object) && "dynutils::with_expression" %in% class(object)
+  is_data_wrapper(object) && any(c("dynutils::with_expression", "dynwrap::with_expression") %in% class(object))
 }

@@ -30,7 +30,7 @@ wrap_data <- function(
     cell_info = cell_info,
     ...
   )
-  class(out) <- c("dynutils::data_wrapper", class(out))
+  class(out) <- c("dynwrap::data_wrapper", class(out))
   out
 }
 
@@ -40,5 +40,5 @@ wrap_data <- function(
 #'
 #' @export
 is_data_wrapper <- function(object) {
-  "dynutils::data_wrapper" %in% class(object)
+  any(c("dynutils::data_wrapper", "dynwrap::data_wrapper") %in% class(object))
 }

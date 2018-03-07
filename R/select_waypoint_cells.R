@@ -78,7 +78,7 @@ add_cell_waypoints_to_wrapper <- function(object, num_cells_selected = 100) {
     num_cells_selected = num_cells_selected
   )
 
-  class(object) <- c("dynutils::with_cell_waypoints", class(object))
+  class(object) <- c("dynwrap::with_cell_waypoints", class(object))
 
   object
 }
@@ -89,5 +89,5 @@ add_cell_waypoints_to_wrapper <- function(object, num_cells_selected = 100) {
 #'
 #' @export
 is_wrapper_with_waypoint_cells <- function(object) {
-  is_wrapper_with_trajectory(object) && "dynutils::with_cell_waypoints" %in% class(object)
+  is_wrapper_with_trajectory(object) && any(c("dynutils::with_cell_waypoints","dynwrap::with_cell_waypoints") %in% class(object))
 }

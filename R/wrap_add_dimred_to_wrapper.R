@@ -16,7 +16,7 @@ add_dimred_to_wrapper <- function(
   dimred_trajectory_segments = NULL,
   ...
 ) {
-  testthat::expect_is(data_wrapper, "dynutils::data_wrapper")
+  testthat::expect_true(is_data_wrapper(data_wrapper))
 
   cell_ids <- data_wrapper$cell_ids
 
@@ -50,7 +50,7 @@ add_dimred_to_wrapper <- function(
       dimred_trajectory_segments = dimred_trajectory_segments,
       ...
     ))
-  class(out) <- c("dynutils::with_dimred", class(data_wrapper))
+  class(out) <- c("dynwrap::with_dimred", class(data_wrapper))
   out
 }
 
@@ -60,5 +60,5 @@ add_dimred_to_wrapper <- function(
 #'
 #' @export
 is_wrapper_with_dimred <- function(object) {
-  is_data_wrapper(object) && "dynutils::with_dimred" %in% class(object)
+  is_data_wrapper(object) && any(c("dynutils::with_dimred", "dynwrap::with_dimred") %in% class(object))
 }

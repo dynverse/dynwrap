@@ -24,7 +24,8 @@ add_dimred_projection_to_wrapper <- function(
   ...
 ) {
   # check data wrapper
-  testthat::expect_is(data_wrapper, "dynutils::data_wrapper")
+  testthat::expect_true(is_wrapper_with_trajectory(object))
+
   cell_ids <- data_wrapper$cell_ids
 
   # check dimred_cells

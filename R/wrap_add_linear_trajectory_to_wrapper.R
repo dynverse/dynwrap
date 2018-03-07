@@ -15,7 +15,7 @@ add_linear_trajectory_to_wrapper <- function(
   ...
 ) {
   # check data wrapper
-  testthat::expect_is(data_wrapper, "dynutils::data_wrapper")
+  testthat::expect_true(is_data_wrapper(data_wrapper))
 
   # check names of pseudotimes
   cell_ids <- data_wrapper$cell_ids
