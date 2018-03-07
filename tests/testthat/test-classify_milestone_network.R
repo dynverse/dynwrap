@@ -141,7 +141,7 @@ all_networks <- list(
   ),
   "directed_graph" = list(
     "simple" = data_frame(from = c("A", "B", "C", "A"), to = c("B", "C", "A", "D"), length = 1.1, directed = TRUE),
-    "intermediate" = data_frame(from = c("A", "B", "C", LETTERS), to = c("B", "C", "A", sample(LETTERS)), length = 4, directed = TRUE),
+    "intermediate" = data_frame(from = c("A", "B", "C", sample(c("A", "B", "C"), length(letters), replace = TRUE)), to = c("B", "C", "A", sample(letters)), length = 4, directed = TRUE),
     "larger" = data_frame(from = c(rep("root", 7), LETTERS[1:6], LETTERS[1:6]), to = c("root", LETTERS[1:6], LETTERS[7:12], LETTERS[13:18]), length = 1.5, directed = TRUE),
     "spiked_triangle" = data_frame(from = c("A", "B", "C", "A", "B", "C"), to = c("B", "C", "A", "D", "E", "F"), length = 1, directed = TRUE)
   ),
@@ -149,9 +149,15 @@ all_networks <- list(
     "bifur_conv_undirected" = data_frame(from = c("A", "B", "B", "C", "D", "E"), to = c("B", "C", "D", "E", "E", "F"), length = 0.4, directed = FALSE),
     "complete" = crossing(from = LETTERS, to = LETTERS, length = 1, directed = FALSE) %>% filter(from < to),
     "simple" = data_frame(from = c("A", "B", "C", "A"), to = c("B", "C", "A", "D"), length = 1.1, directed = FALSE),
-    "intermediate" = data_frame(from = c("A", "B", "C", LETTERS), to = c("B", "C", "A", sample(LETTERS)), length = 4, directed = FALSE),
+    "intermediate" = data_frame(from = c("A", "B", "C", sample(c("A", "B", "C"), length(letters), replace = TRUE)), to = c("B", "C", "A", sample(letters)), length = 4, directed = FALSE),
     "larger" = data_frame(from = c(rep("root", 7), LETTERS[1:6], LETTERS[1:6]), to = c("root", LETTERS[1:6], LETTERS[7:12], LETTERS[13:18]), length = 1.5, directed = FALSE),
     "spiked_triangle" = data_frame(from = c("A", "B", "C", "A", "B", "C"), to = c("B", "C", "A", "D", "E", "F"), length = 1, directed = FALSE)
+  ),
+  "disconnected_undirected_graph" = list(
+    "simple" = data_frame(from = c("A", "B"), to = c("C", "D"), length = 1, directed = FALSE)
+  ),
+  "disconnected_directed_graph" = list(
+    "simple" = data_frame(from = c("A", "B"), to = c("C", "D"), length = 1, directed = TRUE)
   )
 )
 
@@ -160,7 +166,6 @@ for (network_type in names(all_networks)) {
 
   for (network_name in names(networks)) {
     test_that(pritt("test whether {network_name} is detected as {network_type}"), {
-      cat(pritt("test whether {network_name} is detected as {network_type}"), "\n", sep = "")
       network <- networks[[network_name]]
 
       detected_network_type <- classify_milestone_network(network)$network_type
