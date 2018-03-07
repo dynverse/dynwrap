@@ -14,6 +14,7 @@ Depends:
 Imports: 
   crayon,
   dplyr,
+  dynutils,
   glue,
   httr,
   igraph,
@@ -36,3 +37,5 @@ Suggests:
   parallelMap,
   ggplot2,
   tidyverse
+Remotes:
+  rcannood/dynutils

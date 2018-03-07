@@ -1,6 +1,6 @@
 library(testthat)
-library(dynutils)
+library(dynwrap)
 library(tidyverse)
 
-test_check("dynutils")
+test_check("dynwrap")
 
