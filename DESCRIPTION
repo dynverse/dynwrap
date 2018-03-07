@@ -38,4 +38,4 @@ Suggests:
   ggplot2,
   tidyverse
 Remotes:
-  rcannood/dynutils
+  dynverse/dynutils
