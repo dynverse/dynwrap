@@ -1,6 +1,6 @@
 library(testthat)
 library(dynwrap)
-library(tidyverse)
+library(dplyr)
 
 test_check("dynwrap")
 

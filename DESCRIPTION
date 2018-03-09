@@ -12,30 +12,16 @@ RoxygenNote: 6.0.1
 Depends:
   R (>= 3.0.0)
 Imports: 
-  crayon,
   dplyr,
   dynutils,
-  glue,
-  httr,
   igraph,
   magrittr,
   methods,
-  parallel,
   pdist,
-  processx,
   purrr,
-  rvest,
+  reshape2,
   testthat,
   tibble,
-  tidyr,
-  reshape2,
-  tools,
-  transport,
-  Seurat,
-  xml2
-Suggests:
-  parallelMap,
-  ggplot2,
-  tidyverse
+  tidyr
 Remotes:
   dynverse/dynutils

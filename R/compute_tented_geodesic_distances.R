@@ -4,6 +4,7 @@
 #' @param waypoint_cells A vector of waypoint cells. Only the geodesic distances between waypoint cells and all other cells will be calculated.
 #'
 #' @importFrom igraph graph_from_data_frame neighborhood E distances
+#' @importFrom reshape2 acast melt
 #' @export
 compute_tented_geodesic_distances <- function(trajectory, waypoint_cells = NULL) {
   testthat::expect_true(is_wrapper_with_trajectory(trajectory))
