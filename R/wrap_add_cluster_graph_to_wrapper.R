@@ -24,9 +24,6 @@ add_cluster_graph_to_wrapper <- function(
 
   cell_ids <- data_wrapper$cell_ids
 
-  # check dimred_cells
-  testthat::expect_equal(cell_ids, rownames(dimred_cells))
-
   # check milestone_network
   milestone_ids <- rownames(dimred_milestones)
   check_milestone_network(milestone_ids, milestone_network)
