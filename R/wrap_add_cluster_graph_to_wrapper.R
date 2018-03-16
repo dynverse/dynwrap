@@ -33,8 +33,8 @@ add_cluster_graph_to_wrapper <- function(
     milestone_network %>% select(from, to) %>% mutate(label = to, percentage = 1)
   )
   progressions <- data_frame(
-    cell_id = cell_ids,
-    label = milestone_assignment_cells[cell_id]
+    cell_id = names(milestone_assignment_cells),
+    label = milestone_assignment_cells
   ) %>%
     left_join(both_directions, by = "label") %>%
     group_by(cell_id) %>%
