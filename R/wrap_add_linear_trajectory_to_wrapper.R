@@ -14,7 +14,7 @@
 add_linear_trajectory_to_wrapper <- function(
   data_wrapper,
   pseudotimes,
-  do_scale_minmax,
+  do_scale_minmax = TRUE,
   ...
 ) {
   # check data wrapper
