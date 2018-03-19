@@ -1,0 +1,63 @@
+#' Add a cyclic trajectory to a data wrapper
+#'
+#' This function will generate the milestone_network and progressions.
+#'
+#' @param data_wrapper A data wrapper to extend upon.
+#' @param pseudotimes A named vector of pseudo times.
+#' @param ... extra information to be stored in the wrapper.
+#'
+#' @export
+#'
+#' @importFrom testthat expect_is expect_true
+add_cyclic_trajectory_to_wrapper <- function(
+  data_wrapper,
+  pseudotimes,
+  ...
+) {
+  # check data wrapper
+  testthat::expect_true(is_data_wrapper(data_wrapper))
+
+  # check names of pseudotimes
+  cell_ids <- data_wrapper$cell_ids
+  testthat::expect_is(pseudotimes, "numeric")
+  testthat::expect_true(all(names(pseudotimes) %in% cell_ids))
+
+  # scale pseudotimes
+  pseudotimes <- scale_minmax(pseudotimes)
+
+  # construct milestones
+  milestone_ids <- c("A", "B", "C")
+
+  # construct milestone_network
+  milestone_network <- tibble(
+    from = milestone_ids,
+    to = milestone_ids[c(2,3,1)],
+    directed = TRUE,
+    length = 1,
+    edge_id = seq_along(milestone_ids)
+  )
+
+  # construct progressions
+  progressions <- tibble(
+    time = 3 * pseudotimes,
+    cell_id = cell_ids
+  ) %>%
+    mutate(edge_id = ceiling(time)) %>%
+    left_join(milestone_network, by = "edge_id") %>%
+    mutate(percentage = time - (edge_id - 1)) %>%
+    select(cell_id, from, to, percentage)
+
+  milestone_network <- milestone_network %>%
+    select(from, to, length, directed)
+
+  # return output
+  add_trajectory_to_wrapper(
+    data_wrapper = data_wrapper,
+    milestone_ids = milestone_ids,
+    milestone_network = milestone_network,
+    divergence_regions = NULL,
+    progressions = progressions,
+    pseudotimes = pseudotimes,
+    ...
+  )
+}

@@ -3,6 +3,7 @@
 export(add_cell_graph_to_wrapper)
 export(add_cell_waypoints_to_wrapper)
 export(add_cluster_graph_to_wrapper)
+export(add_cyclic_trajectory_to_wrapper)
 export(add_dimred_projection_to_wrapper)
 export(add_dimred_to_wrapper)
 export(add_expression_to_wrapper)
