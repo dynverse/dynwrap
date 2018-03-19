@@ -4,8 +4,8 @@
 \alias{add_linear_trajectory_to_wrapper}
 \title{Add a linear trajectory to a data wrapper}
 \usage{
-add_linear_trajectory_to_wrapper(data_wrapper, pseudotimes, do_scale_minmax,
-  ...)
+add_linear_trajectory_to_wrapper(data_wrapper, pseudotimes,
+  do_scale_minmax = TRUE, ...)
 }
 \arguments{
 \item{data_wrapper}{A data wrapper to extend upon.}
