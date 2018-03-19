@@ -4,6 +4,8 @@
 #'
 #' @param data_wrapper A data wrapper to extend upon.
 #' @param pseudotimes A named vector of pseudo times.
+#' @param do_scale_minmax Whether or not to scale the pseudotimes between [0,1].
+#'   Otherwise, will assume the values are already within that range.
 #' @param ... extra information to be stored in the wrapper.
 #'
 #' @export
@@ -12,6 +14,7 @@
 add_cyclic_trajectory_to_wrapper <- function(
   data_wrapper,
   pseudotimes,
+  do_scale_minmax = TRUE,
   ...
 ) {
   # check data wrapper
@@ -23,7 +26,11 @@ add_cyclic_trajectory_to_wrapper <- function(
   testthat::expect_true(all(names(pseudotimes) %in% cell_ids))
 
   # scale pseudotimes
-  pseudotimes <- scale_minmax(pseudotimes)
+  if (do_scale_minmax) {
+    pseudotimes <- scale_minmax(pseudotimes)
+  } else {
+    testthat::expect_true(all(0 <= pseudotimes & pseudotimes <= 1))
+  }
 
   # construct milestones
   milestone_ids <- c("A", "B", "C")
@@ -42,7 +49,7 @@ add_cyclic_trajectory_to_wrapper <- function(
     time = 3 * pseudotimes,
     cell_id = cell_ids
   ) %>%
-    mutate(edge_id = ceiling(time)) %>%
+    mutate(edge_id = ifelse(time <= 1, 1L, ifelse(time <= 2, 2L, 3L))) %>%
     left_join(milestone_network, by = "edge_id") %>%
     mutate(percentage = time - (edge_id - 1)) %>%
     select(cell_id, from, to, percentage)

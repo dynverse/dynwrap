@@ -4,12 +4,16 @@
 \alias{add_linear_trajectory_to_wrapper}
 \title{Add a linear trajectory to a data wrapper}
 \usage{
-add_linear_trajectory_to_wrapper(data_wrapper, pseudotimes, ...)
+add_linear_trajectory_to_wrapper(data_wrapper, pseudotimes, do_scale_minmax,
+  ...)
 }
 \arguments{
 \item{data_wrapper}{A data wrapper to extend upon.}
 
 \item{pseudotimes}{A named vector of pseudo times.}
+
+\item{do_scale_minmax}{Whether or not to scale the pseudotimes between [0,1].
+Otherwise, will assume the values are already within that range.}
 
 \item{...}{extra information to be stored in the wrapper.}
 }
