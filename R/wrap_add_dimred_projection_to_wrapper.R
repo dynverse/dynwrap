@@ -98,7 +98,7 @@ add_dimred_projection_to_wrapper <- function(
   milestone_network <- milestone_network %>% mutate_at(c("from", "to"), renamefun)
   milestone_ids <- renamefun(milestone_ids)
   rownames(dimred_milestones) <- renamefun(rownames(dimred_milestones))
-  milestone_assignment_cells <- renamefun(milestone_assignment_cells)
+  if (!is.null(milestone_assignment_cells)) milestone_assignment_cells <- renamefun(milestone_assignment_cells)
 
   dimred_trajectory_segments <- dimred_segment_df %>%
     mutate_at(c("from", "to"), renamefun) %>%
