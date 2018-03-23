@@ -115,11 +115,10 @@ add_dimred_projection_to_wrapper <- function(
     progressions = progressions,
     milestone_assignment_cells = milestone_assignment_cells,
     ...
-  ) %>%
-    add_dimred_to_wrapper(
-      dimred = dimred_cells,
-      dimred_milestones = dimred_milestones,
-      dimred_trajectory_segments = dimred_trajectory_segments
-    )
+  ) %>% add_dimred_to_wrapper(
+    dimred = dimred_cells,
+    dimred_milestones = dimred_milestones,
+    dimred_trajectory_segments = dimred_trajectory_segments
+  )
 }
 
