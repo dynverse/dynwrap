@@ -18,7 +18,7 @@ Type: Data frame(from = character, to = character, length = numeric, directed = 
 
 \item{divergence_regions}{A data frame specifying the divergence
 regions between milestones (e.g. a bifurcation).
-Type: Data frame(divergence_id = character, milestone_id = character).}
+Type: Data frame(divergence_id = character, milestone_id = character, is_start = logical).}
 
 \item{milestone_percentages}{A data frame specifying what percentage milestone each cell
 consists of.
