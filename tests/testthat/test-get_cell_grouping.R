@@ -3,7 +3,7 @@ context("Testing get_cell_grouping")
 
 test_that("Testing get_cell_grouping", {
   milestone_percentages <- data_frame(
-    cell_id = rownames(x),
+    cell_id = paste0("C", 1:11),
     z = seq(-1, 1, length.out = length(cell_id)),
     M1 = ifelse(z <= 0, -z, 0),
     M2 = 1 - abs(z),
