@@ -51,5 +51,5 @@ add_expression_to_wrapper <- function(
 #'
 #' @export
 is_wrapper_with_expression <- function(object) {
-  is_data_wrapper(object) && any(c("dynutils::with_expression", "dynwrap::with_expression") %in% class(object))
+  is_data_wrapper(object) && "dynwrap::with_expression" %in% class(object)
 }

@@ -138,7 +138,7 @@ add_trajectory_to_wrapper <- function(
 #'
 #' @export
 is_wrapper_with_trajectory <- function(object) {
-  is_data_wrapper(object) && any(c("dynutils::with_trajectory", "dynwrap::with_trajectory") %in% class(object))
+  is_data_wrapper(object) && "dynwrap::with_trajectory" %in% class(object)
 }
 
 

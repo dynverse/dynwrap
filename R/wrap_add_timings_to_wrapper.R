@@ -29,7 +29,7 @@ add_timings_to_wrapper <- function(
 #'
 #' @export
 is_wrapper_with_timings <- function(object) {
-  is_data_wrapper(object) && any(c("dynutils::with_timings", "dynwrap::with_timings") %in% class(object))
+  is_data_wrapper(object) && "dynwrap::with_timings" %in% class(object)
 }
 
 #' Helper function for storing timings information.

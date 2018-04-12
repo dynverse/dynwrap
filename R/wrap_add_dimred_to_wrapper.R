@@ -60,5 +60,5 @@ add_dimred_to_wrapper <- function(
 #'
 #' @export
 is_wrapper_with_dimred <- function(object) {
-  is_data_wrapper(object) && any(c("dynutils::with_dimred", "dynwrap::with_dimred") %in% class(object))
+  is_data_wrapper(object) && "dynwrap::with_dimred" %in% class(object)
 }
