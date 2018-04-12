@@ -52,7 +52,7 @@ compute_tented_geodesic_distances <- function(trajectory, waypoint_cells = NULL)
       tent <- dir$milestone_id
 
       tent_nomid <- setdiff(tent, mid)
-      tent_distances <- igraph::distances(mil_gr, v = mid, to = tent, mode = "out")
+      tent_distances <- igraph::distances(mil_gr, v = mid, to = tent, mode = "out", weights = igraph::E(mil_gr)$length)
 
       relevant_pct <- milestone_percentages %>%
         group_by(cell_id) %>%
