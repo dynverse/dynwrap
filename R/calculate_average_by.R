@@ -20,7 +20,7 @@ calculate_average_by_group <- function(x, cell_grouping) {
 #' Calculate mean values by milestone percentages
 #'
 #' @param x A matrix. One row for every cell; one column for every feature. The rows must be named.
-#' @param milestone_percentages The milestone percentages.
+#' @param milestone_percentages A data frame of milestone percentages.
 #'  Format: \code{data_frame(cell_id = character(), milestone_id = character(), percentage = numeric())}.
 #'
 #' @importFrom reshape2 acast

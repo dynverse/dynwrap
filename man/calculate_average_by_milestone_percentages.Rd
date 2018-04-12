@@ -9,7 +9,7 @@ calculate_average_by_milestone_percentages(x, milestone_percentages)
 \arguments{
 \item{x}{A matrix. One row for every cell; one column for every feature. The rows must be named.}
 
-\item{milestone_percentages}{The milestone percentages.
+\item{milestone_percentages}{A data frame of milestone percentages.
 Format: \code{data_frame(cell_id = character(), milestone_id = character(), percentage = numeric())}.}
 }
 \description{
