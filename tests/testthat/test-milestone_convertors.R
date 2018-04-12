@@ -82,4 +82,10 @@ test_that("Testing convert_progressions_to_milestone_percentages", {
 
   # expect error because cells are position on edges that are not in the milestone_network
   expect_error(convert_progressions_to_milestone_percentages(cell_ids, milestone_ids, milestone_network %>% slice(-1), progressions))
+
+  # expect error because cell k is in two different 'from' progressions.
+  expect_error(convert_progressions_to_milestone_percentages(
+    cell_ids, milestone_ids, milestone_network,
+    progressions %>% add_row(cell_id = c("k", "k"), from = c("A", "B"), to = c("C", "D"), percentage = c(.1, .2))
+  ))
 })
