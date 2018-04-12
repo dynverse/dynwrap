@@ -9,7 +9,7 @@
 #'
 #' net <- data.frame(from=c(1,2,3, 4), to=c(2,3,4, 1), directed=TRUE, length=1)
 #' simplify_milestone_network(net)
-simplify_milestone_network = function(net) {
+simplify_milestone_network <- function(net) {
   if (any(!net$directed)) {
     stop("Undirected networks are not supported by this function")
   }
