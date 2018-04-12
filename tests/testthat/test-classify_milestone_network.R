@@ -135,9 +135,11 @@ all_networks <- list(
       select(from, to, length, directed)
   ),
   "directed_acyclic_graph" = list(
-    "bifur_conv_from_start" = data_frame(from = c("A", "A", "B", "C"), to = c("B", "C", "D", "D"), length=0.4, directed=TRUE),
+    "bifur_conv_from_start" = data_frame(from = c("A", "A", "B", "C"), to = c("B", "C", "D", "D"), length = 0.4, directed = TRUE),
     "bifur_conv" = data_frame(from = c("A", "B", "B", "C", "D", "E"), to = c("B", "C", "D", "E", "E", "F"), length = 0.4, directed = TRUE),
-    "directed_complete" = crossing(from = LETTERS, to = LETTERS, length = 1, directed = TRUE) %>% filter(from < to)
+    "directed_complete" = crossing(from = LETTERS, to = LETTERS, length = 1, directed = TRUE) %>% filter(from < to),
+    "conv_bifur" = data_frame(from = c("A", "B", "C", "C"), to = c("C", "C", "D", "E"), length = 1, directed = TRUE),
+    "conv_bifur_big" = data_frame(from = c("A", "B", "C", "D", "D", "D"), to = c("D", "D", "D", "E", "F", "G"), length = 1, directed = TRUE)
   ),
   "directed_graph" = list(
     "simple" = data_frame(from = c("A", "B", "C", "A"), to = c("B", "C", "A", "D"), length = 1.1, directed = TRUE),
@@ -174,36 +176,3 @@ for (network_type in names(all_networks)) {
     })
   }
 }
-
-# all_nets <- map_df(names(all_networks), function(network_type) {
-#   network_names <- names(all_networks[[network_type]])
-#   map_df(network_names, function(network_name) {
-#     tibble(
-#       network_type,
-#       network_name,
-#       milestone_network = list(all_networks[[network_type]][[network_name]])
-#     )
-#   })
-# }) %>%
-#   rowwise() %>%
-#   mutate(
-#     pl2 = list({
-#       cat(network_name, " -- ", network_type, "\n", sep = "")
-#       cell_ids <- paste0("Cell", seq_len(nrow(milestone_network)))
-#       data <- wrap_data(
-#         "one",
-#         paste0(network_name, " is a ", network_type),
-#         cell_ids = cell_ids,
-#         milestone_ids = unique(c(milestone_network$from, milestone_network$to)),
-#         milestone_network = milestone_network,
-#         progressions = data_frame(cell_id = cell_ids, from = milestone_network$from, to = milestone_network$to, percentage = .5))
-#       dynplot::plot_default(data)
-#     })
-#   ) %>%
-#   ungroup()
-# cowplot::plot_grid(plotlist = all_nets$pl2)
-#
-# pdf("~/testplots.pdf", 6, 6)
-# for (pl in all_nets$pl2)
-#   print(pl)
-# dev.off()
