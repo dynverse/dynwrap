@@ -75,3 +75,51 @@ test_that("Testing compute_tented_geodesic_distances", {
   #   color = colorRampPalette(c("white", "#333333"))(100),
   #   cluster_cols = F, cluster_rows = F)
 })
+
+
+test_that("Testing compute_tented_geodesic_distances with a gap in the middle", {
+  cell_ids <- c("a", "b", "f")
+  milestone_ids <- c("W", "X", "Y", "Z", "A")
+
+  milestone_network <- tribble(
+    ~from, ~to, ~length, ~directed,
+    "W", "X", 2, TRUE,
+    "X", "Y", 3, TRUE,
+    "X", "Z", 4, TRUE,
+    "Z", "A", 5, TRUE
+  )
+
+  divergence_regions <- tribble(
+    ~divergence_id, ~milestone_id, ~is_start,
+    "XYZ", "X", TRUE,
+    "XYZ", "Y", FALSE,
+    "XYZ", "Z", FALSE
+  )
+
+  milestone_percentages <- tribble(
+    ~cell_id, ~milestone_id, ~percentage,
+    "a", "W", .9,
+    "a", "X", .1,
+    "b", "W", .2,
+    "b", "X", .8,
+    "f", "Z", .8,
+    "f", "A", .2
+  )
+
+  traj <- wrap_data(
+    id = "test",
+    cell_ids = cell_ids
+  ) %>% add_trajectory_to_wrapper(
+    milestone_ids = milestone_ids,
+    milestone_network = milestone_network,
+    milestone_percentages = milestone_percentages,
+    divergence_regions = divergence_regions
+  )
+
+  geodist <- compute_tented_geodesic_distances(traj)
+
+  expected_dists <- c(1.4, 6.8, 5.4)
+  expect_true(all(abs(geodist[upper.tri(geodist)] - expected_dists) < 1e-10))
+
+  expect_true(all(abs(geodist - t(geodist)) < 1e-10))
+})
