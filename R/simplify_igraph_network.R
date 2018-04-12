@@ -1,50 +1,3 @@
-#' Simplify a milestone network, so that consecutive linear edges are merged
-#'
-#' @param net A network in data.frame format containing at least the columns from, to and length
-#' @export
-#'
-#' @examples
-#' net <- data.frame(from=1:2, to=2:3, length=1, directed=TRUE, stringsAsFactors = F)
-#' simplify_milestone_network(net)
-#'
-#' net <- data.frame(from=c(1,2,3, 4), to=c(2,3,4, 1), directed=TRUE, length=1)
-#' simplify_milestone_network(net)
-simplify_milestone_network <- function(net) {
-  if (any(!net$directed)) {
-    stop("Undirected networks are not supported by this function")
-  }
-
-  for (node in unique(c(net$from, net$to))) {
-    froms <- net %>% filter(from == node)
-    tos <- net %>% filter(to == node)
-
-    if (nrow(froms) == 1 && nrow(tos) == 1) {
-      connected <- net %>% filter((from == tos$from & to == froms$to) | (to == tos$from & from == froms$to))
-
-      # check if they are connected in a cycle
-      if (nrow(connected) == 0) {
-        newfrom <- tos$from
-        newto <- froms$to
-        net <- net %>%
-          filter(from != node, to != node) %>%
-          add_row(
-            from = newfrom,
-            to = newto,
-            length = froms$length + tos$length,
-            directed = froms$directed
-        )
-      }
-    }
-  }
-
-  # check for linear
-  if (nrow(net) == 1 && net$from != net$to) {
-    net <- tibble(from=c(net$from, ">1"), to=c(">1", net$to), directed=TRUE, length = 0.5)
-  }
-
-  net
-}
-
 #' Simplify an igraph network such that consecutive linear edges are removed
 #'
 #' @param gr an igraph object
@@ -54,11 +7,23 @@ simplify_milestone_network <- function(net) {
 #' @export
 #'
 #' @examples
-#' net <- data.frame(from=1:2, to=2:3, length=1, directed=TRUE, stringsAsFactors = F)
+#' net <- data.frame(
+#'   from = 1:2,
+#'   to = 2:3,
+#'   length = 1,
+#'   directed = TRUE,
+#'   stringsAsFactors = F
+#' )
 #' gr <- igraph::graph_from_data_frame(net)
 #' simplify_igraph_network(gr)
 #'
-#' net <- data.frame(from=c(1,2,3,1), to=c(2,3,1,4), length=1, directed=TRUE, stringsAsFactors = F)
+#' net <- data.frame(
+#'   from = c(1, 2, 3, 1),
+#'    to = c(2, 3, 1, 4),
+#'     length = 1,
+#'     directed = TRUE,
+#'     stringsAsFactors = F
+#' )
 #' gr <- igraph::graph_from_data_frame(net)
 #' simplify_igraph_network(gr)
 simplify_igraph_network <- function(gr) {
