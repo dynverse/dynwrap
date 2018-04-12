@@ -1,6 +1,6 @@
-context("milestone conversion")
+context("Testing milestone_convertors.R")
 
-test_that("ciewicw", {
+test_that("Testing milestone_convertors.R", {
   cell_ids <- letters[1:10]
   milestone_ids <- LETTERS[1:4]
   milestone_network <- tribble(
