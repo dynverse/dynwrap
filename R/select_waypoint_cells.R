@@ -10,26 +10,26 @@ select_waypoint_cells <- function(
 
   cells_in_milestone <- milestone_percentages %>%
     group_by(cell_id) %>%
-    filter(percentage != 0) %>%
+    filter(percentage > 1-1e-8) %>%
     filter(n() == 1) %>%
     ungroup() %>%
     mutate(index = match(milestone_id, milestone_ids))
 
-  divergence_cells <-
-    divergence_regions %>%
-    rename(mid = milestone_id) %>%
-    group_by(divergence_id) %>%
-    summarise(cells = list(
-      progressions %>%
+  cells_in_divergence <-
+    map_df(seq_along(divergence_ids), function(dii) {
+      mid <- divergence_regions %>%
+        filter(divergence_id == divergence_ids[[dii]]) %>%
+        .$milestone_id
+
+      cells <- progressions %>%
         group_by(cell_id) %>%
         filter(n() > 1) %>%
         filter(all(unique(c(from, to)) %in% mid)) %>%
-        ungroup() %>%
-        .$cell_id %>% unique
-    ))
-  cells_in_divergence <-
-    map_df(seq_len(nrow(divergence_cells)), function(index) {
-      data_frame(index, cell_id = divergence_cells$cells[[index]])
+        summarise() %>%
+        .$cell_id %>%
+        unique
+
+      data_frame(index = dii, cell_id = cells)
     })
 
   cells_on_edge <- progressions %>%
