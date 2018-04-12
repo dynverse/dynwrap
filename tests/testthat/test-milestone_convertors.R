@@ -1,6 +1,7 @@
 context("Testing percentage convertors")
 
-cell_ids <- letters[1:10]
+# cell 'k' is not part of any progressions or percentages, on purpose.
+cell_ids <- letters[1:11]
 milestone_ids <- LETTERS[1:4]
 milestone_network <- tribble(
   ~from, ~to, ~length, ~directed,
@@ -63,6 +64,9 @@ test_that("Testing convert_milestone_percentages_to_progressions", {
       check = !is.na(orig) & !is.na(calc) & diff < 1e-8
     )
   expect_true(all(prog_control$check))
+
+  # expect error because cells are position on edges that are not in the milestone_network
+  expect_error(convert_milestone_percentages_to_progressions(cell_ids, milestone_ids, milestone_network %>% slice(-1), milestone_percentages))
 })
 
 test_that("Testing convert_progressions_to_milestone_percentages", {
@@ -75,4 +79,7 @@ test_that("Testing convert_progressions_to_milestone_percentages", {
       check = !is.na(calc) & orig_check & ((is.na(orig) & calc == 0) | diff < 1e-8)
     )
   expect_true(all(perc_control$check))
+
+  # expect error because cells are position on edges that are not in the milestone_network
+  expect_error(convert_progressions_to_milestone_percentages(cell_ids, milestone_ids, milestone_network %>% slice(-1), progressions))
 })
