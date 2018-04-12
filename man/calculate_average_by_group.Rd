@@ -15,10 +15,3 @@ Format: \code{data_frame(cell_id = character(), group_id = character())}.}
 \description{
 Calculate mean values per cell group
 }
-\examples{
-data("toy_tasks", package = "dyntoy")
-x <- toy_tasks$expression[[1]]
-cell_grouping <- toy_tasks$prior_information[[1]]$grouping_assignment
-
-calculate_average_by_group(x, cell_grouping)
-}

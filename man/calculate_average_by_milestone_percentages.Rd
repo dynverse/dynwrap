@@ -15,11 +15,3 @@ Format: \code{data_frame(cell_id = character(), milestone_id = character(), perc
 \description{
 Calculate mean values by milestone percentages
 }
-\examples{
-
-data("toy_tasks", package = "dyntoy")
-x <- toy_tasks$expression[[1]]
-milestone_percentages <- toy_tasks$milestone_percentages[[1]]
-
-calculate_average_by_milestone_percentages(x, milestone_percentages)
-}

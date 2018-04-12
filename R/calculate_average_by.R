@@ -5,13 +5,6 @@
 #'  Format: \code{data_frame(cell_id = character(), group_id = character())}.
 #'
 #' @export
-#'
-#' @examples
-#' data("toy_tasks", package = "dyntoy")
-#' x <- toy_tasks$expression[[1]]
-#' cell_grouping <- toy_tasks$prior_information[[1]]$grouping_assignment
-#'
-#' calculate_average_by_group(x, cell_grouping)
 calculate_average_by_group <- function(x, cell_grouping) {
   milestone_percentages <- cell_grouping %>% mutate(percentage = 1) %>% rename(milestone_id = group_id)
   calculate_average_by_milestone_percentages(x, milestone_percentages)
@@ -27,14 +20,6 @@ calculate_average_by_group <- function(x, cell_grouping) {
 #' @importFrom testthat expect_equal expect_true
 #'
 #' @export
-#'
-#' @examples
-#'
-#' data("toy_tasks", package = "dyntoy")
-#' x <- toy_tasks$expression[[1]]
-#' milestone_percentages <- toy_tasks$milestone_percentages[[1]]
-#'
-#' calculate_average_by_milestone_percentages(x, milestone_percentages)
 calculate_average_by_milestone_percentages <- function(x, milestone_percentages) {
   # cast milestone percentages to matrix
   milpct_m <- milestone_percentages %>%
