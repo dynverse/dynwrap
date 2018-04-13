@@ -4,16 +4,18 @@
 #'
 #' @param data_wrapper A data wrapper to extend upon.
 #' @param pseudotimes A named vector of pseudo times.
+#' @param directed Whether or not the directionality of the pseudotime is predicted.
 #' @param do_scale_minmax Whether or not to scale the pseudotimes between [0,1].
 #'   Otherwise, will assume the values are already within that range.
 #' @param ... extra information to be stored in the wrapper.
 #'
 #' @export
 #'
-#' @importFrom testthat expect_is expect_true
+#' @importFrom testthat expect_is expect_true expect_named
 add_linear_trajectory_to_wrapper <- function(
   data_wrapper,
   pseudotimes,
+  directed = FALSE,
   do_scale_minmax = TRUE,
   ...
 ) {
@@ -23,6 +25,7 @@ add_linear_trajectory_to_wrapper <- function(
   # check names of pseudotimes
   cell_ids <- data_wrapper$cell_ids
   testthat::expect_is(pseudotimes, "numeric")
+  testthat::expect_named(pseudotimes)
   testthat::expect_true(all(names(pseudotimes) %in% cell_ids))
 
   # scale pseudotimes
@@ -40,7 +43,7 @@ add_linear_trajectory_to_wrapper <- function(
     from = milestone_ids[[1]],
     to = milestone_ids[[2]],
     length = 1,
-    directed = FALSE
+    directed = directed
   )
 
   # construct progressions
