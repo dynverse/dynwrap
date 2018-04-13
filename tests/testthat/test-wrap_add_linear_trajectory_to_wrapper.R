@@ -4,7 +4,7 @@ id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
 extras <- list("man")
 
-pseudotimes <- runif(length(cell_ids)) %>% set_names(cell_ids)
+pseudotimes <- c(0, .1, .4, .5, .8, 1) %>% set_names(cell_ids)
 
 wr_orig <- wrap_data(
   id = id,
