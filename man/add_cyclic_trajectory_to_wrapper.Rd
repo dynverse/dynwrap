@@ -4,13 +4,15 @@
 \alias{add_cyclic_trajectory_to_wrapper}
 \title{Add a cyclic trajectory to a data wrapper}
 \usage{
-add_cyclic_trajectory_to_wrapper(data_wrapper, pseudotimes,
+add_cyclic_trajectory_to_wrapper(data_wrapper, pseudotimes, directed = FALSE,
   do_scale_minmax = TRUE, ...)
 }
 \arguments{
 \item{data_wrapper}{A data wrapper to extend upon.}
 
 \item{pseudotimes}{A named vector of pseudo times.}
+
+\item{directed}{Whether or not the directionality of the pseudotime is predicted.}
 
 \item{do_scale_minmax}{Whether or not to scale the pseudotimes between [0,1].
 Otherwise, will assume the values are already within that range.}
