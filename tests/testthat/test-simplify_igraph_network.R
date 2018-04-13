@@ -160,7 +160,7 @@ for (test in tests) {
     control <-
       test$expected_net %>%
       mutate(from = as.character(from), to = as.character(to), left = TRUE) %>%
-      full_join(newnet %>% mutate(right = TRUE), by = c("from", "to", "weight"))
+      full_join(newnet %>% mutate(right = TRUE), by = c("from", "to", "weight", "directed"))
 
     pass_check <- all(!is.na(control$left) & !is.na(control$right))
 
@@ -173,7 +173,7 @@ for (test in tests) {
     # print(newnet)
     # cat("============================\n")
     expect_true( pass_check )
-    expect_true( all(c("from", "to", "weight") %in% colnames(newnet)) )
+    expect_true( all(c("from", "to", "weight", "directed") %in% colnames(newnet)) )
   })
 }
 
