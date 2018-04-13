@@ -34,7 +34,7 @@ add_trajectory_to_wrapper <- function(
 
   check_milestone_network(milestone_ids, milestone_network)
 
-  if (is.null(divergence_regions)) {
+  if (is.null(divergence_regions) || (is.data.frame(divergence_regions) && nrow(divergence_regions) == 0)) {
     divergence_regions <- data_frame(divergence_id = character(0), milestone_id = character(0), is_start = logical(0))
   }
   check_divergence_regions(milestone_ids, divergence_regions)
