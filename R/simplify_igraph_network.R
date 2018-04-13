@@ -52,7 +52,8 @@ simplify_igraph_network <- function(gr) {
         data_frame(
           from = names(igraph::V(gr))[[1]],
           to = from,
-          weight = sum(igraph::E(gr)$weight)
+          weight = sum(igraph::E(gr)$weight),
+          directed = is_directed
         ),
         directed = is_directed
       )
@@ -121,7 +122,8 @@ simplify_igraph_network <- function(gr) {
         data_frame(
           from = names(igraph::V(gr))[[1]],
           to = from,
-          weight = sum(igraph::E(gr)$weight)
+          weight = sum(igraph::E(gr)$weight),
+          directed = is_directed
         ),
         directed = is_directed
       )
