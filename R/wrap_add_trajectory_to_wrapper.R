@@ -16,7 +16,7 @@
 #'
 #' @export
 #'
-#' @importFrom testthat expect_is
+#' @importFrom testthat expect_is expect_equal expect_true
 add_trajectory_to_wrapper <- function(
   data_wrapper,
   milestone_ids,
@@ -26,20 +26,27 @@ add_trajectory_to_wrapper <- function(
   progressions = NULL,
   ...
 ) {
+  # check whether object is a data wrapper
   testthat::expect_true(is_data_wrapper(data_wrapper))
-
   cell_ids <- data_wrapper$cell_ids
 
+  # check milestone ids and milestone network
   testthat::expect_is(milestone_ids, "character")
-
+  testthat::expect_false(any(duplicated(milestone_ids)))
   check_milestone_network(milestone_ids, milestone_network)
 
+  # check group ids, if data contains cell grouping
+  if (is_wrapper_with_cell_group(data_wrapper)) {
+    testthat::expect_equal(data_wrapper$group_ids, milestone_ids)
+  }
+
+  # check divergence regions
   if (is.null(divergence_regions) || (is.data.frame(divergence_regions) && nrow(divergence_regions) == 0)) {
     divergence_regions <- data_frame(divergence_id = character(0), milestone_id = character(0), is_start = logical(0))
   }
   check_divergence_regions(milestone_ids, divergence_regions)
 
-  ## Check and process milestone percentages and progressions
+  # check and process milestone percentages and progressions
   if (is.null(milestone_percentages) == is.null(progressions)) {
     stop("Exactly one of ", sQuote("milestone_percentages"), " or ", sQuote("progressions"), " must be defined, the other must be NULL.")
   }
@@ -87,7 +94,7 @@ add_trajectory_to_wrapper <- function(
   ## Find out trajectory type from milestone network (before adding FILTERED_CELLS)
   trajectory_type <- classify_milestone_network(milestone_network)$network_type
 
-  ## create a separate state "FILTERED_CELLS" if some cells have been filtered out
+  ## Create a separate state "FILTERED_CELLS" if some cells have been filtered out
   na_ids <- setdiff(cell_ids, unique(milestone_percentages$cell_id))
   if (length(na_ids) != 0) {
     directed <- any(milestone_network$directed)

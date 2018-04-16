@@ -1,6 +1,7 @@
 #' Add a cell grouping to a data wrapper
 #'
 #' @param data_wrapper A data wrapper to extend upon.
+#' @param group_id The ids of the groupings.
 #' @param cell_group A grouping of the cells.
 #' @param ... Extra information to be stored in the wrapper.
 #'
@@ -9,21 +10,33 @@
 #' @importFrom testthat expect_equal expect_is expect_true
 add_cell_group_to_wrapper <- function(
   data_wrapper,
+  group_ids,
   cell_group,
   ...
 ) {
+  # check whether object is a data wrapper
   testthat::expect_true(is_data_wrapper(data_wrapper))
 
-  cell_ids <- data_wrapper$cell_ids
+  # check group ids
+  testthat::expect_is(group_ids, "character")
+  testthat::expect_false(any(duplicated(group_ids)))
 
+  # check cell group
   testthat::expect_named(cell_group)
-  testthat::expect_is(cell_group, c("character", "factor"))
-  testthat::expect_true(all(names(cell_group) %in% cell_ids))
+  testthat::expect_is(cell_group, "character")
+  testthat::expect_true(all(names(cell_group) %in% data_wrapper$cell_ids))
+  testthat::expect_true(all(cell_group %in% group_ids))
+
+  # check milestone ids, if data contains a trajectory
+  if (is_wrapper_with_trajectory(data_wrapper)) {
+    testthat::expect_equal(data_wrapper$milestone_ids, group_ids)
+  }
 
   # create output structure
   out <- c(
     data_wrapper,
     list(
+      group_ids = group_ids,
       cell_group = cell_group,
       ...
     ))
