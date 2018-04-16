@@ -200,3 +200,196 @@ test_that("Testing add_prior_information_to_wrapper", {
   testthat::expect_equal(prior_info$n_end_states, 2)
 })
 
+
+
+
+# with undirected cyclical dataset
+cell_ids <- c("a", "b", "c", "d", "e", "f")
+milestone_ids <- c("W", "X", "Y", "Z")
+
+milestone_network <- tribble(
+  ~from, ~to, ~length, ~directed,
+  "W", "X", 2, FALSE,
+  "X", "Y", 3, FALSE,
+  "Y", "Z", 4, FALSE,
+  "Z", "W", 5, FALSE
+)
+
+divergence_regions <- NULL
+
+milestone_percentages <- tribble(
+  ~cell_id, ~milestone_id, ~percentage,
+  "a", "W", 1,
+  "b", "W", .2,
+  "b", "X", .8,
+  "c", "X", .8,
+  "c", "Y", .2,
+  "d", "Y", 1,
+  "e", "Y", .3,
+  "e", "Z", .7,
+  "f", "Z", .8,
+  "f", "W", .2
+)
+
+progressions <- convert_milestone_percentages_to_progressions(
+  cell_ids, milestone_ids, milestone_network, milestone_percentages
+)
+
+num_genes <- 100
+gene_ids <- paste0("Gene", seq_len(num_genes))
+counts <- matrix(rbinom(num_genes * length(cell_ids), 1000, .01), ncol = num_genes, dimnames = list(cell_ids, gene_ids))
+feature_info <- data_frame(feature_id = gene_ids, test = 1)
+cell_info <- data_frame(
+  cell_id = cell_ids,
+  test = 2,
+  simulationtime = runif(length(cell_ids)),
+  timepoint = runif(length(cell_ids))
+)
+
+
+test_that("Testing generate_prior_information", {
+  prior_info <-
+    generate_prior_information(
+      cell_ids = cell_ids,
+      milestone_ids = milestone_ids,
+      milestone_network = milestone_network,
+      milestone_percentages = milestone_percentages,
+      progressions = progressions,
+      divergence_regions = divergence_regions,
+      counts = counts,
+      feature_info = feature_info,
+      cell_info = cell_info
+    )
+
+  expected_prior <- c(
+    "start_milestones",
+    "start_cells",
+    "end_milestones",
+    "end_cells",
+    "grouping_assignment",
+    "grouping_network",
+    "marker_feature_ids",
+    "n_branches",
+    "time",
+    "timecourse",
+    "n_end_states"
+  )
+
+  testthat::expect_true(all(expected_prior %in% names(prior_info)))
+
+  testthat::expect_equal(prior_info$start_milestones, character(0))
+
+  testthat::expect_equal(prior_info$start_cells, cell_ids)
+
+  testthat::expect_equal(prior_info$end_milestones, character(0))
+
+  testthat::expect_equal(prior_info$end_cells, NULL)
+
+  join_check <-
+    milestone_percentages %>%
+    group_by(cell_id) %>%
+    arrange(desc(percentage)) %>%
+    slice(1) %>%
+    select(-percentage) %>%
+    ungroup() %>%
+    full_join(prior_info$grouping_assignment, by = "cell_id")
+  testthat::expect_equal(join_check$group_id, join_check$milestone_id)
+
+  testthat::expect_equal(prior_info$grouping_network, milestone_network %>% select(from, to))
+
+  testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
+
+  testthat::expect_equal(prior_info$n_branches, 4)
+
+  testthat::expect_equal(prior_info$time, set_names(cell_info$simulationtime, cell_info$cell_id))
+
+  testthat::expect_equal(prior_info$timecourse, set_names(cell_info$timepoint, cell_info$cell_id))
+
+  testthat::expect_equal(prior_info$n_end_states, 2)
+})
+
+
+test_that("Testing add_prior_information_to_wrapper", {
+  traj <-
+    wrap_data(
+      id = "test",
+      cell_ids = cell_ids,
+      cell_info = cell_info
+    ) %>% add_trajectory_to_wrapper(
+      milestone_ids = milestone_ids,
+      milestone_network = milestone_network,
+      milestone_percentages = milestone_percentages,
+      divergence_regions = divergence_regions
+    ) %>% add_expression_to_wrapper(
+      counts = counts,
+      expression = log2(counts+1),
+      feature_info = feature_info
+    )
+
+  prior_info <-
+    generate_prior_information(
+      cell_ids = cell_ids,
+      milestone_ids = milestone_ids,
+      milestone_network = milestone_network,
+      milestone_percentages = milestone_percentages,
+      progressions = progressions,
+      divergence_regions = divergence_regions,
+      counts = counts,
+      feature_info = feature_info,
+      cell_info = cell_info
+    )
+
+  traj2 <- add_prior_information_to_wrapper(traj)
+
+  prior_info <- traj2$prior_information
+
+  expect_false(is_wrapper_with_prior_information(traj))
+  expect_true(is_wrapper_with_prior_information(traj2))
+
+  # copy paste tests
+  expected_prior <- c(
+    "start_milestones",
+    "start_cells",
+    "end_milestones",
+    "end_cells",
+    "grouping_assignment",
+    "grouping_network",
+    "marker_feature_ids",
+    "n_branches",
+    "time",
+    "timecourse",
+    "n_end_states"
+  )
+
+  testthat::expect_true(all(expected_prior %in% names(prior_info)))
+
+  testthat::expect_equal(prior_info$start_milestones, "W")
+
+  testthat::expect_equal(gsub("[0-9]+", "", prior_info$start_cells), "a")
+
+  testthat::expect_equal(prior_info$end_milestones %>% sort, c("A", "Y"))
+
+  testthat::expect_equal(gsub("[0-9]+", "", prior_info$end_cells), c("b", "f"))
+
+  join_check <-
+    milestone_percentages %>%
+    group_by(cell_id) %>%
+    arrange(desc(percentage)) %>%
+    slice(1) %>%
+    select(-percentage) %>%
+    ungroup() %>%
+    full_join(prior_info$grouping_assignment, by = "cell_id")
+  testthat::expect_equal(join_check$group_id, join_check$milestone_id)
+
+  testthat::expect_equal(prior_info$grouping_network, milestone_network %>% select(from, to))
+
+  testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
+
+  testthat::expect_equal(prior_info$n_branches, 4)
+
+  testthat::expect_equal(prior_info$time, set_names(cell_info$simulationtime, cell_info$cell_id))
+
+  testthat::expect_equal(prior_info$timecourse, set_names(cell_info$timepoint, cell_info$cell_id))
+
+  testthat::expect_equal(prior_info$n_end_states, 2)
+})
