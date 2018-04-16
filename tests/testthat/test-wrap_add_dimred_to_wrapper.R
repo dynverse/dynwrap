@@ -1,6 +1,6 @@
 context("Check add_dimred_to_wrapper")
 
-# trajectory data
+# cell data
 id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
 cell_info <- data_frame(
@@ -12,6 +12,14 @@ cell_info <- data_frame(
 extras1 <- list("a wife.")
 extras2 <- c("However", "little", "known")
 
+wr_orig <- wrap_data(
+  id = id,
+  cell_ids = cell_ids,
+  cell_info = cell_info,
+  extras1 = extras1
+)
+
+# trajectory data
 milestone_ids <-  c("man", "in", "possession", "of", "good", "fortune", "must")
 milestone_network <- tribble(
   ~from, ~to, ~length, ~directed,
@@ -61,13 +69,6 @@ divergence_regions <- tribble(
   "be", "of", FALSE
 )
 
-wr_orig <- wrap_data(
-  id = id,
-  cell_ids = cell_ids,
-  cell_info = cell_info,
-  extras1 = extras1
-)
-
 wr_withtraj <- wr_orig %>%
   add_trajectory_to_wrapper(
     milestone_ids = milestone_ids,
@@ -82,13 +83,15 @@ dim_names <- paste0("comp_", seq_len(num_dims))
 
 dimred <- matrix(runif(num_dims * length(cell_ids), 0, 1), nrow = length(cell_ids), dimnames = list(cell_ids, dim_names))
 
-# dimred
 dimred_milestones <- matrix(runif(num_dims * length(milestone_ids), 0, 1), nrow = length(milestone_ids), dimnames = list(milestone_ids, dim_names))
 
 dimred_trajectory_segments <- cbind(
   (dimred_milestones - .05) %>% magrittr::set_colnames(paste0("from_", dim_names)),
   (dimred_milestones + .05) %>% magrittr::set_colnames(paste0("to_", dim_names))
 )
+
+# clustering data
+cell_group <- sample(milestone_ids, length(cell_ids), replace = TRUE) %>% setNames(cell_ids)
 
 
 test_that("Testing add_dimred_to_wrapper", {
@@ -122,9 +125,29 @@ test_that("Testing add_dimred_to_wrapper with traj dimred", {
 
   # testing is_ti_data_wrapper
   expect_true(is_wrapper_with_dimred(wr))
+  expect_true(is_wrapper_with_trajectory(wr))
 
   expect_equivalent(wr$dimred_milestones, dimred_milestones)
   expect_equivalent(wr$dimred_trajectory_segments, dimred_trajectory_segments)
+})
+
+test_that("Testing add_dimred_to_wrapper with cell group", {
+  wr <- wr_orig %>%
+    add_cell_group_to_wrapper(
+      group_ids = milestone_ids,
+      cell_group = cell_group
+    ) %>%
+    add_dimred_to_wrapper(
+      dimred = dimred,
+      dimred_milestones = dimred_milestones,
+      extras2 = extras2
+    )
+
+  # testing is_ti_data_wrapper
+  expect_true(is_wrapper_with_dimred(wr))
+  expect_true(is_wrapper_with_cell_group(wr))
+
+  expect_equivalent(wr$dimred_milestones, dimred_milestones)
 })
 
 
