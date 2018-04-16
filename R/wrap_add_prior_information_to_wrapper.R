@@ -60,8 +60,8 @@ generate_prior_information <- function(
   progressions,
   divergence_regions,
   counts,
-  feature_info,
-  cell_info
+  feature_info = NULL,
+  cell_info = NULL
 ) {
   requireNamespace("Seurat")
 
@@ -137,7 +137,7 @@ generate_prior_information <- function(
   grouping_network <- milestone_network %>% select(from, to)
 
   ## MARKER GENES ##
-  if ("housekeeping" %in% colnames(feature_info)) {
+  if (!is.null(feature_info) && "housekeeping" %in% colnames(feature_info)) {
     marker_feature_ids <- feature_info %>%
       filter(!housekeeping) %>%
       pull(feature_id)
@@ -171,14 +171,14 @@ generate_prior_information <- function(
 
   ## TIME AND TIME COURSE ##
   time <-
-    if ("simulationtime" %in% colnames(cell_info)) {
+    if (!is.null(cell_info) && "simulationtime" %in% colnames(cell_info)) {
       setNames(cell_info$simulationtime, cell_info$cell_id)
     } else {
       NULL
     }
 
   timecourse <-
-    if ("timepoint" %in% colnames(cell_info)) {
+    if (!is.null(cell_info) && "timepoint" %in% colnames(cell_info)) {
       setNames(cell_info$timepoint, cell_info$cell_id)
     } else {
       NULL

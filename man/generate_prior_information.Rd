@@ -5,8 +5,8 @@
 \title{Extract the prior information from the milestone network}
 \usage{
 generate_prior_information(cell_ids, milestone_ids, milestone_network,
-  milestone_percentages, progressions, divergence_regions, counts, feature_info,
-  cell_info)
+  milestone_percentages, progressions, divergence_regions, counts,
+  feature_info = NULL, cell_info = NULL)
 }
 \arguments{
 \item{cell_ids}{The ids of the cells.}
