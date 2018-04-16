@@ -24,14 +24,13 @@ wrap_data <- function(
     testthat::expect_equal(cell_info$cell_id, cell_ids)
   }
 
-  out <- list(
+  list() %>% extend_with(
+    "dynwrap::data_wrapper",
     id = id,
     cell_ids = cell_ids,
     cell_info = cell_info,
     ...
   )
-  class(out) <- c("dynwrap::data_wrapper", class(out))
-  out
 }
 
 #' Test whether an object is a data_wrapper
@@ -40,5 +39,5 @@ wrap_data <- function(
 #'
 #' @export
 is_data_wrapper <- function(object) {
-  any(c("dynutils::data_wrapper", "dynwrap::data_wrapper") %in% class(object))
+  "dynwrap::data_wrapper" %in% class(object)
 }
