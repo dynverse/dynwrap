@@ -44,7 +44,11 @@ progressions <- convert_milestone_percentages_to_progressions(
 num_genes <- 100
 gene_ids <- paste0("Gene", seq_len(num_genes))
 counts <- matrix(rbinom(num_genes * length(cell_ids), 1000, .01), ncol = num_genes, dimnames = list(cell_ids, gene_ids))
-feature_info <- data_frame(feature_id = gene_ids, test = 1)
+feature_info <- data_frame(
+  feature_id = gene_ids,
+  test = 1,
+  housekeeping = sample(c(T, F), size = length(gene_ids), replace = TRUE)
+)
 cell_info <- data_frame(
   cell_id = cell_ids,
   test = 2,
@@ -225,14 +229,6 @@ progressions <- convert_milestone_percentages_to_progressions(
 num_genes <- 100
 gene_ids <- paste0("Gene", seq_len(num_genes))
 counts <- matrix(rbinom(num_genes * length(cell_ids), 1000, .01), ncol = num_genes, dimnames = list(cell_ids, gene_ids))
-feature_info <- data_frame(feature_id = gene_ids, test = 1)
-cell_info <- data_frame(
-  cell_id = cell_ids,
-  test = 2,
-  simulationtime = runif(length(cell_ids)),
-  timepoint = runif(length(cell_ids))
-)
-
 
 test_that("Testing generate_prior_information", {
   prior_info <-
