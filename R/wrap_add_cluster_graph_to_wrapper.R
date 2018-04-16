@@ -22,12 +22,12 @@ add_cluster_graph_to_wrapper <- function(
   # check data wrapper
   testthat::expect_true(is_data_wrapper(data_wrapper))
 
-  cell_ids <- data_wrapper$cell_ids
-
-  # check milestone_network
+  # check milestone network
   check_milestone_network(milestone_ids, milestone_network)
 
-  # put cells on edges
+  # put cells on edges.
+  # prefer to put a cell at the end of a transition, but put it at the start
+  # if there is no other option.
   both_directions <- bind_rows(
     milestone_network %>% select(from, to) %>% mutate(label = from, percentage = 0),
     milestone_network %>% select(from, to) %>% mutate(label = to, percentage = 1)
