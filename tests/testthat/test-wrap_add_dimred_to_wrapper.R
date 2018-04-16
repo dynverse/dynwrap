@@ -165,14 +165,6 @@ test_that("Expect failure on wrong dimred parameter", {
 
 test_that("Expect failure on wrong dimred_milestones parameter", {
   expect_error(
-    wr_orig %>%
-      add_dimred_to_wrapper(
-        dimred = dimred,
-        dimred_milestones = dimred_milestones,
-        extras2 = extras2
-      )
-  )
-  expect_error(
     wr_withtraj %>%
       add_dimred_to_wrapper(
         dimred = dimred,
