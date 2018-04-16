@@ -132,19 +132,6 @@ test_that("Testing add_prior_information_to_wrapper", {
       feature_info = feature_info
     )
 
-  prior_info <-
-    generate_prior_information(
-      cell_ids = cell_ids,
-      milestone_ids = milestone_ids,
-      milestone_network = milestone_network,
-      milestone_percentages = milestone_percentages,
-      progressions = progressions,
-      divergence_regions = divergence_regions,
-      counts = counts,
-      feature_info = feature_info,
-      cell_info = cell_info
-    )
-
   traj2 <- add_prior_information_to_wrapper(traj)
 
   prior_info <- traj2$prior_information
@@ -256,9 +243,7 @@ test_that("Testing generate_prior_information", {
       milestone_percentages = milestone_percentages,
       progressions = progressions,
       divergence_regions = divergence_regions,
-      counts = counts,
-      feature_info = feature_info,
-      cell_info = cell_info
+      counts = counts
     )
 
   expected_prior <- c(
@@ -301,9 +286,9 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_equal(prior_info$n_branches, 4)
 
-  testthat::expect_equal(prior_info$time, set_names(cell_info$simulationtime, cell_info$cell_id))
+  testthat::expect_equal(prior_info$time, NULL)
 
-  testthat::expect_equal(prior_info$timecourse, set_names(cell_info$timepoint, cell_info$cell_id))
+  testthat::expect_equal(prior_info$timecourse, NULL)
 
   testthat::expect_equal(prior_info$n_end_states, 0)
 })
@@ -313,8 +298,7 @@ test_that("Testing add_prior_information_to_wrapper", {
   traj <-
     wrap_data(
       id = "test",
-      cell_ids = cell_ids,
-      cell_info = cell_info
+      cell_ids = cell_ids
     ) %>% add_trajectory_to_wrapper(
       milestone_ids = milestone_ids,
       milestone_network = milestone_network,
@@ -322,21 +306,7 @@ test_that("Testing add_prior_information_to_wrapper", {
       divergence_regions = divergence_regions
     ) %>% add_expression_to_wrapper(
       counts = counts,
-      expression = log2(counts+1),
-      feature_info = feature_info
-    )
-
-  prior_info <-
-    generate_prior_information(
-      cell_ids = cell_ids,
-      milestone_ids = milestone_ids,
-      milestone_network = milestone_network,
-      milestone_percentages = milestone_percentages,
-      progressions = progressions,
-      divergence_regions = divergence_regions,
-      counts = counts,
-      feature_info = feature_info,
-      cell_info = cell_info
+      expression = log2(counts+1)
     )
 
   traj2 <- add_prior_information_to_wrapper(traj)
@@ -387,9 +357,9 @@ test_that("Testing add_prior_information_to_wrapper", {
 
   testthat::expect_equal(prior_info$n_branches, 4)
 
-  testthat::expect_equal(prior_info$time, set_names(cell_info$simulationtime, cell_info$cell_id))
+  testthat::expect_equal(prior_info$time, NULL)
 
-  testthat::expect_equal(prior_info$timecourse, set_names(cell_info$timepoint, cell_info$cell_id))
+  testthat::expect_equal(prior_info$timecourse, NULL)
 
   testthat::expect_equal(prior_info$n_end_states, 0)
 })
