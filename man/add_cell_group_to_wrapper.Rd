@@ -9,11 +9,11 @@ add_cell_group_to_wrapper(data_wrapper, group_ids, cell_group, ...)
 \arguments{
 \item{data_wrapper}{A data wrapper to extend upon.}
 
+\item{group_ids}{The ids of the groupings.}
+
 \item{cell_group}{A grouping of the cells.}
 
 \item{...}{Extra information to be stored in the wrapper.}
-
-\item{group_id}{The ids of the groupings.}
 }
 \description{
 Add a cell grouping to a data wrapper

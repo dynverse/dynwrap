@@ -1,7 +1,7 @@
 #' Add a cell grouping to a data wrapper
 #'
 #' @param data_wrapper A data wrapper to extend upon.
-#' @param group_id The ids of the groupings.
+#' @param group_ids The ids of the groupings.
 #' @param cell_group A grouping of the cells.
 #' @param ... Extra information to be stored in the wrapper.
 #'
