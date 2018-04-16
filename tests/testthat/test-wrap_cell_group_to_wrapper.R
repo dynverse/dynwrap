@@ -1,6 +1,6 @@
 context("Check add_cell_group_to_wrapper")
 
-# trajectory data
+# cell data
 id <- "a"
 cell_ids <- letters
 group_ids <- LETTERS[1:5]
