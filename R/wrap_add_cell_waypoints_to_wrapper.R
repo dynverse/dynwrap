@@ -19,7 +19,7 @@ add_cell_waypoints_to_wrapper <- function(object, num_cells_selected = 100) {
   ))
 
   # create output structure
-  data_wrapper %>% extend_with(
+  object %>% extend_with(
     "dynwrap::with_cell_waypoints",
     waypoint_cells = waypoint_cells
   )
