@@ -4,20 +4,23 @@
 \alias{add_dimred_projection_to_wrapper}
 \title{Add a dimred projection trajectory to a data wrapper}
 \usage{
-add_dimred_projection_to_wrapper(data_wrapper, milestone_network,
-  dimred_milestones, dimred_cells, milestone_assignment_cells = NULL,
-  num_segments_per_edge = 100, ...)
+add_dimred_projection_to_wrapper(data_wrapper, milestone_ids, milestone_network,
+  dimred, dimred_milestones, cell_group = NULL, num_segments_per_edge = 100,
+  ...)
 }
 \arguments{
 \item{data_wrapper}{A data wrapper to extend upon.}
 
-\item{milestone_network}{A network of milestones.}
+\item{milestone_ids}{The ids of the milestones in the trajectory. Type: Character vector.}
 
-\item{dimred_milestones}{A dimensionality reduction of the milestones.}
+\item{milestone_network}{The network of the milestones.
+Type: Data frame(from = character, to = character, length = numeric, directed = logical).}
 
-\item{dimred_cells}{A dimensionality reduction of the cells.}
+\item{dimred}{The dimensionality reduction matrix.}
 
-\item{milestone_assignment_cells}{A milestone assignment of the cells.}
+\item{dimred_milestones}{An optional dimensionality reduction of the milestones.}
+
+\item{cell_group}{A grouping of the cells.}
 
 \item{num_segments_per_edge}{The number of pieces each milestone transition will be split info for the calculation of the percentages.}
 
