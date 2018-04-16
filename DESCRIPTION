@@ -23,5 +23,7 @@ Imports:
   testthat,
   tibble,
   tidyr
+Suggests:
+  Seurat
 Remotes:
   dynverse/dynutils
