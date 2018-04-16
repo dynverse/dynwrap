@@ -91,10 +91,17 @@ compute_tented_geodesic_distances <- function(trajectory, waypoint_cells = NULL)
     igraph::graph_from_data_frame(directed = FALSE, vertices = c(milestone_ids, cell_ids))
 
   # compute cell-to-cell distances across entire graph
-  gr %>%
+  out <- gr %>%
     igraph::distances(
       v = waypoint_cells,
       to = cell_ids,
       weights = igraph::E(gr)$length
     )
+
+  # return distance matrix
+  if (length(waypoint_cells) == 1) {
+    matrix(out, nrow = 1, dimnames = list(waypoint_cells, cell_ids))
+  } else {
+    out
+  }
 }
