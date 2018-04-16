@@ -32,7 +32,7 @@ add_trajectory_to_wrapper <- function(
 
   # check milestone ids and milestone network
   testthat::expect_is(milestone_ids, "character")
-  testthat::expect_false(any(duplicated(milestone_ids)))
+  testthat::expect_false(any(duplicated(c(milestone_ids, cell_ids))))
   check_milestone_network(milestone_ids, milestone_network)
 
   # check group ids, if data contains cell grouping
