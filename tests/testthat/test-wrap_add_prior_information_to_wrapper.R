@@ -56,6 +56,7 @@ cell_info <- data_frame(
 test_that("Testing generate_prior_information", {
   prior_info <-
     generate_prior_information(
+      cell_ids = cell_ids,
       milestone_ids = milestone_ids,
       milestone_network = milestone_network,
       milestone_percentages = milestone_percentages,
@@ -111,7 +112,6 @@ test_that("Testing generate_prior_information", {
   testthat::expect_equal(prior_info$timecourse, set_names(cell_info$timepoint, cell_info$cell_id))
 
   testthat::expect_equal(prior_info$n_end_states, 2)
-
 })
 
 
@@ -134,6 +134,7 @@ test_that("Testing add_prior_information_to_wrapper", {
 
   prior_info <-
     generate_prior_information(
+      cell_ids = cell_ids,
       milestone_ids = milestone_ids,
       milestone_network = milestone_network,
       milestone_percentages = milestone_percentages,
