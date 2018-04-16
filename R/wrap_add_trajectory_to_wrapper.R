@@ -124,19 +124,16 @@ add_trajectory_to_wrapper <- function(
   }
 
   # create output structure
-  out <- c(
-    data_wrapper,
-    list(
-      milestone_ids = milestone_ids,
-      milestone_network = milestone_network,
-      divergence_regions = divergence_regions,
-      milestone_percentages = milestone_percentages,
-      progressions = progressions,
-      trajectory_type = trajectory_type,
-      ...
-    ))
-  class(out) <- c("dynwrap::with_trajectory", class(data_wrapper))
-  out
+  data_wrapper %>% extend_with(
+    "dynwrap::with_trajectory",
+    milestone_ids = milestone_ids,
+    milestone_network = milestone_network,
+    divergence_regions = divergence_regions,
+    milestone_percentages = milestone_percentages,
+    progressions = progressions,
+    trajectory_type = trajectory_type,
+    ...
+  )
 }
 
 #' Test whether an object is a data_wrapper and has a trajectory

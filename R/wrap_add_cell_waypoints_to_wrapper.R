@@ -9,18 +9,20 @@
 add_cell_waypoints_to_wrapper <- function(object, num_cells_selected = 100) {
   testthat::expect_true(is_wrapper_with_trajectory(object))
 
-  object$waypoint_cells <- select_waypoint_cells(
-    milestone_ids = object$milestone_ids,
-    milestone_network = object$milestone_network,
-    milestone_percentages = object$milestone_percentages,
-    progressions = object$progressions,
-    divergence_regions = object$divergence_regions,
+  waypoint_cells <- with(object, select_waypoint_cells(
+    milestone_ids = milestone_ids,
+    milestone_network = milestone_network,
+    milestone_percentages = milestone_percentages,
+    progressions = progressions,
+    divergence_regions = divergence_regions,
     num_cells_selected = num_cells_selected
+  ))
+
+  # create output structure
+  data_wrapper %>% extend_with(
+    "dynwrap::with_cell_waypoints",
+    waypoint_cells = waypoint_cells
   )
-
-  class(object) <- c("dynwrap::with_cell_waypoints", class(object))
-
-  object
 }
 
 #' Test whether an object is a data_wrapper and cell waypoints

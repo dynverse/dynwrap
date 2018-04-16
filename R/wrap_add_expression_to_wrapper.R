@@ -33,16 +33,13 @@ add_expression_to_wrapper <- function(
   }
 
   # create output structure
-  out <- c(
-    data_wrapper,
-    list(
-      counts = counts,
-      expression = expression,
-      feature_info = feature_info,
-      ...
-    ))
-  class(out) <- c("dynwrap::with_expression", class(data_wrapper))
-  out
+  data_wrapper %>% extend_with(
+    "dynwrap::with_expression",
+    counts = counts,
+    expression = expression,
+    feature_info = feature_info,
+    ...
+  )
 }
 
 #' Test whether an object is a data_wrapper and has expression data

@@ -47,16 +47,13 @@ add_dimred_to_wrapper <- function(
   }
 
   # create output structure
-  out <- c(
-    data_wrapper,
-    list(
-      dimred = dimred,
-      dimred_milestones = dimred_milestones,
-      dimred_trajectory_segments = dimred_trajectory_segments,
-      ...
-    ))
-  class(out) <- c("dynwrap::with_dimred", class(data_wrapper))
-  out
+  data_wrapper %>% extend_with(
+    "dynwrap::with_dimred",
+    dimred = dimred,
+    dimred_milestones = dimred_milestones,
+    dimred_trajectory_segments = dimred_trajectory_segments,
+    ...
+  )
 }
 
 #' Test whether an object is a data_wrapper and has dimred data

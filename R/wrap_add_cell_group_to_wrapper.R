@@ -33,15 +33,12 @@ add_cell_group_to_wrapper <- function(
   }
 
   # create output structure
-  out <- c(
-    data_wrapper,
-    list(
-      group_ids = group_ids,
-      cell_group = cell_group,
-      ...
-    ))
-  class(out) <- c("dynwrap::with_cell_group", class(data_wrapper))
-  out
+  data_wrapper %>% extend_with(
+    "dynwrap::with_cell_group",
+    group_ids = group_ids,
+    cell_group = cell_group,
+    ...
+  )
 }
 
 #' Test whether an object is a data_wrapper and has cell_group data

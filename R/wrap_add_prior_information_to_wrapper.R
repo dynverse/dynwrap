@@ -16,7 +16,7 @@ add_prior_information_to_wrapper <- function(
   testthat::expect_true(is_wrapper_with_expression(data_wrapper))
 
   # compute prior information and add it to the wrapper
-  data_wrapper$prior_information <-
+  prior_information <-
     with(data_wrapper, generate_prior_information(
       cell_ids = cell_ids,
       milestone_ids = milestone_ids,
@@ -29,9 +29,10 @@ add_prior_information_to_wrapper <- function(
       cell_info = cell_info
     ))
 
-  class(data_wrapper) <- c("dynwrap::with_prior", class(data_wrapper))
-
-  data_wrapper
+  data_wrapper %>% extend_with(
+    "dynwrap::with_prior",
+    prior_information = prior_information
+  )
 }
 
 #' Test whether an object is a data_wrapper and contains prior information

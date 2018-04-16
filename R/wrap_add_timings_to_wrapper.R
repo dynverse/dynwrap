@@ -15,12 +15,10 @@ add_timings_to_wrapper <- function(
   testthat::expect_is(timings, "list")
 
   # create output structure
-  out <- c(
-    data_wrapper,
-    list(timings = timings)
+  data_wrapper %>% extend_with(
+    "dynwrap::with_timings",
+    timings = timings
   )
-  class(out) <- c("dynwrap::with_timings", class(data_wrapper))
-  out
 }
 
 #' Test whether an object is a data_wrapper and has timings information
