@@ -23,6 +23,8 @@ Type: Data frame(cell_id = character, from = character, to = character, percenta
 \item{divergence_regions}{A data frame specifying the divergence
 regions between milestones (e.g. a bifurcation).
 Type: Data frame(divergence_id = character, milestone_id = character, is_start = logical).}
+
+\item{num_cells_selected}{About the number of cells selected as waypoints}
 }
 \description{
 Waypoint cells are cells spread across all of the trajectory such that there is no other cell

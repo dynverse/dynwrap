@@ -18,14 +18,15 @@ add_prior_information_to_wrapper <- function(
   # compute prior information and add it to the wrapper
   data_wrapper$prior_information <-
     with(data_wrapper, generate_prior_information(
-      milestone_ids,
-      milestone_network,
-      milestone_percentages,
-      progressions,
-      divergence_regions,
-      counts,
-      feature_info,
-      cell_info
+      cell_ids = cell_ids,
+      milestone_ids = milestone_ids,
+      milestone_network = milestone_network,
+      milestone_percentages = milestone_percentages,
+      progressions = progressions,
+      divergence_regions = divergence_regions,
+      counts = counts,
+      feature_info = feature_info,
+      cell_info = cell_info
     ))
 
   class(data_wrapper) <- c("dynwrap::with_prior", class(data_wrapper))
@@ -52,6 +53,7 @@ is_wrapper_with_prior_information <- function(object) {
 #'
 #' @export
 generate_prior_information <- function(
+  cell_ids,
   milestone_ids,
   milestone_network,
   milestone_percentages,

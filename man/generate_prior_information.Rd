@@ -4,11 +4,13 @@
 \alias{generate_prior_information}
 \title{Extract the prior information from the milestone network}
 \usage{
-generate_prior_information(milestone_ids, milestone_network,
+generate_prior_information(cell_ids, milestone_ids, milestone_network,
   milestone_percentages, progressions, divergence_regions, counts, feature_info,
   cell_info)
 }
 \arguments{
+\item{cell_ids}{The ids of the cells.}
+
 \item{milestone_ids}{The ids of the milestones in the trajectory. Type: Character vector.}
 
 \item{milestone_network}{The network of the milestones.

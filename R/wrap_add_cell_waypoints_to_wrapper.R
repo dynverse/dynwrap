@@ -1,7 +1,7 @@
 #' Add cell waypoints to a wrapped object with trajectory
 #'
 #' @param object Wrapper with trajectory
-#' @param num_cells_selected About the number of cells selected as waypoints
+#' @inheritParams select_waypoint_cells
 #'
 #' @importFrom testthat expect_true
 #'
@@ -38,6 +38,7 @@ is_wrapper_with_waypoint_cells <- function(object) {
 #' that has a large geodesic distance to any of the waypoint cells.
 #'
 #' @inheritParams add_trajectory_to_wrapper
+#' @param num_cells_selected About the number of cells selected as waypoints
 #'
 #' @export
 select_waypoint_cells <- function(
