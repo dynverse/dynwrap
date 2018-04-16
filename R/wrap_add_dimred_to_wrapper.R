@@ -1,4 +1,4 @@
-#' Add a dimensionality reductio n to a data wrapper
+#' Add a dimensionality reduction to a data wrapper
 #'
 #' @param data_wrapper A data wrapper to extend upon.
 #' @param dimred The dimensionality reduction matrix.

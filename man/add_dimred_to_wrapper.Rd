@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrap_add_dimred_to_wrapper.R
 \name{add_dimred_to_wrapper}
 \alias{add_dimred_to_wrapper}
-\title{Add a dimensionality reductio n to a data wrapper}
+\title{Add a dimensionality reduction to a data wrapper}
 \usage{
 add_dimred_to_wrapper(data_wrapper, dimred, dimred_milestones = NULL,
   dimred_trajectory_segments = NULL, ...)
@@ -19,5 +19,5 @@ add_dimred_to_wrapper(data_wrapper, dimred, dimred_milestones = NULL,
 \item{...}{extra information to be stored in the wrapper}
 }
 \description{
-Add a dimensionality reductio n to a data wrapper
+Add a dimensionality reduction to a data wrapper
 }
