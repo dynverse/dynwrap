@@ -9,7 +9,7 @@
 #'
 #' @export
 #'
-#' @importFrom testthat expect_is expect_true expect_equal expect_length
+#' @importFrom testthat expect_is expect_true expect_equal
 #' @importFrom pdist pdist
 add_cluster_graph_to_wrapper <- function(
   data_wrapper,
