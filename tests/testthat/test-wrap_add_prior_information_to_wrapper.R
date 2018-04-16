@@ -85,11 +85,11 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_equal(prior_info$start_milestones, "W")
 
-  testthat::expect_equal(str_replace(prior_info$start_cells, "[0-9]+", ""), "a")
+  testthat::expect_equal(gsub("[0-9]+", "", prior_info$start_cells), "a")
 
   testthat::expect_equal(prior_info$end_milestones %>% sort, c("A", "Y"))
 
-  testthat::expect_equal(str_replace(prior_info$end_cells, "[0-9]+", ""), c("b", "f"))
+  testthat::expect_equal(gsub("[0-9]+", "", prior_info$end_cells), c("b", "f"))
 
   join_check <-
     milestone_percentages %>%
@@ -171,11 +171,11 @@ test_that("Testing add_prior_information_to_wrapper", {
 
   testthat::expect_equal(prior_info$start_milestones, "W")
 
-  testthat::expect_equal(str_replace(prior_info$start_cells, "[0-9]+", ""), "a")
+  testthat::expect_equal(gsub("[0-9]+", "", prior_info$start_cells), "a")
 
   testthat::expect_equal(prior_info$end_milestones %>% sort, c("A", "Y"))
 
-  testthat::expect_equal(str_replace(prior_info$end_cells, "[0-9]+", ""), c("b", "f"))
+  testthat::expect_equal(gsub("[0-9]+", "", prior_info$end_cells), c("b", "f"))
 
   join_check <-
     milestone_percentages %>%
