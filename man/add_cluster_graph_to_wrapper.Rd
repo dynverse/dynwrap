@@ -4,13 +4,10 @@
 \alias{add_cluster_graph_to_wrapper}
 \title{Add a cluster projection trajectory to a data wrapper}
 \usage{
-add_cluster_graph_to_wrapper(data_wrapper, milestone_ids, milestone_network,
-  ...)
+add_cluster_graph_to_wrapper(data_wrapper, milestone_network, ...)
 }
 \arguments{
 \item{data_wrapper}{A data wrapper to extend upon. Needs to have a cell grouping created by \code{\link{add_cell_group_to_wrapper}}.}
-
-\item{milestone_ids}{The names of the milestones.}
 
 \item{milestone_network}{A network of milestones.}
 

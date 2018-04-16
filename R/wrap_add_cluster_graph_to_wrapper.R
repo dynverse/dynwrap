@@ -3,7 +3,6 @@
 #' This function will generate the milestone_network and progressions.
 #'
 #' @param data_wrapper A data wrapper to extend upon. Needs to have a cell grouping created by \code{\link{add_cell_group_to_wrapper}}.
-#' @param milestone_ids The names of the milestones.
 #' @param milestone_network A network of milestones.
 #' @param ... extra information to be stored in the wrapper.
 #'
@@ -13,13 +12,15 @@
 #' @importFrom pdist pdist
 add_cluster_graph_to_wrapper <- function(
   data_wrapper,
-  milestone_ids,
   milestone_network,
   ...
 ) {
   # check data wrapper
   testthat::expect_true(is_data_wrapper(data_wrapper))
   testthat::expect_true(is_wrapper_with_cell_group(data_wrapper))
+
+  # get milestone_ids
+  milestone_ids <- data_wrapper$group_ids
 
   # check milestone network
   check_milestone_network(milestone_ids, milestone_network)
