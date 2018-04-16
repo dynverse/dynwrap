@@ -16,7 +16,7 @@
 #'
 #' @export
 #'
-#' @importFrom testthat expect_is expect_equal expect_true
+#' @importFrom testthat expect_is expect_equal expect_true expect_false
 add_trajectory_to_wrapper <- function(
   data_wrapper,
   milestone_ids,
