@@ -24,12 +24,17 @@ add_dimred_to_wrapper <- function(
   testthat::expect_equal(rownames(dimred), cell_ids)
 
   if (!is.null(dimred_milestones)) {
-    testthat::expect_true(is_wrapper_with_trajectory(data_wrapper))
-
-    milestone_ids <- data_wrapper$milestone_ids
     testthat::expect_is(dimred_milestones, "matrix")
-    testthat::expect_equal(rownames(dimred_milestones), milestone_ids)
     testthat::expect_equal(colnames(dimred_milestones), colnames(dimred))
+
+    if (is_wrapper_with_trajectory(data_wrapper)) {
+      milestone_ids <- data_wrapper$milestone_ids
+      testthat::expect_equal(rownames(dimred_milestones), milestone_ids)
+    }
+    if (is_wrapper_with_cell_group(data_wrapper)) {
+      group_ids <- data_wrapper$group_ids
+      testthat::expect_equal(rownames(dimred_milestones), group_ids)
+    }
   }
 
   if (!is.null(dimred_trajectory_segments)) {
