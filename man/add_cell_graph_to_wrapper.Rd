@@ -4,7 +4,8 @@
 \alias{add_cell_graph_to_wrapper}
 \title{Add a cell graph trajectory to a data wrapper}
 \usage{
-add_cell_graph_to_wrapper(data_wrapper, cell_graph, to_keep, ...)
+add_cell_graph_to_wrapper(data_wrapper, cell_graph, to_keep,
+  milestone_prefix = "milestone_", ...)
 }
 \arguments{
 \item{data_wrapper}{A data wrapper to extend upon.}
@@ -13,6 +14,8 @@ add_cell_graph_to_wrapper(data_wrapper, cell_graph, to_keep, ...)
 
 \item{to_keep}{A named vector containing booleans containing
 whether or not a sample is part of the trajectory that is to be kept.}
+
+\item{milestone_prefix}{A prefix to add to the id of the cell ids when they are used as milestones, in order to avoid any naming conflicts,}
 
 \item{...}{extra information to be stored in the wrapper.}
 }

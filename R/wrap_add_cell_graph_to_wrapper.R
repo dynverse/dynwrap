@@ -6,6 +6,7 @@
 #' @param cell_graph The edges between cells. Format: Data frame(from = character, to = character, length = numeric)
 #' @param to_keep A named vector containing booleans containing
 #'   whether or not a sample is part of the trajectory that is to be kept.
+#' @param milestone_prefix A prefix to add to the id of the cell ids when they are used as milestones, in order to avoid any naming conflicts,
 #' @param ... extra information to be stored in the wrapper.
 #'
 #' @export
@@ -15,6 +16,7 @@ add_cell_graph_to_wrapper <- function(
   data_wrapper,
   cell_graph,
   to_keep,
+  milestone_prefix = "milestone_",
   ...
 ) {
   requireNamespace("igraph")
@@ -93,7 +95,7 @@ add_cell_graph_to_wrapper <- function(
   # rename milestones so the milestones don't have the
   # same names as the nodes
   renamefun <- function(x) {
-    y <- paste0("milestone_", x)
+    y <- paste0(milestone_prefix, x)
     if (!is.null(names(x))) {
       names(y) <- names(x)
     }
