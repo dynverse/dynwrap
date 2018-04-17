@@ -95,11 +95,8 @@ add_cell_graph_to_wrapper <- function(
   # rename milestones so the milestones don't have the
   # same names as the nodes
   renamefun <- function(x) {
-    y <- paste0(milestone_prefix, x)
-    if (!is.null(names(x))) {
-      names(y) <- names(x)
-    }
-    y
+    paste0(milestone_prefix, x) %>%
+      set_names(names(x))
   }
 
   milestone_network <- milestone_network %>%
