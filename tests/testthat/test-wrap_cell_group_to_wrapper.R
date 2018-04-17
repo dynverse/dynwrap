@@ -1,4 +1,4 @@
-context("Check add_cell_group_to_wrapper")
+context("Testing add_cell_group_to_wrapper")
 
 # cell data
 id <- "a"

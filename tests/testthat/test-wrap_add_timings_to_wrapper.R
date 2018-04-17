@@ -1,4 +1,4 @@
-context("Check add_timings_to_wrapper")
+context("Testing add_timings_to_wrapper")
 
 test_that("Testing add_timings_to_wrapper", {
   id <- "a"

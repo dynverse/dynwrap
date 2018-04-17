@@ -1,4 +1,4 @@
-context("Test add_cyclic_trajectory_to_wrapper")
+context("Testing add_cyclic_trajectory_to_wrapper")
 
 id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")

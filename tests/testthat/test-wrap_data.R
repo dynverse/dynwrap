@@ -1,4 +1,4 @@
-context("Check data_wrapper")
+context("Testing wrap_data")
 
 test_that("Testing data_wrapper", {
   id <- "a"

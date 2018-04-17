@@ -1,4 +1,4 @@
-context("milestone network classification")
+context("Testing classify_milestone_network")
 
 
 all_networks <- list(

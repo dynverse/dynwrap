@@ -1,4 +1,4 @@
-context("Check add_cluster_graph_to_wrapper")
+context("Testing add_cluster_graph_to_wrapper")
 
 # cell data
 id <- "a"

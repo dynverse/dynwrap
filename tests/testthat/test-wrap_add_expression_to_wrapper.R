@@ -1,4 +1,4 @@
-context("Check add_expression_to_wrapper")
+context("Testing add_expression_to_wrapper")
 
 test_that("Testing add_expression_to_wrapper", {
   id <- "a"

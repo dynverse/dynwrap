@@ -1,4 +1,4 @@
-context("Check add_dimred_projection_to_wrapper")
+context("Testing add_dimred_projection_to_wrapper")
 
 # cell data
 id <- "a"
