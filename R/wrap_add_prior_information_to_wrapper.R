@@ -51,6 +51,8 @@ is_wrapper_with_prior_information <- function(object) {
 #' @inheritParams wrap_data
 #' @inheritParams add_trajectory_to_wrapper
 #' @inheritParams add_expression_to_wrapper
+#' @param marker_logfc Marker genes require at least a X-fold log difference between groups of cells.
+#' @param marker_minpct Only test genes that are detected in a minimum fraction of cells between groups of cells.
 #'
 #' @export
 generate_prior_information <- function(
@@ -62,7 +64,9 @@ generate_prior_information <- function(
   divergence_regions,
   counts,
   feature_info = NULL,
-  cell_info = NULL
+  cell_info = NULL,
+  marker_logfc = 1,
+  marker_minpct = 0.4
 ) {
   requireNamespace("Seurat")
 
@@ -153,10 +157,11 @@ generate_prior_information <- function(
 
     seurat@ident <- ident
 
-    old_warn <- getOption("warn")
-    options(warn = 2)
-    changing <- Seurat::FindAllMarkers(seurat, logfc.treshold = 1, min.pct = 0.4)
-    options(warn = old_warn)
+    changing <- Seurat::FindAllMarkers(
+      seurat,
+      logfc.treshold = marker_logfc,
+      min.pct = marker_minpct
+    )
 
     marker_feature_ids <- changing %>%
       filter(abs(avg_logFC) >= 1) %>%
