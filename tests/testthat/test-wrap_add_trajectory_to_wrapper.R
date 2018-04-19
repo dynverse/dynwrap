@@ -459,17 +459,17 @@ test_that("Testing filtered cells", {
 })
 
 
-test_that("Testing combination with add_cell_group_to_wrapper", {
-  cell_group <- sample(milestone_ids, length(cell_ids), replace = TRUE) %>% setNames(cell_ids)
+test_that("Testing combination with add_grouping_to_wrapper", {
+  grouping <- sample(milestone_ids, length(cell_ids), replace = TRUE) %>% setNames(cell_ids)
 
   wr <-
     wrap_data(
       id = id,
       cell_ids = cell_ids
     ) %>%
-    add_cell_group_to_wrapper(
+    add_grouping_to_wrapper(
       group_ids = milestone_ids,
-      cell_group = cell_group
+      grouping = grouping
     ) %>%
     add_trajectory_to_wrapper(
       milestone_ids = milestone_ids,
@@ -493,53 +493,11 @@ test_that("Testing combination with add_cell_group_to_wrapper", {
       divergence_regions = divergence_regions,
       extras2 = extras2
     ) %>%
-    add_cell_group_to_wrapper(
+    add_grouping_to_wrapper(
       group_ids = milestone_ids,
-      cell_group = cell_group
+      grouping = grouping
     )
 
   testthat::expect_equal(wr$group_ids, wr$milestone_ids)
 })
 
-
-test_that("Testing combination with add_cell_group_to_wrapper, fails when group_ids don't match", {
-  group_ids <- c("898", "666", "2323")
-  cell_group <- sample(group_ids, length(cell_ids), replace = TRUE) %>% setNames(cell_ids)
-
-  expect_error(
-    wrap_data(
-      id = id,
-      cell_ids = cell_ids
-    ) %>%
-    add_cell_group_to_wrapper(
-      group_ids = group_ids,
-      cell_group = cell_group
-    ) %>%
-    add_trajectory_to_wrapper(
-      milestone_ids = milestone_ids,
-      milestone_network = milestone_network,
-      progressions = progressions,
-      divergence_regions = divergence_regions,
-      extras2 = extras2
-    )
-  )
-
-
-  expect_error(
-    wrap_data(
-      id = id,
-      cell_ids = cell_ids
-    ) %>%
-    add_trajectory_to_wrapper(
-      milestone_ids = milestone_ids,
-      milestone_network = milestone_network,
-      progressions = progressions,
-      divergence_regions = divergence_regions,
-      extras2 = extras2
-    ) %>%
-    add_cell_group_to_wrapper(
-      group_ids = group_ids,
-      cell_group = cell_group
-    )
-  )
-})

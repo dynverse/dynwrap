@@ -1,4 +1,4 @@
-context("Testing wrap_add_cell_waypoints_to_wrapper")
+context("Testing add_cell_waypoints_to_wrapper")
 
 orig_cell_ids <- c("a", "b", "c", "d", "e", "f")
 cell_ids <- unlist(map(1:100, ~ paste0(orig_cell_ids, .)))

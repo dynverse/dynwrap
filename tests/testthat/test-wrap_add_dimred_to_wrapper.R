@@ -91,7 +91,7 @@ dimred_trajectory_segments <- cbind(
 )
 
 # clustering data
-cell_group <- sample(milestone_ids, length(cell_ids), replace = TRUE) %>% setNames(cell_ids)
+grouping <- sample(milestone_ids, length(cell_ids), replace = TRUE) %>% setNames(cell_ids)
 
 
 test_that("Testing add_dimred_to_wrapper", {
@@ -133,9 +133,9 @@ test_that("Testing add_dimred_to_wrapper with traj dimred", {
 
 test_that("Testing add_dimred_to_wrapper with cell group", {
   wr <- wr_orig %>%
-    add_cell_group_to_wrapper(
+    add_grouping_to_wrapper(
       group_ids = milestone_ids,
-      cell_group = cell_group
+      grouping = grouping
     ) %>%
     add_dimred_to_wrapper(
       dimred = dimred,
@@ -145,7 +145,7 @@ test_that("Testing add_dimred_to_wrapper with cell group", {
 
   # testing is_ti_data_wrapper
   expect_true(is_wrapper_with_dimred(wr))
-  expect_true(is_wrapper_with_cell_group(wr))
+  expect_true(is_wrapper_with_grouping(wr))
 
   expect_equivalent(wr$dimred_milestones, dimred_milestones)
 })
