@@ -33,7 +33,7 @@ milestone_network <- tribble(
 )
 
 # grouping info
-cell_group <- sample(milestone_ids, length(cell_ids), replace = T) %>% setNames(cell_ids)
+grouping <- sample(milestone_ids, length(cell_ids), replace = T) %>% setNames(cell_ids)
 
 # dimred data
 num_dims <- round(runif(1, 3, 10))
@@ -73,24 +73,24 @@ test_that("Testing add_dimred_projection_to_wrapper", {
 })
 
 
-test_that("Testing add_dimred_projection_to_wrapper with cell_group", {
+test_that("Testing add_dimred_projection_to_wrapper with grouping", {
   wr <- wr_orig %>%
     add_dimred_projection_to_wrapper(
       milestone_ids = milestone_ids,
       milestone_network = milestone_network,
       dimred = dimred,
       dimred_milestones = dimred_milestones,
-      cell_group = cell_group,
+      grouping = grouping,
       extras2 = extras2
     )
 
   # testing is_ti_data_wrapper
   expect_false(is_wrapper_with_dimred(wr_orig))
   expect_false(is_wrapper_with_trajectory(wr_orig))
-  expect_false(is_wrapper_with_cell_group(wr_orig))
+  expect_false(is_wrapper_with_grouping(wr_orig))
   expect_true(is_wrapper_with_dimred(wr))
   expect_true(is_wrapper_with_trajectory(wr))
-  expect_true(is_wrapper_with_cell_group(wr))
+  expect_true(is_wrapper_with_grouping(wr))
 
   expect_equivalent(wr$id, id)
   expect_equivalent(wr$cell_ids, cell_ids)
@@ -101,9 +101,9 @@ test_that("Testing add_dimred_projection_to_wrapper with cell_group", {
   expect_equivalent(wr$dimred_milestones, dimred_milestones)
   expect_equivalent(wr$milestone_ids, milestone_ids)
   expect_equivalent(wr$milestone_network, milestone_network)
-  expect_equivalent(wr$cell_group, cell_group)
+  expect_equivalent(wr$grouping, grouping)
 
-  expect_true(all(wr$progressions$from == cell_group | wr$progressions$to == cell_group))
+  expect_true(all(wr$progressions$from == grouping | wr$progressions$to == grouping))
 })
 
 

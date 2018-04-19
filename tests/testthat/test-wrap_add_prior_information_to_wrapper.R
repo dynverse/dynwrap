@@ -1,4 +1,4 @@
-context("Testing wrap_add_prior_information_to_wrapper")
+context("Testing add_prior_information_to_wrapper")
 
 orig_cell_ids <- c("a", "b", "c", "d", "e", "f")
 cell_ids <- unlist(map(1:100, ~ paste0(orig_cell_ids, .)))
@@ -43,7 +43,7 @@ progressions <- convert_milestone_percentages_to_progressions(
 
 num_genes <- 100
 gene_ids <- paste0("Gene", seq_len(num_genes))
-counts <- matrix(rbinom(num_genes * length(cell_ids), 1000, .01), ncol = num_genes, dimnames = list(cell_ids, gene_ids))
+counts <- matrix(rbinom(num_genes * length(cell_ids), 10000, .01), ncol = num_genes, dimnames = list(cell_ids, gene_ids))
 feature_info <- data_frame(
   feature_id = gene_ids,
   test = 1,
@@ -195,40 +195,53 @@ test_that("Testing add_prior_information_to_wrapper", {
 
 
 # with undirected cyclical dataset
-cell_ids <- c("a", "b", "c", "d", "e", "f")
-milestone_ids <- c("W", "X", "Y", "Z")
+orig_cell_ids <- c("a", "b", "c", "d", "e", "f")
+cell_ids <- orig_cell_ids %>% map(~paste0(., seq_len(20))) %>% unlist()
+orig_map <- setNames(gsub("[0-9]+", "", cell_ids), cell_ids)
+milestone_ids <- c("X", "Y", "Z")
 
 milestone_network <- tribble(
   ~from, ~to, ~length, ~directed,
-  "W", "X", 2, FALSE,
   "X", "Y", 3, FALSE,
   "Y", "Z", 4, FALSE,
-  "Z", "W", 5, FALSE
+  "Z", "X", 5, FALSE
 )
 
 divergence_regions <- NULL
 
-milestone_percentages <- tribble(
-  ~cell_id, ~milestone_id, ~percentage,
-  "a", "W", 1,
-  "b", "W", .2,
-  "b", "X", .8,
-  "c", "X", .8,
-  "c", "Y", .2,
-  "d", "Y", 1,
-  "e", "Y", .3,
-  "e", "Z", .7,
-  "f", "Z", .8,
-  "f", "W", .2
+orig_progressions <- tribble(
+  ~orig_cell_id, ~from, ~to, ~percentage,
+  "a", "Z", "X", 1,
+  "b", "X", "Y", 0.8,
+  "c", "X", "Y", 1,
+  "d", "Y", "Z", 0.75,
+  "e", "Y", "Z", 1,
+  "f", "Z", "X", .6
 )
+progressions <-
+  tibble(cell_id = cell_ids, orig_cell_id = orig_map) %>%
+  left_join(orig_progressions, by = "orig_cell_id") %>%
+  mutate(
+    percentage = percentage + runif(n(), -.3, .3),
+    percentage = ifelse(percentage > 1, 1, ifelse(percentage < 0, 0, percentage))
+  ) %>%
+  select(-orig_cell_id)
 
-progressions <- convert_milestone_percentages_to_progressions(
-  cell_ids, milestone_ids, milestone_network, milestone_percentages
-)
+milestone_percentages <-
+  convert_progressions_to_milestone_percentages(
+    cell_ids,
+    milestone_ids,
+    milestone_network,
+    progressions
+  )
 
-num_genes <- 100
-gene_ids <- paste0("Gene", seq_len(num_genes))
-counts <- matrix(rbinom(num_genes * length(cell_ids), 1000, .01), ncol = num_genes, dimnames = list(cell_ids, gene_ids))
+num_genes <- 20
+orig_gene_ids <- paste0("Gene", seq_len(num_genes))
+orig_counts <- matrix(rbinom(num_genes * length(cell_ids), 10000, .01), ncol = num_genes, dimnames = list(cell_ids, orig_gene_ids))
+
+milpct <- milestone_percentages %>% reshape2::acast(cell_id ~ milestone_id, value.var = "percentage", fill = 0)
+counts <- cbind(orig_counts, milpct) * 100 + 2
+gene_ids <- colnames(counts)
 
 test_that("Testing generate_prior_information", {
   prior_info <-
@@ -280,7 +293,7 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
 
-  testthat::expect_equal(prior_info$n_branches, 4)
+  testthat::expect_equal(prior_info$n_branches, 3)
 
   testthat::expect_equal(prior_info$time, NULL)
 
@@ -351,7 +364,7 @@ test_that("Testing add_prior_information_to_wrapper", {
 
   testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
 
-  testthat::expect_equal(prior_info$n_branches, 4)
+  testthat::expect_equal(prior_info$n_branches, 3)
 
   testthat::expect_equal(prior_info$time, NULL)
 
