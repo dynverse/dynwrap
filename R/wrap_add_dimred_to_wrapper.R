@@ -31,10 +31,6 @@ add_dimred_to_wrapper <- function(
       milestone_ids <- data_wrapper$milestone_ids
       testthat::expect_equal(rownames(dimred_milestones), milestone_ids)
     }
-    if (is_wrapper_with_cell_group(data_wrapper)) {
-      group_ids <- data_wrapper$group_ids
-      testthat::expect_equal(rownames(dimred_milestones), group_ids)
-    }
   }
 
   if (!is.null(dimred_trajectory_segments)) {

@@ -2,7 +2,7 @@
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @param data_wrapper A data wrapper to extend upon. Needs to have a cell grouping created by \code{\link{add_cell_group_to_wrapper}}.
+#' @param data_wrapper A data wrapper to extend upon. Needs to have a cell grouping created by \code{\link{add_grouping_to_wrapper}}.
 #' @param milestone_network A network of milestones.
 #' @param ... extra information to be stored in the wrapper.
 #'
@@ -17,7 +17,7 @@ add_cluster_graph_to_wrapper <- function(
 ) {
   # check data wrapper
   testthat::expect_true(is_data_wrapper(data_wrapper))
-  testthat::expect_true(is_wrapper_with_cell_group(data_wrapper))
+  testthat::expect_true(is_wrapper_with_grouping(data_wrapper))
 
   # get milestone_ids
   milestone_ids <- data_wrapper$group_ids
@@ -33,8 +33,8 @@ add_cluster_graph_to_wrapper <- function(
     milestone_network %>% select(from, to) %>% mutate(label = to, percentage = 1)
   )
   progressions <- data_frame(
-    cell_id = names(data_wrapper$cell_group),
-    label = data_wrapper$cell_group
+    cell_id = names(data_wrapper$grouping),
+    label = data_wrapper$grouping
   ) %>%
     left_join(both_directions, by = "label") %>%
     group_by(cell_id) %>%
