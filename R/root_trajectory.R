@@ -3,7 +3,8 @@
 #' Roots the trajectory by changing the directionality of all edges given a start cell
 #'
 #' @param trajectory the trajectory object
-#' @param start_cell_id The start cell id
+#' @param start_cell_id The start cell id, not required if start_milestone_id is given
+#' @param start_milestone_id The start milestone id, not required if start_cell_id is given
 #' @export
 root_trajectory <- function(trajectory, start_cell_id = NULL, start_milestone_id = trajectory$milestone_percentages %>% filter(cell_id == start_cell_id) %>% filter(percentage == max(percentage)) %>% pull(milestone_id)) {
 

@@ -12,7 +12,9 @@ root_trajectory(trajectory, start_cell_id = NULL,
 \arguments{
 \item{trajectory}{the trajectory object}
 
-\item{start_cell_id}{The start cell id}
+\item{start_cell_id}{The start cell id, not required if start_milestone_id is given}
+
+\item{start_milestone_id}{The start milestone id, not required if start_cell_id is given}
 }
 \description{
 Roots the trajectory by changing the directionality of all edges given a start cell
