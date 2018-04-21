@@ -4,15 +4,15 @@ context("Testing add_cluster_graph_to_wrapper")
 id <- "a"
 cell_ids <- letters
 group_ids <- LETTERS[1:5]
-cell_group <- sample(group_ids, length(cell_ids), replace = T) %>% setNames(cell_ids)
+grouping <- sample(group_ids, length(cell_ids), replace = T) %>% setNames(cell_ids)
 extras <- "banana"
 
 wr_orig <- wrap_data(
   id = id,
   cell_ids = cell_ids
-) %>% add_cell_group_to_wrapper(
+) %>% add_grouping_to_wrapper(
   group_ids = group_ids,
-  cell_group = cell_group,
+  grouping = grouping,
   extras = extras
 )
 
@@ -38,7 +38,7 @@ test_that("Testing add_cluster_graph_to_wrapper", {
   expect_equivalent(wr$milestone_ids, group_ids)
   expect_equivalent(wr$cell_ids, cell_ids)
   expect_equivalent(wr$extras, extras)
-  expect_equivalent(wr$cell_group, cell_group)
+  expect_equivalent(wr$grouping, grouping)
   expect_equivalent(wr$milestone_network, milestone_network)
 
   # percentages are either 0 or 1

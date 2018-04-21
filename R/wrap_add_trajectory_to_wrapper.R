@@ -35,11 +35,6 @@ add_trajectory_to_wrapper <- function(
   testthat::expect_false(any(duplicated(c(milestone_ids, cell_ids))))
   check_milestone_network(milestone_ids, milestone_network)
 
-  # check group ids, if data contains cell grouping
-  if (is_wrapper_with_cell_group(data_wrapper)) {
-    testthat::expect_equal(data_wrapper$group_ids, milestone_ids)
-  }
-
   # check divergence regions
   if (is.null(divergence_regions) || (is.data.frame(divergence_regions) && nrow(divergence_regions) == 0)) {
     divergence_regions <- data_frame(divergence_id = character(0), milestone_id = character(0), is_start = logical(0))

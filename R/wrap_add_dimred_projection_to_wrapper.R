@@ -4,7 +4,7 @@
 #'
 #' @inheritParams add_trajectory_to_wrapper
 #' @inheritParams add_dimred_to_wrapper
-#' @inheritParams add_cell_group_to_wrapper
+#' @inheritParams add_grouping_to_wrapper
 #'
 #' @param num_segments_per_edge The number of pieces each milestone transition will be split info for the calculation of the percentages.
 #' @param ... extra information to be stored in the wrapper.
@@ -19,7 +19,7 @@ add_dimred_projection_to_wrapper <- function(
   milestone_network,
   dimred,
   dimred_milestones,
-  cell_group = NULL,
+  grouping = NULL,
   num_segments_per_edge = 100,
   ...
 ) {
@@ -67,8 +67,8 @@ add_dimred_projection_to_wrapper <- function(
     x <- dimred[i,]
 
     # limit possible edges based on sample cluster
-    if (!is.null(cell_group)) {
-      la <- cell_group[[i]]
+    if (!is.null(grouping)) {
+      la <- grouping[[i]]
       ix <- which(piecewise_df$from == la | piecewise_df$to == la)
     } else {
       ix <- seq_len(nrow(piecewise_df))
@@ -106,10 +106,10 @@ add_dimred_projection_to_wrapper <- function(
   )
 
   # add cell grouping of a milestone_assignment was given
-  if (!is.null(cell_group)) {
-    out <- out %>% add_cell_group_to_wrapper(
+  if (!is.null(grouping)) {
+    out <- out %>% add_grouping_to_wrapper(
       group_ids = milestone_ids,
-      cell_group = cell_group
+      grouping = grouping
     )
   }
 

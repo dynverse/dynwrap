@@ -5,7 +5,7 @@
 \title{Add a dimred projection trajectory to a data wrapper}
 \usage{
 add_dimred_projection_to_wrapper(data_wrapper, milestone_ids, milestone_network,
-  dimred, dimred_milestones, cell_group = NULL, num_segments_per_edge = 100,
+  dimred, dimred_milestones, grouping = NULL, num_segments_per_edge = 100,
   ...)
 }
 \arguments{
@@ -20,7 +20,7 @@ Type: Data frame(from = character, to = character, length = numeric, directed = 
 
 \item{dimred_milestones}{An optional dimensionality reduction of the milestones.}
 
-\item{cell_group}{A grouping of the cells.}
+\item{grouping}{A grouping of the cells.}
 
 \item{num_segments_per_edge}{The number of pieces each milestone transition will be split info for the calculation of the percentages.}
 
