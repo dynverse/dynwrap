@@ -4,10 +4,7 @@
 \alias{root_trajectory}
 \title{Root trajectory}
 \usage{
-root_trajectory(trajectory, start_cell_id = NULL,
-  start_milestone_id = trajectory$milestone_percentages \%>\% filter(cell_id
-  == start_cell_id) \%>\% filter(percentage == max(percentage)) \%>\%
-  pull(milestone_id))
+root_trajectory(trajectory, start_cell_id = NULL, start_milestone_id = NULL)
 }
 \arguments{
 \item{trajectory}{the trajectory object}

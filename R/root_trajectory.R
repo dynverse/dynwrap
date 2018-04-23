@@ -6,10 +6,13 @@
 #' @param start_cell_id The start cell id, not required if start_milestone_id is given
 #' @param start_milestone_id The start milestone id, not required if start_cell_id is given
 #' @export
-root_trajectory <- function(trajectory, start_cell_id = NULL, start_milestone_id = trajectory$milestone_percentages %>% filter(cell_id == start_cell_id) %>% filter(percentage == max(percentage)) %>% pull(milestone_id)) {
+root_trajectory <- function(trajectory, start_cell_id = NULL, start_milestone_id = NULL) {
 
-  if (is.null(start_cell_id) & is.null(start_milestone_id)) {
-    stop("Provide start_cell_id or start_milestone_id")
+  if (!is.null(start_cell_id)) {
+    start_milestone_id <- trajectory$milestone_percentages %>% filter(cell_id == start_cell_id) %>% filter(percentage == max(percentage)) %>% pull(milestone_id)
+  } else if (is.null(start_milestone_id)) {
+    message("Start cell or milestone not provided, using first milestone_id")
+    start_milestone_id <- trajectory$milestone_ids[[1]]
   }
 
   milestone_order <- igraph::graph_from_data_frame(trajectory$milestone_network) %>% igraph::ego(nodes=start_milestone_id, 999) %>% first() %>% names()
@@ -41,4 +44,25 @@ root_trajectory <- function(trajectory, start_cell_id = NULL, start_milestone_id
   trajectory$root_milestone_id <- start_milestone_id
 
   trajectory
+}
+
+
+
+#' Calculate global pseudotime as distance from root
+#'
+#' @param trajectory The trajectory
+calculate_pseudotime <- function(trajectory) {
+  if(!"root_milestone_id" %in% trajectory) {
+    trajectory <- root_trajectory(trajectory)
+  }
+
+  start_cell_id <- task$milestone_percentages %>%
+    filter(milestone_id == trajectory$root_milestone_id) %>%
+    arrange(desc(percentage)) %>%
+    pull(cell_id) %>%
+    first()
+
+  pseudotime <- compute_tented_geodesic_distances(trajectory, start_cell_id)[1, ]
+
+  pseudotime
 }
