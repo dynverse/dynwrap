@@ -12,12 +12,13 @@ root_trajectory <- function(trajectory, start_cell_id = NULL, start_milestone_id
   } else if (is.null(start_milestone_id)) {
     message("Start cell or milestone not provided, trying first outgoing milestone_id")
     start_milestone_id <- setdiff(trajectory$milestone_ids, trajectory$milestone_network$to) %>% first()
-    message(paste0("Using '", start_milestone_id, "' as root"))
 
     if(is.na(start_milestone_id)) {
       message("Could not find outgoing milestone_id, using first milestone_id as root")
       start_milestone_id <- trajectory$milestone_ids[[1]]
     }
+
+    message(paste0("Using '", start_milestone_id, "' as root"))
   }
 
   milestone_order <- igraph::graph_from_data_frame(trajectory$milestone_network) %>% igraph::ego(nodes=start_milestone_id, 999) %>% first() %>% names()
