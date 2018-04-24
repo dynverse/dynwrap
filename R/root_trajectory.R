@@ -7,7 +7,6 @@
 #' @param start_milestone_id The start milestone id, not required if start_cell_id is given
 #' @export
 root_trajectory <- function(trajectory, start_cell_id = NULL, start_milestone_id = NULL) {
-
   if (!is.null(start_cell_id)) {
     start_milestone_id <- trajectory$milestone_percentages %>% filter(cell_id == start_cell_id) %>% filter(percentage == max(percentage)) %>% pull(milestone_id)
   } else if (is.null(start_milestone_id)) {
@@ -57,7 +56,7 @@ calculate_pseudotime <- function(trajectory) {
     trajectory <- root_trajectory(trajectory)
   }
 
-  start_cell_id <- task$milestone_percentages %>%
+  start_cell_id <- trajectory$milestone_percentages %>%
     filter(milestone_id == trajectory$root_milestone_id) %>%
     arrange(desc(percentage)) %>%
     pull(cell_id) %>%
