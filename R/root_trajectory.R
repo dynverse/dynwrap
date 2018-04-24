@@ -22,12 +22,13 @@ root_trajectory <- function(trajectory, start_cell_id = NULL, start_milestone_id
 
   milestone_order <- igraph::graph_from_data_frame(trajectory$milestone_network) %>% igraph::ego(nodes=start_milestone_id, 999) %>% first() %>% names()
 
-  # first flip edge if from is later than to
+  # flip edge if from is later than to
   trajectory$milestone_network <- trajectory$milestone_network %>%
     mutate(
       flip = match(from, milestone_order) > match(to, milestone_order)
     )
 
+  # flip milestone network & progressions
   trajectory$progressions <- trajectory$progressions %>%
     left_join(trajectory$milestone_network %>% select(from, to, flip), c("from", "to")) %>%
     mutate(
@@ -42,9 +43,20 @@ root_trajectory <- function(trajectory, start_cell_id = NULL, start_milestone_id
     mutate(
       from2 = from,
       from = ifelse(flip, to, from),
-      to = ifelse(flip, from2, to)
+      to = ifelse(flip, from2, to),
+      directed = TRUE
     ) %>%
     select(-flip, from2)
+
+  # order milestone network
+  milestone_order <- trajectory$milestone_network %>%
+    igraph::graph_from_data_frame() %>%
+    igraph::dfs(start_milestone_id) %>%
+    .$order %>%
+    names()
+
+  trajectory$milestone_network <- trajectory$milestone_network %>%
+    arrange(factor(from, milestone_order))
 
   trajectory$root_milestone_id <- start_milestone_id
 
