@@ -62,6 +62,8 @@ calculate_pseudotime <- function(trajectory) {
     pull(cell_id) %>%
     first()
 
+  if(is.na(start_cell_id)) {stop("Could not find starting cell for pseudotime calculation")}
+
   pseudotime <- compute_tented_geodesic_distances(trajectory, start_cell_id)[1, ]
 
   pseudotime
