@@ -10,8 +10,13 @@ root_trajectory <- function(trajectory, start_cell_id = NULL, start_milestone_id
   if (!is.null(start_cell_id)) {
     start_milestone_id <- trajectory$milestone_percentages %>% filter(cell_id == start_cell_id) %>% filter(percentage == max(percentage)) %>% pull(milestone_id)
   } else if (is.null(start_milestone_id)) {
-    message("Start cell or milestone not provided, using first milestone_id")
-    start_milestone_id <- trajectory$milestone_ids[[1]]
+    message("Start cell or milestone not provided, trying first outgoing milestone_id")
+    start_milestone_id <- setdiff(trajectory$milestone_ids, trajectory$to) %>% first()
+
+    if(is.na(start_milestone_id)) {
+      message("Could not find outgoing milestone_id, using first milestone_id as root")
+      start_milestone_id <- trajectory$milestone_ids[[1]]
+    }
   }
 
   milestone_order <- igraph::graph_from_data_frame(trajectory$milestone_network) %>% igraph::ego(nodes=start_milestone_id, 999) %>% first() %>% names()
