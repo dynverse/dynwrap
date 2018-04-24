@@ -51,6 +51,7 @@ root_trajectory <- function(trajectory, start_cell_id = NULL, start_milestone_id
 #' Calculate global pseudotime as distance from root
 #'
 #' @param trajectory The trajectory
+#' @export
 calculate_pseudotime <- function(trajectory) {
   if(!"root_milestone_id" %in% trajectory) {
     trajectory <- root_trajectory(trajectory)
