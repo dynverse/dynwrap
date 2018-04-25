@@ -19,6 +19,7 @@ Imports:
   methods,
   pdist,
   purrr,
+  ranger,
   reshape2,
   testthat,
   tibble,
