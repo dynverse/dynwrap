@@ -4,7 +4,8 @@
 \alias{root_trajectory}
 \title{Root trajectory}
 \usage{
-root_trajectory(trajectory, start_cell_id = NULL, start_milestone_id = NULL)
+root_trajectory(trajectory, start_cell_id = NULL,
+  start_milestone_id = trajectory$root_milestone_id)
 }
 \arguments{
 \item{trajectory}{the trajectory object}
