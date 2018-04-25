@@ -8,6 +8,8 @@
 #' @export
 root_trajectory <- function(trajectory, start_cell_id = NULL, start_milestone_id = trajectory$root_milestone_id) {
   if (!is.null(start_cell_id)) {
+    if(!start_cell_id %in% trajectory$cell_ids) {stop("Invalid start_cell_id")}
+
     start_milestone_id <- trajectory$milestone_percentages %>% filter(cell_id == start_cell_id) %>% filter(percentage == max(percentage)) %>% pull(milestone_id)
   } else if (is.null(start_milestone_id)) {
     message("Start cell or milestone not provided, trying first outgoing milestone_id")
@@ -38,7 +40,7 @@ root_trajectory <- function(trajectory, start_cell_id = NULL, start_milestone_id
       to = ifelse(flip, from2, to),
       percentage = ifelse(flip, 1-percentage, percentage)
     ) %>%
-    select(-flip, from2)
+    select(-flip, -from2)
 
   trajectory$milestone_network <- trajectory$milestone_network %>%
     mutate(
@@ -47,7 +49,7 @@ root_trajectory <- function(trajectory, start_cell_id = NULL, start_milestone_id
       to = ifelse(flip, from2, to),
       directed = TRUE
     ) %>%
-    select(-flip, from2)
+    select(-flip, -from2)
 
   # order milestone network
   milestone_order <- trajectory$milestone_network %>%
@@ -57,7 +59,7 @@ root_trajectory <- function(trajectory, start_cell_id = NULL, start_milestone_id
     names()
 
   trajectory$milestone_network <- trajectory$milestone_network %>%
-    arrange(factor(from, milestone_order))
+    arrange(map2_int(from, to, ~max(which(milestone_order %in% c(.x, .y)))))
 
   trajectory$root_milestone_id <- start_milestone_id
 
