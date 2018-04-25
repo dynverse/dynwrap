@@ -5,6 +5,9 @@
 #' @param trajectory the trajectory object
 #' @param start_cell_id The start cell id, not required if start_milestone_id is given
 #' @param start_milestone_id The start milestone id, not required if start_cell_id is given
+#'
+#' @importFrom purrr map2_int
+#'
 #' @export
 root_trajectory <- function(trajectory, start_cell_id = NULL, start_milestone_id = trajectory$root_milestone_id) {
   if (!is.null(start_cell_id)) {
