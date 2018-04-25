@@ -51,4 +51,6 @@ trajectory_gene_importances <- function(
 
     data_frame(milestone_id = colnames(milenet_m)[[i]], feature_id = names(importance), importance)
   })
+
+  importances %>% arrange(desc(importance))
 }
