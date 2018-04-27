@@ -1,0 +1,56 @@
+context("Testing root_trajectory")
+
+test_that("Testing root_trajectory", {
+  cell_ids <- c("a", "b", "c", "d", "e", "f")
+  milestone_ids <- c("W", "X", "Y", "Z", "A")
+
+  milestone_network <- tribble(
+    ~from, ~to, ~length, ~directed,
+    "W", "X", 2, TRUE,
+    "X", "Z", 4, TRUE,
+    "X", "Y", 3, TRUE,
+    "Z", "A", 5, TRUE
+  )
+
+  divergence_regions <- tribble(
+    ~divergence_id, ~milestone_id, ~is_start,
+    "XYZ", "X", TRUE,
+    "XYZ", "Y", FALSE,
+    "XYZ", "Z", FALSE
+  )
+
+  milestone_percentages <- tribble(
+    ~cell_id, ~milestone_id, ~percentage,
+    "a", "W", .9,
+    "a", "X", .1,
+    "b", "W", .2,
+    "b", "X", .8,
+    "c", "X", .8,
+    "c", "Z", .2,
+    "d", "X", .2,
+    "d", "Y", .7,
+    "d", "Z", .1,
+    "e", "X", .3,
+    "e", "Y", .2,
+    "e", "Z", .5,
+    "f", "Z", .8,
+    "f", "A", .2
+  )
+
+  traj <- wrap_data(
+    id = "test",
+    cell_ids = cell_ids
+  ) %>% add_trajectory_to_wrapper(
+    milestone_ids = milestone_ids,
+    milestone_network = milestone_network,
+    milestone_percentages = milestone_percentages,
+    divergence_regions = divergence_regions
+  )
+
+  rooted <- root_trajectory(traj, start_cell_id = "a")
+
+  expect_true(rooted$root_milestone_id == "W")
+  expect_true(rooted$milestone_network$from[[1]] == "W")
+  expect_true(all(rooted$milestone_network$from == c("W", "X", "Z", "X")))
+  expect_true(all(rooted$milestone_network$to == c("X", "Z", "A", "Y")))
+})
