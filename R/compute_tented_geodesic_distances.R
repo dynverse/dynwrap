@@ -2,25 +2,43 @@
 #'
 #' @param trajectory The trajectory
 #' @param waypoint_cells A vector of waypoint cells. Only the geodesic distances between waypoint cells and all other cells will be calculated.
+#' @param waypoint_milestone_percentages The milestone percentages of non-cell waypoints, containing waypoint_id, milestone_id and percentage columns
 #'
 #' @importFrom igraph graph_from_data_frame neighborhood E distances
 #' @importFrom reshape2 acast melt
 #' @export
-compute_tented_geodesic_distances <- function(trajectory, waypoint_cells = NULL) {
+compute_tented_geodesic_distances <- function(
+  trajectory,
+  waypoint_cells = NULL,
+  waypoint_milestone_percentages = NULL
+) {
   testthat::expect_true(is_wrapper_with_trajectory(trajectory))
 
   # gather data from trajectory
   cell_ids <- trajectory$cell_ids
 
-  if (is.null(waypoint_cells)) {
-    waypoint_cells <- cell_ids
+  # get waypoints and milestone percentages
+  waypoint_ids <- c()
+  milestone_percentages <- trajectory$milestone_percentages
+  if (!is.null(waypoint_cells)) {
+    waypoint_ids <- c(waypoint_ids, waypoint_cells)
+  } else if (is.null(waypoint_milestone_percentages)){
+    waypoint_ids <- cell_ids
+  }
+
+  if (!is.null(waypoint_milestone_percentages)) {
+    waypoint_ids <- c(waypoint_ids, unique(waypoint_milestone_percentages$waypoint_id))
+    milestone_percentages <- bind_rows(
+      milestone_percentages,
+      waypoint_milestone_percentages %>% rename(cell_id = waypoint_id)
+    )
   }
 
   # rename milestones to avoid name conflicts between cells and milestones
   milestone_trafo_fun <- function(x) paste0("MILESTONE_", x)
   milestone_network <- trajectory$milestone_network %>% mutate(from = milestone_trafo_fun(from), to = milestone_trafo_fun(to))
-  milestone_ids <- trajectory$milestone_ids %>% milestone_trafo_fun(.)
-  milestone_percentages <- trajectory$milestone_percentages %>% mutate(milestone_id = milestone_trafo_fun(milestone_id))
+  milestone_ids <- trajectory$milestone_ids %>% milestone_trafo_fun()
+  milestone_percentages <- milestone_percentages %>% mutate(milestone_id = milestone_trafo_fun(milestone_id))
   divergence_regions <- trajectory$divergence_regions %>% mutate(milestone_id = milestone_trafo_fun(milestone_id))
 
   # add 'extra' divergences for transitions not in a divergence
@@ -74,7 +92,7 @@ compute_tented_geodesic_distances <- function(trajectory, waypoint_cells = NULL)
         ) %>%
         reshape2::acast(from ~ to, value.var = "length", fill = 0)
 
-      wp_cells <- rownames(pct_mat)[rownames(pct_mat) %in% waypoint_cells]
+      wp_cells <- rownames(pct_mat)[rownames(pct_mat) %in% waypoint_ids]
 
       dynutils::manhattan_distance(pct_mat, pct_mat[c(tent, wp_cells), , drop=FALSE]) %>%
         reshape2::melt(varnames = c("from", "to"), value.name = "length") %>%
@@ -88,19 +106,19 @@ compute_tented_geodesic_distances <- function(trajectory, waypoint_cells = NULL)
     group_by(from, to) %>%
     summarise(length = min(length)) %>%
     ungroup() %>%
-    igraph::graph_from_data_frame(directed = FALSE, vertices = c(milestone_ids, cell_ids))
+    igraph::graph_from_data_frame(directed = FALSE, vertices = unique(c(milestone_ids, cell_ids, waypoint_ids)))
 
   # compute cell-to-cell distances across entire graph
   out <- gr %>%
     igraph::distances(
-      v = waypoint_cells,
+      v = waypoint_ids,
       to = cell_ids,
       weights = igraph::E(gr)$length
     )
 
   # return distance matrix
-  if (length(waypoint_cells) == 1) {
-    matrix(out, nrow = 1, dimnames = list(waypoint_cells, cell_ids))
+  if (length(waypoint_ids) == 1) {
+    matrix(out, nrow = 1, dimnames = list(waypoint_ids, cell_ids))
   } else {
     out
   }

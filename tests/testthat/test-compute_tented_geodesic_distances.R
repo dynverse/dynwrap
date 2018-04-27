@@ -37,7 +37,7 @@ test_that("Testing compute_tented_geodesic_distances", {
     "f", "A", .2
   )
 
-  traj <- wrap_data(
+  trajectory <- wrap_data(
     id = "test",
     cell_ids = cell_ids
   ) %>% add_trajectory_to_wrapper(
@@ -47,7 +47,7 @@ test_that("Testing compute_tented_geodesic_distances", {
     divergence_regions = divergence_regions
   )
 
-  geodist <- compute_tented_geodesic_distances(traj)
+  geodist <- compute_tented_geodesic_distances(trajectory)
 
   # a,b = 2 * (0.9 - 0.2) = 1.4
   # a,c = 2 * 0.9 + 4 * 0.2 = 2.6
@@ -65,15 +65,33 @@ test_that("Testing compute_tented_geodesic_distances", {
   # d,f = .7 * 3 + .9 * 4 + .2 * 5 = 6.7
   # e,f = .2 * 3 + .5 * 4 + .2 * 5 = 3.6
   expected_dists <- c(1.4, 2.6, 1.2, 4.3, 2.9, 2.5, 4.4, 3.0, 1.8, 3.1, 6.8, 5.4, 4.2, 6.7, 3.6)
-  expect_true(all(abs(geodist[upper.tri(geodist)] - expected_dists) < 1e-10))
+  expect_equivalent(geodist[upper.tri(geodist)], expected_dists)
+  expect_equivalent(geodist, t(geodist))
 
-  expect_true(all(abs(geodist - t(geodist)) < 1e-10))
-
-  # dynplot::plot_default(traj)
+  # dynplot::plot_default(trajectory)
   # pheatmap::pheatmap(
   #   geodist,
   #   color = colorRampPalette(c("white", "#333333"))(100),
   #   cluster_cols = F, cluster_rows = F)
+
+  # testing for waypoints
+  waypoint_milestone_percentages <- tribble(
+    ~milestone_id, ~waypoint_id, ~percentage,
+    "W", "test1", 0.5,
+    "X", "test1", 0.5,
+    "X", "test2", 0.5,
+    "Y", "test2", 0.1,
+    "Z", "test2", 0.4
+  )
+
+  geodist <- compute_tented_geodesic_distances(
+    trajectory,
+    waypoint_milestone_percentages = waypoint_milestone_percentages
+  )
+
+  expect_true(all(c("test1", "test2") == rownames(geodist)))
+  expected_dists <- c(0.8, 3.7, 0.6, 2.3, 1.8, 1.1, 3.5, 3.0, 3.6, 0.7, 6.0, 3.7)
+  expect_equivalent(geodist, expected_dists)
 })
 
 
@@ -106,7 +124,7 @@ test_that("Testing compute_tented_geodesic_distances with a gap in the middle", 
     "f", "A", .2
   )
 
-  traj <- wrap_data(
+  trajectory <- wrap_data(
     id = "test",
     cell_ids = cell_ids
   ) %>% add_trajectory_to_wrapper(
@@ -116,7 +134,7 @@ test_that("Testing compute_tented_geodesic_distances with a gap in the middle", 
     divergence_regions = divergence_regions
   )
 
-  geodist <- compute_tented_geodesic_distances(traj)
+  geodist <- compute_tented_geodesic_distances(trajectory)
 
   expected_dists <- c(1.4, 6.8, 5.4)
   expect_true(all(abs(geodist[upper.tri(geodist)] - expected_dists) < 1e-10))
