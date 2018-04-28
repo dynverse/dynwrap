@@ -4,10 +4,12 @@
 \alias{select_waypoints}
 \title{Select the waypoints}
 \usage{
-select_waypoints(traj, num_cells_selected = 100)
+select_waypoints(traj, resolution = 0.1)
 }
 \arguments{
-\item{resoltion}{The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges}
+\item{traj}{The trajectory object}
+
+\item{resolution}{The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges}
 }
 \description{
 Waypoints are spread equally over the whole trajectory

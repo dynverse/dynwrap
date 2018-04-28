@@ -8,6 +8,8 @@ add_waypoints_to_wrapper(object, resolution = 0.1)
 }
 \arguments{
 \item{object}{Wrapper with trajectory}
+
+\item{resolution}{The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges}
 }
 \description{
 Add waypoints to a wrapped object with trajectory

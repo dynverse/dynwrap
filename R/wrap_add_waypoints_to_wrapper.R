@@ -34,16 +34,15 @@ is_wrapper_with_waypoints <- function(object) {
 #'
 #' Waypoints are spread equally over the whole trajectory
 #'
-#' @inheritParams add_trajectory_to_wrapper
-#' @param resoltion The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges
+#' @param traj The trajectory object
+#' @param resolution The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges
 #'
 #' @export
 select_waypoints <- function(
   traj,
-  num_cells_selected = 100
+  resolution = 0.1
 ) {
   generate_uniform_waypoint_progressions <- function(milestone_network) {
-    resolution <- 0.1
     milestone_network %>%
       mutate(percentage = map(length, ~seq(0, ., min(resolution, .))/.)) %>%
       select(-length, -directed) %>%
