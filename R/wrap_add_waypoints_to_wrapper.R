@@ -1,46 +1,50 @@
-#' Add waypoints to a wrapped object with trajectory
+#' Add waypoints to a wrapped traj with trajectory
 #'
-#' @param object Wrapper with trajectory
 #' @inheritParams select_waypoints
-#'
 #' @importFrom testthat expect_true
 #'
 #' @export
-add_waypoints_to_wrapper <- function(object, resolution = 0.1) {
-  testthat::expect_true(is_wrapper_with_trajectory(object))
+add_waypoints_to_wrapper <- function(
+  traj,
+  n_waypoints = 100,
+  resolution = sum(traj$milestone_network$length)/n_waypoints
+) {
+  testthat::expect_true(is_wrapper_with_trajectory(traj))
 
-  waypoints <- with(object, select_waypoints(
-    object,
+  waypoints <- with(traj, select_waypoints(
+    traj,
     resolution
   ))
 
   # create output structure
-  object %>% extend_with(
+  traj %>% extend_with(
     "dynwrap::with_waypoints",
     waypoints = waypoints
   )
 }
 
-#' Test whether an object is a data_wrapper and waypoints
+#' Test whether an traj is a data_wrapper and waypoints
 #'
-#' @param object The object to be tested.
+#' @param traj The traj to be tested.
 #'
 #' @export
-is_wrapper_with_waypoints <- function(object) {
-  is_wrapper_with_trajectory(object) && "dynwrap::with_waypoints" %in% class(object)
+is_wrapper_with_waypoints <- function(traj) {
+  is_wrapper_with_trajectory(traj) && "dynwrap::with_waypoints" %in% class(traj)
 }
 
 #' Select the waypoints
 #'
 #' Waypoints are spread equally over the whole trajectory
 #'
-#' @param traj The trajectory object
-#' @param resolution The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges
+#' @param traj Wrapper with trajectory
+#' @param n_waypoints The number of waypoints
+#' @param resolution The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges, will be automatically computed using n_waypoints
 #'
 #' @export
 select_waypoints <- function(
   traj,
-  resolution = 0.1
+  n_waypoints = 100,
+  resolution = sum(traj$milestone_network$length)/n_waypoints
 ) {
   generate_uniform_waypoint_progressions <- function(milestone_network) {
     milestone_network %>%

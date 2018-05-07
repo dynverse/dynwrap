@@ -4,12 +4,15 @@
 \alias{select_waypoints}
 \title{Select the waypoints}
 \usage{
-select_waypoints(traj, resolution = 0.1)
+select_waypoints(traj, n_waypoints = 100,
+  resolution = sum(traj$milestone_network$length)/n_waypoints)
 }
 \arguments{
-\item{traj}{The trajectory object}
+\item{traj}{Wrapper with trajectory}
 
-\item{resolution}{The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges}
+\item{n_waypoints}{The number of waypoints}
+
+\item{resolution}{The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges, will be automatically computed using n_waypoints}
 }
 \description{
 Waypoints are spread equally over the whole trajectory

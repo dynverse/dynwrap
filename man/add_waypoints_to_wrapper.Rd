@@ -2,15 +2,18 @@
 % Please edit documentation in R/wrap_add_waypoints_to_wrapper.R
 \name{add_waypoints_to_wrapper}
 \alias{add_waypoints_to_wrapper}
-\title{Add waypoints to a wrapped object with trajectory}
+\title{Add waypoints to a wrapped traj with trajectory}
 \usage{
-add_waypoints_to_wrapper(object, resolution = 0.1)
+add_waypoints_to_wrapper(traj, n_waypoints = 100,
+  resolution = sum(traj$milestone_network$length)/n_waypoints)
 }
 \arguments{
-\item{object}{Wrapper with trajectory}
+\item{traj}{Wrapper with trajectory}
 
-\item{resolution}{The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges}
+\item{n_waypoints}{The number of waypoints}
+
+\item{resolution}{The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges, will be automatically computed using n_waypoints}
 }
 \description{
-Add waypoints to a wrapped object with trajectory
+Add waypoints to a wrapped traj with trajectory
 }
