@@ -19,6 +19,10 @@ lighten <- function(color, factor=1.4){
 trajectory_types <- tribble(
   ~id,                              ~simplified,            ~colour,   ~directed,
 
+  # cycles
+  "undirected_cycle",               "cycle",                "#003d76", FALSE,
+  "directed_cycle",                 "cycle",                "#003d76", TRUE,
+
   # linear
   "undirected_linear",              "linear",               "#0278dd", FALSE,
   "directed_linear",                "linear",               "#0278dd", TRUE,
@@ -39,10 +43,6 @@ trajectory_types <- tribble(
   # trees
   "unrooted_tree",                  "tree",                 "#e0ab00", FALSE,
   "rooted_tree",                    "tree",                 "#e0ab00", TRUE,
-
-  # cycles
-  "undirected_cycle",               "cycle",                "#003d76", FALSE,
-  "directed_cycle",                 "cycle",                "#003d76", TRUE,
 
   # dag
   "directed_acyclic_graph",         "acyclic_graph",        "#ff8821", TRUE,
