@@ -50,3 +50,22 @@ add_expression_to_wrapper <- function(
 is_wrapper_with_expression <- function(object) {
   is_data_wrapper(object) && "dynwrap::with_expression" %in% class(object)
 }
+
+
+
+#' Get expression
+#'
+#' @param task The task
+#' @param expression_source `expression`, `counts` or a matrix
+#' @export
+get_expression <- function(task, expression_source) {
+  if (is.character(expression_source)) {
+    if(!expression_source %in% names(task)) {stop("Expression source not in traj, did you run add_expression_to_wrapper?")}
+    expression <- task[[expression_source]]
+  } else if (is.matrix(expression_source)) {
+    expression <- expression_source
+  } else {
+    stop("Invalid expression_source")
+  }
+  expression
+}

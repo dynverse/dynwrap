@@ -13,6 +13,7 @@ add_waypoints_to_wrapper <- function(
 
   waypoints <- with(traj, select_waypoints(
     traj,
+    n_waypoints,
     resolution
   ))
 

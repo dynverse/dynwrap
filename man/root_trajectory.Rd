@@ -4,16 +4,16 @@
 \alias{root_trajectory}
 \title{Root trajectory}
 \usage{
-root_trajectory(trajectory, start_cell_id = NULL,
-  start_milestone_id = trajectory$root_milestone_id)
+root_trajectory(trajectory, root_cell_id = NULL,
+  root_milestone_id = trajectory$root_milestone_id)
 }
 \arguments{
 \item{trajectory}{the trajectory object}
 
-\item{start_cell_id}{The start cell id, not required if start_milestone_id is given}
+\item{root_cell_id}{The root cell id, not required if root_milestone_id is given}
 
-\item{start_milestone_id}{The start milestone id, not required if start_cell_id is given}
+\item{root_milestone_id}{The root milestone id, not required if root_cell_id is given}
 }
 \description{
-Roots the trajectory by changing the directionality of all edges given a start cell
+Roots the trajectory by changing the directionality of all edges given a root cell
 }
