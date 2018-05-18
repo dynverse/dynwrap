@@ -28,9 +28,9 @@ Type: Data frame(cell_id = character, from = character, to = character, percenta
 regions between milestones (e.g. a bifurcation).
 Type: Data frame(divergence_id = character, milestone_id = character, is_start = logical).}
 
-\item{counts}{The counts.}
+\item{counts}{The counts with genes in columns and cells in rows}
 
-\item{feature_info}{Optional meta-information pertaining the features.}
+\item{feature_info}{Optional meta-information pertaining the features}
 
 \item{cell_info}{Optional meta-information pertaining the cells.}
 

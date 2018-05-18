@@ -4,9 +4,28 @@
 \alias{add_prior_information_to_wrapper}
 \title{Add prior information to a data wrapper}
 \usage{
-add_prior_information_to_wrapper(data_wrapper)
+add_prior_information_to_wrapper(task, start_cells = NULL, end_cells = NULL,
+  grouping_assignment = NULL, grouping_network = NULL,
+  marker_feature_ids = NULL, n_branches = NULL, n_end_states = NULL,
+  time = NULL)
 }
 \arguments{
+\item{start_cells}{The start cells}
+
+\item{end_cells}{The end cells}
+
+\item{grouping_assignment}{The grouping of cells, a dataframe with cell_id and group_id}
+
+\item{grouping_network}{The network between groups, a dataframe with from and to}
+
+\item{marker_feature_ids}{The features (genes) important for the trajectory}
+
+\item{n_branches}{Number of branches}
+
+\item{n_end_states}{Number of end states}
+
+\item{time}{The time for every cell}
+
 \item{data_wrapper}{A data wrapper to extend upon.}
 }
 \description{

@@ -2,19 +2,22 @@
 % Please edit documentation in R/wrap_add_expression_to_wrapper.R
 \name{add_expression_to_wrapper}
 \alias{add_expression_to_wrapper}
+\alias{wrap_expression}
 \title{Add count and normalised expression values to a data wrapper}
 \usage{
 add_expression_to_wrapper(data_wrapper, counts, expression,
   feature_info = NULL, ...)
+
+wrap_expression(expression, counts)
 }
 \arguments{
-\item{data_wrapper}{A data wrapper to extend upon.}
+\item{data_wrapper}{A data wrapper to extend upon}
 
-\item{counts}{The counts.}
+\item{counts}{The counts with genes in columns and cells in rows}
 
-\item{expression}{the normalised expression values.}
+\item{expression}{the normalised expression values with genes in columns and cells in rows}
 
-\item{feature_info}{Optional meta-information pertaining the features.}
+\item{feature_info}{Optional meta-information pertaining the features}
 
 \item{...}{extra information to be stored in the wrapper}
 }

@@ -1,9 +1,9 @@
 #' Add count and normalised expression values to a data wrapper
 #'
-#' @param data_wrapper A data wrapper to extend upon.
-#' @param counts The counts.
-#' @param expression the normalised expression values.
-#' @param feature_info Optional meta-information pertaining the features.
+#' @param data_wrapper A data wrapper to extend upon
+#' @param counts The counts with genes in columns and cells in rows
+#' @param expression the normalised expression values with genes in columns and cells in rows
+#' @param feature_info Optional meta-information pertaining the features
 #' @param ... extra information to be stored in the wrapper
 #'
 #' @export
@@ -68,4 +68,17 @@ get_expression <- function(task, expression_source) {
     stop("Invalid expression_source")
   }
   expression
+}
+
+
+
+#' @rdname add_expression_to_wrapper
+#' @export
+wrap_expression <- function(expression, counts) {
+  testthat::expect_equivalent(dim(expression), dim(counts))
+  testthat::expect_equivalent(colnames(expression), colnames(counts))
+  testthat::expect_equivalent(rownames(expression), rownames(counts))
+
+  wrap_data(rownames(expression)) %>%
+    add_expression_to_wrapper(counts, expression, feature_info)
 }

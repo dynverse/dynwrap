@@ -4,36 +4,100 @@
 #' to have been added already.
 #'
 #' @param data_wrapper A data wrapper to extend upon.
+#' @param start_cells The start cells
+#' @param end_cells The end cells
+#' @param grouping_assignment The grouping of cells, a dataframe with cell_id and group_id
+#' @param grouping_network The network between groups, a dataframe with from and to
+#' @param marker_feature_ids The features (genes) important for the trajectory
+#' @param n_branches Number of branches
+#' @param n_end_states Number of end states
+#' @param time The time for every cell
 #'
 #' @export
 #'
 #' @importFrom testthat expect_true
 add_prior_information_to_wrapper <- function(
-  data_wrapper
+  task,
+  start_cells = NULL,
+  end_cells = NULL,
+  grouping_assignment = NULL,
+  grouping_network = NULL,
+  marker_feature_ids = NULL,
+  n_branches = NULL,
+  n_end_states = NULL,
+  time = NULL
 ) {
-  # check data wrapper
-  testthat::expect_true(is_wrapper_with_trajectory(data_wrapper))
-  testthat::expect_true(is_wrapper_with_expression(data_wrapper))
+  prior_information <- lst(
+    start_milestones,
+    start_cells,
+    end_milestones,
+    end_cells,
+    grouping_assignment,
+    grouping_network,
+    marker_feature_ids,
+    n_branches,
+    time,
+    n_end_states
+  ) %>% discard(is.null)
 
-  # compute prior information and add it to the wrapper
-  prior_information <-
-    with(data_wrapper, generate_prior_information(
-      cell_ids = cell_ids,
-      milestone_ids = milestone_ids,
-      milestone_network = milestone_network,
-      milestone_percentages = milestone_percentages,
-      progressions = progressions,
-      divergence_regions = divergence_regions,
-      counts = counts,
-      feature_info = feature_info,
-      cell_info = cell_info
-    ))
+  # check input
+  # if(!is.null(start_milestones)) {
+  #   testthat::expect_true(is_wrapper_with_trajectory(task))
+  #   testthat::expect_true(all(start_milestones %in% task$milestone_ids))
+  # }
+  # if(!is.null(end_milestones)) {
+  #   testthat::expect_true(is_wrapper_with_trajectory(task))
+  #   testthat::expect_true(all(end_milestones %in% task$milestone_ids))
+  # }
+  if(!is.null(start_cells)) {
+    testthat::expect_true(all(start_cells %in% task$cell_ids))
+  }
+  if(!is.null(end_cells)) {
+    testthat::expect_true(all(start_cells %in% task$cell_ids))
+  }
+  if(!is.null(grouping_assignment)) {
+    testthat::expect_true(is.data.frame(grouping_assignment))
+    testthat::expect_setequal(colnames(grouping_assignment), c("cell_id", "group_id"))
+    testthat::expect_setequal(grouping_assignment$cell_ids, task$cell_ids)
+  }
+  if(!is.null(grouping_network)) {
+    testthat::expect_true(!is.null(grouping_assignment))
+    testthat::expect_setequal(colnames(grouping_network), c("from", "to"))
+    testthat::expect_setequal(grouping_network$from, grouping_assignment$group_id)
+    testthat::expect_setequal(grouping_network$to, grouping_assignment$group_id)
+  }
+  if(!is.null(marker_feature_ids)) {
+    testthat::expect_true(is_wrapper_with_expression(task))
+    testthat::expect_true(all(marker_feature_ids %in% colnames(task$counts)))
+  }
+
+  if (is_wrapper_with_trajectory(data_wrapper) && is_wrapper_with_expression(data_wrapper)) {
+    message("Calculating prior information using trajectory")
+
+    # compute prior information and add it to the wrapper
+    calculated_prior_information <-
+      with(data_wrapper, generate_prior_information(
+        cell_ids = cell_ids,
+        milestone_ids = milestone_ids,
+        milestone_network = milestone_network,
+        milestone_percentages = milestone_percentages,
+        progressions = progressions,
+        divergence_regions = divergence_regions,
+        counts = counts,
+        feature_info = feature_info,
+        cell_info = cell_info
+      ))
+
+    # update calculated prior information with given prior information (giving precendence to the latter)
+    prior_information <- list_modify(calculated_prior_information, !!!prior_information)
+  }
 
   data_wrapper %>% extend_with(
     "dynwrap::with_prior",
     prior_information = prior_information
   )
 }
+
 
 #' Test whether an object is a data_wrapper and contains prior information
 #'
