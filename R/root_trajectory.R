@@ -9,27 +9,21 @@
 #' @importFrom purrr map2_int
 #'
 #' @export
-root_trajectory <- function(trajectory, root_cell_id = NULL, root_milestone_id = trajectory$root_milestone_id) {
+root_trajectory <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_milestone_id = trajectory$root_milestone_id) {
   if (!is.null(root_cell_id)) {
     if(!root_cell_id %in% trajectory$cell_ids) {stop("Invalid root_cell_id")}
 
     root_milestone_id <- trajectory$milestone_percentages %>% filter(cell_id == root_cell_id) %>% filter(percentage == max(percentage)) %>% pull(milestone_id)
   } else if (is.null(root_milestone_id)) {
-    if(!is.null(trajectory$root_cell_id)) {
-      root_cell_id <- trajectory$root_cell_id
-      root_milestone_id <- trajectory$milestone_percentages %>% filter(cell_id == root_cell_id) %>% filter(percentage == max(percentage)) %>% pull(milestone_id)
-      message("Using root_cell_id as root")
-    } else {
-      message("root cell or milestone not provided, trying first outgoing milestone_id")
-      root_milestone_id <- setdiff(trajectory$milestone_ids, trajectory$milestone_network$to) %>% first()
+    message("root cell or milestone not provided, trying first outgoing milestone_id")
+    root_milestone_id <- setdiff(trajectory$milestone_ids, trajectory$milestone_network$to) %>% first()
 
-      if(is.na(root_milestone_id)) {
-        message("Could not find outgoing milestone_id, using first milestone_id as root")
-        root_milestone_id <- trajectory$milestone_ids[[1]]
-      }
-
-      message(paste0("Using '", root_milestone_id, "' as root"))
+    if(is.na(root_milestone_id)) {
+      message("Could not find outgoing milestone_id, using first milestone_id as root")
+      root_milestone_id <- trajectory$milestone_ids[[1]]
     }
+
+    message(paste0("Using '", root_milestone_id, "' as root"))
   }
 
   milestone_order <- igraph::graph_from_data_frame(trajectory$milestone_network) %>% igraph::ego(nodes=root_milestone_id, 999) %>% first() %>% names()
