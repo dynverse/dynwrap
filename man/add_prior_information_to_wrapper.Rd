@@ -10,6 +10,8 @@ add_prior_information_to_wrapper(task, start_cells = NULL, end_cells = NULL,
   time = NULL)
 }
 \arguments{
+\item{task}{A data wrapper to extend upon.}
+
 \item{start_cells}{The start cells}
 
 \item{end_cells}{The end cells}
@@ -25,8 +27,6 @@ add_prior_information_to_wrapper(task, start_cells = NULL, end_cells = NULL,
 \item{n_end_states}{Number of end states}
 
 \item{time}{The time for every cell}
-
-\item{data_wrapper}{A data wrapper to extend upon.}
 }
 \description{
 Note that the given data wrapper requires a trajectory and expression values

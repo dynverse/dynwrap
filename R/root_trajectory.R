@@ -99,7 +99,8 @@ calculate_pseudotime <- function(trajectory) {
 #' Add root cell to wrapper using expression of features
 #'
 #' @param task The task
-#' @param feature_ids The feature ids
+#' @param features_oi The feature ids which will be used to root
+#' @param expression_source Source of the expression, either a string or a matrix
 #' @export
 add_root_using_expression <- function(task, features_oi, expression_source = "expression") {
   expression <- get_expression(task, expression_source)

@@ -47,7 +47,7 @@ traj <- wrap_data(
 )
 
 test_that("Testing root_trajectory", {
-  rooted <- root_trajectory(traj, start_cell_id = "a")
+  rooted <- root_trajectory(traj, root_cell_id = "a")
 
   expect_true(rooted$root_milestone_id == "W")
   expect_true(rooted$milestone_network$from[[1]] == "W")
@@ -56,8 +56,8 @@ test_that("Testing root_trajectory", {
 
   rooted <- root_trajectory(traj)
 
-  expect_error(root_trajectory(traj, start_cell_id = "trajectories are cool"))
-  expect_error(root_trajectory(traj, start_milestone_id = "trajectories are cool"))
+  expect_error(root_trajectory(traj, root_cell_id = "trajectories are cool"))
+  expect_error(root_trajectory(traj, root_milestone_id = "trajectories are cool"))
 })
 
 

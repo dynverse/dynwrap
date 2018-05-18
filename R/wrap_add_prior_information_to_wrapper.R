@@ -3,7 +3,7 @@
 #' Note that the given data wrapper requires a trajectory and expression values
 #' to have been added already.
 #'
-#' @param data_wrapper A data wrapper to extend upon.
+#' @param task A data wrapper to extend upon.
 #' @param start_cells The start cells
 #' @param end_cells The end cells
 #' @param grouping_assignment The grouping of cells, a dataframe with cell_id and group_id
@@ -28,9 +28,9 @@ add_prior_information_to_wrapper <- function(
   time = NULL
 ) {
   prior_information <- lst(
-    start_milestones,
+    # start_milestones,
     start_cells,
-    end_milestones,
+    # end_milestones,
     end_cells,
     grouping_assignment,
     grouping_network,
@@ -71,12 +71,12 @@ add_prior_information_to_wrapper <- function(
     testthat::expect_true(all(marker_feature_ids %in% colnames(task$counts)))
   }
 
-  if (is_wrapper_with_trajectory(data_wrapper) && is_wrapper_with_expression(data_wrapper)) {
+  if (is_wrapper_with_trajectory(task) && is_wrapper_with_expression(task)) {
     message("Calculating prior information using trajectory")
 
     # compute prior information and add it to the wrapper
     calculated_prior_information <-
-      with(data_wrapper, generate_prior_information(
+      with(task, generate_prior_information(
         cell_ids = cell_ids,
         milestone_ids = milestone_ids,
         milestone_network = milestone_network,
@@ -92,14 +92,14 @@ add_prior_information_to_wrapper <- function(
     prior_information <- list_modify(calculated_prior_information, !!!prior_information)
   }
 
-  data_wrapper %>% extend_with(
+  task %>% extend_with(
     "dynwrap::with_prior",
     prior_information = prior_information
   )
 }
 
 
-#' Test whether an object is a data_wrapper and contains prior information
+#' Test whether an object is a task and contains prior information
 #'
 #' @param object The object to be tested.
 #'

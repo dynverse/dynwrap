@@ -9,7 +9,9 @@ add_root_using_expression(task, features_oi, expression_source = "expression")
 \arguments{
 \item{task}{The task}
 
-\item{feature_ids}{The feature ids}
+\item{features_oi}{The feature ids which will be used to root}
+
+\item{expression_source}{Source of the expression, either a string or a matrix}
 }
 \description{
 Add root cell to wrapper using expression of features
