@@ -71,14 +71,17 @@ get_expression <- function(task, expression_source) {
 }
 
 
-
-#' @rdname add_expression_to_wrapper
+#' Wrap expression
+#'
+#' @inheritParams wrap_data
+#' @inheritParams add_expression_to_wrapper
+#'
 #' @export
-wrap_expression <- function(expression, counts) {
+wrap_expression <- function(expression, counts, cell_info = NULL, feature_info = NULL, ..., id="") {
   testthat::expect_equivalent(dim(expression), dim(counts))
   testthat::expect_equivalent(colnames(expression), colnames(counts))
   testthat::expect_equivalent(rownames(expression), rownames(counts))
 
-  wrap_data(rownames(expression)) %>%
+  wrap_data(id, rownames(expression), cell_info, ...) %>%
     add_expression_to_wrapper(counts, expression, feature_info)
 }
