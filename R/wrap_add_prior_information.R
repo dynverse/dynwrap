@@ -16,7 +16,7 @@
 #' @export
 #'
 #' @importFrom testthat expect_true
-#' @importFrom purrr discard
+#' @importFrom purrr discard list_modify
 add_prior_information <- function(
   task,
   start_cells = NULL,
