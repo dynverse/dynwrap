@@ -1,4 +1,4 @@
-context("Testing root_trajectory")
+context("Testing add_root")
 
 cell_ids <- c("a", "b", "c", "d", "e", "f")
 milestone_ids <- c("W", "X", "Y", "Z", "A")
@@ -46,23 +46,22 @@ traj <- wrap_data(
   divergence_regions = divergence_regions
 )
 
-test_that("Testing root_trajectory", {
-  rooted <- root_trajectory(traj, root_cell_id = "a")
+test_that("Testing add_root", {
+  rooted <- add_root(traj, root_cell_id = "a")
 
   expect_true(rooted$root_milestone_id == "W")
   expect_true(rooted$milestone_network$from[[1]] == "W")
   expect_true(all(rooted$milestone_network$from == c("W", "X", "Z", "X")))
   expect_true(all(rooted$milestone_network$to == c("X", "Z", "A", "Y")))
 
-  rooted <- root_trajectory(traj)
+  rooted <- add_root(traj)
 
-  expect_error(root_trajectory(traj, root_cell_id = "trajectories are cool"))
-  expect_error(root_trajectory(traj, root_milestone_id = "trajectories are cool"))
+  expect_error(add_root(traj, root_cell_id = "trajectories are cool"))
+  expect_error(add_root(traj, root_milestone_id = "trajectories are cool"))
 })
 
 
 test_that("Testing calculate_pseudotime", {
-  pseudotime <- calculate_pseudotime(traj)
-  pseudotime[["a"]] <- 0
-  expect_equal(pseudotime, c("a"=0, "b"=1.4, "c"=2.6, "d"=4.3, "e"=4.4, "f"=6.8))
+  traj <- add_pseudotime(traj)
+  expect_equal(traj$pseudotime, c("a"=0, "b"=1.4, "c"=2.6, "d"=4.3, "e"=4.4, "f"=6.8))
 })

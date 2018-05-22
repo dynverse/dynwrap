@@ -1,4 +1,4 @@
-#' Root trajectory
+#' Root the trajectory
 #'
 #' Roots the trajectory by changing the directionality of all edges given a root cell
 #'
@@ -9,7 +9,7 @@
 #' @importFrom purrr map2_int
 #'
 #' @export
-root_trajectory <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_milestone_id = trajectory$root_milestone_id) {
+add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_milestone_id = trajectory$root_milestone_id) {
   if (!is.null(root_cell_id)) {
     if(!root_cell_id %in% trajectory$cell_ids) {stop("Invalid root_cell_id")}
 
@@ -69,43 +69,19 @@ root_trajectory <- function(trajectory, root_cell_id = trajectory$root_cell_id, 
   trajectory
 }
 
-
-
-#' Calculate global pseudotime as distance from root
-#'
-#' @param trajectory The trajectory
-#' @export
-calculate_pseudotime <- function(trajectory) {
-  if(!"root_milestone_id" %in% trajectory) {
-    trajectory <- root_trajectory(trajectory)
-  }
-
-  root_cell_id <- trajectory$milestone_percentages %>%
-    filter(milestone_id == trajectory$root_milestone_id) %>%
-    arrange(desc(percentage)) %>%
-    pull(cell_id) %>%
-    first()
-
-  if(is.na(root_cell_id)) {stop("Could not find rooting cell for pseudotime calculation")}
-
-  pseudotime <- compute_tented_geodesic_distances(trajectory, root_cell_id)[1, ]
-
-  pseudotime
-}
-
-
-
-
 #' Add root cell to wrapper using expression of features
 #'
-#' @param task The task
 #' @param features_oi The feature ids which will be used to root
 #' @param expression_source Source of the expression, either a string or a matrix
+#'
+#' @inheritParams add_root
+#'
 #' @export
-add_root_using_expression <- function(task, features_oi, expression_source = "expression") {
-  expression <- get_expression(task, expression_source)
+add_root_using_expression <- function(trajectory, features_oi, expression_source = "expression") {
+  expression <- get_expression(trajectory, expression_source)
 
-  task$root_cell_id <- rownames(expression)[expression[, features_oi, drop=F] %>% rowMeans() %>% which.max()]
+  root_cell_id <- rownames(expression)[expression[, features_oi, drop=F] %>% rowMeans() %>% which.max()]
+  trajectory <- add_root(trajectory, root_cell_id)
 
-  task
+  trajectory
 }
