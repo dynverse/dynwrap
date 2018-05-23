@@ -35,7 +35,7 @@ label_milestones <- function(traj, labelling, expression_source = "expression", 
   # multiple mappings
   if (any(table(mapping$new_milestone_id) > 1)) {
     too_many <- table(mapping$new_milestone_id) %>% keep(~. > 1) %>% names()
-    warning(glue::glue("{too_many} was mapped to multiple milestones, adding integer suffices"))
+    warning(stringr::str_glue("{too_many} was mapped to multiple milestones, adding integer suffices"))
 
     mapping <- mapping %>%
       group_by(new_milestone_id) %>%
