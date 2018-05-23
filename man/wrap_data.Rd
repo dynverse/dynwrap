@@ -4,7 +4,7 @@
 \alias{wrap_data}
 \title{A data wrapper for datasets and trajectories}
 \usage{
-wrap_data(id, cell_ids, cell_info = NULL, ...)
+wrap_data(id = "", cell_ids, cell_info = NULL, ...)
 }
 \arguments{
 \item{id}{A unique identifier for the data}
