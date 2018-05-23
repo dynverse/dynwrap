@@ -2,10 +2,16 @@
 % Please edit documentation in R/wrap_label_milestones.R
 \name{label_milestones}
 \alias{label_milestones}
+\alias{is_wrapper_with_milestone_labelling}
+\alias{get_milestone_labelling}
 \title{Label milestones based on highest expression of a set of markers}
 \usage{
 label_milestones(traj, labelling, expression_source = "expression",
   n_nearest_cells = 20)
+
+is_wrapper_with_milestone_labelling(traj)
+
+get_milestone_labelling(traj)
 }
 \arguments{
 \item{traj}{The trajectory}
@@ -13,6 +19,8 @@ label_milestones(traj, labelling, expression_source = "expression",
 \item{labelling}{List containing for each new name of a milestone the genes which will be used as markers}
 
 \item{expression_source}{The expression source}
+
+\item{n_nearest_cells}{The number of nearest cells to use for extracting milestone expression}
 }
 \description{
 Label milestones based on highest expression of a set of markers

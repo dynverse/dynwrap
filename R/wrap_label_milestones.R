@@ -3,6 +3,7 @@
 #' @param traj The trajectory
 #' @param labelling List containing for each new name of a milestone the genes which will be used as markers
 #' @param expression_source The expression source
+#' @param n_nearest_cells The number of nearest cells to use for extracting milestone expression
 #'
 #' @export
 label_milestones <- function(traj, labelling, expression_source = "expression", n_nearest_cells = 20) {
@@ -34,7 +35,7 @@ label_milestones <- function(traj, labelling, expression_source = "expression", 
   # multiple mappings
   if (any(table(mapping$new_milestone_id) > 1)) {
     too_many <- table(mapping$new_milestone_id) %>% keep(~. > 1) %>% names()
-    warning(stringr::str_glue("{too_many} was mapped to multiple milestones, adding integer suffices"))
+    warning(glue::glue("{too_many} was mapped to multiple milestones, adding integer suffices"))
 
     mapping <- mapping %>%
       group_by(new_milestone_id) %>%
@@ -46,7 +47,7 @@ label_milestones <- function(traj, labelling, expression_source = "expression", 
   }
 
   # do the actual renaming
-  milestone_labelling <- set_names(milestone_ids, milestone_ids)
+  milestone_labelling <- set_names(rep(NA, length(milestone_ids)), milestone_ids)
   milestone_labelling[mapping$milestone_id] <- mapping$new_milestone_id
 
   traj$milestone_labelling <- milestone_labelling
@@ -55,4 +56,22 @@ label_milestones <- function(traj, labelling, expression_source = "expression", 
     "dynwrap::with_milestone_labelling",
     milestone_labelling = milestone_labelling
   )
+}
+
+
+
+#' @rdname label_milestones
+#' @export
+is_wrapper_with_milestone_labelling <- function(traj) {
+  is_wrapper_with_trajectory(traj) && "dynwrap::with_milestone_labelling" %in% class(traj)
+}
+
+#' @rdname label_milestones
+#' @export
+get_milestone_labelling <- function(traj) {
+  if(is_wrapper_with_milestone_labelling(traj)) {
+    traj$milestone_labelling
+  } else {
+    set_names(traj$milestone_ids, traj$milestone_ids)
+  }
 }
