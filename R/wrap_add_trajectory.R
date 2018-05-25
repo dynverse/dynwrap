@@ -34,12 +34,14 @@ add_trajectory <- function(
   testthat::expect_is(milestone_ids, "character")
   testthat::expect_false(any(duplicated(c(milestone_ids, cell_ids))))
   check_milestone_network(milestone_ids, milestone_network)
+  milestone_network <- milestone_network %>% select(from, to, length, directed)
 
   # check divergence regions
   if (is.null(divergence_regions) || (is.data.frame(divergence_regions) && nrow(divergence_regions) == 0)) {
     divergence_regions <- data_frame(divergence_id = character(0), milestone_id = character(0), is_start = logical(0))
   }
   check_divergence_regions(milestone_ids, divergence_regions)
+  divergence_regions <- divergence_regions %>% select(divergence_id, milestone_id, is_start)
 
   # check and process milestone percentages and progressions
   if (is.null(milestone_percentages) == is.null(progressions)) {
@@ -48,6 +50,7 @@ add_trajectory <- function(
 
   if (is.null(progressions)) {
     check_milestone_percentages(cell_ids, milestone_ids, milestone_percentages)
+    milestone_percentages <- milestone_percentages %>% select(cell_id, milestone_id, percentage)
 
     progressions <- convert_milestone_percentages_to_progressions(
       cell_ids,
@@ -59,6 +62,7 @@ add_trajectory <- function(
     check_progressions(cell_ids, milestone_ids, milestone_network, progressions)
   } else if (is.null(milestone_percentages)) {
     check_progressions(cell_ids, milestone_ids, milestone_network, progressions)
+    progressions <- progressions %>% select(cell_id, from, to, percentage)
 
     milestone_percentages <- convert_progressions_to_milestone_percentages(
       cell_ids,
@@ -145,7 +149,7 @@ is_wrapper_with_trajectory <- function(object) {
 check_milestone_network <- function(milestone_ids, milestone_network) {
   testthat::expect_is(milestone_network, "data.frame")
   testthat::expect_equal(ncol(milestone_network), 4)
-  testthat::expect_equal(colnames(milestone_network), c("from", "to", "length", "directed"))
+  testthat::expect_setequal(colnames(milestone_network), c("from", "to", "length", "directed"))
   testthat::expect_equal(sapply(milestone_network, class), c(from = "character", to = "character", length = "numeric", directed = "logical"))
   testthat::expect_true(all(milestone_network$from %in% milestone_ids))
   testthat::expect_true(all(milestone_network$to %in% milestone_ids))
@@ -155,7 +159,7 @@ check_milestone_network <- function(milestone_ids, milestone_network) {
 check_divergence_regions <- function(milestone_ids, divergence_regions) {
   testthat::expect_is(divergence_regions, "data.frame")
   testthat::expect_equal(ncol(divergence_regions), 3)
-  testthat::expect_equal(colnames(divergence_regions), c("divergence_id", "milestone_id", "is_start"))
+  testthat::expect_setequal(colnames(divergence_regions), c("divergence_id", "milestone_id", "is_start"))
   testthat::expect_equal(sapply(divergence_regions, class), c(divergence_id = "character", milestone_id = "character", is_start = "logical"))
   testthat::expect_true(all(divergence_regions$milestone_id %in% milestone_ids))
 
@@ -167,7 +171,7 @@ check_divergence_regions <- function(milestone_ids, divergence_regions) {
 check_milestone_percentages <- function(cell_ids, milestone_ids, milestone_percentages) {
   testthat::expect_is(milestone_percentages, "data.frame")
   testthat::expect_equal(ncol(milestone_percentages), 3)
-  testthat::expect_equal(colnames(milestone_percentages), c("cell_id", "milestone_id", "percentage"))
+  testthat::expect_setequal(colnames(milestone_percentages), c("cell_id", "milestone_id", "percentage"))
   testthat::expect_equal(sapply(milestone_percentages, class), c(cell_id = "character", milestone_id = "character", percentage = "numeric"))
   testthat::expect_true(all(milestone_percentages$cell_id %in% cell_ids))
   testthat::expect_true(all(milestone_percentages$milestone_id %in% milestone_ids))
@@ -180,7 +184,7 @@ check_milestone_percentages <- function(cell_ids, milestone_ids, milestone_perce
 check_progressions <- function(cell_ids, milestone_ids, milestone_network, progressions) {
   testthat::expect_is(progressions, "data.frame")
   testthat::expect_equal(ncol(progressions), 4)
-  testthat::expect_equal(colnames(progressions), c("cell_id", "from", "to", "percentage"))
+  testthat::expect_setequal(colnames(progressions), c("cell_id", "from", "to", "percentage"))
   testthat::expect_equal(sapply(progressions, class), c(cell_id = "character", from = "character", to = "character", percentage = "numeric"))
   testthat::expect_true(all(progressions$cell_id %in% cell_ids))
   testthat::expect_true(all(progressions$from %in% milestone_ids))
