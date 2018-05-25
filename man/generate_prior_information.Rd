@@ -30,7 +30,7 @@ Type: Data frame(divergence_id = character, milestone_id = character, is_start =
 
 \item{counts}{The counts with genes in columns and cells in rows}
 
-\item{feature_info}{Optional meta-information pertaining the features}
+\item{feature_info}{Optional meta-information of the features, a data.frame with at least feature_id as column}
 
 \item{cell_info}{Optional meta-information pertaining the cells.}
 

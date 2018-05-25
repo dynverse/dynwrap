@@ -15,3 +15,15 @@
 #'
 #' @docType data
 "trajectory_types_simplified"
+
+
+#' Metadata on priors
+#'
+#' @docType data
+"priors"
+
+
+#' Metadata on prior usages
+#'
+#' @docType data
+"prior_usages"
