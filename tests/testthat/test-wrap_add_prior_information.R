@@ -43,7 +43,7 @@ progressions <- convert_milestone_percentages_to_progressions(
 
 num_genes <- 100
 gene_ids <- paste0("Gene", seq_len(num_genes))
-counts <- matrix(rbinom(num_genes * length(cell_ids), 10000, .01), ncol = num_genes, dimnames = list(cell_ids, gene_ids))
+expression <- matrix(rbinom(num_genes * length(cell_ids), 10000, .01), ncol = num_genes, dimnames = list(cell_ids, gene_ids))
 feature_info <- data_frame(
   feature_id = gene_ids,
   test = 1,
@@ -66,7 +66,7 @@ test_that("Testing generate_prior_information", {
       milestone_percentages = milestone_percentages,
       progressions = progressions,
       divergence_regions = divergence_regions,
-      counts = counts,
+      expression = expression,
       feature_info = feature_info,
       cell_info = cell_info
     )
@@ -131,8 +131,8 @@ test_that("Testing add_prior_information", {
       milestone_percentages = milestone_percentages,
       divergence_regions = divergence_regions
     ) %>% add_expression(
-      counts = counts,
-      expression = log2(counts+1),
+      counts = expression,
+      expression = expression,
       feature_info = feature_info
     )
 
@@ -237,11 +237,11 @@ milestone_percentages <-
 
 num_genes <- 20
 orig_gene_ids <- paste0("Gene", seq_len(num_genes))
-orig_counts <- matrix(rbinom(num_genes * length(cell_ids), 10000, .01), ncol = num_genes, dimnames = list(cell_ids, orig_gene_ids))
+orig_expression <- matrix(rbinom(num_genes * length(cell_ids), 10000, .01), ncol = num_genes, dimnames = list(cell_ids, orig_gene_ids))
 
 milpct <- milestone_percentages %>% reshape2::acast(cell_id ~ milestone_id, value.var = "percentage", fill = 0)
-counts <- cbind(orig_counts, milpct) * 100 + 2
-gene_ids <- colnames(counts)
+expression <- cbind(orig_expression, milpct) * 100 + 2
+gene_ids <- colnames(expression)
 
 test_that("Testing generate_prior_information", {
   prior_info <-
@@ -252,7 +252,7 @@ test_that("Testing generate_prior_information", {
       milestone_percentages = milestone_percentages,
       progressions = progressions,
       divergence_regions = divergence_regions,
-      counts = counts
+      expression = expression
     )
 
   expected_prior <- c(
@@ -314,8 +314,8 @@ test_that("Testing add_prior_information", {
       milestone_percentages = milestone_percentages,
       divergence_regions = divergence_regions
     ) %>% add_expression(
-      counts = counts,
-      expression = log2(counts+1)
+      expression = expression,
+      counts = expression
     )
 
   traj2 <- add_prior_information(traj)
