@@ -4,7 +4,7 @@
 \name{priors}
 \alias{priors}
 \title{Metadata on priors}
-\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 8 rows and 2 columns.}
+\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 9 rows and 3 columns.}
 \usage{
 priors
 }
