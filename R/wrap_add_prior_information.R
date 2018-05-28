@@ -212,9 +212,10 @@ generate_prior_information <- function(
       markers <- scran::findMarkers(t(expression), grouping_assignment %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
 
       marker_feature_ids <- map(markers, as, "data.frame") %>%
+        map(rownames_to_column, "gene") %>%
         bind_rows() %>%
         filter(FDR < marker_fdr) %>%
-        rownames()
+        pull("gene")
     } else {
       warning("scran should be installed to determine marker features, will simply order by standard deviation")
 
