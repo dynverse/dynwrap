@@ -25,6 +25,6 @@ Imports:
   tibble,
   tidyr
 Suggests:
-  Seurat
+  scran
 Remotes:
   dynverse/dynutils
