@@ -214,7 +214,7 @@ generate_prior_information <- function(
       marker_feature_ids <- map(markers, as, "data.frame") %>%
         bind_rows() %>%
         filter(FDR < marker_fdr) %>%
-        pull(Gene)
+        rownames()
     } else {
       warning("scran should be installed to determine marker features, will simply order by standard deviation")
 
