@@ -4,7 +4,7 @@
 \name{dynwrap}
 \alias{dynwrap}
 \alias{dynwrap-package}
-\title{Helper functions}
+\title{This R package contains the code for a common model of single-cell trajectories.}
 \description{
-Helper functions
+This R package contains the code for a common model of single-cell trajectories.
 }
