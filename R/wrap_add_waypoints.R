@@ -47,59 +47,59 @@ select_waypoints <- function(
   n_waypoints = 100,
   resolution = sum(traj$milestone_network$length)/n_waypoints
 ) {
+  # create milestone waypoints
+  waypoint_milestone_percentages_milestones <- tibble(
+    milestone_id = traj$milestone_ids,
+    waypoint_id = paste0("W", milestone_id),
+    percentage = 1
+  )
+
   # create uniform progressions
-  generate_uniform_waypoint_progressions <- function(milestone_network) {
-    milestone_network %>%
-      mutate(percentage = map(length, ~c(seq(0, ., min(resolution, .))/., 1))) %>%
-      select(-length, -directed) %>%
-      unnest(percentage) %>%
-      mutate(cell_id = paste0("W", row_number()))
-  }
-  waypoint_progressions <- generate_uniform_waypoint_progressions(traj$milestone_network)
+  # waypoints which lie on a milestone will get a special name, so that they are the same between milestone network edges
+  waypoint_progressions <- traj$milestone_network %>%
+    mutate(percentage = map(length, ~c(seq(0, ., min(resolution, .))/., 1))) %>%
+    select(-length, -directed) %>%
+    unnest(percentage) %>%
+    group_by(from, to, percentage) %>% # remove duplicate waypoints
+    filter(row_number() == 1) %>%
+    ungroup() %>%
+    mutate(waypoint_id = case_when(
+      percentage == 0 ~ paste0("W", from),
+      percentage == 1 ~ paste0("W", to),
+      TRUE ~ paste0("W", row_number())
+    )
+  )
 
   # create waypoint percentages from progressions
   waypoint_milestone_percentages <- waypoint_progressions %>%
+    group_by(waypoint_id) %>%
+    filter(row_number() == 1) %>%
+    rename(cell_id = waypoint_id) %>%
     convert_progressions_to_milestone_percentages(
       "this argument is unnecessary, I can put everything I want in here!",
       traj$milestone_ids,
       traj$milestone_network,
       .
-    ) %>% rename(waypoint_id = cell_id)
+    ) %>%
+    rename(waypoint_id = cell_id)
 
   # calculate distance
   waypoint_geodesic_distances <- compute_tented_geodesic_distances(traj, waypoint_milestone_percentages = waypoint_milestone_percentages)
 
   # also create network between waypoints
-
-  # network between waypoints within an edge: just select successive waypoints
-  waypoint_network_intra_edges <- waypoint_progressions %>%
+  waypoint_network <- waypoint_progressions %>%
     group_by(from, to) %>%
-    mutate(from_waypoint = cell_id, to_waypoint = lead(cell_id, 1)) %>%
+    mutate(from_waypoint = waypoint_id, to_waypoint = lead(waypoint_id, 1)) %>%
     drop_na() %>% ungroup() %>%
     select(from = from_waypoint, to = to_waypoint)
-
-  # network between waypoints of different edges: select those waypoints with percentage == 1
-  waypoint_network_inter_edges <- waypoint_milestone_percentages %>%
-    filter(percentage == 1) %>%
-    group_by(milestone_id) %>%
-    filter(n() > 1) %>%
-    summarise(waypoint_ids = list(waypoint_id)) %>%
-    mutate(subnetwork = map(waypoint_ids, function(waypoint_ids) {
-      links <- combn(waypoint_ids, 2, simplify=F)
-      tibble(from = map_chr(links, ~.[[1]]), to = map_chr(links, ~.[[2]]))
-      })
-    ) %>% unnest(subnetwork) %>%
-      select(from, to)
-
-  waypoint_network <- bind_rows(waypoint_network_intra_edges, waypoint_network_inter_edges)
 
   # create waypoints and their properties
   waypoints <- waypoint_milestone_percentages %>%
     group_by(waypoint_id) %>%
-    filter(waypoint_id > 0) %>%
-    arrange(percentage) %>%
+    arrange(-percentage) %>%
     filter(row_number() == 1) %>%
-    mutate(milestone_id = ifelse(percentage == 1, NA, milestone_id)) %>%
+    ungroup() %>%
+    mutate(milestone_id = ifelse(percentage == 1, milestone_id, NA)) %>%
     select(-percentage)
 
   lst(
