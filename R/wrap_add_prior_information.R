@@ -116,8 +116,7 @@ is_wrapper_with_prior_information <- function(object) {
 #' @inheritParams wrap_data
 #' @inheritParams add_trajectory
 #' @inheritParams add_expression
-#' @param marker_logfc Marker genes require at least a X-fold log difference between groups of cells.
-#' @param marker_minpct Only test genes that are detected in a minimum fraction of cells between groups of cells.
+#' @param marker_fdr Maximal FDR value for a gene to be considered a marker
 #'
 #' @export
 generate_prior_information <- function(
@@ -204,6 +203,7 @@ generate_prior_information <- function(
   grouping_network <- milestone_network %>% select(from, to)
 
   ## MARKER GENES ##
+  browser()
   if (!is.null(feature_info) && "housekeeping" %in% colnames(feature_info)) {
     marker_feature_ids <- feature_info %>%
       filter(!housekeeping) %>%
@@ -212,7 +212,10 @@ generate_prior_information <- function(
     if ("scran" %in% rownames(installed.packages())) {
       markers <- scran::findMarkers(t(expression), grouping_assignment %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
 
-      marker_feature_ids <- map(markers, as, "data.frame") %>% bind_rows(markers) %>% filter(FDR < marker_fdr) %>% pull(Gene)
+      marker_feature_ids <- map(markers, as, "data.frame") %>%
+        bind_rows() %>%
+        filter(FDR < marker_fdr) %>%
+        pull(Gene)
     } else {
       warning("scran should be installed to determine marker features, will simply order by standard deviation")
 

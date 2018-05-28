@@ -5,9 +5,8 @@
 \title{Extract the prior information from the milestone network}
 \usage{
 generate_prior_information(cell_ids, milestone_ids, milestone_network,
-  milestone_percentages, progressions, divergence_regions, counts,
-  feature_info = NULL, cell_info = NULL, marker_logfc = 1,
-  marker_minpct = 0.4)
+  milestone_percentages, progressions, divergence_regions, expression,
+  feature_info = NULL, cell_info = NULL, marker_fdr = 0.005)
 }
 \arguments{
 \item{cell_ids}{The ids of the cells.}
@@ -28,15 +27,13 @@ Type: Data frame(cell_id = character, from = character, to = character, percenta
 regions between milestones (e.g. a bifurcation).
 Type: Data frame(divergence_id = character, milestone_id = character, is_start = logical).}
 
-\item{counts}{The counts with genes in columns and cells in rows}
+\item{expression}{The normalised expression values with genes in columns and cells in rows}
 
 \item{feature_info}{Optional meta-information of the features, a data.frame with at least feature_id as column}
 
 \item{cell_info}{Optional meta-information pertaining the cells.}
 
-\item{marker_logfc}{Marker genes require at least a X-fold log difference between groups of cells.}
-
-\item{marker_minpct}{Only test genes that are detected in a minimum fraction of cells between groups of cells.}
+\item{marker_fdr}{Maximal FDR value for a gene to be considered a marker}
 }
 \description{
 For example, what are the start cells, the end cells, to which milestone does each cell belong to.
