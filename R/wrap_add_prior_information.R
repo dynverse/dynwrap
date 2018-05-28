@@ -203,7 +203,6 @@ generate_prior_information <- function(
   grouping_network <- milestone_network %>% select(from, to)
 
   ## MARKER GENES ##
-  browser()
   if (!is.null(feature_info) && "housekeeping" %in% colnames(feature_info)) {
     marker_feature_ids <- feature_info %>%
       filter(!housekeeping) %>%
