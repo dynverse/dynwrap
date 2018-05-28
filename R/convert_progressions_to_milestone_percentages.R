@@ -19,7 +19,6 @@ convert_progressions_to_milestone_percentages <- function(cell_ids, milestone_id
     stop("All from-to combinations in ", sQuote("progressions"), " should be in ", sQuote("milestone_network"), " as well.")
   }
 
-
   froms <- progressions %>%
     group_by(cell_id) %>%
     summarise(
