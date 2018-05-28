@@ -4,6 +4,7 @@
 #' @param labelling List containing for each new name of a milestone the genes which will be used as markers
 #' @param expression_source The expression source
 #' @param n_nearest_cells The number of nearest cells to use for extracting milestone expression
+#' @param label_milestones How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels as milestone_ids will be used), a named character vector, or FALSE
 #'
 #' @export
 label_milestones <- function(traj, labelling, expression_source = "expression", n_nearest_cells = 20) {
@@ -68,10 +69,24 @@ is_wrapper_with_milestone_labelling <- function(traj) {
 
 #' @rdname label_milestones
 #' @export
-get_milestone_labelling <- function(traj) {
-  if(is_wrapper_with_milestone_labelling(traj)) {
-    traj$milestone_labelling
-  } else {
-    set_names(traj$milestone_ids, traj$milestone_ids)
+get_milestone_labelling <- function(traj, label_milestones=NULL) {
+  if(is.character(label_milestones) && length(names(label_milestones)) == length(label_milestones)) {
+    labels <- label_milestones
+    labels <- labels[intersect(names(labels), traj$milestone_ids)]
+  } else if (label_milestones == TRUE) {
+    if (is_wrapper_with_milestone_labelling(traj)) {
+      labels <- traj$milestone_labelling
+    } else {
+      labels <- set_names(traj$milestone_ids, traj$milestone_ids)
+    }
+  } else if (label_milestones == "all") {
+    labels <- set_names(traj$milestone_ids, traj$milestone_ids)
+    if (is_wrapper_with_milestone_labelling(traj)) {
+      labels <- c(labels[names(traj$milestone_labelling)[is.na(traj$milestone_labelling)]], traj$milestone_labelling)
+    }
+  } else  {
+    labels <- character()
   }
+
+  labels
 }

@@ -1,6 +1,6 @@
 context("Testing add_expression")
 
-test_that("Testing add_expression", {
+test_that("Testing add_expression and get_expression", {
   id <- "a"
   cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
   cell_info <- data_frame(
@@ -58,6 +58,13 @@ test_that("Testing add_expression", {
     expect_equivalent(wr$extras2, extras2)
     expect_equivalent(wr$counts, counts)
     expect_equivalent(wr$expression, expression)
-  }
 
+    expect_equivalent(get_expression(wr, "counts"), counts)
+    expect_equivalent(get_expression(wr), expression)
+    expect_equivalent(get_expression("whatever", wr), expression)
+    expect_equivalent(get_expression(wr, expression), expression)
+    expect_equivalent(get_expression(wr, counts), counts)
+    expect_error(get_expression(wr, "say what"))
+    expect_error(get_expression("you don't say"))
+  }
 })

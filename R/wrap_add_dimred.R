@@ -1,10 +1,14 @@
 #' Add a dimensionality reduction to a data wrapper
 #'
+#' TODO: add possibility to also dimred the milestones and segments
+#'
 #' @param data_wrapper A data wrapper to extend upon.
-#' @param dimred The dimensionality reduction matrix.
+#' @param dimred The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction
 #' @param dimred_milestones An optional dimensionality reduction of the milestones.
 #' @param dimred_trajectory_segments An optional dimensionality reduction of the trajectory segments.
 #' @param ... extra information to be stored in the wrapper
+#'
+#' @inheritParams get_expression
 #'
 #' @export
 #'
@@ -14,9 +18,15 @@ add_dimred <- function(
   dimred,
   dimred_milestones = NULL,
   dimred_trajectory_segments = NULL,
+  expression_source = "expression",
   ...
 ) {
   testthat::expect_true(is_data_wrapper(data_wrapper))
+
+  # run or process dimred
+  if (!is.matrix(dimred)) {
+    dimred <- get_dimred(data_wrapper, dimred, expression_source)
+  }
 
   cell_ids <- data_wrapper$cell_ids
 
@@ -52,11 +62,37 @@ add_dimred <- function(
   )
 }
 
-#' Test whether an object is a data_wrapper and has dimred data
-#'
-#' @param object The object to be tested.
-#'
+#' @rdname add_dimred
 #' @export
-is_wrapper_with_dimred <- function(object) {
-  is_data_wrapper(object) && "dynwrap::with_dimred" %in% class(object)
+is_wrapper_with_dimred <- function(data_wrapper) {
+  is_data_wrapper(data_wrapper) && "dynwrap::with_dimred" %in% class(data_wrapper)
+}
+
+#' @rdname add_dimred
+#' @export
+get_dimred <- function(data_wrapper, dimred=NULL, expression_source="expression") {
+  if(is.function(dimred)) {
+    # function
+    expression <- get_expression(data_wrapper, expression_source)
+    dimred <- dimred(expression)
+  } else if (is.matrix(dimred)) {
+    # matrix
+    testthat::expect_true(length(rownames(dimred)) == nrow(dimred))
+    testthat::expect_setequal(data_wrapper$cell_ids, rownames(dimred))
+
+    colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
+  } else if (is_wrapper_with_dimred(data_wrapper)) {
+    # dimred within wrapper
+    if(is.list(data_wrapper$dimred)) {
+      testthat::expect_true(dimred %in% names(data_wrapper$dimred))
+      dimred <- data_wrapper$dimred[[dimred]]
+    } else {
+      dimred <- data_wrapper$dimred
+    }
+    colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
+  } else {
+    stop("Invalid dimred argument")
+  }
+
+  dimred
 }

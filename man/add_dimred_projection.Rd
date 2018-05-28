@@ -15,7 +15,7 @@ add_dimred_projection(data_wrapper, milestone_ids, milestone_network, dimred,
 \item{milestone_network}{The network of the milestones.
 Type: Data frame(from = character, to = character, length = numeric, directed = logical).}
 
-\item{dimred}{The dimensionality reduction matrix.}
+\item{dimred}{The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction}
 
 \item{dimred_milestones}{An optional dimensionality reduction of the milestones.}
 

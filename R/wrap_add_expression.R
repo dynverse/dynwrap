@@ -2,9 +2,10 @@
 #'
 #' @param data_wrapper A data wrapper to extend upon
 #' @param counts The counts with genes in columns and cells in rows
-#' @param expression the normalised expression values with genes in columns and cells in rows
-#' @param feature_info Optional meta-information pertaining the features
+#' @param expression The normalised expression values with genes in columns and cells in rows
+#' @param feature_info Optional meta-information of the features, a data.frame with at least feature_id as column
 #' @param ... extra information to be stored in the wrapper
+#' @param expression_source The source of expression, can be "counts", "expression", an expression matrix, or another data wrapper which contains expression
 #'
 #' @export
 #'
@@ -42,39 +43,32 @@ add_expression <- function(
   )
 }
 
-#' Test whether an object is a data_wrapper and has expression data
-#'
-#' @param object The object to be tested.
-#'
+#' @rdname add_expression
 #' @export
-is_wrapper_with_expression <- function(object) {
-  is_data_wrapper(object) && "dynwrap::with_expression" %in% class(object)
+is_wrapper_with_expression <- function(data_wrapper) {
+  is_data_wrapper(data_wrapper) && "dynwrap::with_expression" %in% class(data_wrapper)
 }
 
-
-
-#' Get expression
-#'
-#' @param task The task
-#' @param expression_source `expression`, `counts` or a matrix
+#' @rdname add_expression
 #' @export
-get_expression <- function(task, expression_source) {
+get_expression <- function(data_wrapper, expression_source = "expression") {
   if (is.character(expression_source)) {
-    if(!expression_source %in% names(task)) {stop("Expression source not in traj, did you run add_expression?")}
-    expression <- task[[expression_source]]
+    if(!expression_source %in% names(data_wrapper)) {stop("Expression source not in traj, did you run add_expression?")}
+    expression <- data_wrapper[[expression_source]]
   } else if (is.matrix(expression_source)) {
     expression <- expression_source
+  } else if (is_wrapper_with_expression(expression_source)) {
+    expression <- get_expression(expression_source)
   } else {
     stop("Invalid expression_source")
   }
   expression
 }
 
-
-#' Wrap expression
+#' Create a wrapper object with expression and counts
 #'
-#' @inheritParams wrap_data
 #' @inheritParams add_expression
+#' @inheritParams wrap_data
 #'
 #' @export
 wrap_expression <- function(expression, counts, cell_info = NULL, feature_info = NULL, ..., id="") {

@@ -11,7 +11,7 @@ label_milestones(traj, labelling, expression_source = "expression",
 
 is_wrapper_with_milestone_labelling(traj)
 
-get_milestone_labelling(traj)
+get_milestone_labelling(traj, label_milestones = NULL)
 }
 \arguments{
 \item{traj}{The trajectory}
@@ -21,6 +21,8 @@ get_milestone_labelling(traj)
 \item{expression_source}{The expression source}
 
 \item{n_nearest_cells}{The number of nearest cells to use for extracting milestone expression}
+
+\item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels as milestone_ids will be used), a named character vector, or FALSE}
 }
 \description{
 Label milestones based on highest expression of a set of markers
