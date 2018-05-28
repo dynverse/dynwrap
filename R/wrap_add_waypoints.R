@@ -64,8 +64,8 @@ select_waypoints <- function(
     filter(row_number() == 1) %>%
     ungroup() %>%
     mutate(waypoint_id = case_when(
-      percentage == 0 ~ paste0("W", from),
-      percentage == 1 ~ paste0("W", to),
+      percentage == 0 ~ paste0("MILESTONE_W", from),
+      percentage == 1 ~ paste0("MILESTONE_W", to),
       TRUE ~ paste0("W", row_number())
     )
   )
