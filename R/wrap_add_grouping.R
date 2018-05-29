@@ -1,8 +1,8 @@
 #' Add a cell grouping to a data wrapper
 #'
 #' @param data_wrapper A data wrapper to extend upon.
-#' @param group_ids The ids of the groupings.
-#' @param grouping A grouping of the cells.
+#' @param group_ids All group_ids, optional
+#' @param grouping A grouping of the cells, can be
 #' @param ... Extra information to be stored in the wrapper.
 #'
 #' @export
@@ -11,9 +11,26 @@
 add_grouping <- function(
   data_wrapper,
   group_ids,
-  grouping,
+  grouping = NULL,
   ...
 ) {
+  # if grouping not provided, will use group_ids
+  if (is.null(grouping)) {
+    grouping <- group_ids
+    group_ids <- NULL
+  }
+
+  # process the grouping
+  grouping <- get_grouping(wrapper, grouping)
+
+  # if grouping not provided, have to calculate group_ids here
+  if(is.null(group_ids)) group_ids <- unique(grouping)
+
+  #
+  if(length(names(grouping)) != length(grouping)) {
+    names(grouping) <- data_wrapper$cell_ids
+  }
+
   # check whether object is a data wrapper
   testthat::expect_true(is_data_wrapper(data_wrapper))
 
@@ -41,11 +58,45 @@ add_grouping <- function(
   )
 }
 
-#' Test whether an object is a data_wrapper and has grouping data
-#'
-#' @param object The object to be tested.
-#'
+#' @rdname add_grouping
 #' @export
-is_wrapper_with_grouping <- function(object) {
-  is_data_wrapper(object) && "dynwrap::with_grouping" %in% class(object)
+is_wrapper_with_grouping <- function(data_wrapper) {
+  is_data_wrapper(data_wrapper) && "dynwrap::with_grouping" %in% class(data_wrapper)
+}
+
+#' @rdname add_grouping
+#' @export
+get_grouping <- function(data_wrapper, grouping = NULL) {
+  if(is.null(grouping)) {
+    # no grouping provided, use
+    if(is_wrapper_with_grouping(data_wrapper)) {
+      grouping <- set_names(data_wrapper$grouping, data_wrapper$cell_ids)
+    } else if (is_wrapper_with_prior_information(data_wrapper)) {
+      if("grouping_assignment" %in% names(data_wrapper$prior_information)) {
+        grouping <- data_wrapper$prior_information$grouping_assignment %>%
+          {set_names(.$group_id, .$cell_id)}
+      }
+    } else {
+      stop("Wrapper does not contain a grouping, provide grouping or add a grouping to wrapper using add_grouping")
+    }
+  } else if (is.data.frame(grouping)) {
+    grouping <- set_names(grouping$group_id, grouping$cell_id)
+  } else if (length(grouping) == length(cell_ids)) {
+    grouping <- grouping
+  } else if (length(grouping) == 1 && is.character(grouping)) {
+    # column in cell_info
+    if(grouping %in% colnames(data_wrapper$cell_info)) {
+      grouping <- set_names(data_wrapper$cell_info[[grouping]], data_wrapper$cell_id)
+    } else {
+      stop("Could not find column ", grouping, " in cell_info")
+    }
+  } else {
+    stop("Could not find grouping")
+  }
+
+  if(length(names(grouping)) != length(grouping)) {
+    names(grouping) <- data_wrapper$cell_ids
+  }
+
+  grouping
 }
