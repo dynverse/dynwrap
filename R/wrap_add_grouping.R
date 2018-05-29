@@ -21,7 +21,7 @@ add_grouping <- function(
   }
 
   # process the grouping
-  grouping <- get_grouping(wrapper, grouping)
+  grouping <- get_grouping(data_wrapper, grouping)
 
   # if grouping not provided, have to calculate group_ids here
   if(is.null(group_ids)) group_ids <- unique(grouping)
@@ -79,10 +79,13 @@ get_grouping <- function(data_wrapper, grouping = NULL) {
     } else {
       stop("Wrapper does not contain a grouping, provide grouping or add a grouping to wrapper using add_grouping")
     }
-  } else if (is.data.frame(grouping)) {
+  } else if (is.data.frame(grouping) && all(c("group_id", "cell_id") %in% colnames(grouping))) {
     grouping <- set_names(grouping$group_id, grouping$cell_id)
-  } else if (length(grouping) == length(cell_ids)) {
+  } else if (length(grouping) == length(data_wrapper$cell_ids)) {
     grouping <- grouping
+  } else if (length(grouping) == length(names(grouping))) {
+    grouping <- grouping
+    grouping[setdiff(names(grouping), data_wrapper$cell_id)] <- NA
   } else if (length(grouping) == 1 && is.character(grouping)) {
     # column in cell_info
     if(grouping %in% colnames(data_wrapper$cell_info)) {

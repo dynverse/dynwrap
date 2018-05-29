@@ -58,15 +58,6 @@ test_that("Testing add_grouping fails when groupings is not in the correct forma
     wr_orig %>%
       add_grouping(
         group_ids = group_ids,
-        grouping = grouping %>% setNames(NULL),
-        extras = extras
-      )
-  )
-
-  expect_error(
-    wr_orig %>%
-      add_grouping(
-        group_ids = group_ids,
         grouping = paste0("HUO", grouping),
         extras = extras
       )
