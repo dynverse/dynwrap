@@ -1,4 +1,4 @@
-#' Helper functions
+#' This R package contains the code for a common model of single-cell trajectories.
 #'
 #' @import dplyr
 #' @import tidyr

@@ -84,7 +84,7 @@ add_prior_information <- function(
         milestone_percentages = milestone_percentages,
         progressions = progressions,
         divergence_regions = divergence_regions,
-        counts = counts,
+        expression = expression,
         feature_info = feature_info,
         cell_info = cell_info
       ))
@@ -116,8 +116,7 @@ is_wrapper_with_prior_information <- function(object) {
 #' @inheritParams wrap_data
 #' @inheritParams add_trajectory
 #' @inheritParams add_expression
-#' @param marker_logfc Marker genes require at least a X-fold log difference between groups of cells.
-#' @param marker_minpct Only test genes that are detected in a minimum fraction of cells between groups of cells.
+#' @param marker_fdr Maximal FDR value for a gene to be considered a marker
 #'
 #' @export
 generate_prior_information <- function(
@@ -127,14 +126,11 @@ generate_prior_information <- function(
   milestone_percentages,
   progressions,
   divergence_regions,
-  counts,
+  expression,
   feature_info = NULL,
   cell_info = NULL,
-  marker_logfc = 1,
-  marker_minpct = 0.4
+  marker_fdr = 0.005
 ) {
-  requireNamespace("Seurat")
-
   ## START AND END CELLS ##
   # convert milestone network to an igraph object
   is_directed <- any(milestone_network$directed)
@@ -212,26 +208,19 @@ generate_prior_information <- function(
       filter(!housekeeping) %>%
       pull(feature_id)
   } else {
-    ident <- grouping_assignment %>%
-      slice(match(rownames(counts), cell_id)) %>%
-      pull(group_id) %>%
-      factor() %>%
-      setNames(rownames(counts))
+    if ("scran" %in% rownames(installed.packages())) {
+      markers <- scran::findMarkers(t(expression), grouping_assignment %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
 
-    seurat <- Seurat::CreateSeuratObject(t(counts[names(ident), ]))
+      marker_feature_ids <- map(markers, as, "data.frame") %>%
+        map(rownames_to_column, "gene") %>%
+        bind_rows() %>%
+        filter(FDR < marker_fdr) %>%
+        pull("gene")
+    } else {
+      warning("scran should be installed to determine marker features, will simply order by standard deviation")
 
-    seurat@ident <- ident
-
-    changing <- Seurat::FindAllMarkers(
-      seurat,
-      logfc.treshold = marker_logfc,
-      min.pct = marker_minpct
-    )
-
-    marker_feature_ids <- changing %>%
-      filter(abs(avg_logFC) >= 1) %>%
-      .$gene %>%
-      unique()
+      marker_feature_ids <- apply(expression, 2, sd) %>% sort() %>% rownames() %>% {head(., round(length(.)*0.1))}
+    }
   }
 
   ## NUMBER OF BRANCHES ##
