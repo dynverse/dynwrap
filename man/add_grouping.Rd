@@ -2,16 +2,22 @@
 % Please edit documentation in R/wrap_add_grouping.R
 \name{add_grouping}
 \alias{add_grouping}
+\alias{is_wrapper_with_grouping}
+\alias{get_grouping}
 \title{Add a cell grouping to a data wrapper}
 \usage{
-add_grouping(data_wrapper, group_ids, grouping, ...)
+add_grouping(data_wrapper, group_ids, grouping = NULL, ...)
+
+is_wrapper_with_grouping(data_wrapper)
+
+get_grouping(data_wrapper, grouping = NULL)
 }
 \arguments{
 \item{data_wrapper}{A data wrapper to extend upon.}
 
-\item{group_ids}{The ids of the groupings.}
+\item{group_ids}{All group_ids, optional}
 
-\item{grouping}{A grouping of the cells.}
+\item{grouping}{A grouping of the cells, can be}
 
 \item{...}{Extra information to be stored in the wrapper.}
 }
