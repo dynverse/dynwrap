@@ -9,6 +9,8 @@
 #' @param plot_fun A function to plot the results of a TI, needs to have 'prediction' as its first param.
 #'   of `run_fun` with those described in `par_set`.
 #'
+#' @importFrom ParamHelpers dfRowToList generateDesignOfDefaults
+#'
 #' @export
 create_ti_method <- function(
   name,
@@ -29,8 +31,8 @@ create_ti_method <- function(
   ) %>% add_class("dynmethod::ti_method")
 
   default_params <- par_set %>%
-    ParamHelpers::generateDesignOfDefaults(trafo = TRUE) %>%
-    ParamHelpers::dfRowToList(par_set, 1)
+    generateDesignOfDefaults(trafo = TRUE) %>%
+    dfRowToList(par_set, 1)
 
   ti_fun_constructor_with_params <- function(...) {
     run_fun <- get_function(run_fun)
@@ -79,3 +81,22 @@ get_function <- function(fun) {
     stop(sQuote("fun"), " has an incompatible format.")
   }
 }
+
+#' Get the default parameters of a method
+#'
+#' @param method A TI method description
+#'
+#' @export
+#'
+#' @importFrom testthat expect_true
+#' @importFrom ParamHelpers dfRowToList generateDesignOfDefaults
+get_default_parameters <- function(method) {
+  testthat::expect_true(is_ti_method(method))
+
+  dfRowToList(
+    generateDesignOfDefaults(method$par_set, trafo = TRUE),
+    method$par_set,
+    i = 1
+  )
+}
+

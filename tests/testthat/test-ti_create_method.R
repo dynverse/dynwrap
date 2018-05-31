@@ -1,7 +1,7 @@
 context("Testing create_ti_method")
 
 
-test_that("Testing create_ti_method with dummy method", {
+test_that("Testing create_ti_method and get_default_parameters with dummy method", {
   dummy <- create_ti_method(
     name = "dummy 1",
     short_name = "dum1",
@@ -29,4 +29,6 @@ test_that("Testing create_ti_method with dummy method", {
 
   dummy_instance2 <- dummy(param = "101010")
   expect_equal( dummy_instance2$run_fun(NULL), "101010" )
+
+  expect_equal(get_default_parameters(dummy_instance)$param, "banana")
 })
