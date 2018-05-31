@@ -1,14 +1,14 @@
 ---
-title: "Adding a new TI method within R"
+title: "Creating a TI method within R"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Adding a new TI method within R}
+  %\VignetteIndexEntry{Creating a TI method within R}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 
-This vignette describes how to include your own method into the dynverse workflow. We'll illustrate this with a very basic method: using one of the components of a PCA as the pseudotimes.
+This vignette describes how to include your own method into the dynverse workflow. We'll illustrate this with a very basic method: using one of the components of a PCA as the pseudotime.
 
 There are two main ways to add a new method:
 
@@ -39,13 +39,13 @@ The The raw `counts` or normalised `expression`. This is a matrix with in the co
 
 ```{r}
 ncells <- 1000
-pseudotimes <- runif(ncells)
+pseudotime <- runif(ncells)
 
 expression <- matrix(
   c(
-    (pseudotimes - 0.5) ** 2,
-    sqrt(pseudotimes + 20),
-    pseudotimes
+    (pseudotime - 0.5) ** 2,
+    sqrt(pseudotime + 20),
+    pseudotime
   ),
   ncol = 3,
   dimnames = list(as.character(rep(seq_len(ncells))), as.character(c("A", "B", "C")))
@@ -72,8 +72,8 @@ par_set <- makeParamSet(
 
 ```{r}
 component <- 1
-pseudotimes <- pca$x[, component]
-pseudotimes <- (pseudotimes - min(pseudotimes)) / (max(pseudotimes) - min(pseudotimes))
+pseudotime <- pca$x[, component]
+pseudotime <- (pseudotime - min(pseudotime)) / (max(pseudotime) - min(pseudotime))
 ```
 
 ### Prior information
@@ -92,15 +92,15 @@ priors %>%
 
 In this example we will use the `start_cells`...
 ```{r}
-start_cells <- as.character(which.min(pseudotimes))
+start_cells <- as.character(which.min(pseudotime))
 ```
 
 as follows
 
 ```{r}
 if (!is.null(start_cells)) {
-  if(mean(pseudotimes[start_cells]) > 0.5) {
-    pseudotimes <- 1-pseudotimes
+  if(mean(pseudotime[start_cells]) > 0.5) {
+    pseudotime <- 1-pseudotime
   }
 }
 ```
@@ -132,13 +132,13 @@ Example of `milestone_percentages`:
 milestone_percentages <- bind_rows(
   tibble(
     milestone_id = "A",
-    cell_id = names(pseudotimes),
-    percentage = 1-pseudotimes
+    cell_id = names(pseudotime),
+    percentage = 1-pseudotime
   ),
   tibble(
     milestone_id = "B",
-    cell_id = names(pseudotimes),
-    percentage = pseudotimes
+    cell_id = names(pseudotime),
+    percentage = pseudotime
   )
 )
 ```
@@ -146,10 +146,10 @@ milestone_percentages <- bind_rows(
 Example of `progressions`:
 ```{r}
 progressions <- tibble(
-  cell_id = names(pseudotimes),
+  cell_id = names(pseudotime),
   from = "A",
   to = "B",
-  percentage = pseudotimes
+  percentage = pseudotime
 )
 ```
 
@@ -157,7 +157,7 @@ We can now wrap this information up:
 ```{r}
 trajectory <- 
   wrap_data(
-    cell_id = names(pseudotimes)
+    cell_id = names(pseudotime)
   ) %>% 
   add_trajectory(
     milestone_ids = milestone_ids,
@@ -167,14 +167,14 @@ trajectory <-
   )
 ```
 
-In some cases, we already provide functions which do the calculation of milestone_percentages or progressions. For example, when a method returns only a linear trajectory with pseudotimes:
+In some cases, we already provide functions which do the calculation of milestone_percentages or progressions. For example, when a method returns only a linear trajectory with pseudotime:
 
 ```{r}
 trajectory <- 
   wrap_data(
-    cell_ids = names(pseudotimes)
+    cell_ids = names(pseudotime)
   ) %>% 
-  add_linear_trajectory(pseudotimes)
+  add_linear_trajectory(pseudotime)
 ```
 
 Other examples include:
@@ -195,23 +195,23 @@ Combining everything in a function:
 
 ```{r}
 run_fun <- function(expression, component, start_cells = NULL) {
-  # do pca and extract pseudotimes
+  # do pca and extract pseudotime
   pca <- prcomp(expression)
   
-  pseudotimes <- pca$x[, component]
+  pseudotime <- pca$x[, component]
   
-  # flip pseudotimes using start_cells
+  # flip pseudotime using start_cells
   if (!is.null(start_cells)) {
-    if(mean(pseudotimes[start_cells]) > 0.5) {
-      pseudotimes <- 1-pseudotimes
+    if(mean(pseudotime[start_cells]) > 0.5) {
+      pseudotime <- 1-pseudotime
     }
   }
   
   # convert to common format
   wrap_data(
-    cell_ids = names(pseudotimes)
+    cell_ids = names(pseudotime)
   ) %>% 
-  add_linear_trajectory(pseudotimes)
+  add_linear_trajectory(pseudotime)
 }
 ```
 

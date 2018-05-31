@@ -1,18 +1,22 @@
 ---
-title: "Adding a new TI method using docker"
+title: "Creating a TI method using docker"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Adding a new TI method using docker}
+  %\VignetteIndexEntry{Creating a TI method using docker}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 
-This vignette describes how to include your own method into the dynverse workflow. We'll illustrate this with a very basic method: using one of the components of a PCA as the pseudotimes.
+```{r setup, echo=FALSE, message=FALSE}
+library(tidyverse)
+```
+
+This vignette describes how to include your own method into the dynverse workflow. We'll illustrate this with a very basic method: using one of the components of a PCA as the pseudotime.
 
 There are two main ways to add a new method:
 
-* **Directly within R**. In this case you create an R function or R packages. The user will have to install all dependencies. This is the use case described here.
+* **Directly within R**. In this case you create an R function or R packages. The user will have to install all dependencies. This is use case is described in another vignette.
 * **Using a docker**. In this case you create a docker which uses some input files (eg. a file containing the expression) and returns some output files. This use case is described here.
 
 A TI docker requires at least three files:
@@ -21,6 +25,117 @@ A TI docker requires at least three files:
 * A Dockerfile, used to construct the docker.
 * Script(s) to load the data, run the method, and save the output
 
-## Method definition file 
+## Method definition file (`definition.yml`)
 
-The method definition file contains the following 
+An example of a `definition.yml` file (as can be found on the [github](https://github.com/dynverse/comp1)):
+
+```{r, echo=FALSE, results="asis"}
+read_file("https://raw.githubusercontent.com/dynverse/comp1/master/definition.yml") %>%
+  paste0("```yaml\n", ., "\n```") %>% 
+  cat()
+```
+
+This yaml file contains:
+
+#### name
+A name of the method
+
+#### image
+
+The name of the image to use, can be a local name or a name from the [docker hub](https://hub.docker.com/)
+
+#### parameters
+A named list of parameters for the method. Each parameter should at least have the following two properties:
+
+```{r, echo=FALSE}
+parameter_types <- tribble(
+  ~type, ~properties,
+  "numeric", "lower, upper, trafo",
+  "numeric_vector", "len, lower, upper, trafo",
+  "integer", "lower, upper, trafo",
+  "integer_vector", "len, lower, upper, trafo",
+  "logical", "",
+  "logical_vector", "len",
+  "discrete", "values, trafo",
+  "discrete_vector", "len, values"
+)
+```
+
+
+- **type** The type of parameter, can be `r glue::collapse(paste0("\"", parameter_types$type, "\""), ", ", last=" or ")`
+- **default** The default value
+    
+Each type can have addition properties, which define the parameter space
+
+```{r, echo=FALSE}
+parameter_types %>% knitr::kable()
+```
+
+- **lower** and **upper** The lower and upper bounds
+- **trafo** A transoformation function, eg. log
+- **values** A list of values
+- **len** Length of the parameter
+
+#### input
+```{r, echo=FALSE}
+github_url <- function(x, prefix) {
+  glue::glue("[{x}](https://github.com/dynverse/dynwrap/blob/master/{prefix}{x})")
+}
+```
+
+A list of required inputs, can be:
+```{r, echo=FALSE}
+dynwrap:::input_processors %>% 
+  mutate(file = github_url(file, "inst/example_inputs/")) %>% 
+  select(input=id, `File` = file, `Description`=description) %>% 
+  knitr::kable()
+```
+
+
+#### output
+
+A list of outputs, can be:
+
+```{r, echo=FALSE}
+github_url <- function(x, prefix) {
+  glue::glue("[{x}](https://github.com/dynverse/dynwrap/blob/master/{prefix}{x})")
+}
+
+dynwrap:::output_processors %>% 
+  mutate(required_files = map(
+    required_files, 
+    function(required_files) {
+      github_url(required_files, "inst/example_outputs/") %>% 
+        glue::collapse(", ")
+    })
+  ) %>% 
+  select(input=id, `Required files` = required_files, `Description`=description) %>% 
+  knitr::kable()
+```
+
+
+## The `Dockerfile`
+
+An example of a `Dockerfile` (as can be found on the [github](https://github.com/dynverse/comp1)):
+
+```{r, echo=FALSE, results="asis"}
+read_file("https://raw.githubusercontent.com/dynverse/comp1/master/Dockerfile") %>%
+  paste0("```Dockerfile\n", ., "\n```") %>% 
+  cat()
+```
+
+In this example, we add all the files present in the current working directory (which contains the run.R file) to the /code directory.
+
+All dependencies of the method should be installed in this Dockerfile (or from parent docker images)
+
+This file should always contain an entrypoint, which will be called when the TI method is run.
+
+## Running the TI method
+
+All input files requested in the `definition.yml` will be mounted in the `/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/output` directory. An example (as can be found on the [github](https://github.com/dynverse/comp1)):
+
+```{r, echo=FALSE, results="asis"}
+read_file("https://raw.githubusercontent.com/dynverse/comp1/master/run.R") %>%
+  paste0("```r\n", ., "\n```") %>% 
+  cat()
+```
