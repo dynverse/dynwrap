@@ -4,8 +4,9 @@
 \alias{create_ti_method}
 \title{Create a TI method wrapper}
 \usage{
-create_ti_method(name, par_set, run_fun, plot_fun = NULL,
-  package_loaded = c(), package_required = c(), short_name = name)
+create_ti_method(name, par_set, run_fun, plot_fun = function(prediction)
+  ggplot(), package_loaded = c(), package_required = c(),
+  short_name = name)
 }
 \arguments{
 \item{name}{The name of the TI method}
