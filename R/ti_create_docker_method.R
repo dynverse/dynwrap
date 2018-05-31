@@ -194,22 +194,29 @@ save_input <- function(x, input_id, path) {
 }
 
 
+read_pseudotime <- function(dir_output) {
+  pseudotime <- read_csv(
+    file.path(dir_output, "pseudotime.csv"),
+    col_types = cols(
+      cell_id = col_character(),
+      pseudotime = col_double()
+    )
+  ) %>%
+  {set_names(.$pseudotime, .$cell_id)}
+}
+
 
 output_processors <- tribble(
-  ~id, ~processor,
+  ~id, ~processor, ~required_files, ~description,
   "linear", function(model, dir_output) {
-    pseudotimes <- read_csv(
-      file.path(dir_output, "pseudotimes.csv"),
-      col_types = cols(
-        cell_id = col_character(),
-        pseudotime = col_double()
-      )
+    pseudotime <- read_pseudotime(dir_output)
+    model %>% add_linear_trajectory(pseudotime)
+  }, c("pseudotime.csv"), "hi",
 
-    ) %>%
-    {set_names(.$pseudotime, .$cell_id)}
-
-    model %>% add_linear_trajectory(pseudotimes)
-  }
+  "pseudotime", function(model, dir_output) {
+    pseudotime <- read_pseudotime(dir_output)
+    model %>% add_pseudotime(pseudotime)
+  }, c("pseudotime.csv"), "hi"
 )
 
 wrap_output <- function(model, output_ids, dir_output) {
