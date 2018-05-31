@@ -14,7 +14,7 @@ add_cyclic_trajectory(data_wrapper, pseudotimes, directed = FALSE,
 
 \item{directed}{Whether or not the directionality of the pseudotime is predicted.}
 
-\item{do_scale_minmax}{Whether or not to scale the pseudotimes between \link{0,1}.
+\item{do_scale_minmax}{Whether or not to scale the pseudotimes between 0 and 1.
 Otherwise, will assume the values are already within that range.}
 
 \item{...}{extra information to be stored in the wrapper.}
