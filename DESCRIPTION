@@ -21,11 +21,13 @@ Imports:
   ParamHelpers (>= 1.11),
   pdist,
   purrr,
+  readr,
   stringr,
   reshape2,
   testthat,
   tibble,
-  tidyr
+  tidyr,
+  viridis
 Suggests:
   scran
 Remotes:

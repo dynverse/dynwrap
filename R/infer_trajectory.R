@@ -3,7 +3,7 @@
 #' @param task One or more datasets, as created using dynwrap
 #' @param method One or more methods. Must be one of:
 #' \itemize{
-#'   \item{an object or list of ti_... objects (e.g. \code{\link{ti_paga}()}),}
+#'   \item{an object or list of ti_... objects (e.g. \code{\link{ti_comp1}()}),}
 #'   \item{a character vector containing the names of methods to execute (e.g. \code{"scorpius"}), or}
 #'   \item{a dynguidelines data frame.}
 #' }
@@ -389,6 +389,7 @@ execute_method_internal <- function(method, arglist, setseed_detection_file) {
 #' Return all TI ti_methods
 #'
 #' @param as_tibble Whether or not to return the ti_methods as a tibble
+#' @param packages In which packages to look for ti methods
 #'
 #' @importFrom utils lsf.str
 #' @export

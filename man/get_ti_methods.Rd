@@ -8,6 +8,8 @@ get_ti_methods(as_tibble = TRUE, packages = c("dynwrap"))
 }
 \arguments{
 \item{as_tibble}{Whether or not to return the ti_methods as a tibble}
+
+\item{packages}{In which packages to look for ti methods}
 }
 \description{
 Return all TI ti_methods
