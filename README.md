@@ -1,6 +1,9 @@
 # dynwrap
 
-This R package contains the code for a common model of single-cell trajectories.
+[![Build Status](https://travis-ci.org/dynverse/dynwrap.svg)](https://travis-ci.org/dynverse/dynwrap)
+[![codecov](https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynwrap)
+
+**dynwrap** contains the code for a common model of single-cell trajectories.
 Furthermore, it can:
 * Classify the given topology into a trajectory type
 * Contain extra data of single-cell datasets, such as expression, prior information, counts, ...
