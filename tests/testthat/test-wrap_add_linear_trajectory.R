@@ -4,7 +4,7 @@ id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
 extras <- list("man")
 
-pseudotimes <- c(0, .1, .4, .5, .8, 1) %>% set_names(cell_ids)
+pseudotime <- c(0, .1, .4, .5, .8, 1) %>% set_names(cell_ids)
 
 wr_orig <- wrap_data(
   id = id,
@@ -15,7 +15,7 @@ test_that("Testing add_linear_trajectory", {
   wr <-
     wr_orig %>%
     add_linear_trajectory(
-      pseudotimes = pseudotimes,
+      pseudotime = pseudotime,
       do_scale_minmax = TRUE,
       directed = FALSE,
       extras = extras
@@ -27,7 +27,7 @@ test_that("Testing add_linear_trajectory", {
   expect_equivalent(wr$id, id)
   expect_equivalent(wr$cell_ids, cell_ids)
   expect_equivalent(wr$extras, extras)
-  expect_gt(cor(wr$pseudotimes[cell_ids], pseudotimes[cell_ids]), .9)
+  expect_gt(cor(wr$pseudotime[cell_ids], pseudotime[cell_ids]), .9)
   expect_equivalent(length(wr$milestone_ids), 2)
   expect_equivalent(nrow(wr$milestone_network), 1)
   expect_equivalent(set_names(sort(unlist(wr$milestone_network[,c("from", "to")])), NULL), sort(wr$milestone_ids))
@@ -42,7 +42,7 @@ test_that("Testing add_linear_trajectory", {
   wr <-
     wr_orig %>%
     add_linear_trajectory(
-      pseudotimes = pseudotimes,
+      pseudotime = pseudotime,
       do_scale_minmax = TRUE,
       directed = TRUE,
       extras = extras
@@ -54,7 +54,7 @@ test_that("Testing add_linear_trajectory", {
   expect_equivalent(wr$id, id)
   expect_equivalent(wr$cell_ids, cell_ids)
   expect_equivalent(wr$extras, extras)
-  expect_gt(cor(wr$pseudotimes[cell_ids], pseudotimes[cell_ids]), .9)
+  expect_gt(cor(wr$pseudotime[cell_ids], pseudotime[cell_ids]), .9)
   expect_equivalent(length(wr$milestone_ids), 2)
   expect_equivalent(nrow(wr$milestone_network), 1)
   expect_equivalent(set_names(sort(unlist(wr$milestone_network[,c("from", "to")])), NULL), sort(wr$milestone_ids))
@@ -69,14 +69,14 @@ test_that("Testing add_linear_trajectory", {
   wr <-
     wr_orig %>%
     add_linear_trajectory(
-      pseudotimes = pseudotimes/10 + .45,
+      pseudotime = pseudotime/10 + .45,
       do_scale_minmax = FALSE,
       directed = TRUE,
       extras = extras
     )
 
-  expect_gt(min(wr$pseudotimes), .4)
-  expect_lt(max(wr$pseudotimes), .6)
+  expect_gt(min(wr$pseudotime), .4)
+  expect_lt(max(wr$pseudotime), .6)
 
 })
 
@@ -84,7 +84,7 @@ test_that("Testing add_linear_trajectory", {
   wr <-
     wr_orig %>%
     add_linear_trajectory(
-      pseudotimes = pseudotimes[-1],
+      pseudotime = pseudotime[-1],
       do_scale_minmax = TRUE,
       directed = TRUE,
       extras = extras
@@ -93,7 +93,7 @@ test_that("Testing add_linear_trajectory", {
   expect_equivalent(wr$id, id)
   expect_equivalent(wr$cell_ids, cell_ids)
   expect_equivalent(wr$extras, extras)
-  expect_equivalent(length(wr$pseudotimes), length(cell_ids) - 1)
+  expect_equivalent(length(wr$pseudotime), length(cell_ids) - 1)
   expect_true(all(cell_ids %in% wr$progressions$cell_id))
   expect_equivalent(nrow(wr$progressions), length(cell_ids))
 })
@@ -103,7 +103,7 @@ test_that("Testing add_linear_trajectory fails when expected", {
   expect_error(
     wr_orig %>%
     add_linear_trajectory(
-      pseudotimes = pseudotimes %>% set_names(NULL),
+      pseudotime = pseudotime %>% set_names(NULL),
       do_scale_minmax = TRUE,
       directed = FALSE,
       extras = extras

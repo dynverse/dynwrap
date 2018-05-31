@@ -3,9 +3,9 @@
 #' This function will generate the milestone_network and progressions.
 #'
 #' @param data_wrapper A data wrapper to extend upon.
-#' @param pseudotimes A named vector of pseudo times.
+#' @param pseudotime A named vector of pseudo times.
 #' @param directed Whether or not the directionality of the pseudotime is predicted.
-#' @param do_scale_minmax Whether or not to scale the pseudotimes between 0 and 1.
+#' @param do_scale_minmax Whether or not to scale the pseudotime between 0 and 1.
 #'   Otherwise, will assume the values are already within that range.
 #' @param ... extra information to be stored in the wrapper.
 #'
@@ -14,7 +14,7 @@
 #' @importFrom testthat expect_is expect_true expect_named
 add_linear_trajectory <- function(
   data_wrapper,
-  pseudotimes,
+  pseudotime,
   directed = FALSE,
   do_scale_minmax = TRUE,
   ...
@@ -22,17 +22,17 @@ add_linear_trajectory <- function(
   # check data wrapper
   testthat::expect_true(is_data_wrapper(data_wrapper))
 
-  # check names of pseudotimes
+  # check names of pseudotime
   cell_ids <- data_wrapper$cell_ids
-  testthat::expect_is(pseudotimes, "numeric")
-  testthat::expect_named(pseudotimes)
-  testthat::expect_true(all(names(pseudotimes) %in% cell_ids))
+  testthat::expect_is(pseudotime, "numeric")
+  testthat::expect_named(pseudotime)
+  testthat::expect_true(all(names(pseudotime) %in% cell_ids))
 
-  # scale pseudotimes
+  # scale pseudotime
   if (do_scale_minmax) {
-    pseudotimes <- scale_minmax(pseudotimes)
+    pseudotime <- scale_minmax(pseudotime)
   } else {
-    testthat::expect_true(all(0 <= pseudotimes & pseudotimes <= 1))
+    testthat::expect_true(all(0 <= pseudotime & pseudotime <= 1))
   }
 
   # construct milestones
@@ -48,10 +48,10 @@ add_linear_trajectory <- function(
 
   # construct progressions
   progressions <- data_frame(
-    cell_id = names(pseudotimes),
+    cell_id = names(pseudotime),
     from = milestone_ids[[1]],
     to = milestone_ids[[2]],
-    percentage = pseudotimes
+    percentage = pseudotime
   )
 
   # return output
@@ -61,7 +61,7 @@ add_linear_trajectory <- function(
     milestone_network = milestone_network,
     divergence_regions = NULL,
     progressions = progressions,
-    pseudotimes = pseudotimes,
+    pseudotime = pseudotime,
     ...
   )
 }

@@ -15,7 +15,7 @@ run_comp1 <- function(
   wrap_prediction_model(
     cell_ids = rownames(expression)
   ) %>% add_linear_trajectory(
-    pseudotimes = space[,1] %>% setNames(rownames(expression))
+    pseudotime = space[,1] %>% setNames(rownames(expression))
   ) %>% add_dimred(
     dimred = space
   ) %>% add_timings(

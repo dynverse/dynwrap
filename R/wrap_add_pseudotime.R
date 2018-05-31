@@ -19,11 +19,18 @@ calculate_pseudotime <- function(trajectory) {
 }
 
 
-#' Calculate global pseudotime as distance from root
+#' Add or calculate pseudotime as distance from the root
 #'
 #' @param trajectory The trajectory
+#' @param pseudotime Named vector containing the pseudotime for every cell
 #' @export
-add_pseudotime <- function(trajectory) {
-  trajectory$pseudotime <- calculate_pseudotime(trajectory)
+add_pseudotime <- function(trajectory, pseudotime = NULL) {
+  if (is.null(pseudotime)) {
+    pseudotime <- calculate_pseudotime(trajectory)
+  }
+
+  testthat::expect_setequal(names(pseudotime), trajectory$cell_ids)
+
+  trajectory$pseudotime <- pseudotime
   trajectory
 }
