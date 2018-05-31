@@ -1,7 +1,7 @@
 #' Group cells to their highest milestone
 #'
 #' @param milestone_percentages A data frame of milestone percentages.
-#'  Format: \code{data_frame(cell_id = character(), milestone_id = character(), percentage = numeric())}.
+#'  Format: `data_frame(cell_id = character(), milestone_id = character(), percentage = numeric())`.
 #'
 #' @export
 get_cell_grouping <- function(milestone_percentages) {

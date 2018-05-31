@@ -2,7 +2,7 @@
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @param data_wrapper A data wrapper to extend upon. Needs to have a cell grouping created by \code{\link{add_grouping}}.
+#' @param data_wrapper A data wrapper to extend upon. Needs to have a cell grouping created by [add_grouping()].
 #' @param milestone_network A network of milestones.
 #' @param ... extra information to be stored in the wrapper.
 #'

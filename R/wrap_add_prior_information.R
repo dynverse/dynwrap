@@ -209,8 +209,6 @@ generate_prior_information <- function(
       pull(feature_id)
   } else {
     if ("scran" %in% rownames(installed.packages())) {
-      browser()
-
       markers <- scran::findMarkers(t(expression), grouping_assignment %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
 
       marker_feature_ids <- map(markers, as, "data.frame") %>%

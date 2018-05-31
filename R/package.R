@@ -5,7 +5,8 @@
 #' @import methods
 #' @import tibble
 #' @import dynutils
-#' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl keep set_names map2_df
+#' @import ParamHelpers
+#' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl keep set_names map2_df map2
 #' @importFrom magrittr %<>% %$% set_rownames set_colnames
 #'
 #' @docType package
