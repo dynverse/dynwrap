@@ -162,7 +162,7 @@ create_docker_ti_method <- function(
     model
   }
 
-  # adapat run_fun environment
+  # adapt run_fun environment
   environment(run_fun) <- list2env(lst(input_ids, param_ids, output_ids))
 
   # adapt run_fun arguments
@@ -179,50 +179,4 @@ create_docker_ti_method <- function(
     par_set,
     run_fun
   )
-}
-
-
-
-input_processors <- tribble(
-  ~id, ~processor,
-  "expression", function(x, path) {write.csv(x, paste0(path, ".csv"))},
-  "start_cells", function(x, path) {write_json(x, paste0(path, ".json"))}
-)
-
-save_input <- function(x, input_id, path) {
-  input_processors$processor[[which(input_processors$id == input_id)]](x, path)
-}
-
-
-read_pseudotime <- function(dir_output) {
-  pseudotime <- read_csv(
-    file.path(dir_output, "pseudotime.csv"),
-    col_types = cols(
-      cell_id = col_character(),
-      pseudotime = col_double()
-    )
-  ) %>%
-  {set_names(.$pseudotime, .$cell_id)}
-}
-
-
-output_processors <- tribble(
-  ~id, ~processor, ~required_files, ~description,
-  "linear", function(model, dir_output) {
-    pseudotime <- read_pseudotime(dir_output)
-    model %>% add_linear_trajectory(pseudotime)
-  }, c("pseudotime.csv"), "hi",
-
-  "pseudotime", function(model, dir_output) {
-    pseudotime <- read_pseudotime(dir_output)
-    model %>% add_pseudotime(pseudotime)
-  }, c("pseudotime.csv"), "hi"
-)
-
-wrap_output <- function(model, output_ids, dir_output) {
-  for (output_id in output_ids) {
-    model <- output_processors$processor[[which(output_processors$id == output_id)]](model, dir_output)
-  }
-
-  model
 }
