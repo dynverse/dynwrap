@@ -3,7 +3,7 @@
 #' Wrapper around TI method
 #'
 #' @param dimred A character vector specifying which dimensionality reduction method to use.
-#'   See \code{\link{dyndimred::dimred}} for the list of available dimensionality reduction methods.
+#'   See [dyndimred::dimred] for the list of available dimensionality reduction methods.
 #' @inheritParams dyndimred::dimred
 #'
 #' @export
@@ -47,8 +47,8 @@ run_comp1 <- function(
   )
 }
 
-#' @importFrom viridis scale_colour_viridis
 plot_comp1 <- function(prediction) {
+  requireNamespace("viridis")
   g <- ggplot() +
     geom_point(aes(Comp1, Comp2, color = Comp1), data.frame(prediction$dimred)) +
     viridis::scale_colour_viridis(option = "plasma") +

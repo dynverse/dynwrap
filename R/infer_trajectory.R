@@ -3,14 +3,14 @@
 #' @param task One or more datasets, as created using dynwrap
 #' @param method One or more methods. Must be one of:
 #' \itemize{
-#'   \item{an object or list of ti_... objects (e.g. \code{\link{ti_comp1}()}),}
-#'   \item{a character vector containing the names of methods to execute (e.g. \code{"scorpius"}), or}
+#'   \item{an object or list of ti_... objects (e.g. [ti_comp1()]),}
+#'   \item{a character vector containing the names of methods to execute (e.g. `"scorpius"`), or}
 #'   \item{a dynguidelines data frame.}
 #' }
 #' @param parameters A set of parameters to be used during trajectory inference.
 #'   A parameter set must be a named list of parameters.
-#'   If multiple methods were provided in the \code{method} parameter,
-#'    \code{parameters} must be an unnamed list of the same length.
+#'   If multiple methods were provided in the `method` parameter,
+#'    `parameters` must be an unnamed list of the same length.
 #' @param give_priors All the priors a method is allowed to receive. Must be a subset of: `"start_milestones"`,
 #'  `"start_cells"`, `"end_milestones"`, `"end_cells"`, `"grouping_assignment"` and `"grouping_network"`
 #' @param mc_cores The number of cores to use, allowing to parallellise the different tasks

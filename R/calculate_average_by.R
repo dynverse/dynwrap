@@ -2,7 +2,7 @@
 #'
 #' @param x A matrix. One row for every cell; one column for every feature. The rows must be named.
 #' @param cell_grouping A data frame denoting the grouping of the cells.
-#'  Format: \code{data_frame(cell_id = character(), group_id = character())}.
+#'  Format: `data_frame(cell_id = character(), group_id = character())`.
 #'
 #' @export
 calculate_average_by_group <- function(x, cell_grouping) {
@@ -14,7 +14,7 @@ calculate_average_by_group <- function(x, cell_grouping) {
 #'
 #' @param x A matrix. One row for every cell; one column for every feature. The rows must be named.
 #' @param milestone_percentages A data frame of milestone percentages.
-#'  Format: \code{data_frame(cell_id = character(), milestone_id = character(), percentage = numeric())}.
+#'  Format: `data_frame(cell_id = character(), milestone_id = character(), percentage = numeric())`.
 #'
 #' @importFrom reshape2 acast
 #' @importFrom testthat expect_equal expect_true

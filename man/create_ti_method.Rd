@@ -10,12 +10,12 @@ create_ti_method(name, par_set, run_fun, plot_fun = dynplot::plot_default,
 \arguments{
 \item{name}{The name of the TI method}
 
-\item{par_set}{A bunch of parameters created by [ParamHelpers::makeParamSet()]}
+\item{par_set}{A bunch of parameters created by \code{\link[ParamHelpers:makeParamSet]{ParamHelpers::makeParamSet()}}}
 
 \item{run_fun}{A function to run the TI, needs to have 'counts' as its first param.}
 
 \item{plot_fun}{A function to plot the results of a TI, needs to have 'prediction' as its first param.
-of `run_fun` with those described in `par_set`.}
+of \code{run_fun} with those described in \code{par_set}.}
 
 \item{package_loaded}{The packages that need to be loaded before executing the method}
 

@@ -16,6 +16,8 @@ Imports:
   dynutils,
   dyndimred,
   igraph,
+  glue,
+  jsonlite,
   magrittr,
   methods,
   ParamHelpers (>= 1.11),
@@ -26,20 +28,25 @@ Imports:
   reshape2,
   testthat,
   tibble,
-  tidyr,
-  viridis
+  tidyr
 Suggests:
-  scran
+  crayon,
+  scran,
+  stevedore,
+  viridis,
+  yaml
 Remotes:
   berndbischl/ParamHelpers,
   dynverse/dynutils,
-  dynverse/dyndimred
+  dynverse/dyndimred,
+  richfitz/stevedore
 Collate: 
     'calculate_average_by.R'
     'classify_milestone_network.R'
     'compute_tented_geodesic_distances.R'
     'convert_milestone_percentages_to_progressions.R'
     'convert_progressions_to_milestone_percentages.R'
+    'create_docker_ti_method.R'
     'create_ti_method.R'
     'data.R'
     'get_cell_grouping.R'
@@ -65,3 +72,4 @@ Collate:
     'wrap_data.R'
     'wrap_label_milestones.R'
     'wrap_prediction_model.R'
+Roxygen: list(markdown = TRUE)

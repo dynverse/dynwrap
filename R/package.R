@@ -6,7 +6,7 @@
 #' @import tibble
 #' @import dynutils
 #' @import ParamHelpers
-#' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl keep set_names map2_df
+#' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl keep set_names map2_df map2
 #' @importFrom magrittr %<>% %$% set_rownames set_colnames
 #'
 #' @docType package

@@ -5,7 +5,7 @@
 #' @param data_wrapper A data wrapper to extend upon.
 #' @param pseudotimes A named vector of pseudo times.
 #' @param directed Whether or not the directionality of the pseudotime is predicted.
-#' @param do_scale_minmax Whether or not to scale the pseudotimes between [0,1].
+#' @param do_scale_minmax Whether or not to scale the pseudotimes between 0 and 1.
 #'   Otherwise, will assume the values are already within that range.
 #' @param ... extra information to be stored in the wrapper.
 #'
