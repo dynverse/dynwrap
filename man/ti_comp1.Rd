@@ -8,7 +8,7 @@ ti_comp1(dimred = "pca", ndim = 2L)
 }
 \arguments{
 \item{dimred}{A character vector specifying which dimensionality reduction method to use.
-See \code{\link{dyndimred::list_dimred_methods}} for the list of available dimensionality reduction methods.}
+See \code{\link{dyndimred::dimred}} for the list of available dimensionality reduction methods.}
 
 \item{ndim}{The number of dimensions}
 }
