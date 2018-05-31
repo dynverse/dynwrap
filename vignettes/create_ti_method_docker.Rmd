@@ -12,14 +12,14 @@ vignette: >
 library(tidyverse)
 ```
 
-This vignette describes how to include your own method into the dynverse workflow. We'll illustrate this with a very basic method: using one of the components of a PCA as the pseudotime.
+This vignette describes how to include your own method into the dynverse workflow. We'll illustrate this with a very basic method: using one of the components of a PCA as the pseudotime. The files for this example are also available at [https://github.com/dynverse/comp1](https://github.com/dynverse/comp1).
 
 There are two main ways to add a new method:
 
 * **Directly within R**. In this case you create an R function or R packages. The user will have to install all dependencies. This is use case is described in another vignette.
 * **Using a docker**. In this case you create a docker which uses some input files (eg. a file containing the expression) and returns some output files. This use case is described here.
 
-A TI docker requires at least three files:
+A TI docker requires at least three files.
 
 * A definition yaml or json file, used to determine the format of input, output and parameters.
 * A Dockerfile, used to construct the docker.

@@ -15,8 +15,8 @@ pseudotime <- tibble(
 
 start_cells <- pseudotime$cell_id[which.min(pseudotime$pseudotime)]
 
-counts %>% as.data.frame %>% write_csv("inst/example_inputs/counts.csv")
-expression %>% as.data.frame %>% write_csv("inst/example_inputs/expression.csv")
+counts %>% as.data.frame() %>% rownames_to_column("cell_id") %>% write_csv("inst/example_inputs/counts.csv")
+expression %>% as.data.frame %>% rownames_to_column("cell_id") %>% write_csv("inst/example_inputs/expression.csv")
 
 start_cells %>% jsonlite::write_json("inst/example_inputs/start_cells.json")
 
