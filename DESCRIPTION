@@ -35,8 +35,9 @@ Suggests:
   stevedore,
   viridis,
   yaml,
-    knitr,
-    rmarkdown
+  knitr,
+  rmarkdown,
+  tidyverse
 Remotes:
   berndbischl/ParamHelpers,
   dynverse/dynutils,
