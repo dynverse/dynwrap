@@ -59,6 +59,8 @@ Collate:
     'ti_comp1.R'
     'ti_create_docker_method.R'
     'ti_infer_trajectory.R'
+    'ti_input_processors.R'
+    'ti_output_processors.R'
     'wrap_add_cell_graph.R'
     'wrap_add_cell_waypoints.R'
     'wrap_add_cluster_graph.R'
