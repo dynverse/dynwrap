@@ -17,6 +17,7 @@ Imports:
   igraph,
   magrittr,
   methods,
+  ParamHelpers (>= 1.11),
   pdist,
   purrr,
   stringr,
