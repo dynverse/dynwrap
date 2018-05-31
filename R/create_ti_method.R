@@ -31,8 +31,8 @@ create_ti_method <- function(
   ) %>% add_class("dynmethod::ti_method")
 
   default_params <- par_set %>%
-    generateDesignOfDefaults(trafo = TRUE) %>%
-    dfRowToList(par_set, 1)
+    ParamHelpers::generateDesignOfDefaults(trafo = TRUE) %>%
+    ParamHelpers::dfRowToList(par_set, 1)
 
   ti_fun_constructor_with_params <- function(...) {
     run_fun <- get_function(run_fun)
@@ -93,8 +93,8 @@ get_function <- function(fun) {
 get_default_parameters <- function(method) {
   testthat::expect_true(is_ti_method(method))
 
-  dfRowToList(
-    generateDesignOfDefaults(method$par_set, trafo = TRUE),
+  ParamHelpers::dfRowToList(
+    ParamHelpers::generateDesignOfDefaults(method$par_set, trafo = TRUE),
     method$par_set,
     i = 1
   )
