@@ -29,8 +29,9 @@ add_pseudotime <- function(trajectory, pseudotime = NULL) {
     pseudotime <- calculate_pseudotime(trajectory)
   }
 
+  testthat::expect_true(length(names(pseudotime) )== length(trajectory$cell_ids))
   testthat::expect_setequal(names(pseudotime), trajectory$cell_ids)
 
-  trajectory$pseudotime <- pseudotime
+  trajectory$pseudotime <- pseudotime[trajectory$cell_ids]
   trajectory
 }
