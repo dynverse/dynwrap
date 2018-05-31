@@ -184,7 +184,9 @@ Other examples include:
 We can plot this output using the plotting functions provided by the `dynplot` package:
 
 ```{r}
-dynplot::plot_dimred(trajectory, "pseudotime", expression_source = expression)
+if ("dynplot" %in% rownames(installed.packages())) {
+  dynplot::plot_dimred(trajectory, "pseudotime", expression_source = expression)
+}
 ```
 
 ## Creating the method object
@@ -239,9 +241,8 @@ task <- wrap_data("", rownames(expression)) %>% add_expression(expression, expre
 model <- infer_trajectory(task, ti_dummy())
 ```
 
-
 ```{r}
-library(dynplot)
-dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
+if ("dynplot" %in% rownames(installed.packages())) {
+  dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
+}
 ```
-

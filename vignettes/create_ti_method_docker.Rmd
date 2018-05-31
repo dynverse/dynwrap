@@ -21,8 +21,6 @@ A TI docker requires at least three files:
 * A Dockerfile, used to construct the docker.
 * Script(s) to load the data, run the method, and save the output
 
-Although not required, it can be very useful to 
+## Method definition file 
 
-## Method definition file
-
-The complete definition file for this example can be found
+The method definition file contains the following 
