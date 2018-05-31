@@ -2,16 +2,16 @@
 % Please edit documentation in R/ti_create_docker_method.R
 \name{create_docker_ti_method}
 \alias{create_docker_ti_method}
-\title{Create a TI method from a docker(hub) container}
+\title{Create a TI method from a docker(hub) image}
 \usage{
-create_docker_ti_method(container, name = NULL, input = NULL,
-  output = NULL, par_set = NULL, parameters = NULL, definition = NULL,
-  pull = TRUE, docker_client = stevedore::docker_client())
+create_docker_ti_method(image, name = NULL, input = NULL, output = NULL,
+  par_set = NULL, parameters = NULL, definition = NULL, pull = TRUE,
+  docker_client = stevedore::docker_client())
 }
 \arguments{
-\item{container}{The name of the container. Required}
+\item{image}{The name of the image. Required}
 
-\item{name}{The name of the method. Optional, will be extracted from the container definition.yml file}
+\item{name}{The name of the method. Optional, will be extracted from the image definition.yml file}
 
 \item{input}{Input data, such as expression, counts or prior_information}
 
@@ -19,14 +19,14 @@ create_docker_ti_method(container, name = NULL, input = NULL,
 
 \item{par_set}{The parameter set as created by \link[ParamHelpers:makeParamSet]{ParamHelpers::makeParamSet}}
 
-\item{parameters}{A named list of parameters, containing the type of parameter and additional parameters such as lower and upper bounds, default value and/or possible values. Optional, will be extracted from the container definition.yml file}
+\item{parameters}{A named list of parameters, containing the type of parameter and additional parameters such as lower and upper bounds, default value and/or possible values. Optional, will be extracted from the image definition.yml file}
 
-\item{definition}{A list containing the name, container, input, output and parameters of a method. Usually used for when these values are loaded from a yaml or json file}
+\item{definition}{A list containing the name, image, input, output and parameters of a method. Usually used for when these values are loaded from a yaml or json file}
 
-\item{pull}{Whether to pull the container first}
+\item{pull}{Whether to pull the image first}
 
 \item{docker_client}{Optional, a \code{\link[stevedore:docker_client]{stevedore::docker_client()}}}
 }
 \description{
-Create a TI method from a docker(hub) container
+Create a TI method from a docker(hub) image
 }

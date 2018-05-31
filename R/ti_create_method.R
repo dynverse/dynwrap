@@ -26,7 +26,7 @@ create_ti_method <- function(
     package_loaded,
     package_required,
     par_set
-  ) %>% add_class("dynmethods::ti_method")
+  ) %>% add_class("dynwrap::ti_method")
 
   default_params <- par_set %>%
     ParamHelpers::generateDesignOfDefaults(trafo = TRUE) %>%
@@ -62,7 +62,7 @@ create_ti_method <- function(
 #'
 #' @export
 is_ti_method <- function(object) {
-  "dynmethods::ti_method" %in% class(object)
+  ("dynwrap::ti_method" %in% class(object)) || ("dynmethod::ti_method" %in% class(object))
 }
 
 get_function <- function(fun) {
