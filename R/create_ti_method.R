@@ -14,7 +14,7 @@ create_ti_method <- function(
   name,
   par_set,
   run_fun,
-  plot_fun = NULL,
+  plot_fun = function(prediction) ggplot(),
   package_loaded = c(),
   package_required = c(),
   short_name = name
