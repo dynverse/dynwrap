@@ -11,7 +11,7 @@ LazyData: TRUE
 RoxygenNote: 6.0.1
 Depends:
   R (>= 3.0.0)
-Imports: 
+Imports:
   dplyr,
   dynutils,
   dyndimred,
@@ -34,26 +34,30 @@ Suggests:
   scran,
   stevedore,
   viridis,
-  yaml
+  yaml,
+    knitr,
+    rmarkdown
 Remotes:
   berndbischl/ParamHelpers,
   dynverse/dynutils,
   dynverse/dyndimred,
   richfitz/stevedore
+Roxygen: list(markdown = TRUE)
+VignetteBuilder: knitr
 Collate: 
     'calculate_average_by.R'
     'classify_milestone_network.R'
     'compute_tented_geodesic_distances.R'
     'convert_milestone_percentages_to_progressions.R'
     'convert_progressions_to_milestone_percentages.R'
-    'create_docker_ti_method.R'
-    'create_ti_method.R'
     'data.R'
     'get_cell_grouping.R'
-    'infer_trajectory.R'
     'package.R'
     'simplify_igraph_network.R'
+    'ti_create_method.R'
     'ti_comp1.R'
+    'ti_create_docker_method.R'
+    'ti_infer_trajectory.R'
     'wrap_add_cell_graph.R'
     'wrap_add_cell_waypoints.R'
     'wrap_add_cluster_graph.R'
@@ -72,4 +76,3 @@ Collate:
     'wrap_data.R'
     'wrap_label_milestones.R'
     'wrap_prediction_model.R'
-Roxygen: list(markdown = TRUE)

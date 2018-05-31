@@ -1,27 +1,3 @@
-#' Inferring trajectories with Component 1
-#'
-#' Wrapper around TI method
-#'
-#' @param dimred A character vector specifying which dimensionality reduction method to use.
-#'   See [dyndimred::dimred] for the list of available dimensionality reduction methods.
-#' @inheritParams dyndimred::dimred
-#'
-#' @export
-#'
-#' @include create_ti_method.R
-ti_comp1 <- create_ti_method(
-  name = "Component 1",
-  short_name = "comp1",
-  package_loaded = c(),
-  package_required = c(),
-  par_set = ParamHelpers::makeParamSet(
-    ParamHelpers::makeDiscreteParam(id = "dimred", default = "pca", values = names(dyndimred::list_dimred_methods())),
-    ParamHelpers::makeIntegerParam(id="ndim", default = 2, lower=2, upper=30)
-  ),
-  run_fun = "run_comp1",
-  plot_fun = "plot_comp1"
-)
-
 run_comp1 <- function(
   expression,
   ndim,
@@ -55,3 +31,28 @@ plot_comp1 <- function(prediction) {
     labs(colour = "Pseudotime") +
     theme(legend.position = c(.92, .12))
 }
+
+
+#' Inferring trajectories with Component 1
+#'
+#' Wrapper around TI method
+#'
+#' @param dimred A character vector specifying which dimensionality reduction method to use.
+#'   See [dyndimred::dimred] for the list of available dimensionality reduction methods.
+#' @inheritParams dyndimred::dimred
+#'
+#' @export
+#'
+#' @include ti_create_method.R
+ti_comp1 <- create_ti_method(
+  name = "Component 1",
+  short_name = "comp1",
+  package_loaded = c(),
+  package_required = c(),
+  par_set = ParamHelpers::makeParamSet(
+    ParamHelpers::makeDiscreteParam(id = "dimred", default = "pca", values = names(dyndimred::list_dimred_methods())),
+    ParamHelpers::makeIntegerParam(id="ndim", default = 2, lower=2, upper=30)
+  ),
+  run_fun = run_comp1,
+  plot_fun = plot_comp1
+)
