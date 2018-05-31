@@ -1,6 +1,6 @@
 #' An abstract data wrapper for TI predictions
 #'
-#' @inheritParams dynwrap::wrap_data
+#' @inheritParams wrap_data
 #'
 #' @export
 wrap_prediction_model <- function(
@@ -14,7 +14,7 @@ wrap_prediction_model <- function(
     cell_info = cell_info,
     ...
   )
-  class(out) <- c("dynmethods::prediction", class(out))
+  class(out) <- c("dynwrap::prediction", class(out))
   out
 }
 
@@ -24,5 +24,5 @@ wrap_prediction_model <- function(
 #'
 #' @export
 is_prediction <- function(object) {
-  "dynmethods::prediction" %in% class(object)
+  "dynwrap::prediction" %in% class(object)
 }

@@ -9,8 +9,6 @@
 #' @param plot_fun A function to plot the results of a TI, needs to have 'prediction' as its first param.
 #'   of `run_fun` with those described in `par_set`.
 #'
-#' @importFrom ParamHelpers dfRowToList generateDesignOfDefaults
-#'
 #' @export
 create_ti_method <- function(
   name,
@@ -89,7 +87,6 @@ get_function <- function(fun) {
 #' @export
 #'
 #' @importFrom testthat expect_true
-#' @importFrom ParamHelpers dfRowToList generateDesignOfDefaults
 get_default_parameters <- function(method) {
   testthat::expect_true(is_ti_method(method))
 
