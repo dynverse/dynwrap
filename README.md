@@ -10,5 +10,6 @@ The advantage of using a common model is that it allows
 * Comparison between a prediction and a gold standard, eg. from [dyneval](https://www.github.com/dynverse/dyneval)
 * Comparing two predictions
 * Using common plotting findings, eg. from [dynplot](https://www.github.com/dynverse/dynplot)
+* Extracting relevant features/genes, eg. using [dynfeature](https://www.github.com/dynverse/dynfeature)
 
 Better documentation will be provided very soon.
