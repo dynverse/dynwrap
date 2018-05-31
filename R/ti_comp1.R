@@ -54,5 +54,4 @@ plot_comp1 <- function(prediction) {
     viridis::scale_colour_viridis(option = "plasma") +
     labs(colour = "Pseudotime") +
     theme(legend.position = c(.92, .12))
-  process_dynplot(g, prediction$id)
 }

@@ -4,7 +4,7 @@
 \alias{create_ti_method}
 \title{Create a TI method wrapper}
 \usage{
-create_ti_method(name, par_set, run_fun, plot_fun = dynplot::plot_default,
+create_ti_method(name, par_set, run_fun, plot_fun = NULL,
   package_loaded = c(), package_required = c(), short_name = name)
 }
 \arguments{

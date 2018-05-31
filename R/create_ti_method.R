@@ -14,7 +14,7 @@ create_ti_method <- function(
   name,
   par_set,
   run_fun,
-  plot_fun = dynplot::plot_default,
+  plot_fun = NULL,
   package_loaded = c(),
   package_required = c(),
   short_name = name
