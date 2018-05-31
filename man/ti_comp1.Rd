@@ -13,5 +13,5 @@ See \code{\link{dyndimred::list_dimred_methods}} for the list of available dimen
 \item{ndim}{The number of dimensions}
 }
 \description{
-Inferring trajectories with Component 1
+Wrapper around TI method
 }
