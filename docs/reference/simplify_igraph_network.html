@@ -91,7 +91,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/dynverse/dynwrap">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -105,7 +110,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Simplify an igraph network such that consecutive linear edges are removed</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/simplify_igraph_network.R'><code>R/simplify_igraph_network.R</code></a></small>
     <div class="hidden name"><code>simplify_igraph_network.Rd</code></div>
     </div>
 
@@ -136,9 +141,9 @@
   <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>F</span>
 )
 <span class='no'>gr</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>igraph</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/igraph/topics/graph_from_data_frame'>graph_from_data_frame</a></span>(<span class='no'>net</span>)
-<span class='fu'>simplify_igraph_network</span>(<span class='no'>gr</span>)</div><div class='output co'>#&gt; IGRAPH 3a862e2 DNW- 2 1 -- 
+<span class='fu'>simplify_igraph_network</span>(<span class='no'>gr</span>)</div><div class='output co'>#&gt; IGRAPH 575cc2e DNW- 2 1 -- 
 #&gt; + attr: name (v/c), length (e/n), directed (e/l), weight (e/n)
-#&gt; + edge from 3a862e2 (vertex names):
+#&gt; + edge from 575cc2e (vertex names):
 #&gt; [1] 1-&gt;3</div><div class='input'>
 <span class='no'>net</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(
   <span class='kw'>from</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>1</span>),
@@ -148,9 +153,9 @@
     <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>F</span>
 )
 <span class='no'>gr</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>igraph</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/igraph/topics/graph_from_data_frame'>graph_from_data_frame</a></span>(<span class='no'>net</span>)
-<span class='fu'>simplify_igraph_network</span>(<span class='no'>gr</span>)</div><div class='output co'>#&gt; IGRAPH 14724e4 DNW- 2 2 -- 
+<span class='fu'>simplify_igraph_network</span>(<span class='no'>gr</span>)</div><div class='output co'>#&gt; IGRAPH d580749 DNW- 2 2 -- 
 #&gt; + attr: name (v/c), length (e/n), directed (e/l), weight (e/n)
-#&gt; + edges from 14724e4 (vertex names):
+#&gt; + edges from d580749 (vertex names):
 #&gt; [1] 1-&gt;4 1-&gt;1</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
