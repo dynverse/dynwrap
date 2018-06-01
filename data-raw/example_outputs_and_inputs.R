@@ -44,6 +44,10 @@ divergence_regions <- tibble(
   is_start = c(TRUE, FALSE, FALSE)
 )
 
+dimred <- dyndimred::dimred_pca(expression)
+dimred_milestones <- dimred[sample(seq_len(nrow(dimred)), length(milestone_ids)), ]
+rownames(dimred_milestones) <- milestone_ids
+
 # prior information
 start_cells <- names(pseudotime)[which.min(pseudotime)]
 
@@ -65,3 +69,5 @@ write_milestone_ids(milestone_ids, dir_output)
 write_progressions(progressions, dir_output)
 write_milestone_percentages(milestone_percentages, dir_output)
 write_divergence_regions(divergence_regions, dir_output)
+write_dimred(dimred, dir_output)
+write_dimred_milestones(dimred_milestones, dir_output)

@@ -147,7 +147,7 @@ All dependencies of the method should be installed in this Dockerfile (or from p
 
 This file should always contain an entrypoint, which will be called when the TI method is run.
 
-## Running the TI method
+## Doing trajectory inference
 
 All input files requested in the `definition.yml` will be mounted in the `/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/output` directory. An example (as can be found on the [github](https://github.com/dynverse/comp1)):
 
@@ -156,3 +156,52 @@ read_file("https://raw.githubusercontent.com/dynverse/comp1/master/run.R") %>%
   paste0("```r\n", ., "\n```") %>% 
   cat()
 ```
+
+## Running the TI method
+
+Now we're all set to test the TI method on data. We first have to build the method (in shell)
+
+```bash
+docker build -t dynverse/comp1 .
+```
+
+Although this docker can be run in any programming language, we'll run it here using the `dynwrap` workflow. First, we have to wrap the docker into a method function.
+```r
+ti_comp1 <- create_docker_ti_method("dynverse/comp1")
+```
+
+If the method is on the docker hub, it can also be pulled
+```{r}
+library(dynwrap)
+ti_comp1 <- dynwrap::pull_docker_ti_method("dynverse/comp1")
+```
+
+Then we'll use some test data
+```{r}
+ncells <- 1000
+pseudotime <- runif(ncells)
+
+expression <- matrix(
+  c(
+    (pseudotime - 0.5) ** 2,
+    sqrt(pseudotime + 20),
+    pseudotime
+  ),
+  ncol = 3,
+  dimnames = list(as.character(rep(seq_len(ncells))), as.character(c("A", "B", "C")))
+)
+expression <- expression + rnorm(length(expression), sd = 0.02)
+
+counts <- round(expression)
+
+task <- wrap_expression(
+  expression,
+  counts
+) %>% add_prior_information(start_cells = rownames(expression)[which.min(pseudotime)])
+```
+
+Now infer a trajectory
+```{r}
+model <- infer_trajectory(task, ti_comp1())
+```
+

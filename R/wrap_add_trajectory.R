@@ -209,13 +209,13 @@ check_progressions <- function(cell_ids, milestone_ids, milestone_network, progr
 
 # Process trajectory from file ----------------------------------------
 read_milestone_network <- function(dir_output) {
-  readr::read_csv(
+  read_csv(
     file.path(dir_output, "milestone_network.csv"),
-    col_types = readr::cols(
-      from = readr::col_character(),
-      to = readr::col_character(),
-      directed = readr::col_logical(),
-      length = readr::col_number()
+    col_types = cols(
+      from = col_character(),
+      to = col_character(),
+      directed = col_logical(),
+      length = col_number()
     )
   )
 }
@@ -240,12 +240,12 @@ write_milestone_ids <- function(milestone_ids, dir_output) {
 }
 
 read_milestone_percentages <- function(dir_output) {
-  readr::read_csv(
+  read_csv(
     file.path(dir_output, "milestone_percentages.csv"),
-    col_types = readr::cols(
-      cell_id = readr::col_character(),
-      milestone_id = readr::col_character(),
-      percentage = readr::col_number()
+    col_types = cols(
+      cell_id = col_character(),
+      milestone_id = col_character(),
+      percentage = col_number()
     )
   )
 }
@@ -257,13 +257,13 @@ write_milestone_percentages <- function(milestone_percentages, dir_output) {
 }
 
 read_progressions <- function(dir_output) {
-  readr::read_csv(
+  read_csv(
     file.path(dir_output, "progressions.csv"),
-    col_types = readr::cols(
-      cell_id = readr::col_character(),
-      from = readr::col_character(),
-      to = readr::col_character(),
-      percentage = readr::col_number()
+    col_types = cols(
+      cell_id = col_character(),
+      from = col_character(),
+      to = col_character(),
+      percentage = col_number()
     )
   )
 }
@@ -277,12 +277,12 @@ write_progressions <- function(progressions, dir_output) {
 read_divergence_regions <- function(dir_output, milestone_network) {
   path <- file.path(dir_output, "divergence_regions.csv")
   if(file.exists(path)) {
-    readr::read_csv(
+    read_csv(
       path,
-      col_types = readr::cols(
-        divergence_id = readr::col_character(),
-        milestone_id = readr::col_character(),
-        is_start = readr::col_logical()
+      col_types = cols(
+        divergence_id = col_character(),
+        milestone_id = col_character(),
+        is_start = col_logical()
       )
     )
   } else {
