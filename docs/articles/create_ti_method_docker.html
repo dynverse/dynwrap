@@ -60,7 +60,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/dynverse/dynwrap">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -74,16 +81,16 @@
     <div class="page-header toc-ignore">
       <h1>Creating a TI method using docker</h1>
             
-            <h4 class="date">2018-05-31</h4>
+            <h4 class="date">2018-06-01</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/dynverse/dynwrap/blob/master/vignettes/create_ti_method_docker.Rmd"><code>vignettes/create_ti_method_docker.Rmd</code></a></small>
       <div class="hidden name"><code>create_ti_method_docker.Rmd</code></div>
 
     </div>
 
     
     
-<p>This vignette describes how to include your own method into the dynverse workflow. We’ll illustrate this with a very basic method: using one of the components of a PCA as the pseudotime.</p>
+<p>This vignette describes how to include your own method into the dynverse workflow. We’ll illustrate this with a very basic method: using one of the components of a PCA as the pseudotime. The files for this example are also available at <a href="https://github.com/dynverse/comp1" class="uri">https://github.com/dynverse/comp1</a>.</p>
 <p>There are two main ways to add a new method:</p>
 <ul>
 <li>
@@ -91,7 +98,7 @@
 <li>
 <strong>Using a docker</strong>. In this case you create a docker which uses some input files (eg. a file containing the expression) and returns some output files. This use case is described here.</li>
 </ul>
-<p>A TI docker requires at least three files:</p>
+<p>A TI docker requires at least three files.</p>
 <ul>
 <li>A definition yaml or json file, used to determine the format of input, output and parameters.</li>
 <li>A Dockerfile, used to construct the docker.</li>
@@ -102,7 +109,7 @@
 <a href="#method-definition-file-definition-yml" class="anchor"></a>Method definition file (<code>definition.yml</code>)</h2>
 <p>An example of a <code>definition.yml</code> file (as can be found on the <a href="https://github.com/dynverse/comp1">github</a>):</p>
 <div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">name:</span><span class="at"> component_one</span>
-<span class="fu">image:</span><span class="at"> dynverse/compone</span>
+<span class="fu">image:</span><span class="at"> dynverse/comp1</span>
 <span class="fu">parameters:</span>
   <span class="fu">component:</span>
     <span class="fu">type:</span><span class="at"> integer</span>
@@ -222,20 +229,57 @@
 <p>A list of outputs, can be:</p>
 <table class="table">
 <thead><tr class="header">
-<th align="left">input</th>
+<th align="left">name</th>
 <th align="left">Required files</th>
+<th align="left">Optional files</th>
 <th align="left">Description</th>
+<th align="left">Creates trajectory</th>
+<th align="left">Required outputs</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">linear</td>
-<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/pseudotime.csv">pseudotime.csv</a></td>
-<td align="left">Creates a linear trajectory from pseudotime</td>
+<td align="left">trajectory</td>
+<td align="left">
+<a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/milestone_network.csv">milestone_network.csv</a>, <a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/progressions.csv">progressions.csv</a>, <a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/milestone_percentages.csv">milestone_percentages.csv</a>
+</td>
+<td align="left">
+<a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/divergence_regions.csv">divergence_regions.csv</a>, <a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/milestone_ids.json">milestone_ids.json</a>
+</td>
+<td align="left">Creates a trajectory using a milestone network and progressions OR milestone percentages (one of either is required)</td>
+<td align="left">✔</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">linear</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/pseudotime.csv">pseudotime.csv</a></td>
+<td align="left"></td>
+<td align="left">Creates a linear trajectory from pseudotime</td>
+<td align="left">✔</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
 <td align="left">pseudotime</td>
 <td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/pseudotime.csv">pseudotime.csv</a></td>
-<td align="left">Add pseudotime to the trajectory</td>
+<td align="left"></td>
+<td align="left">Add pseudotime, a single value for every cell which denotes its progression from start to finish</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">grouping</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/grouping.csv">grouping.csv</a></td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/group_ids.json">group_ids.json</a></td>
+<td align="left">Add a cell grouping, a single value for every cell which assigns it to one group</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">cluster_graph</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/milestone_network.csv">milestone_network.csv</a></td>
+<td align="left"></td>
+<td align="left">Creates a trajectory by using a cell grouping and a given network between these cell groups</td>
+<td align="left">✔</td>
+<td align="left">grouping</td>
 </tr>
 </tbody>
 </table>

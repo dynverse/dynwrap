@@ -98,18 +98,35 @@ A list of outputs, can be:
 
 ```{r, echo=FALSE}
 github_url <- function(x, prefix) {
-  glue::glue("[{x}](https://github.com/dynverse/dynwrap/blob/master/{prefix}{x})")
+  if(length(x)) {
+    glue::glue("[{x}](https://github.com/dynverse/dynwrap/blob/master/{prefix}{x})")
+  } else {
+    ""
+  }
 }
 
 dynwrap:::output_processors %>% 
-  mutate(required_files = map(
-    required_files, 
-    function(required_files) {
-      github_url(required_files, "inst/example_outputs/") %>% 
-        glue::collapse(", ")
-    })
+  mutate_at(
+    c("required_files", "optional_files"),
+    ~map(
+      ., 
+      function(files) {
+        github_url(files, "inst/example_outputs/") %>% 
+          glue::collapse(", ")
+      })
   ) %>% 
-  select(input=id, `Required files` = required_files, `Description`=description) %>% 
+  mutate(
+    creates_trajectory = ifelse(creates_trajectory, "✔", ""),
+    required_output = map_chr(required_output, paste0, collapse= ", ")
+  ) %>% 
+  select(
+    name=id, 
+    `Required files` = required_files, 
+    `Optional files` = optional_files,
+    `Description`=description, 
+    `Creates trajectory`=creates_trajectory,
+    `Required outputs` = required_output
+  ) %>% 
   knitr::kable()
 ```
 
