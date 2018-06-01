@@ -2,11 +2,14 @@
 % Please edit documentation in R/ti_create_docker_method.R
 \name{create_docker_ti_method}
 \alias{create_docker_ti_method}
+\alias{pull_docker_ti_method}
 \title{Create a TI method from a docker(hub) image}
 \usage{
 create_docker_ti_method(image, name = NULL, input = NULL, output = NULL,
-  par_set = NULL, parameters = NULL, definition = NULL, pull = TRUE,
+  par_set = NULL, parameters = NULL, definition = NULL,
   docker_client = stevedore::docker_client())
+
+pull_docker_ti_method(image, docker_client = stevedore::docker_client())
 }
 \arguments{
 \item{image}{The name of the image. Required}
@@ -23,10 +26,8 @@ create_docker_ti_method(image, name = NULL, input = NULL, output = NULL,
 
 \item{definition}{A list containing the name, image, input, output and parameters of a method. Usually used for when these values are loaded from a yaml or json file}
 
-\item{pull}{Whether to pull the image first}
-
 \item{docker_client}{Optional, a \code{\link[stevedore:docker_client]{stevedore::docker_client()}}}
 }
 \description{
-Create a TI method from a docker(hub) image
+\code{create_docker_ti_method} will use a local docker image, \code{pull_docker_ti_method} will pull the latest docker image from the docker hub
 }

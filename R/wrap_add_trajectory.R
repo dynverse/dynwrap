@@ -141,6 +141,7 @@ is_wrapper_with_trajectory <- function(object) {
 }
 
 
+# Check given trajectory input ----------------------------------------
 #' @importFrom testthat expect_is expect_equal expect_true
 check_milestone_network <- function(milestone_ids, milestone_network) {
   testthat::expect_is(milestone_network, "data.frame")
@@ -204,3 +205,104 @@ check_progressions <- function(cell_ids, milestone_ids, milestone_network, progr
 
   progressions
 }
+
+
+# Process trajectory from file ----------------------------------------
+read_milestone_network <- function(dir_output) {
+  readr::read_csv(
+    file.path(dir_output, "milestone_network.csv"),
+    col_types = readr::cols(
+      from = readr::col_character(),
+      to = readr::col_character(),
+      directed = readr::col_logical(),
+      length = readr::col_number()
+    )
+  )
+}
+
+read_milestone_ids <- function(dir_output, milestone_network) {
+  read_vector(file.path(dir_output, "milestone_ids.json"), unique(c(milestone_network$from, milestone_network$to))) %>%
+    as.character()
+}
+
+read_milestone_percentages <- function(dir_output) {
+  readr::read_csv(
+    file.path(dir_output, "milestone_percentages.csv"),
+    col_types = readr::cols(
+      cell_id = readr::col_character(),
+      milestone_id = readr::col_character(),
+      percentage = readr::col_number()
+    )
+  )
+}
+
+read_progressions <- function(dir_output) {
+  readr::read_csv(
+    file.path(dir_output, "progressions.csv"),
+    col_types = readr::cols(
+      cell_id = readr::col_character(),
+      from = readr::col_character(),
+      to = readr::col_character(),
+      percentage = readr::col_number()
+    )
+  )
+}
+
+read_divergence_regions <- function(dir_output, milestone_network) {
+  path <- file.path(dir_output, "divergence_regions.csv")
+  if(file.exists(path)) {
+    readr::read_csv(
+      path,
+      col_types = readr::cols(
+        divergence_id = readr::col_character(),
+        milestone_id = readr::col_character(),
+        is_start = readr::col_logical()
+      )
+    )
+  } else {
+    tibble(
+      divergence_id = character(0),
+      milestone_id = character(0),
+      is_start = logical(0)
+    )
+  }
+}
+
+
+# process trajectory
+process_trajectory <- function(model, dir_output) {
+  milestone_network <- read_milestone_network(dir_output)
+  divergence_regions <- read_divergence_regions(dir_output, milestone_network)
+  milestone_ids <- read_milestone_ids(dir_output, milestone_network)
+
+  if(file.exists(file.path(dir_output, "progressions.csv"))) {
+    progressions <- read_progressions(dir_output)
+    model %>%
+      add_trajectory(
+        milestone_ids,
+        milestone_network,
+        divergence_regions,
+        progressions = progressions
+      )
+  } else if(file.exists(file.path(dir_output, "milestone_percentages.csv"))) {
+    milestone_percentages <- read_milestone_percentages(dir_output)
+    model %>%
+      add_trajectory(
+        milestone_ids,
+        milestone_network,
+        divergence_regions,
+        milestone_percentages = milestone_percentages
+      )
+  }
+}
+
+output_processors <- output_processors %>% add_row(
+  id="trajectory",
+  processor=list(process_trajectory),
+  required_files=list(c("milestone_network.csv", "progressions.csv", "milestone_percentages.csv")),
+  optional_files=list(c("divergence_regions.csv", "milestone_ids.json")),
+  required_output=list(c()),
+  description="Creates a trajectory using a milestone network and progressions OR milestone percentages (one of either is required)",
+  creates_trajectory = TRUE
+)
+

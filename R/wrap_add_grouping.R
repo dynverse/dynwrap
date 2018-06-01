@@ -103,3 +103,36 @@ get_grouping <- function(data_wrapper, grouping = NULL) {
 
   grouping
 }
+
+
+# Process grouping from file ------------------------------
+read_grouping <- function(dir_output) {
+  read_assignment(file.path(dir_output, "grouping.csv"))
+}
+
+read_group_ids <- function(dir_output, grouping) {
+  read_vector(file.path(dir_output, "group_ids.json"), unique(grouping)) %>% as.character()
+}
+
+
+process_grouping <- function(model, dir_output) {
+  grouping <- read_grouping(dir_output)
+  group_ids <- read_group_ids(dir_output, grouping)
+
+  model %>%
+    add_grouping(
+      group_ids=group_ids,
+      grouping=grouping
+    )
+}
+
+
+output_processors <- output_processors %>% add_row(
+  id="grouping",
+  processor=list(process_grouping),
+  required_files=list(c("grouping.csv")),
+  optional_files=list(c("group_ids.json")),
+  required_output=list(c()),
+  description="Add a cell grouping, a single value for every cell which assigns it to one group",
+  creates_trajectory=FALSE
+)

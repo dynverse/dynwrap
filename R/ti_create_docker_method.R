@@ -1,5 +1,7 @@
 #' Create a TI method from a docker(hub) image
 #'
+#' `create_docker_ti_method` will use a local docker image, `pull_docker_ti_method` will pull the latest docker image from the docker hub
+#'
 #' @param image The name of the image. Required
 #' @param name The name of the method. Optional, will be extracted from the image definition.yml file
 #' @param input Input data, such as expression, counts or prior_information
@@ -7,7 +9,6 @@
 #' @param par_set The parameter set as created by [ParamHelpers::makeParamSet]
 #' @param parameters A named list of parameters, containing the type of parameter and additional parameters such as lower and upper bounds, default value and/or possible values. Optional, will be extracted from the image definition.yml file
 #' @param definition A list containing the name, image, input, output and parameters of a method. Usually used for when these values are loaded from a yaml or json file
-#' @param pull Whether to pull the image first
 #' @param docker_client Optional, a [stevedore::docker_client()]
 #'
 #' @importFrom jsonlite write_json read_json
@@ -22,19 +23,12 @@ create_docker_ti_method <- function(
   par_set = NULL,
   parameters = NULL,
   definition = NULL,
-  pull = TRUE,
   docker_client = stevedore::docker_client()
 ) {
   requireNamespace("crayon")
   requireNamespace("yaml")
 
   testthat::expect_s3_class(docker_client, "docker_client")
-  testthat::expect_true(is.logical(pull))
-
-  # pull image
-  if (pull) {
-    docker_client$image$pull(image)
-  }
 
   # extract from image if required parameters are not specified
   if (any(map_lgl(list(name, input, output), is.null))) {
@@ -69,19 +63,6 @@ create_docker_ti_method <- function(
   if(is.null(par_set)) {
     if(is.null(parameters)) stop("parameters is required if par_set is not given")
 
-    parse_parameter_definition <- function(parameter_definition) {
-      map2(names(parameter_definition), parameter_definition, function(id, p) {
-        with(
-          p,
-          if(type == "integer") {
-            ParamHelpers::makeIntegerParam(id, lower=lower, upper=upper, default=default)
-          } else {
-            stop("invalid type")
-          }
-        )
-      }) %>%
-        do.call(ParamHelpers::makeParamSet, .)
-    }
     par_set <- parse_parameter_definition(parameters)
   }
 
@@ -135,10 +116,6 @@ create_docker_ti_method <- function(
     # run docker image
     docker <- stevedore::docker_client()
 
-    if (pull) {
-      docker_client$image$pull(image)
-    }
-
     docker_client$container$run(
       image,
       volumes=c(
@@ -169,7 +146,7 @@ create_docker_ti_method <- function(
   argument_ids <- c(input_ids, param_ids)
   arguments <- c(
     rep(list(expr()), length(argument_ids)) %>% set_names(argument_ids),
-    alist(pull=TRUE, docker_client=stevedore::docker_client()) # default pull and docker_client arguments
+    alist(docker_client=stevedore::docker_client()) # default docker_client arguments
   )
   formals(run_fun) <- arguments
 
@@ -179,4 +156,16 @@ create_docker_ti_method <- function(
     par_set,
     run_fun
   )
+}
+
+
+#' @rdname create_docker_ti_method
+#' @export
+pull_docker_ti_method <- function(
+  image,
+  docker_client = stevedore::docker_client()
+) {
+  docker_client$image$pull(image)
+
+  create_docker_ti_method(image, docker_client=docker_client())
 }
