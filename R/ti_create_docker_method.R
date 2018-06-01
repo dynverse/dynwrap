@@ -167,5 +167,5 @@ pull_docker_ti_method <- function(
 ) {
   docker_client$image$pull(image)
 
-  create_docker_ti_method(image, docker_client=docker_client())
+  create_docker_ti_method(image, docker_client=docker_client)
 }
