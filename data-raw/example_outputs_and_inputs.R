@@ -1,6 +1,8 @@
 library(tidyverse)
 library(jsonlite)
 
+devtools::load_all()
+
 set.seed(1)
 
 # generate the dataset
@@ -12,10 +14,7 @@ counts <- rnbinom(length(cell_ids) * n_genes, 1000, 0.99) %>%
 
 expression <- log2(counts + 1)
 
-pseudotime <- tibble(
-  cell_id=cell_ids
-) %>%
-  mutate(pseudotime = runif(n(), 0, 10))
+pseudotime <- runif(length(cell_ids), 0, 10) %>% set_names(cell_ids)
 
 group_ids <- paste0("group_", letters[1:5])
 grouping <- set_names(sample(group_ids, length(cell_ids), replace = TRUE), cell_ids)
@@ -46,21 +45,23 @@ divergence_regions <- tibble(
 )
 
 # prior information
-start_cells <- pseudotime$cell_id[which.min(pseudotime$pseudotime)]
+start_cells <- names(pseudotime)[which.min(pseudotime)]
 
-# save the data
+# save the input
 counts %>% as.data.frame() %>% rownames_to_column("cell_id") %>% write_csv("inst/example_inputs/counts.csv")
 expression %>% as.data.frame %>% rownames_to_column("cell_id") %>% write_csv("inst/example_inputs/expression.csv")
 
 start_cells %>% jsonlite::write_json("inst/example_inputs/start_cells.json")
 
-tibble(cell_id=cell_ids) %>% write_csv("inst/example_outputs/cell_ids.csv")
-pseudotime %>% write_csv("inst/example_outputs/pseudotime.csv")
-group_ids %>% write_json("inst/example_outputs/group_ids.json")
-tibble(cell_id = names(grouping), group_id = grouping) %>%
-  write_csv("inst/example_outputs/grouping.csv")
-milestone_network %>% write_csv("inst/example_outputs/milestone_network.csv")
-milestone_ids %>% write_json("inst/example_outputs/milestone_ids.json")
-progressions %>% write_csv("inst/example_outputs/progressions.csv")
-milestone_percentages %>% write_csv("inst/example_outputs/milestone_percentages.csv")
-divergence_regions %>% write_csv("inst/example_outputs/divergence_regions.csv")
+# save the output
+dir_output <- "inst/example_outputs/"
+
+tibble(cell_id=cell_ids) %>% write_csv(file.path(dir_output, "cell_ids.csv"))
+write_pseudotime(pseudotime, dir_output)
+write_group_ids(group_ids, dir_output)
+write_grouping(grouping, dir_output)
+write_milestone_network(milestone_network, dir_output)
+write_milestone_ids(milestone_ids, dir_output)
+write_progressions(progressions, dir_output)
+write_milestone_percentages(milestone_percentages, dir_output)
+write_divergence_regions(divergence_regions, dir_output)

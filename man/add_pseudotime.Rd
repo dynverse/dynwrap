@@ -3,16 +3,21 @@
 \name{calculate_pseudotime}
 \alias{calculate_pseudotime}
 \alias{add_pseudotime}
+\alias{write_pseudotime}
 \title{Add or calculate pseudotime as distance from the root}
 \usage{
 calculate_pseudotime(trajectory)
 
 add_pseudotime(trajectory, pseudotime = NULL)
+
+write_pseudotime(pseudotime, dir_output)
 }
 \arguments{
 \item{trajectory}{The trajectory}
 
 \item{pseudotime}{Named vector containing the pseudotime for every cell}
+
+\item{dir_output}{The output directory}
 }
 \description{
 Add or calculate pseudotime as distance from the root

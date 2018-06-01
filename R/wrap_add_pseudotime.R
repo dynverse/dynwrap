@@ -54,10 +54,17 @@ output_processors <- output_processors %>% add_row(
   creates_trajectory=FALSE
 )
 
-# read pseudotime from disk
 read_pseudotime <- function(dir_output) {
   read_assignment(
     file.path(dir_output, "pseudotime.csv"),
     readr::cols(cell_id=readr::col_character(), pseudotime=readr::col_double())
   )
+}
+
+#' @rdname add_pseudotime
+#' @param dir_output The output directory
+#' @export
+write_pseudotime <- function(pseudotime, dir_output) {
+  tibble(cell_id = names(pseudotime), pseudotime = pseudotime) %>%
+    write_csv(file.path(dir_output, "pseudotime.csv"))
 }

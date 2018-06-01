@@ -1,6 +1,6 @@
 #' Add a dimensionality reduction to a data wrapper
 #'
-#' TODO: add possibility to also dimred the milestones and segments
+#' TODO: add possibility to also dimred the milestones and segments. This should be migrated from dynplot!
 #'
 #' @param data_wrapper A data wrapper to extend upon.
 #' @param dimred The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction
@@ -96,3 +96,8 @@ get_dimred <- function(data_wrapper, dimred=NULL, expression_source="expression"
 
   dimred
 }
+
+
+
+
+

@@ -220,9 +220,23 @@ read_milestone_network <- function(dir_output) {
   )
 }
 
+#' @rdname add_trajectory
+#' @param dir_output The output directory
+#'
+#' @export
+write_milestone_network <- function(milestone_network, dir_output) {
+  write_csv(milestone_network, file.path(dir_output, "milestone_network.csv"))
+}
+
 read_milestone_ids <- function(dir_output, milestone_network) {
   read_vector(file.path(dir_output, "milestone_ids.json"), unique(c(milestone_network$from, milestone_network$to))) %>%
     as.character()
+}
+
+#' @rdname add_trajectory
+#' @export
+write_milestone_ids <- function(milestone_ids, dir_output) {
+  jsonlite::write_json(milestone_ids, file.path(dir_output, "milestone_ids.json"))
 }
 
 read_milestone_percentages <- function(dir_output) {
@@ -236,6 +250,12 @@ read_milestone_percentages <- function(dir_output) {
   )
 }
 
+#' @rdname add_trajectory
+#' @export
+write_milestone_percentages <- function(milestone_percentages, dir_output) {
+  write_csv(milestone_percentages, file.path(dir_output, "milestone_percentages.csv"))
+}
+
 read_progressions <- function(dir_output) {
   readr::read_csv(
     file.path(dir_output, "progressions.csv"),
@@ -246,6 +266,12 @@ read_progressions <- function(dir_output) {
       percentage = readr::col_number()
     )
   )
+}
+
+#' @rdname add_trajectory
+#' @export
+write_progressions <- function(progressions, dir_output) {
+  write_csv(progressions, file.path(dir_output, "progressions.csv"))
 }
 
 read_divergence_regions <- function(dir_output, milestone_network) {
@@ -266,6 +292,12 @@ read_divergence_regions <- function(dir_output, milestone_network) {
       is_start = logical(0)
     )
   }
+}
+
+#' @rdname add_trajectory
+#' @export
+write_divergence_regions <- function(divergence_regions, dir_output) {
+  write_csv(divergence_regions, file.path(dir_output, "divergence_regions.csv"))
 }
 
 

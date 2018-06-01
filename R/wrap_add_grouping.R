@@ -110,10 +110,23 @@ read_grouping <- function(dir_output) {
   read_assignment(file.path(dir_output, "grouping.csv"))
 }
 
+#' @rdname add_grouping
+#' @param dir_output The output directory
+#' @export
+write_grouping <- function(grouping, dir_output) {
+  tibble(cell_id = names(grouping), group_id = grouping) %>%
+    write_csv(file.path(dir_output, "grouping.csv"))
+}
+
 read_group_ids <- function(dir_output, grouping) {
   read_vector(file.path(dir_output, "group_ids.json"), unique(grouping)) %>% as.character()
 }
 
+#' @rdname add_grouping
+#' @export
+write_group_ids <- function(group_ids, dir_output) {
+  jsonlite::write_json(group_ids, file.path(dir_output, "group_ids.json"))
+}
 
 process_grouping <- function(model, dir_output) {
   grouping <- read_grouping(dir_output)
