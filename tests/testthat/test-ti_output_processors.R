@@ -2,10 +2,17 @@ context("Testing output_processors")
 
 
 test_that("There is an example for every type of output", {
-  output_files <- unique(unlist(output_processors$required_files))
+  output_files <- unique(c(
+    unlist(output_processors$required_files),
+    unlist(output_processors$optional_files)
+  ))
+
+  # print(output_files)
 
   output_files_found <-
     list.files(devtools:::shim_system.file("example_outputs", package="dynwrap"))
+
+  # print(output_files_found)
 
   expect_setequal(c(output_files, "cell_ids.csv"), output_files_found)
 })
@@ -36,4 +43,29 @@ test_that("Output processors can process output", {
     dir_output
   )
   expect_true("pseudotime" %in% names(model))
+
+  # grouping
+  model <- wrap_output(
+    base_model,
+    "grouping",
+    dir_output
+  )
+  expect_true(is_wrapper_with_grouping(model))
+
+  # cluster graph
+  model <- wrap_output(
+    base_model,
+    c("grouping", "cluster_graph"),
+    dir_output
+  )
+  expect_true(is_wrapper_with_grouping(model))
+  expect_true(is_wrapper_with_trajectory(model))
+
+  # trajectory
+  model <- wrap_output(
+    base_model,
+    c("trajectory"),
+    dir_output
+  )
+  expect_true(is_wrapper_with_trajectory(model))
 })

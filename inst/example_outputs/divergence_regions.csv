@@ -1,0 +1,4 @@
+divergence_id,milestone_id,is_start
+divergence_1,group_c,TRUE
+divergence_1,group_d,FALSE
+divergence_1,group_e,FALSE
