@@ -178,6 +178,56 @@ infer_trajectory <- function(
 }
 
 
+extract_args_from_task <- function(
+  task,
+  inputs,
+  give_priors = NULL
+) {
+  args_task <- task[inputs %>% filter(required, type == "expression") %>% pull(input_id)]
+
+  # extract prior information
+  priors <- task$prior_information
+  priors$task <- task
+
+  # required, check if the prior infirm
+  required_prior_ids <- inputs %>%
+    filter(required, type == "prior_information") %>%
+    pull(input_id)
+
+  if (!all(required_prior_ids %in% names(priors))) {
+    stop(
+      "Prior information ",
+      paste(setdiff(required_prior_ids, names(priors)), collapse = ";"),
+      " is required, but missing from task ",
+      task$id)
+  }
+
+  args_required_priors <- priors[required_prior_ids]
+
+  # optional
+  optional_prior_ids <- inputs %>%
+    filter(!required, type == "prior_information", input_id %in% give_priors) %>%
+    pull(input_id)
+
+  if (!all(optional_prior_ids %in% names(priors))) {
+    warning(
+      "Prior information ",
+      paste(setdiff(optional_prior_ids, names(priors)), collapse = ";"),
+      " is optional, but missing from task ",
+      task$id)
+  }
+
+  args_optional_priors <- priors[optional_prior_ids]
+
+  # output
+  c(
+    args_task,
+    args_required_priors,
+    args_optional_priors
+  )
+}
+
+
 #' Run a method on a task with a set of parameters
 #'
 #' @inheritParams infer_trajectory
@@ -194,47 +244,15 @@ execute_method_on_task <- function(
   # start the timer
   time0 <- Sys.time()
 
-  # test whether the task is truely a task
+  # test whether the task contains expression
   testthat::expect_true(is_data_wrapper(task))
   testthat::expect_true(is_wrapper_with_expression(task))
 
-  # find out a method's required params (counts, expression, or any prior information)
-  required_params <- formals(method$run_fun) %>%
-    as.list %>%
-    map_chr(class) %>%
-    keep(~.=="name") %>%
-    names
-
-  # find out wether the method wants the counts, expression, or both
-  task_args <- task[intersect(required_params, c("counts", "expression"))]
-
-  # determine which prior information is strictly required by the method
-  required_priors <- setdiff(required_params, c("counts", "expression"))
-
-  # collect all prior information
-  prior_information <- task$prior_information
-  prior_information$task <- task
-
-  # determine which priors to give and give it
-  prior_names <- union(give_priors, required_priors)
-  prior_type <- ifelse(prior_names %in% required_priors, "required", "optional")
-
-  if (!all(prior_names %in% names(prior_information))) {
-    stop("Prior information ", paste(setdiff(prior_names, names(prior_information)), collapse = ";"), " is missing from ", task$id)
-  }
-
-  prior_args <- as.list(prior_information[prior_names])
-
-  # only retain priors which the method accepts
-  prior_args <- prior_args[intersect(names(formals(method$run_fun)), names(prior_args))]
-
-  prior_df <- data_frame(prior_type, prior_names)
-
-  # create arglist. content:
-  # * counts or expression
-  # * parameters
-  # * any prior information
-  arglist <- c(task_args, parameters, prior_args)
+  # extract args from task and combine with parameters
+  args <- c(
+    extract_args_from_task(task, method$inputs, give_priors),
+    parameters
+  )
 
   # create a temporary directory to set as working directory,
   # to avoid polluting the working directory if a method starts
@@ -254,7 +272,7 @@ execute_method_on_task <- function(
   out <-
     tryCatch({
       # run method
-      model <- execute_method_internal(method, arglist, setseed_detection_file)
+      model <- execute_method_internal(method, args, setseed_detection_file)
 
       # add task id and method names to the model
       model$task_id <- task$id
@@ -317,7 +335,7 @@ execute_method_on_task <- function(
     error = list(error),
     num_files_created = num_files_created,
     num_setseed_calls = num_setseed_calls,
-    prior_df = list(prior_df)
+    prior_df = list(method$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(args)))
   )
 
   lst(model, summary)

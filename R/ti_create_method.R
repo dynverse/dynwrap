@@ -47,6 +47,23 @@ create_ti_method <- function(
     desc$run_fun <- run_fun
     desc$plot_fun <- plot_fun
 
+    # add inputs tibble
+    data(priors, package="dynwrap", envir=environment())
+
+    input_ids <- names(formals(run_fun))
+    input_ids_required <- names(as.list(formals(run_fun)) %>% map_chr(class) %>% keep(~.=="name"))
+
+    desc$inputs <- tibble(
+      input_id = input_ids,
+      required = input_id %in% input_ids_required
+    ) %>% mutate(
+      type = case_when(
+        input_id %in% c("counts", "expression") ~ "expression",
+        input_id %in% priors$prior_id2 ~ "prior_information",
+        TRUE ~ "parameter"
+      )
+    )
+
     # return the description
     desc
   }
