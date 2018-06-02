@@ -152,19 +152,23 @@ infer_trajectories <- function(
 
 
 #' @rdname infer_trajectories
+#' @param ... Any additional parameters given to the method
 #' @export
 infer_trajectory <- function(
   task,
   method,
-  parameters = NULL,
+  parameters = list(),
   give_priors = NULL,
   mc_cores = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  ...
 ) {
+  parameters <- c(parameters, list(...))
+
   design <- infer_trajectories(
     task = task,
     method = method,
-    parameters = parameters,
+    parameters = list(parameters),
     give_priors = give_priors,
     mc_cores = mc_cores,
     verbose = verbose
