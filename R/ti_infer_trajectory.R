@@ -42,8 +42,16 @@ infer_trajectories <- function(
   # process method ----------------------
   if (is.character(method)) {
     # names of method
+
+    # get a list of all methods
+    packages <- if("dynmethods" %in% rownames(installed.packages())) {
+      c("dynmethods", "dynwrap")
+    } else {
+      "dynwrap"
+    }
+    all_desc <- get_ti_methods(packages = packages)
+
     # do some fuzzy matching, try both short name and real name
-    all_desc <- get_ti_methods()
     method <- all_desc %>% slice(
       map_int(
         method,
@@ -51,7 +59,7 @@ infer_trajectories <- function(
           distances <- adist(x, c(all_desc$name, all_desc$short_name))
           id <- as.integer(((which.min(distances)-1) %% nrow(all_desc)) + 1)
           if(min(distances) > 0) {
-            message(stringr::str_glue("Converted {x} -> {all_desc$name[[id]]}"))
+            message(stringr::str_glue("Fuzzy matching {x} -> {all_desc$name[[id]]} / {all_desc$short_name[[id]]}"))
           }
 
           id
@@ -152,7 +160,7 @@ infer_trajectories <- function(
 
 
 #' @rdname infer_trajectories
-#' @param ... Any additional parameters given to the method
+#' @param ... Any additional parameters given to the method, will be concatednated to the parameters argument
 #' @export
 infer_trajectory <- function(
   task,
