@@ -3,16 +3,19 @@
 [![Build Status](https://travis-ci.org/dynverse/dynwrap.svg)](https://travis-ci.org/dynverse/dynwrap)
 [![codecov](https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynwrap)
 
-**dynwrap** contains the code for a common model of single-cell trajectories.
-Furthermore, it can:
-* Classify the given topology into a trajectory type
-* Contain extra data of single-cell datasets, such as expression, prior information, counts, ...
-* Contain extra data specific for the trajectory inference methods, such as a clustering, dimensionality reduction, ...
+**dynwrap** contains the code for a common model of single-cell trajectories. The package can
+
+* Wrap the input data of a TI method, such as expression and prior information
+* Run a TI method locally or in a docker
+* Wrap the output of a TI method, such as the pseudotime, a clustering or a branch network, and convert it into a common trajectory model
+* Further postprocess the output, such as labelling milestones and rooting the trajectory
+
+![dynwrap](docs/figures/overview_wrapping_v1.svg)
+
 
 The advantage of using a common model is that it allows
-* Comparison between a prediction and a gold standard, eg. from [dyneval](https://www.github.com/dynverse/dyneval)
-* Comparing two predictions
-* Using common plotting findings, eg. from [dynplot](https://www.github.com/dynverse/dynplot)
-* Extracting relevant features/genes, eg. using [dynfeature](https://www.github.com/dynverse/dynfeature)
 
-Better documentation will be provided very soon.
+* Comparison between a prediction and a gold standard, eg. using [dyneval](https://www.github.com/dynverse/dyneval)
+* Comparing two predictions
+* Easily visualise the trajectory, eg. using [dynplot](https://www.github.com/dynverse/dynplot)
+* Extracting relevant features/genes, eg. using [dynfeature](https://www.github.com/dynverse/dynfeature)

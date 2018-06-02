@@ -68,4 +68,20 @@ test_that("Output processors can process output", {
     dir_output
   )
   expect_true(is_wrapper_with_trajectory(model))
+
+  # dimred
+  model <- wrap_output(
+    base_model,
+    c("dimred"),
+    dir_output
+  )
+  expect_true(is_wrapper_with_dimred(model))
+
+  # dimred_projection
+  model <- wrap_output(
+    base_model,
+    c("dimred_projection"),
+    dir_output
+  )
+  expect_true(is_wrapper_with_trajectory(model))
 })

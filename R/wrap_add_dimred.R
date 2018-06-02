@@ -1,6 +1,6 @@
 #' Add a dimensionality reduction to a data wrapper
 #'
-#' TODO: add possibility to also dimred the milestones and segments
+#' TODO: add possibility to also dimred the milestones and segments. This should be migrated from dynplot!
 #'
 #' @param data_wrapper A data wrapper to extend upon.
 #' @param dimred The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction
@@ -39,6 +39,7 @@ add_dimred <- function(
 
     if (is_wrapper_with_trajectory(data_wrapper)) {
       milestone_ids <- data_wrapper$milestone_ids
+      dimred_milestones <- dimred_milestones[milestone_ids, ]
       testthat::expect_equal(rownames(dimred_milestones), milestone_ids)
     }
   }
@@ -96,3 +97,79 @@ get_dimred <- function(data_wrapper, dimred=NULL, expression_source="expression"
 
   dimred
 }
+
+
+
+# Process dimred from file ----------------------------------------
+
+write_dimred_generic <- function(type = "cell", file = "dimred.csv") {
+  function(dimred, dir_output) {
+    dimred %>% as.data.frame() %>% rownames_to_column(paste0(type, "_id")) %>%
+      write_csv(file.path(dir_output, file))
+  }
+}
+
+read_dimred_generic <- function(type = "cell", file = "dimred.csv", check_exists = FALSE) {
+  function(dir_output) {
+    path <- file.path(dir_output, file)
+
+    if(check_exists) {
+      if(!file.exists(path)) {
+        return(NULL)
+      }
+    }
+
+    # change col_type to type + _id
+    col_types <- cols(
+      cell_id = col_character(),
+      .default = col_double()
+    )
+    names(col_types$cols) <- paste0(type, "_id")
+
+    dimred <- read_csv(
+      path,
+      col_types = col_types
+    ) %>%
+      as.data.frame() %>%
+      column_to_rownames(paste0(type, "_id")) %>%
+      as.matrix()
+
+    colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
+
+    dimred
+  }
+}
+
+
+#' @rdname add_dimred
+#' @param dir_output Output directory
+#' @export
+write_dimred <- write_dimred_generic()
+
+read_dimred <- read_dimred_generic()
+
+#' @rdname add_dimred
+#' @export
+write_dimred_milestones <- write_dimred_generic("milestone", "dimred_milestones.csv")
+
+read_dimred_milestones <- read_dimred_generic("milestone", "dimred_milestones.csv")
+
+read_dimred_milestones_required <- read_dimred_generic("milestone", "dimred_milestones.csv", TRUE)
+
+
+process_dimred <- function(model, dir_output) {
+  dimred <- read_dimred(dir_output)
+  dimred_milestones <- read_dimred_milestones(dir_output)
+
+  model <- model %>% add_dimred(dimred, dimred_milestones)
+}
+
+output_processors <- output_processors %>% add_row(
+  id="dimred",
+  processor=list(process_dimred),
+  required_files=list(c("dimred.csv")),
+  optional_files=list(c("dimred_milestones.csv")),
+  required_output=list(c()),
+  description="Adds the dimensionality reduction of each cell, and, optionally also the dimensionality reduction of every milestone. Any number of dimensions can be used.",
+  creates_trajectory = FALSE
+)

@@ -4,6 +4,8 @@
 \alias{add_grouping}
 \alias{is_wrapper_with_grouping}
 \alias{get_grouping}
+\alias{write_grouping}
+\alias{write_group_ids}
 \title{Add a cell grouping to a data wrapper}
 \usage{
 add_grouping(data_wrapper, group_ids, grouping = NULL, ...)
@@ -11,6 +13,10 @@ add_grouping(data_wrapper, group_ids, grouping = NULL, ...)
 is_wrapper_with_grouping(data_wrapper)
 
 get_grouping(data_wrapper, grouping = NULL)
+
+write_grouping(grouping, dir_output)
+
+write_group_ids(group_ids, dir_output)
 }
 \arguments{
 \item{data_wrapper}{A data wrapper to extend upon.}
@@ -20,6 +26,8 @@ get_grouping(data_wrapper, grouping = NULL)
 \item{grouping}{A grouping of the cells, can be}
 
 \item{...}{Extra information to be stored in the wrapper.}
+
+\item{dir_output}{The output directory}
 }
 \description{
 Add a cell grouping to a data wrapper
