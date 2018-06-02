@@ -49,13 +49,22 @@ dimred_milestones <- dimred[sample(seq_len(nrow(dimred)), length(milestone_ids))
 rownames(dimred_milestones) <- milestone_ids
 
 # prior information
-start_cells <- names(pseudotime)[which.min(pseudotime)]
+prior_information <- list(
+  start_cells = names(pseudotime)[which.min(pseudotime)],
+  end_cells = sample(cell_ids, 2),
+  n_end_states = 2,
+  n_start_states = 1,
+  grouping_assignment = grouping,
+  n_branches = length(group_ids),
+  grouping_network = milestone_network %>% select(from, to),
+  time = pseudotime + runif(length(pseudotime)) * 10 - 5,
+  marker_features_id = colnames(expression)[1:2]
+)
 
 # save the input
 counts %>% as.data.frame() %>% rownames_to_column("cell_id") %>% write_csv("inst/example_inputs/counts.csv")
 expression %>% as.data.frame %>% rownames_to_column("cell_id") %>% write_csv("inst/example_inputs/expression.csv")
-
-start_cells %>% jsonlite::write_json("inst/example_inputs/start_cells.json")
+jsonlite::write_json(prior_information, "inst/example_inputs/prior_information.json")
 
 # save the output
 dir_output <- "inst/example_outputs/"

@@ -226,10 +226,12 @@ extract_args_from_task <- function(
       "Prior information ",
       paste(setdiff(optional_prior_ids, names(priors)), collapse = ";"),
       " is optional, but missing from task ",
-      task$id)
+      task$id,
+      ". Will not give this prior to method.",
+      "\n")
   }
 
-  args_optional_priors <- priors[optional_prior_ids]
+  args_optional_priors <- priors[intersect(optional_prior_ids, names(priors))]
 
   # output
   c(

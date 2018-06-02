@@ -30,7 +30,7 @@
 
 <meta property="og:title" content="Create a TI method from a docker(hub) image — create_docker_ti_method" />
 
-<meta property="og:description" content="Create a TI method from a docker(hub) image" />
+<meta property="og:description" content="create_docker_ti_method will use a local docker image, pull_docker_ti_method will pull the latest docker image from the docker hub" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -116,13 +116,16 @@
 
     <div class="ref-description">
     
-    <p>Create a TI method from a docker(hub) image</p>
+    <p><code>create_docker_ti_method</code> will use a local docker image, <code>pull_docker_ti_method</code> will pull the latest docker image from the docker hub</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>create_docker_ti_method</span>(<span class='no'>image</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>input</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>output</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>par_set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>definition</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pull</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>docker_client</span> <span class='kw'>=</span> <span class='kw pkg'>stevedore</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stevedore/topics/docker_client'>docker_client</a></span>())</pre>
+    <pre class="usage"><span class='fu'>create_docker_ti_method</span>(<span class='no'>image</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>input</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>input_optional</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>output</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>par_set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>definition</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>docker_client</span> <span class='kw'>=</span> <span class='kw pkg'>stevedore</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stevedore/topics/docker_client'>docker_client</a></span>())
+
+<span class='fu'>pull_docker_ti_method</span>(<span class='no'>image</span>, <span class='kw'>docker_client</span> <span class='kw'>=</span> <span class='kw pkg'>stevedore</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stevedore/topics/docker_client'>docker_client</a></span>())</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -137,7 +140,11 @@
     </tr>
     <tr>
       <th>input</th>
-      <td><p>Input data, such as expression, counts or prior_information</p></td>
+      <td><p>Names of input data, such as expression, counts or some <a href='priors.html'>priors</a></p></td>
+    </tr>
+    <tr>
+      <th>input_optional</th>
+      <td><p>Names of optional input data, such as expression, counts, or some <a href='priors.html'>priors</a></p></td>
     </tr>
     <tr>
       <th>output</th>
@@ -154,10 +161,6 @@
     <tr>
       <th>definition</th>
       <td><p>A list containing the name, image, input, output and parameters of a method. Usually used for when these values are loaded from a yaml or json file</p></td>
-    </tr>
-    <tr>
-      <th>pull</th>
-      <td><p>Whether to pull the image first</p></td>
     </tr>
     <tr>
       <th>docker_client</th>

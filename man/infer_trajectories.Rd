@@ -8,8 +8,8 @@
 infer_trajectories(task, method, parameters = NULL, give_priors = NULL,
   mc_cores = 1, verbose = FALSE)
 
-infer_trajectory(task, method, parameters = NULL, give_priors = NULL,
-  mc_cores = 1, verbose = FALSE)
+infer_trajectory(task, method, parameters = list(), give_priors = NULL,
+  mc_cores = 1, verbose = FALSE, ...)
 }
 \arguments{
 \item{task}{One or more datasets, as created using dynwrap}
@@ -32,6 +32,8 @@ If multiple methods were provided in the \code{method} parameter,
 \item{mc_cores}{The number of cores to use, allowing to parallellise the different tasks}
 
 \item{verbose}{Whether or not to print information output}
+
+\item{...}{Any additional parameters given to the method, will be concatednated to the parameters argument}
 }
 \description{
 Infer trajectories

@@ -30,7 +30,7 @@
 
 <meta property="og:title" content="Add a dimensionality reduction to a data wrapper — add_dimred" />
 
-<meta property="og:description" content="TODO: add possibility to also dimred the milestones and segments" />
+<meta property="og:description" content="TODO: add possibility to also dimred the milestones and segments. This should be migrated from dynplot!" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -116,7 +116,7 @@
 
     <div class="ref-description">
     
-    <p>TODO: add possibility to also dimred the milestones and segments</p>
+    <p>TODO: add possibility to also dimred the milestones and segments. This should be migrated from dynplot!</p>
     
     </div>
 
@@ -125,7 +125,11 @@
 
 <span class='fu'>is_wrapper_with_dimred</span>(<span class='no'>data_wrapper</span>)
 
-<span class='fu'>get_dimred</span>(<span class='no'>data_wrapper</span>, <span class='kw'>dimred</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>expression_source</span> <span class='kw'>=</span> <span class='st'>"expression"</span>)</pre>
+<span class='fu'>get_dimred</span>(<span class='no'>data_wrapper</span>, <span class='kw'>dimred</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>expression_source</span> <span class='kw'>=</span> <span class='st'>"expression"</span>)
+
+<span class='fu'>write_dimred</span>(<span class='no'>dimred</span>, <span class='no'>dir_output</span>)
+
+<span class='fu'>write_dimred_milestones</span>(<span class='no'>dimred</span>, <span class='no'>dir_output</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -153,6 +157,10 @@
     <tr>
       <th>...</th>
       <td><p>extra information to be stored in the wrapper</p></td>
+    </tr>
+    <tr>
+      <th>dir_output</th>
+      <td><p>Output directory</p></td>
     </tr>
     </table>
     
