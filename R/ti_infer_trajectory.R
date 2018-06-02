@@ -195,6 +195,10 @@ extract_args_from_task <- function(
   inputs,
   give_priors = NULL
 ) {
+  if(!any(give_priors %in% priors$prior_id2)) {
+    stop("Invalid priors requested: ", give_priors)
+  }
+
   args_task <- task[inputs %>% filter(required, type == "expression") %>% pull(input_id)]
 
   # extract prior information

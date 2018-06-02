@@ -48,8 +48,6 @@ create_ti_method <- function(
     desc$plot_fun <- plot_fun
 
     # add inputs tibble
-    data(priors, package="dynwrap", envir=environment())
-
     input_ids <- names(formals(run_fun))
     input_ids_required <- names(as.list(formals(run_fun)) %>% map_chr(class) %>% keep(~.=="name"))
 
