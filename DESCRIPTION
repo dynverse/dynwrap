@@ -21,6 +21,7 @@ Imports:
   magrittr,
   methods,
   ParamHelpers (>= 1.11),
+  PRISM,
   pdist,
   purrr,
   readr,
@@ -42,7 +43,8 @@ Remotes:
   berndbischl/ParamHelpers,
   dynverse/dynutils,
   dynverse/dyndimred,
-  richfitz/stevedore
+  richfitz/stevedore,
+  rcannood/PRISM
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Collate: 

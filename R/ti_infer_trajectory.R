@@ -21,6 +21,8 @@
 #' @importFrom stringr str_length
 #' @importFrom parallel mclapply
 #' @importFrom testthat expect_true
+#' @importFrom PRISM qsub_lapply is_qsub_config
+#'
 #' @export
 infer_trajectories <- function(
   task,
@@ -122,9 +124,30 @@ infer_trajectories <- function(
     methodi = seq_along(method)
   )
 
-  output <- parallel::mclapply(
+  parfun <-
+    if (PRISM::is_qsub_config(mc_cores)) {
+      function(X, FUN) {
+        PRISM::qsub_lapply(
+          X = X,
+          qsub_config = mc_cores,
+          qsub_packages = c("dynmethods", "dynwrap", "dynutils"),
+          FUN = FUN
+        )
+      }
+    } else if (is.integer(mc_cores) || is.numeric(mc_cores)) {
+      function(X, FUN) {
+        parallel::mclapply(
+          X = X,
+          mc.cores = mc_cores,
+          FUN = FUN
+        )
+      }
+    } else {
+      stop("Invalid ", sQuote("mc_cores"), " argument. Must be an integer or a PRISM config.")
+    }
+
+  output <- parfun(
     X = seq_len(nrow(design)),
-    mc.cores = mc_cores,
     FUN = function(ri) {
       tari <- task[[design$taski[[ri]]]]
       meri <- method[[design$methodi[[ri]]]]
