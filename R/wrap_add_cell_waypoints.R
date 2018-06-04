@@ -102,7 +102,7 @@ select_waypoint_cells <- function(
   divergence_regions,
   num_cells_selected = 100
 ) {
-  determine_cell_trajectory_positions(
+  places <- determine_cell_trajectory_positions(
     milestone_ids,
     milestone_network,
     milestone_percentages,
