@@ -34,22 +34,17 @@ is_wrapper_with_waypoint_cells <- function(object) {
   is_wrapper_with_trajectory(object) && "dynwrap::with_cell_waypoints" %in% class(object)
 }
 
-#' Select the waypoint cells
-#'
-#' Waypoint cells are cells spread across all of the trajectory such that there is no other cell
-#' that has a large geodesic distance to any of the waypoint cells.
+#' Determine the positions of all cells in the trajectory
 #'
 #' @inheritParams add_trajectory
-#' @param num_cells_selected About the number of cells selected as waypoints
 #'
 #' @export
-select_waypoint_cells <- function(
+determine_cell_trajectory_positions <- function(
   milestone_ids,
   milestone_network,
   milestone_percentages,
   progressions,
-  divergence_regions,
-  num_cells_selected = 100
+  divergence_regions
 ) {
   divergence_ids <- divergence_regions$divergence_id %>% unique
 
@@ -74,7 +69,7 @@ select_waypoint_cells <- function(
         .$cell_id %>%
         unique
 
-      data_frame(index = dii, cell_id = cells)
+      data_frame(index = dii, cell_id = cells, divergence_id = divergence_ids[dii])
     })
 
   cells_on_edge <- progressions %>%
@@ -87,6 +82,32 @@ select_waypoint_cells <- function(
     cells_in_milestone %>% mutate(type = "in_milestone"),
     cells_on_edge %>% mutate(type = "on_edge"),
     cells_in_divergence %>% mutate(type = "in_divergence")
+  )
+}
+
+#' Select the waypoint cells
+#'
+#' Waypoint cells are cells spread across all of the trajectory such that there is no other cell
+#' that has a large geodesic distance to any of the waypoint cells.
+#'
+#' @inheritParams add_trajectory
+#' @param num_cells_selected About the number of cells selected as waypoints
+#'
+#' @export
+select_waypoint_cells <- function(
+  milestone_ids,
+  milestone_network,
+  milestone_percentages,
+  progressions,
+  divergence_regions,
+  num_cells_selected = 100
+) {
+  determine_cell_trajectory_positions(
+    milestone_ids,
+    milestone_network,
+    milestone_percentages,
+    progressions,
+    divergence_regions
   ) %>%
     group_by(type, index) %>%
     summarise(num_cells = n(), cells = list(cell_id)) %>%
