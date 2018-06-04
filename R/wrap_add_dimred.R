@@ -101,14 +101,6 @@ get_dimred <- function(data_wrapper, dimred=NULL, expression_source="expression"
 
 
 # Process dimred from file ----------------------------------------
-
-write_dimred_generic <- function(type = "cell", file = "dimred.csv") {
-  function(dimred, dir_output) {
-    dimred %>% as.data.frame() %>% rownames_to_column(paste0(type, "_id")) %>%
-      write_csv(file.path(dir_output, file))
-  }
-}
-
 read_dimred_generic <- function(type = "cell", file = "dimred.csv", check_exists = FALSE) {
   function(dir_output) {
     path <- file.path(dir_output, file)
@@ -140,22 +132,11 @@ read_dimred_generic <- function(type = "cell", file = "dimred.csv", check_exists
   }
 }
 
-
-#' @rdname add_dimred
-#' @param dir_output Output directory
-#' @export
-write_dimred <- write_dimred_generic()
-
 read_dimred <- read_dimred_generic()
-
-#' @rdname add_dimred
-#' @export
-write_dimred_milestones <- write_dimred_generic("milestone", "dimred_milestones.csv")
 
 read_dimred_milestones <- read_dimred_generic("milestone", "dimred_milestones.csv")
 
 read_dimred_milestones_required <- read_dimred_generic("milestone", "dimred_milestones.csv", TRUE)
-
 
 process_dimred <- function(model, dir_output) {
   dimred <- read_dimred(dir_output)

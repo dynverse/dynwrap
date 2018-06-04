@@ -122,7 +122,6 @@ add_dimred_projection <- function(
 
 
 # Process dimred_projection from file ----------------------------------------
-
 process_dimred_projection <- function(model, dir_output) {
   milestone_network <- read_milestone_network(dir_output)
   milestone_ids <- read_milestone_ids(dir_output, milestone_network)
@@ -139,11 +138,11 @@ process_dimred_projection <- function(model, dir_output) {
 
 
 output_processors <- output_processors %>% add_row(
-  id="dimred_projection",
-  processor=list(process_dimred_projection),
-  required_files=list(c("dimred.csv", "dimred_milestones.csv", "milestone_network.csv")),
-  optional_files=list(c("milestone_ids.json")),
-  required_output=list(c()),
-  description="Creates a trajectory using the dimensionality reduction of cells and milestones, combined with the milestone network, to project each cell on the paths between the milestones.",
+  id = "dimred_projection",
+  processor = list(process_dimred_projection),
+  required_files = list(c("dimred.csv", "dimred_milestones.csv", "milestone_network.csv")),
+  optional_files = list(c("milestone_ids.json")),
+  required_output = list(c()),
+  description = "Creates a trajectory using the dimensionality reduction of cells and milestones, combined with the milestone network, to project each cell on the paths between the milestones.",
   creates_trajectory = TRUE
 )
