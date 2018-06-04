@@ -15,18 +15,16 @@ compute_tented_geodesic_distances <- function(
   waypoint_milestone_percentages = NULL
 ) {
   testthat::expect_true(is_wrapper_with_trajectory(trajectory))
-  with(
-    trajectory,
-    compute_tented_geodesic_distances_(
-      cell_ids = cell_ids,
-      milestone_ids = milestone_ids,
-      milestone_network = milestone_network,
-      milestone_percentages = milestone_percentages,
-      progressions = progressions,
-      divergence_regions = divergence_regions,
-      waypoint_cells = waypoint_cells,
-      waypoint_milestone_percentages = waypoint_milestone_percentages
-    )
+
+  compute_tented_geodesic_distances_(
+    cell_ids = trajectory$cell_ids,
+    milestone_ids = trajectory$milestone_ids,
+    milestone_network = trajectory$milestone_network,
+    milestone_percentages = trajectory$milestone_percentages,
+    progressions = trajectory$progressions,
+    divergence_regions = trajectory$divergence_regions,
+    waypoint_cells = waypoint_cells,
+    waypoint_milestone_percentages = waypoint_milestone_percentages
   )
 }
 
