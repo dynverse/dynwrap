@@ -17,8 +17,12 @@ create_ti_method <- function(
   plot_fun = function(prediction) ggplot(),
   package_loaded = c(),
   package_required = c(),
-  short_name = name
+  short_name = NULL
 ) {
+  # create nice short name
+  if(is.null(short_name)) {
+    short_name <- name %>% gsub("[^A-Za-z1-9 ]", "", .) %>% gsub("[ ]", "_", .)
+  }
 
   desc <- lst(
     name,
