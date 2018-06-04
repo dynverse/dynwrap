@@ -7,19 +7,47 @@
 #' @importFrom igraph graph_from_data_frame neighborhood E distances
 #' @importFrom reshape2 acast melt
 #' @export
+#'
+#' @rdname compute_tented_geodesic_distances
 compute_tented_geodesic_distances <- function(
   trajectory,
   waypoint_cells = NULL,
   waypoint_milestone_percentages = NULL
 ) {
   testthat::expect_true(is_wrapper_with_trajectory(trajectory))
+  with(
+    trajectory,
+    compute_tented_geodesic_distances(
+      cell_ids = cell_ids,
+      milestone_ids = milestone_ids,
+      milestone_network = milestone_network,
+      milestone_percentages = milestone_percentages,
+      progressions = progressions,
+      divergence_regions = divergence_regions,
+      waypoint_cells = waypoint_cells,
+      waypoint_milestone_percentages = waypoint_milestone_percentages
+    )
+  )
+}
 
-  # gather data from trajectory
-  cell_ids <- trajectory$cell_ids
 
+#' @inheritParams add_trajectory
+#' @inheritParams wrap_data
+#'
+#' @rdname compute_tented_geodesic_distances
+#' @export
+compute_tented_geodesic_distances_ <- function(
+  cell_ids,
+  milestone_ids,
+  milestone_network,
+  milestone_percentages,
+  progressions,
+  divergence_regions,
+  waypoint_cells = NULL,
+  waypoint_milestone_percentages = NULL
+) {
   # get waypoints and milestone percentages
   waypoint_ids <- c()
-  milestone_percentages <- trajectory$milestone_percentages
   if (!is.null(waypoint_cells)) {
     waypoint_ids <- c(waypoint_ids, waypoint_cells)
   } else if (is.null(waypoint_milestone_percentages)){
@@ -36,10 +64,10 @@ compute_tented_geodesic_distances <- function(
 
   # rename milestones to avoid name conflicts between cells and milestones
   milestone_trafo_fun <- function(x) paste0("MILESTONE_", x)
-  milestone_network <- trajectory$milestone_network %>% mutate(from = milestone_trafo_fun(from), to = milestone_trafo_fun(to))
-  milestone_ids <- trajectory$milestone_ids %>% milestone_trafo_fun()
+  milestone_network <- milestone_network %>% mutate(from = milestone_trafo_fun(from), to = milestone_trafo_fun(to))
+  milestone_ids <- milestone_ids %>% milestone_trafo_fun()
   milestone_percentages <- milestone_percentages %>% mutate(milestone_id = milestone_trafo_fun(milestone_id))
-  divergence_regions <- trajectory$divergence_regions %>% mutate(milestone_id = milestone_trafo_fun(milestone_id))
+  divergence_regions <- divergence_regions %>% mutate(milestone_id = milestone_trafo_fun(milestone_id))
 
   # add 'extra' divergences for transitions not in a divergence
   extra_divergences <-
