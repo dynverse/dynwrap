@@ -339,27 +339,28 @@ execute_method_on_task <- function(
     error <- out$error
     timings_list <- out$timings_list
   }, finally = {
+
     # check whether the method produced output files and
     # wd to previous state
     num_files_created <- length(list.files(tmp_dir, recursive = TRUE))
     setwd(old_wd)
-  })
 
-  # Remove temporary folder
-  unlink(tmp_dir, recursive = TRUE, force = TRUE)
+    # Remove temporary folder
+    unlink(tmp_dir, recursive = TRUE, force = TRUE)
 
-  # read how many seeds were set and
-  # restore environment to previous state
-  num_setseed_calls <-
+    # read how many seeds were set and
+    # restore environment to previous state
+    num_setseed_calls <-
+      if (file.exists(setseed_detection_file)) {
+        stringr::str_length(readr::read_file(setseed_detection_file))
+      } else {
+        0
+      }
     if (file.exists(setseed_detection_file)) {
-      stringr::str_length(readr::read_file(setseed_detection_file))
-    } else {
-      0
+      file.remove(setseed_detection_file)
     }
-  if (file.exists(setseed_detection_file)) {
-    file.remove(setseed_detection_file)
-  }
-  dynutils::override_setseed(orig_setseed)
+    dynutils::override_setseed(orig_setseed)
+  })
 
   # stop the timer
   time3 <- Sys.time()
