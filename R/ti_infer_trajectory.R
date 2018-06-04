@@ -295,53 +295,55 @@ execute_method_on_task <- function(
     parameters
   )
 
-  # create a temporary directory to set as working directory,
-  # to avoid polluting the working directory if a method starts
-  # producing files :angry_face:
-  tmp_dir <- tempfile(pattern = method$short_name)
-  dir.create(tmp_dir)
-  old_wd <- getwd()
-  setwd(tmp_dir)
+  tryCatch({
+    # create a temporary directory to set as working directory,
+    # to avoid polluting the working directory if a method starts
+    # producing files :angry_face:
+    tmp_dir <- tempfile(pattern = method$short_name)
+    dir.create(tmp_dir)
+    old_wd <- getwd()
+    setwd(tmp_dir)
 
-  # disable seed setting
-  # a method shouldn't set seeds during regular execution,
-  # it should be left up to the user instead
-  orig_setseed <- base::set.seed
-  setseed_detection_file <- tempfile(pattern = "seedsetcheck")
+    # disable seed setting
+    # a method shouldn't set seeds during regular execution,
+    # it should be left up to the user instead
+    orig_setseed <- base::set.seed
+    setseed_detection_file <- tempfile(pattern = "seedsetcheck")
 
-  # run the method and catch the error, if necessary
-  out <-
-    tryCatch({
-      # run method
-      model <- execute_method_internal(method, args, setseed_detection_file)
+    # run the method and catch the error, if necessary
+    out <-
+      tryCatch({
+        # run method
+        model <- execute_method_internal(method, args, setseed_detection_file)
 
-      # add task id and method names to the model
-      model$task_id <- task$id
-      model$method_name <- method$name
-      model$method_short_name <- method$short_name
+        # add task id and method names to the model
+        model$task_id <- task$id
+        model$method_name <- method$name
+        model$method_short_name <- method$short_name
 
-      c(model, list(error = NULL))
-    }, error = function(e) {
-      time_new <- Sys.time()
-      timings_list <- list(
-        method_start = time0,
-        method_afterpreproc = time0,
-        method_aftermethod = time_new,
-        method_afterpostproc = time_new,
-        method_stop = time_new
-      )
-      list(model = NULL, timings_list = timings_list, error = e)
-    })
+        c(model, list(error = NULL))
+      }, error = function(e) {
+        time_new <- Sys.time()
+        timings_list <- list(
+          method_start = time0,
+          method_afterpreproc = time0,
+          method_aftermethod = time_new,
+          method_afterpostproc = time_new,
+          method_stop = time_new
+        )
+        list(model = NULL, timings_list = timings_list, error = e)
+      })
 
-  # retrieve the model, error message, and timings
-  model <- out$model
-  error <- out$error
-  timings_list <- out$timings_list
-
-  # check whether the method produced output files and
-  # wd to previous state
-  num_files_created <- length(list.files(tmp_dir, recursive = TRUE))
-  setwd(old_wd)
+    # retrieve the model, error message, and timings
+    model <- out$model
+    error <- out$error
+    timings_list <- out$timings_list
+  }, finally = {
+    # check whether the method produced output files and
+    # wd to previous state
+    num_files_created <- length(list.files(tmp_dir, recursive = TRUE))
+    setwd(old_wd)
+  })
 
   # Remove temporary folder
   unlink(tmp_dir, recursive = TRUE, force = TRUE)
