@@ -17,7 +17,7 @@ compute_tented_geodesic_distances <- function(
   testthat::expect_true(is_wrapper_with_trajectory(trajectory))
   with(
     trajectory,
-    compute_tented_geodesic_distances(
+    compute_tented_geodesic_distances_(
       cell_ids = cell_ids,
       milestone_ids = milestone_ids,
       milestone_network = milestone_network,
