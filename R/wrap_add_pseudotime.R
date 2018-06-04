@@ -35,3 +35,36 @@ add_pseudotime <- function(trajectory, pseudotime = NULL) {
   trajectory$pseudotime <- pseudotime[trajectory$cell_ids]
   trajectory
 }
+
+
+# Process pseudotime from file ---------------------------
+process_pseudotime <- function(model, dir_output) {
+  pseudotime <- read_pseudotime(dir_output)
+  model %>% add_pseudotime(pseudotime)
+}
+
+
+output_processors <- output_processors %>% add_row(
+  id="pseudotime",
+  processor=list(process_pseudotime),
+  required_files=list(c("pseudotime.csv")),
+  optional_files=list(c()),
+  required_output=list(c()),
+  description="Add pseudotime, a single value for every cell which denotes its progression from start to finish",
+  creates_trajectory=FALSE
+)
+
+read_pseudotime <- function(dir_output) {
+  read_assignment(
+    file.path(dir_output, "pseudotime.csv"),
+    readr::cols(cell_id=readr::col_character(), pseudotime=readr::col_double())
+  )
+}
+
+#' @rdname add_pseudotime
+#' @param dir_output The output directory
+#' @export
+write_pseudotime <- function(pseudotime, dir_output) {
+  tibble(cell_id = names(pseudotime), pseudotime = pseudotime) %>%
+    write_csv(file.path(dir_output, "pseudotime.csv"))
+}

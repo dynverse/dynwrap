@@ -60,7 +60,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/dynverse/dynwrap">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -74,16 +81,16 @@
     <div class="page-header toc-ignore">
       <h1>Creating a TI method using docker</h1>
             
-            <h4 class="date">2018-05-31</h4>
+            <h4 class="date">2018-06-02</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/dynverse/dynwrap/blob/master/vignettes/create_ti_method_docker.Rmd"><code>vignettes/create_ti_method_docker.Rmd</code></a></small>
       <div class="hidden name"><code>create_ti_method_docker.Rmd</code></div>
 
     </div>
 
     
     
-<p>This vignette describes how to include your own method into the dynverse workflow. We’ll illustrate this with a very basic method: using one of the components of a PCA as the pseudotime.</p>
+<p>This vignette describes how to include your own method into the dynverse workflow. We’ll illustrate this with a very basic method: using one of the components of a PCA as the pseudotime. The files for this example are also available at <a href="https://github.com/dynverse/comp1" class="uri">https://github.com/dynverse/comp1</a>.</p>
 <p>There are two main ways to add a new method:</p>
 <ul>
 <li>
@@ -91,7 +98,7 @@
 <li>
 <strong>Using a docker</strong>. In this case you create a docker which uses some input files (eg. a file containing the expression) and returns some output files. This use case is described here.</li>
 </ul>
-<p>A TI docker requires at least three files:</p>
+<p>A TI docker requires at least three files.</p>
 <ul>
 <li>A definition yaml or json file, used to determine the format of input, output and parameters.</li>
 <li>A Dockerfile, used to construct the docker.</li>
@@ -102,7 +109,7 @@
 <a href="#method-definition-file-definition-yml" class="anchor"></a>Method definition file (<code>definition.yml</code>)</h2>
 <p>An example of a <code>definition.yml</code> file (as can be found on the <a href="https://github.com/dynverse/comp1">github</a>):</p>
 <div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">name:</span><span class="at"> component_one</span>
-<span class="fu">image:</span><span class="at"> dynverse/compone</span>
+<span class="fu">image:</span><span class="at"> dynverse/comp1</span>
 <span class="fu">parameters:</span>
   <span class="fu">component:</span>
     <span class="fu">type:</span><span class="at"> integer</span>
@@ -110,8 +117,9 @@
     <span class="fu">upper:</span><span class="at"> 10</span>
     <span class="fu">default:</span><span class="at"> 1</span>
 <span class="fu">input:</span>
-  <span class="kw">-</span> expression
-  <span class="kw">-</span> start_cells
+  expression
+<span class="fu">input_optional:</span>
+  start_cells
 <span class="fu">output:</span>
   <span class="kw">-</span> linear</code></pre></div>
 <p>This yaml file contains:</p>
@@ -187,10 +195,10 @@
 <strong>len</strong> Length of the parameter</li>
 </ul>
 </div>
-<div id="input" class="section level4">
+<div id="input-input_optional" class="section level4">
 <h4 class="hasAnchor">
-<a href="#input" class="anchor"></a>input</h4>
-<p>A list of required inputs, can be:</p>
+<a href="#input-input_optional" class="anchor"></a>input &amp; input_optional</h4>
+<p>A list of required or optional inputs, can be:</p>
 <table class="table">
 <thead><tr class="header">
 <th align="left">input</th>
@@ -210,8 +218,48 @@
 </tr>
 <tr class="odd">
 <td align="left">start_cells</td>
-<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_inputs/start_cells.json">start_cells.json</a></td>
-<td align="left">List of start cells</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_inputs/prior_information.json">prior_information.json</a></td>
+<td align="left">One or more start cell identifiers</td>
+</tr>
+<tr class="even">
+<td align="left">end_cells</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_inputs/prior_information.json">prior_information.json</a></td>
+<td align="left">One or more end cell identifiers</td>
+</tr>
+<tr class="odd">
+<td align="left">n_end_states</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_inputs/prior_information.json">prior_information.json</a></td>
+<td align="left">The number of end states</td>
+</tr>
+<tr class="even">
+<td align="left">n_start_states</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_inputs/prior_information.json">prior_information.json</a></td>
+<td align="left">The number of start states</td>
+</tr>
+<tr class="odd">
+<td align="left">grouping_assignment</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_inputs/prior_information.json">prior_information.json</a></td>
+<td align="left">Named character vector linking the cell identifiers to different states/branches</td>
+</tr>
+<tr class="even">
+<td align="left">n_branches</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_inputs/prior_information.json">prior_information.json</a></td>
+<td align="left">Number of states/branches, including start, end and intermediary states</td>
+</tr>
+<tr class="odd">
+<td align="left">grouping_network</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_inputs/prior_information.json">prior_information.json</a></td>
+<td align="left">Dataframe containing the known network between states/branches. Contains a from and to column</td>
+</tr>
+<tr class="even">
+<td align="left">time</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_inputs/prior_information.json">prior_information.json</a></td>
+<td align="left">Named numeric vector linking the cell ids to time points</td>
+</tr>
+<tr class="odd">
+<td align="left">marker_features_id</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_inputs/prior_information.json">prior_information.json</a></td>
+<td align="left">Genes/features known to be important in the dynamic process</td>
 </tr>
 </tbody>
 </table>
@@ -219,23 +267,78 @@
 <div id="output" class="section level4">
 <h4 class="hasAnchor">
 <a href="#output" class="anchor"></a>output</h4>
-<p>A list of outputs, can be:</p>
+<p>A list of outputs, some of which contain enough information to construct a trajectory:</p>
 <table class="table">
 <thead><tr class="header">
-<th align="left">input</th>
+<th align="left">name</th>
 <th align="left">Required files</th>
+<th align="left">Optional files</th>
 <th align="left">Description</th>
+<th align="left">Creates trajectory</th>
+<th align="left">Required outputs</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
+<td align="left">cluster_graph</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/milestone_network.csv">milestone_network.csv</a></td>
+<td align="left"></td>
+<td align="left">Creates a trajectory by using a cell grouping and a given network between these cell groups</td>
+<td align="left">✔</td>
+<td align="left">grouping</td>
+</tr>
+<tr class="even">
+<td align="left">dimred</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/dimred.csv">dimred.csv</a></td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/dimred_milestones.csv">dimred_milestones.csv</a></td>
+<td align="left">Adds the dimensionality reduction of each cell, and, optionally also the dimensionality reduction of every milestone. Any number of dimensions can be used.</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">dimred_projection</td>
+<td align="left">
+<a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/dimred.csv">dimred.csv</a>, <a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/dimred_milestones.csv">dimred_milestones.csv</a>, <a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/milestone_network.csv">milestone_network.csv</a>
+</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/milestone_ids.json">milestone_ids.json</a></td>
+<td align="left">Creates a trajectory using the dimensionality reduction of cells and milestones, combined with the milestone network, to project each cell on the paths between the milestones.</td>
+<td align="left">✔</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">grouping</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/grouping.csv">grouping.csv</a></td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/group_ids.json">group_ids.json</a></td>
+<td align="left">Add a cell grouping, a single value for every cell which assigns it to one group</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
 <td align="left">linear</td>
 <td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/pseudotime.csv">pseudotime.csv</a></td>
+<td align="left"></td>
 <td align="left">Creates a linear trajectory from pseudotime</td>
+<td align="left">✔</td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left">pseudotime</td>
 <td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/pseudotime.csv">pseudotime.csv</a></td>
-<td align="left">Add pseudotime to the trajectory</td>
+<td align="left"></td>
+<td align="left">Add pseudotime, a single value for every cell which denotes its progression from start to finish</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">trajectory</td>
+<td align="left">
+<a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/milestone_network.csv">milestone_network.csv</a>, <a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/progressions.csv">progressions.csv</a>, <a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/milestone_percentages.csv">milestone_percentages.csv</a>
+</td>
+<td align="left">
+<a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/divergence_regions.csv">divergence_regions.csv</a>, <a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/milestone_ids.json">milestone_ids.json</a>
+</td>
+<td align="left">Creates a trajectory using a milestone network and progressions OR milestone percentages (one of either is required)</td>
+<td align="left">✔</td>
+<td align="left"></td>
 </tr>
 </tbody>
 </table>
@@ -248,24 +351,28 @@
 <p>An example of a <code>Dockerfile</code> (as can be found on the <a href="https://github.com/dynverse/comp1">github</a>):</p>
 <div class="sourceCode"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span class="kw">FROM</span> rocker/tidyverse
 <span class="kw">ADD</span> . /code
-<span class="co"># RUN R -e "install.packages(...)" # install R dependencies</span>
 <span class="kw">ENTRYPOINT</span> Rscript /code/run.R</code></pre></div>
 <p>In this example, we add all the files present in the current working directory (which contains the run.R file) to the /code directory.</p>
 <p>All dependencies of the method should be installed in this Dockerfile (or from parent docker images)</p>
 <p>This file should always contain an entrypoint, which will be called when the TI method is run.</p>
 </div>
-<div id="running-the-ti-method" class="section level2">
+<div id="doing-trajectory-inference" class="section level2">
 <h2 class="hasAnchor">
-<a href="#running-the-ti-method" class="anchor"></a>Running the TI method</h2>
+<a href="#doing-trajectory-inference" class="anchor"></a>Doing trajectory inference</h2>
 <p>All input files requested in the <code>definition.yml</code> will be mounted in the <code>/input</code> directory of the docker. After inferring a trajectory, the method should write output files into the <code>/output</code> directory. An example (as can be found on the <a href="https://github.com/dynverse/comp1">github</a>):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr, <span class="dt">warn.conflicts =</span> <span class="ot">FALSE</span>)
 
 ## Load data -----------------------------------------------
 
 expression &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">"/input/expression.csv"</span>, <span class="dt">row.names=</span><span class="dv">1</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">as.matrix</span>()
 params &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/jsonlite/topics/read_json">read_json</a></span>(<span class="st">"/input/params.json"</span>, <span class="dt">simplifyVector =</span> <span class="ot">TRUE</span>)
-start_cells &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/jsonlite/topics/read_json">read_json</a></span>(<span class="st">"/input/start_cells.json"</span>, <span class="dt">simplifyVector =</span> <span class="ot">TRUE</span>)
+
+<span class="cf">if</span> (<span class="kw">file.exists</span>(<span class="st">"/input/prior_information.json"</span>)) {
+  priors &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/jsonlite/topics/read_json">read_json</a></span>(<span class="st">"/input/prior_information.json"</span>, <span class="dt">simplifyVector =</span> <span class="ot">TRUE</span>)
+} <span class="cf">else</span> {
+  priors &lt;-<span class="st"> </span><span class="kw">list</span>()
+}
 
 ## Trajectory inference -----------------------------------
 <span class="co"># do PCA</span>
@@ -275,19 +382,81 @@ pca &lt;-<span class="st"> </span><span class="kw">prcomp</span>(expression)
 pseudotime &lt;-<span class="st"> </span>pca<span class="op">$</span>x[, params<span class="op">$</span>component]
 
 <span class="co"># flip pseudotimes using start_cells</span>
-<span class="cf">if</span> (<span class="op">!</span><span class="kw">is.null</span>(start_cells)) {
-  <span class="cf">if</span>(<span class="kw">mean</span>(pseudotime[start_cells]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>) {
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">is.null</span>(priors<span class="op">$</span>start_cells)) {
+  <span class="cf">if</span>(<span class="kw">mean</span>(pseudotime[priors<span class="op">$</span>start_cells]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>) {
     pseudotime &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">-</span>pseudotime
   }
 }
 
 ## Save output ---------------------------------------------
 <span class="co"># output pseudotimes</span>
-<span class="kw">tibble</span>(
+<span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tibble</a></span>(
   <span class="dt">cell_id =</span> <span class="kw">names</span>(pseudotime),
   <span class="dt">pseudotime =</span> pseudotime
 ) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">write_csv</span>(<span class="st">"/output/pseudotime.csv"</span>)</code></pre></div>
+</div>
+<div id="testing-the-ti-method" class="section level2">
+<h2 class="hasAnchor">
+<a href="#testing-the-ti-method" class="anchor"></a>Testing the TI method</h2>
+<p>Now we’re all set to test the TI method on data. We first have to build the method (in shell)</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">docker</span> build -t dynverse/comp1 .</code></pre></div>
+<p>Although this docker can be run in any programming language, we’ll run it here using the <code>dynwrap</code> workflow. First, we have to wrap the docker into a method function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dynwrap)
+ti_comp1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/create_docker_ti_method.html">create_docker_ti_method</a></span>(<span class="st">"dynverse/comp1"</span>)</code></pre></div>
+<p>If the method is on the docker hub, it can also be pulled</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ti_comp1 &lt;-<span class="st"> </span>dynwrap<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/dynwrap/topics/create_docker_ti_method">pull_docker_ti_method</a></span>(<span class="st">"dynverse/comp1"</span>)</code></pre></div>
+<pre><code>## The option 'stevedore.spec.path' not set - using temporary dir</code></pre>
+<pre><code>## Pulling from dynverse/comp1 latest
+## Digest: sha256:423d555a388117adb5a0aa04e1f9b6cbc887c29ac8f8fd0d168683836e6907ba
+## Status: Image is up to date for dynverse/comp1:latest</code></pre>
+<pre><code>## Extracting method definition from image definitions.yml file</code></pre>
+<p>Then we’ll use some test data</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ncells &lt;-<span class="st"> </span><span class="dv">1000</span>
+pseudotime &lt;-<span class="st"> </span><span class="kw">runif</span>(ncells)
+
+expression &lt;-<span class="st"> </span><span class="kw">matrix</span>(
+  <span class="kw">c</span>(
+    (pseudotime <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>) <span class="op">**</span><span class="st"> </span><span class="dv">2</span>,
+    <span class="kw">sqrt</span>(pseudotime <span class="op">+</span><span class="st"> </span><span class="dv">20</span>),
+    pseudotime
+  ),
+  <span class="dt">ncol =</span> <span class="dv">3</span>,
+  <span class="dt">dimnames =</span> <span class="kw">list</span>(<span class="kw">as.character</span>(<span class="kw">rep</span>(<span class="kw">seq_len</span>(ncells))), <span class="kw">as.character</span>(<span class="kw">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>)))
+)
+expression &lt;-<span class="st"> </span>expression <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(expression), <span class="dt">sd =</span> <span class="fl">0.02</span>)
+
+start_cells =<span class="st"> </span><span class="kw">rownames</span>(expression)[<span class="kw">which.min</span>(pseudotime)]
+
+counts &lt;-<span class="st"> </span><span class="kw">round</span>(expression)
+
+task &lt;-<span class="st"> </span><span class="kw"><a href="../reference/wrap_expression.html">wrap_expression</a></span>(
+  expression,
+  counts
+) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/add_prior_information.html">add_prior_information</a></span>(<span class="dt">start_cells=</span>start_cells)</code></pre></div>
+<p>Now infer a trajectory</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model &lt;-<span class="st"> </span><span class="kw"><a href="../reference/infer_trajectories.html">infer_trajectory</a></span>(task, <span class="kw"><a href="../reference/ti_comp1.html">ti_comp1</a></span>())</code></pre></div>
+<pre><code>## input saved to /tmp/RtmpLpjE3T/input: 
+##  expression.csv
+##  params.json
+## output saved in /tmp/RtmpLpjE3T/output: 
+##  pseudotime.csv</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="st">"dynplot"</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">rownames</span>(<span class="kw">installed.packages</span>())) {
+  dynplot<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/dynplot/topics/plot_dimred">plot_dimred</a></span>(model, <span class="dt">color_cells =</span> <span class="st">"pseudotime"</span> , <span class="dt">expression_source =</span> task<span class="op">$</span>expression)
+}</code></pre></div>
+<p><img src="create_ti_method_docker_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p>Give some optional prior information</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model &lt;-<span class="st"> </span><span class="kw"><a href="../reference/infer_trajectories.html">infer_trajectory</a></span>(task, <span class="kw"><a href="../reference/ti_comp1.html">ti_comp1</a></span>(), <span class="dt">give_priors =</span> <span class="st">"start_cells"</span>)</code></pre></div>
+<pre><code>## input saved to /tmp/RtmpLpjE3T/input: 
+##  expression.csv
+##  params.json
+##  prior_information.json
+## output saved in /tmp/RtmpLpjE3T/output: 
+##  pseudotime.csv</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="st">"dynplot"</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">rownames</span>(<span class="kw">installed.packages</span>())) {
+  dynplot<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/dynplot/topics/plot_dimred">plot_dimred</a></span>(model, <span class="dt">color_cells =</span> <span class="st">"pseudotime"</span> , <span class="dt">expression_source =</span> task<span class="op">$</span>expression)
+}</code></pre></div>
+<p><img src="create_ti_method_docker_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 </div>
   </div>
 
@@ -298,7 +467,8 @@ pseudotime &lt;-<span class="st"> </span>pca<span class="op">$</span>x[, params<
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#method-definition-file-definition-yml">Method definition file (<code>definition.yml</code>)</a></li>
       <li><a href="#the-dockerfile">The <code>Dockerfile</code></a></li>
-      <li><a href="#running-the-ti-method">Running the TI method</a></li>
+      <li><a href="#doing-trajectory-inference">Doing trajectory inference</a></li>
+      <li><a href="#testing-the-ti-method">Testing the TI method</a></li>
       </ul>
 </div>
       </div>

@@ -1,27 +1,28 @@
-read_pseudotime <- function(dir_output) {
-  pseudotime <- readr::read_csv(
-    file.path(dir_output, "pseudotime.csv"),
-    col_types = readr::cols(
-      cell_id = readr::col_character(),
-      pseudotime = readr::col_double()
-    )
-  ) %>%
-  {set_names(.$pseudotime, .$cell_id)}
+# some generic read functions
+read_assignment <- function(
+  path,
+  col_types = readr::cols(readr::col_character(), readr::col_character())
+) {
+  output <- readr::read_csv(
+    path,
+    col_types =col_types
+  )
+  set_names(
+    output %>% pull(2),
+    output %>% pull(1)
+  )
 }
 
-
-output_processors <- tribble(
-  ~id, ~processor, ~required_files, ~description,
-  "linear", function(model, dir_output) {
-    pseudotime <- read_pseudotime(dir_output)
-    model %>% add_linear_trajectory(pseudotime)
-  }, c("pseudotime.csv"), "Creates a linear trajectory from pseudotime",
-
-  "pseudotime", function(model, dir_output) {
-    pseudotime <- read_pseudotime(dir_output)
-    model %>% add_pseudotime(pseudotime)
-  }, c("pseudotime.csv"), "Add pseudotime to the trajectory"
-)
+read_vector <- function(
+  path,
+  default = NULL
+) {
+  if(!is.null(default) && !file.exists(path)) {
+    default
+  } else {
+    jsonlite::read_json(path) %>% unlist()
+  }
+}
 
 #' Wrap the output of a TI method
 #'

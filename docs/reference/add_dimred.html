@@ -30,7 +30,7 @@
 
 <meta property="og:title" content="Add a dimensionality reduction to a data wrapper — add_dimred" />
 
-<meta property="og:description" content="TODO: add possibility to also dimred the milestones and segments" />
+<meta property="og:description" content="TODO: add possibility to also dimred the milestones and segments. This should be migrated from dynplot!" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -91,7 +91,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/dynverse/dynwrap">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -105,13 +110,13 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Add a dimensionality reduction to a data wrapper</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/wrap_add_dimred.R'><code>R/wrap_add_dimred.R</code></a></small>
     <div class="hidden name"><code>add_dimred.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>TODO: add possibility to also dimred the milestones and segments</p>
+    <p>TODO: add possibility to also dimred the milestones and segments. This should be migrated from dynplot!</p>
     
     </div>
 
@@ -120,7 +125,11 @@
 
 <span class='fu'>is_wrapper_with_dimred</span>(<span class='no'>data_wrapper</span>)
 
-<span class='fu'>get_dimred</span>(<span class='no'>data_wrapper</span>, <span class='kw'>dimred</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>expression_source</span> <span class='kw'>=</span> <span class='st'>"expression"</span>)</pre>
+<span class='fu'>get_dimred</span>(<span class='no'>data_wrapper</span>, <span class='kw'>dimred</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>expression_source</span> <span class='kw'>=</span> <span class='st'>"expression"</span>)
+
+<span class='fu'>write_dimred</span>(<span class='no'>dimred</span>, <span class='no'>dir_output</span>)
+
+<span class='fu'>write_dimred_milestones</span>(<span class='no'>dimred</span>, <span class='no'>dir_output</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -148,6 +157,10 @@
     <tr>
       <th>...</th>
       <td><p>extra information to be stored in the wrapper</p></td>
+    </tr>
+    <tr>
+      <th>dir_output</th>
+      <td><p>Output directory</p></td>
     </tr>
     </table>
     

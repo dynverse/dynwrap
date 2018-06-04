@@ -1,0 +1,11 @@
+from,to,cell_id,percentage
+group_a,group_b,cell_1,0.47256829240359366
+group_c,group_d,cell_2,0.1522698518820107
+group_c,group_e,cell_3,0.8576366063207388
+group_c,group_d,cell_4,0.16891129408031702
+group_c,group_d,cell_5,0.6637735059484839
+group_b,group_c,cell_6,0.9608633136376739
+group_b,group_c,cell_7,0.005579673685133457
+group_a,group_b,cell_8,0.3088671297300607
+group_b,group_c,cell_9,0.8188797659240663
+group_c,group_d,cell_10,0.19569564377889037

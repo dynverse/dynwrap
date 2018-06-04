@@ -30,7 +30,7 @@ A TI docker requires at least three files.
 An example of a `definition.yml` file (as can be found on the [github](https://github.com/dynverse/comp1)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/comp1/master/definition.yml") %>%
+read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/definition.yml") %>%
   paste0("```yaml\n", ., "\n```") %>% 
   cat()
 ```
@@ -76,14 +76,14 @@ parameter_types %>% knitr::kable()
 - **values** A list of values
 - **len** Length of the parameter
 
-#### input
+#### input & input_optional
 ```{r, echo=FALSE}
 github_url <- function(x, prefix) {
   glue::glue("[{x}](https://github.com/dynverse/dynwrap/blob/master/{prefix}{x})")
 }
 ```
 
-A list of required inputs, can be:
+A list of required or optional inputs, can be:
 ```{r, echo=FALSE}
 dynwrap:::input_processors %>% 
   mutate(file = github_url(file, "inst/example_inputs/")) %>% 
@@ -94,22 +94,39 @@ dynwrap:::input_processors %>%
 
 #### output
 
-A list of outputs, can be:
+A list of outputs, some of which contain enough information to construct a trajectory:
 
 ```{r, echo=FALSE}
 github_url <- function(x, prefix) {
-  glue::glue("[{x}](https://github.com/dynverse/dynwrap/blob/master/{prefix}{x})")
+  if(length(x)) {
+    glue::glue("[{x}](https://github.com/dynverse/dynwrap/blob/master/{prefix}{x})")
+  } else {
+    ""
+  }
 }
 
 dynwrap:::output_processors %>% 
-  mutate(required_files = map(
-    required_files, 
-    function(required_files) {
-      github_url(required_files, "inst/example_outputs/") %>% 
-        glue::collapse(", ")
-    })
+  mutate_at(
+    c("required_files", "optional_files"),
+    ~map(
+      ., 
+      function(files) {
+        github_url(files, "inst/example_outputs/") %>% 
+          glue::collapse(", ")
+      })
   ) %>% 
-  select(input=id, `Required files` = required_files, `Description`=description) %>% 
+  mutate(
+    creates_trajectory = ifelse(creates_trajectory, "✔", ""),
+    required_output = map_chr(required_output, paste0, collapse= ", ")
+  ) %>% 
+  select(
+    name=id, 
+    `Required files` = required_files, 
+    `Optional files` = optional_files,
+    `Description`=description, 
+    `Creates trajectory`=creates_trajectory,
+    `Required outputs` = required_output
+  ) %>% 
   knitr::kable()
 ```
 
@@ -119,7 +136,7 @@ dynwrap:::output_processors %>%
 An example of a `Dockerfile` (as can be found on the [github](https://github.com/dynverse/comp1)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/comp1/master/Dockerfile") %>%
+read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/Dockerfile") %>%
   paste0("```Dockerfile\n", ., "\n```") %>% 
   cat()
 ```
@@ -130,12 +147,85 @@ All dependencies of the method should be installed in this Dockerfile (or from p
 
 This file should always contain an entrypoint, which will be called when the TI method is run.
 
-## Running the TI method
+## Doing trajectory inference
 
 All input files requested in the `definition.yml` will be mounted in the `/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/output` directory. An example (as can be found on the [github](https://github.com/dynverse/comp1)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/comp1/master/run.R") %>%
+read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/run.R") %>%
   paste0("```r\n", ., "\n```") %>% 
   cat()
 ```
+
+## Testing the TI method
+
+Now we're all set to test the TI method on data. We first have to build the method (in shell)
+
+```bash
+docker build -t dynverse/comp1 .
+```
+
+Although this docker can be run in any programming language, we'll run it here using the `dynwrap` workflow. First, we have to wrap the docker into a method function.
+```r
+library(dynwrap)
+ti_comp1 <- create_docker_ti_method("dynverse/comp1")
+```
+
+```{r, echo=FALSE}
+library(dynwrap)
+```
+
+If the method is on the docker hub, it can also be pulled
+```{r}
+ti_comp1 <- dynwrap::pull_docker_ti_method("dynverse/comp1")
+```
+
+Then we'll use some test data
+```{r}
+ncells <- 1000
+pseudotime <- runif(ncells)
+
+expression <- matrix(
+  c(
+    (pseudotime - 0.5) ** 2,
+    sqrt(pseudotime + 20),
+    pseudotime
+  ),
+  ncol = 3,
+  dimnames = list(as.character(rep(seq_len(ncells))), as.character(c("A", "B", "C")))
+)
+expression <- expression + rnorm(length(expression), sd = 0.02)
+
+start_cells = rownames(expression)[which.min(pseudotime)]
+
+counts <- round(expression)
+
+task <- wrap_expression(
+  expression,
+  counts
+) %>% add_prior_information(start_cells=start_cells)
+```
+
+Now infer a trajectory
+```{r}
+model <- infer_trajectory(task, ti_comp1())
+```
+
+```{r}
+if ("dynplot" %in% rownames(installed.packages())) {
+  dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
+}
+```
+
+
+Give some optional prior information
+```{r}
+model <- infer_trajectory(task, ti_comp1(), give_priors = "start_cells")
+```
+
+```{r}
+if ("dynplot" %in% rownames(installed.packages())) {
+  dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
+}
+```
+

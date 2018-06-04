@@ -3,8 +3,23 @@ Type: Package
 Title: Common trajectory model for representing trajectories from all sources
 Version: 0.1.0
 Authors@R: c(
-  person("Robrecht", "Cannoodt", email = "rcannood@ugent.be", role = c("aut", "cre")),
-  person("Wouter", "Saelens", email = "wouter.saelens@ugent.be", role = c("aut")))
+    person(
+      "Robrecht", 
+      "Cannoodt", 
+      email = "rcannood@gmail.com", 
+      role = c("aut", "cre"),
+      comment = c(ORCID = "0000-0003-3641-729X")
+    ),
+    person(
+      "Wouter", 
+      "Saelens", 
+      email = "wouter.saelens@ugent.be", 
+      role = c("aut"), 
+      comment = c(ORCID = "0000-0002-7114-6248")
+    )
+  )
+URL: https://github.com/dynverse/dynwrap
+BugReports: https://github.com/dynverse/dynwrap/issues
 Description: The common trajectory model for representing trajectories from real and synthetic datasets and method predictions.
 License: GPL-3
 LazyData: TRUE
@@ -48,6 +63,7 @@ Remotes:
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Collate: 
+    'aa_output_processors.R'
     'calculate_average_by.R'
     'classify_milestone_network.R'
     'compute_tented_geodesic_distances.R'
@@ -63,6 +79,7 @@ Collate:
     'ti_infer_trajectory.R'
     'ti_input_processors.R'
     'ti_output_processors.R'
+    'ti_parse_parameter_definition.R'
     'wrap_add_cell_graph.R'
     'wrap_add_cell_waypoints.R'
     'wrap_add_cluster_graph.R'

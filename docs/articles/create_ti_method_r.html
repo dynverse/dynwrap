@@ -60,7 +60,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/dynverse/dynwrap">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -74,9 +81,9 @@
     <div class="page-header toc-ignore">
       <h1>Creating a TI method within R</h1>
             
-            <h4 class="date">2018-05-31</h4>
+            <h4 class="date">2018-06-02</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/dynverse/dynwrap/blob/master/vignettes/create_ti_method_r.Rmd"><code>vignettes/create_ti_method_r.Rmd</code></a></small>
       <div class="hidden name"><code>create_ti_method_r.Rmd</code></div>
 
     </div>
@@ -144,8 +151,8 @@ pseudotime &lt;-<span class="st"> </span>(pseudotime <span class="op">-</span><s
 <p>Following prior information requests are possible:</p>
 <table class="table">
 <colgroup>
-<col width="17%">
-<col width="82%">
+<col width="18%">
+<col width="81%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Name of parameter</th>
@@ -153,40 +160,44 @@ pseudotime &lt;-<span class="st"> </span>(pseudotime <span class="op">-</span><s
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">start_id</td>
+<td align="left">start_cells</td>
 <td align="left">Vector containing ids of the start cells</td>
 </tr>
 <tr class="even">
-<td align="left">end_id</td>
+<td align="left">end_cells</td>
 <td align="left">Vector containing ids of the end cells</td>
 </tr>
 <tr class="odd">
-<td align="left">end_n</td>
+<td align="left">n_end_states</td>
 <td align="left">The number of end states</td>
 </tr>
 <tr class="even">
-<td align="left">start_n</td>
+<td align="left">n_start_states</td>
 <td align="left">The number of start states</td>
 </tr>
 <tr class="odd">
-<td align="left">states_id</td>
+<td align="left">grouping_assignment</td>
 <td align="left">Named character vector linking the cell ids to different states or clustering</td>
 </tr>
 <tr class="even">
-<td align="left">states_n</td>
+<td align="left">n_branches</td>
 <td align="left">Vector containing the number of end states (including start, end and intermediary states)</td>
 </tr>
 <tr class="odd">
-<td align="left">states_network</td>
+<td align="left">grouping_network</td>
 <td align="left">Dataframe containing the known network between states. Contains a from and to column</td>
 </tr>
 <tr class="even">
-<td align="left">time_id</td>
+<td align="left">time</td>
 <td align="left">Named numeric vector linking the cell ids to time points</td>
 </tr>
 <tr class="odd">
-<td align="left">genes_id</td>
+<td align="left">marker_features_id</td>
 <td align="left">Character vector with genes known to be important in the dynamic process</td>
+</tr>
+<tr class="even">
+<td align="left">task</td>
+<td align="left">The full dataset, including gold standard</td>
 </tr>
 </tbody>
 </table>

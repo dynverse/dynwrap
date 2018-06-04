@@ -65,3 +65,23 @@ add_linear_trajectory <- function(
     ...
   )
 }
+
+
+
+
+# Process linear from file -------------------------------------
+process_linear <- function(model, dir_output) {
+  pseudotime <- read_pseudotime(dir_output)
+  model %>% add_linear_trajectory(pseudotime)
+}
+
+output_processors <- output_processors %>% add_row(
+  id="linear",
+  processor=list(process_linear),
+  required_files=list(c("pseudotime.csv")),
+  optional_files=list(c()),
+  required_output=list(c()),
+  description="Creates a linear trajectory from pseudotime",
+  creates_trajectory=TRUE
+)
+
