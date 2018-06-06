@@ -164,6 +164,7 @@ check_milestone_network <- function(milestone_ids, milestone_network) {
   testthat::expect_equal(sapply(milestone_network, class), c(from = "character", to = "character", length = "numeric", directed = "logical"))
   testthat::expect_true(all(milestone_network$from %in% milestone_ids))
   testthat::expect_true(all(milestone_network$to %in% milestone_ids))
+  testthat::expect_false(any(duplicated(milestone_network %>% select(from, to))))
 
   milestone_network
 }
