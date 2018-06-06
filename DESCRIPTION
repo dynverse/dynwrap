@@ -48,7 +48,7 @@ Imports:
 Suggests:
   crayon,
   feather,
-  hdf5r,
+  h5,
   scran,
   stevedore,
   viridis,
