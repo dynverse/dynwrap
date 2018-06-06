@@ -68,15 +68,16 @@ jsonlite::write_json(prior_information, "inst/example_inputs/prior_information.j
 
 # save the output
 dir_output <- "inst/example_outputs/"
+output_file <- function(x) file.path(dir_output, x)
 
-tibble(cell_id=cell_ids) %>% write_csv(file.path(dir_output, "cell_ids.csv"))
-write_pseudotime(pseudotime, dir_output)
-write_group_ids(group_ids, dir_output)
-write_grouping(grouping, dir_output)
-write_milestone_network(milestone_network, dir_output)
-write_milestone_ids(milestone_ids, dir_output)
-write_progressions(progressions, dir_output)
-write_milestone_percentages(milestone_percentages, dir_output)
-write_divergence_regions(divergence_regions, dir_output)
-write_dimred(dimred, dir_output)
-write_dimred_milestones(dimred_milestones, dir_output)
+tibble(cell_id=cell_ids) %>% write_csv(output_file("cell_ids.csv"))
+enframe(pseudotime, "cell_id", "pseudotime") %>% write_csv(output_file("pseudotime.csv"))
+group_ids %>% write_json(output_file("group_ids.json"))
+enframe(grouping, "cell_id", "group_id") %>% write_csv(output_file("grouping.csv"))
+milestone_network %>% write_csv(output_file("milestone_network.csv"))
+milestone_ids %>% write_json(output_file("milestone_ids.json"))
+progressions %>% write_csv(output_file("progressions.csv"))
+milestone_percentages %>% write_csv(output_file("milestone_percentages.csv"))
+divergence_regions %>% write_csv(output_file("divergence_regions.csv"))
+dimred %>% as.data.frame() %>% rownames_to_column("cell_id") %>% write_csv(output_file("dimred.csv"))
+dimred_milestones %>% as.data.frame() %>% rownames_to_column("milestone_id") %>% write_csv(output_file("dimred_milestones.csv"))

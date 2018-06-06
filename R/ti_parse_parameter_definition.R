@@ -1,6 +1,6 @@
 parse_parameter_definition <- function(parameter_definition) {
-  if(!is.null(parameter_defintition$forbidden)) {
-    forbidden <- quote(parse(text = parameter_defintition$forbidden))
+  if(!is.null(parameter_definition$forbidden)) {
+    forbidden <- quote(parse(text = parameter_definition$forbidden))
   } else {
     forbidden <- NULL
   }

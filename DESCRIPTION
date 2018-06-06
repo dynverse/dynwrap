@@ -47,6 +47,8 @@ Imports:
   tidyr
 Suggests:
   crayon,
+  feather,
+  hdf5r,
   scran,
   stevedore,
   viridis,
@@ -63,7 +65,6 @@ Remotes:
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Collate: 
-    'aa_output_processors.R'
     'calculate_average_by.R'
     'classify_milestone_network.R'
     'compute_tented_geodesic_distances.R'
@@ -77,8 +78,6 @@ Collate:
     'ti_comp1.R'
     'ti_create_docker_method.R'
     'ti_infer_trajectory.R'
-    'ti_input_processors.R'
-    'ti_output_processors.R'
     'ti_parse_parameter_definition.R'
     'wrap_add_cell_graph.R'
     'wrap_add_cell_waypoints.R'
@@ -97,4 +96,5 @@ Collate:
     'wrap_add_waypoints.R'
     'wrap_data.R'
     'wrap_label_milestones.R'
+    'wrap_output.R'
     'wrap_prediction_model.R'

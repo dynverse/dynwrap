@@ -19,6 +19,9 @@ Otherwise, will assume the values are already within that range.}
 
 \item{...}{extra information to be stored in the wrapper.}
 }
+\value{
+The trajectory model
+}
 \description{
 This function will generate the milestone_network and progressions.
 }

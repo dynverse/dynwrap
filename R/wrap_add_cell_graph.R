@@ -11,6 +11,8 @@
 #'
 #' @export
 #'
+#' @return The trajectory model
+#'
 #' @importFrom testthat expect_is expect_true expect_equal
 add_cell_graph <- function(
   data_wrapper,

@@ -14,14 +14,16 @@
 #'   Type: Data frame(cell_id = character, from = character, to = character, percentage = numeric).
 #' @param ... extra information to be stored in the wrapper.
 #'
+#' @return The trajectory model
+#'
 #' @export
 #'
 #' @importFrom testthat expect_is expect_equal expect_true expect_false
 add_trajectory <- function(
   data_wrapper,
-  milestone_ids,
+  milestone_ids = NULL,
   milestone_network,
-  divergence_regions,
+  divergence_regions = NULL,
   milestone_percentages = NULL,
   progressions = NULL,
   ...
@@ -29,6 +31,11 @@ add_trajectory <- function(
   # check whether object is a data wrapper
   testthat::expect_true(is_data_wrapper(data_wrapper))
   cell_ids <- data_wrapper$cell_ids
+
+  # infer milestone_ids if not given
+  if(is.null(milestone_ids)) {
+    milestone_ids <- unique(c(milestone_network$from, milestone_network$to))
+  }
 
   # check milestone ids and milestone network
   testthat::expect_is(milestone_ids, "character")
@@ -43,7 +50,13 @@ add_trajectory <- function(
 
   # check and process milestone percentages and progressions
   if (is.null(milestone_percentages) == is.null(progressions)) {
-    stop("Exactly one of ", sQuote("milestone_percentages"), " or ", sQuote("progressions"), " must be defined, the other must be NULL.")
+    if(!is.null(milestone_percentages)) {
+      warning("Both milestone_percentages and progressions are given, will only use progressions")
+      milestone_percentages <-  NULL
+    } else {
+      stop("Exactly one of ", sQuote("milestone_percentages"), " or ", sQuote("progressions"), " must be defined, the other must be NULL.")
+    }
+
   }
 
   if (is.null(progressions)) {
@@ -205,104 +218,3 @@ check_progressions <- function(cell_ids, milestone_ids, milestone_network, progr
 
   progressions
 }
-
-
-# Process trajectory from file ----------------------------------------
-read_milestone_network <- function(dir_output) {
-  read_csv(
-    file.path(dir_output, "milestone_network.csv"),
-    col_types = cols(
-      from = col_character(),
-      to = col_character(),
-      directed = col_logical(),
-      length = col_number()
-    )
-  )
-}
-
-read_milestone_ids <- function(dir_output, milestone_network) {
-  read_vector(file.path(dir_output, "milestone_ids.json"), unique(c(milestone_network$from, milestone_network$to))) %>%
-    as.character()
-}
-
-read_milestone_percentages <- function(dir_output) {
-  read_csv(
-    file.path(dir_output, "milestone_percentages.csv"),
-    col_types = cols(
-      cell_id = col_character(),
-      milestone_id = col_character(),
-      percentage = col_number()
-    )
-  )
-}
-
-read_progressions <- function(dir_output) {
-  read_csv(
-    file.path(dir_output, "progressions.csv"),
-    col_types = cols(
-      cell_id = col_character(),
-      from = col_character(),
-      to = col_character(),
-      percentage = col_number()
-    )
-  )
-}
-
-read_divergence_regions <- function(dir_output, milestone_network) {
-  path <- file.path(dir_output, "divergence_regions.csv")
-  if(file.exists(path)) {
-    read_csv(
-      path,
-      col_types = cols(
-        divergence_id = col_character(),
-        milestone_id = col_character(),
-        is_start = col_logical()
-      )
-    )
-  } else {
-    tibble(
-      divergence_id = character(0),
-      milestone_id = character(0),
-      is_start = logical(0)
-    )
-  }
-}
-
-
-# process trajectory
-process_trajectory <- function(model, dir_output) {
-  milestone_network <- read_milestone_network(dir_output)
-  divergence_regions <- read_divergence_regions(dir_output, milestone_network)
-  milestone_ids <- read_milestone_ids(dir_output, milestone_network)
-
-  if(file.exists(file.path(dir_output, "progressions.csv"))) {
-    progressions <- read_progressions(dir_output)
-    model %>%
-      add_trajectory(
-        milestone_ids,
-        milestone_network,
-        divergence_regions,
-        progressions = progressions
-      )
-  } else if(file.exists(file.path(dir_output, "milestone_percentages.csv"))) {
-    milestone_percentages <- read_milestone_percentages(dir_output)
-    model %>%
-      add_trajectory(
-        milestone_ids,
-        milestone_network,
-        divergence_regions,
-        milestone_percentages = milestone_percentages
-      )
-  }
-}
-
-output_processors <- output_processors %>% add_row(
-  id="trajectory",
-  processor=list(process_trajectory),
-  required_files=list(c("milestone_network.csv", "progressions.csv", "milestone_percentages.csv")),
-  optional_files=list(c("divergence_regions.csv", "milestone_ids.json")),
-  required_output=list(c()),
-  description="Creates a trajectory using a milestone network and progressions OR milestone percentages (one of either is required)",
-  creates_trajectory = TRUE
-)
-

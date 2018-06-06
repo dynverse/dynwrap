@@ -156,7 +156,7 @@ test_that("Test empty divergence regions", {
 
 
 test_that("Test combination of percentages & progressions", {
-  expect_error(
+  expect_warning(
     wr_orig %>%
       add_trajectory(
         milestone_ids = milestone_ids,

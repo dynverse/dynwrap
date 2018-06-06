@@ -53,7 +53,7 @@ create_ti_method <- function(
 
     # add inputs tibble
     input_ids <- names(formals(run_fun))
-    input_ids_required <- names(as.list(formals(run_fun)) %>% map_chr(class) %>% keep(~.=="name"))
+    input_ids_required <- names(as.list(formals(run_fun)) %>% map_chr(class) %>% keep(~. == "name"))
 
     desc$inputs <- tibble(
       input_id = input_ids,

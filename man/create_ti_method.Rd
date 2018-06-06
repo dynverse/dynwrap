@@ -6,7 +6,7 @@
 \usage{
 create_ti_method(name, par_set, run_fun, plot_fun = function(prediction)
   ggplot(), package_loaded = c(), package_required = c(),
-  short_name = name)
+  short_name = NULL)
 }
 \arguments{
 \item{name}{The name of the TI method}

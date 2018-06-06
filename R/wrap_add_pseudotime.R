@@ -27,32 +27,25 @@ calculate_pseudotime <- function(trajectory) {
 add_pseudotime <- function(trajectory, pseudotime = NULL) {
   if (is.null(pseudotime)) {
     pseudotime <- calculate_pseudotime(trajectory)
+  } else {
+    pseudotime <- process_pseudotime(data_wrapper, pseudotime)
   }
 
-  testthat::expect_true(length(names(pseudotime) )== length(trajectory$cell_ids))
-  testthat::expect_setequal(names(pseudotime), trajectory$cell_ids)
+  # check names of pseudotime
+  cell_ids <- trajectory$cell_ids
+  testthat::expect_is(pseudotime, "numeric")
+  testthat::expect_named(pseudotime)
+  testthat::expect_setequal(names(pseudotime), cell_ids)
+  testthat::expect_true(length(names(pseudotime) )== length(cell_ids))
 
   trajectory$pseudotime <- pseudotime[trajectory$cell_ids]
   trajectory
 }
 
-
-# Process pseudotime from file ---------------------------
-process_pseudotime <- function(model, dir_output) read_pseudotime(dir_output) %>% add_pseudotime(model, .)
-
-output_processors <- output_processors %>% add_row(
-  id="pseudotime",
-  processor=list(process_pseudotime),
-  required_files=list(c("pseudotime.csv")),
-  optional_files=list(c()),
-  required_output=list(c()),
-  description="Add pseudotime, a single value for every cell which denotes its progression from start to finish",
-  creates_trajectory=FALSE
-)
-
-read_pseudotime <- function(dir_output) {
-  read_assignment(
-    file.path(dir_output, "pseudotime.csv"),
-    readr::cols(cell_id=readr::col_character(), pseudotime=readr::col_double())
-  )
+process_pseudotime <- function(data_wrapper, pseudotime) {
+  # convert to named vector if necessary
+  if(is.data.frame(pseudotime) && all(c("cell_id", "pseudotime") %in% colnames(pseudotime))) {
+    pseudotime <- pseudotime %>% select(cell_id, pseudotime) %>% deframe()
+  }
+  pseudotime
 }

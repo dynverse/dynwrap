@@ -2,26 +2,11 @@
 % Please edit documentation in R/wrap_add_trajectory.R
 \name{add_trajectory}
 \alias{add_trajectory}
-\alias{write_milestone_network}
-\alias{write_milestone_ids}
-\alias{write_milestone_percentages}
-\alias{write_progressions}
-\alias{write_divergence_regions}
 \title{Add a trajectory to a data wrapper}
 \usage{
-add_trajectory(data_wrapper, milestone_ids, milestone_network,
-  divergence_regions, milestone_percentages = NULL, progressions = NULL,
-  ...)
-
-write_milestone_network(milestone_network, dir_output)
-
-write_milestone_ids(milestone_ids, dir_output)
-
-write_milestone_percentages(milestone_percentages, dir_output)
-
-write_progressions(progressions, dir_output)
-
-write_divergence_regions(divergence_regions, dir_output)
+add_trajectory(data_wrapper, milestone_ids = NULL, milestone_network,
+  divergence_regions = NULL, milestone_percentages = NULL,
+  progressions = NULL, ...)
 }
 \arguments{
 \item{data_wrapper}{A data wrapper to extend upon.}
@@ -43,8 +28,9 @@ Type: Data frame(cell_id = character, milestone_id = character, percentage = num
 Type: Data frame(cell_id = character, from = character, to = character, percentage = numeric).}
 
 \item{...}{extra information to be stored in the wrapper.}
-
-\item{dir_output}{The output directory}
+}
+\value{
+The trajectory model
 }
 \description{
 Add a trajectory to a data wrapper

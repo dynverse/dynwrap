@@ -27,3 +27,16 @@
 #'
 #' @docType data
 "prior_usages"
+
+
+
+#' All allowed inputs
+#'
+#' @docType data
+"allowed_inputs"
+
+
+#' All allowed outputs
+#'
+#' @docType data
+"allowed_outputs"

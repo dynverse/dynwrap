@@ -4,8 +4,6 @@
 \alias{add_dimred}
 \alias{is_wrapper_with_dimred}
 \alias{get_dimred}
-\alias{write_dimred}
-\alias{write_dimred_milestones}
 \title{Add a dimensionality reduction to a data wrapper}
 \usage{
 add_dimred(data_wrapper, dimred, dimred_milestones = NULL,
@@ -14,10 +12,6 @@ add_dimred(data_wrapper, dimred, dimred_milestones = NULL,
 is_wrapper_with_dimred(data_wrapper)
 
 get_dimred(data_wrapper, dimred = NULL, expression_source = "expression")
-
-write_dimred(dimred, dir_output)
-
-write_dimred_milestones(dimred, dir_output)
 }
 \arguments{
 \item{data_wrapper}{A data wrapper to extend upon.}
@@ -31,8 +25,6 @@ write_dimred_milestones(dimred, dir_output)
 \item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another data wrapper which contains expression}
 
 \item{...}{extra information to be stored in the wrapper}
-
-\item{dir_output}{Output directory}
 }
 \description{
 TODO: add possibility to also dimred the milestones and segments. This should be migrated from dynplot!
