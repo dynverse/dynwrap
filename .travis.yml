@@ -2,21 +2,22 @@ language: r
 sudo: required
 dist: trusty
 bioc_required: true
-cache: packages
+cache:
+  directories:
+    - $HOME/.cache/hdf5
+    - $HOME/R/Library
 services:
   - docker
-env:
-  global:
-    - HDF5_VERSION=1.10.1
-    - HDF5_RELEASE_URL="https://support.hdfgroup.org/ftp/HDF5/releases"
-    - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 addons:
   apt:
     update: true
     packages:
     - libhdf5-dev
 before_install:
-  - source <( curl --insecure https://raw.githubusercontent.com/hhoeflin/hdf5r/master/travis_setup.sh | sed "s/hdf5r/dynwrap/" )
+  - export HDF5_DIR=$HOME/.cache/hdf5
+  - echo $HDF5_DIR
+  - source <( curl --insecure https://raw.githubusercontent.com/h5py/h5py/master/ci/travis/get_hdf5_if_needed.sh )
+  - ls -lRa $HDF5_DIR
 install:
  - if [ `git branch | grep '* master' | wc -l` == 0 ]; then sed -i 's#\(dynverse/[^, ]*\)#\1@devel#' DESCRIPTION; fi
  - R -e 'if ("devtools" %in% rownames(installed.packages())) update.packages(oldPkgs = "devtools", ask = FALSE) else install.packages("devtools")'
