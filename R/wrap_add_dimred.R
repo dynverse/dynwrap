@@ -68,7 +68,7 @@ is_wrapper_with_dimred <- function(data_wrapper) {
 
 #' @rdname add_dimred
 #' @export
-get_dimred <- function(data_wrapper, dimred=NULL, expression_source="expression") {
+get_dimred <- function(data_wrapper, dimred = NULL, expression_source = "expression") {
   if(is.function(dimred)) {
     # function
     expression <- get_expression(data_wrapper, expression_source)
