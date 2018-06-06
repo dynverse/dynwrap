@@ -8,6 +8,7 @@ services:
 env:
   global:
     - HDF5_VERSION=1.10.1
+    - HDF5_RELEASE_URL="https://support.hdfgroup.org/ftp/HDF5/releases"
 addons:
   apt:
     update: true
