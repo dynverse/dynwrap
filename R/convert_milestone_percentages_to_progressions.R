@@ -17,6 +17,10 @@ convert_milestone_percentages_to_progressions <- function(cell_ids, milestone_id
         left_join(relevant_pct, by = c("to" = "milestone_id")) %>%
         select(cell_id, from, to, percentage)
 
+      start <- relevant_pct$milestone_id %>% setdiff(relevant_progr$to)
+
+      relevant_progr <- relevant_progr %>% filter(from == start)
+
       # fail check
       if (nrow(relevant_progr) == 0) {
         stop("According to milestone_percentages, cell ", sQuote(cid), " is between milestones ",
