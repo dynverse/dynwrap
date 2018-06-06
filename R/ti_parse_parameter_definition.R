@@ -55,6 +55,17 @@ parse_parameter_definition <- function(parameter_definition) {
         len = param$length,
         special.vals = param$special_values
       )
+    } else if (param$type == "logical") {
+      ParamHelpers::makeLogicalParam(
+        id,
+        default = param$default
+      )
+    } else if (param$type == "logical_vector") {
+      ParamHelpers::makeLogicalVectorParam(
+        id,
+        default = param$default,
+        len = param$length
+      )
     } else {
       stop("invalid type")
     }

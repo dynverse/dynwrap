@@ -75,6 +75,15 @@ parameter_definition <- list(
     values = c("a", "b", "c"),
     default = c("a", "b"),
     length = 2
+  ),
+  logical = list(
+    type = "logical",
+    default = TRUE
+  ),
+  logical_vector = list(
+    type = "logical_vector",
+    length = 2,
+    default = c(TRUE, FALSE)
   )
 )
 
@@ -93,6 +102,9 @@ test_that("Parameters can be parsed and sampled", {
 
   discretes <- sampled_parameters[, c("discrete", "discrete_vector")] %>% unlist()
   testthat::expect_true(all(discretes %in% c("a", "b", "c")))
+
+  logicals <- sampled_parameters[, c("logical", "logical_vector")] %>% unlist()
+  testthat::expect_true(all(logicals %in% c(TRUE, FALSE)))
 })
 
 
