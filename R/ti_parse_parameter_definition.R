@@ -14,8 +14,8 @@ parse_parameter_definition <- function(parameter_definition) {
     if (is.null(param$special_values)) param$special_values <- list()
 
     if(param$type %in% c("integer", "numeric", "integer_vector", "numeric_vector")) {
-      if (is.null(param$lower)) param$lower <- -Inf
-      if (is.null(param$upper)) param$upper <- Inf
+      if (is.null(param$lower)) param$lower <- param$default
+      if (is.null(param$upper)) param$upper <- param$default
       if (is.null(param$distribution)) param$distribution <- "uniform"
       distribution2uniform <- get_distribution2uniform(param)
       uniform2distribution <- get_uniform2distribution(param)

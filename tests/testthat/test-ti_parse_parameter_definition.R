@@ -1,6 +1,10 @@
 context("Testing parse_parameter_defintion")
 
 parameter_definition <- list(
+  fixed = list(
+    type = "integer",
+    default = 42
+  ),
   integer = list(
     type = "integer",
     lower = 10,
@@ -81,6 +85,8 @@ sampled_parameters <- ParamHelpers::generateDesign(1000, par_set, trafo=TRUE) %>
   dynutils::list_as_tibble()
 
 test_that("Parameters can be parsed and sampled", {
+  testthat::expect_setequal(sampled_parameters$fixed, 42)
+
   numbers <- sampled_parameters[, c("integer", "numeric", "integer_vector", "numeric_vector")] %>% unlist()
   testthat::expect_true(all(numbers >= 10))
   testthat::expect_true(all(numbers <= 20))
