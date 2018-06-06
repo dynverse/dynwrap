@@ -7,6 +7,11 @@ services:
   - docker
 env:
   - R_MAX_NUM_DLLS=250
+addons:
+  apt:
+    update: true
+    packages:
+    - libhdf5-dev
 install:
  - if [ `git branch | grep '* master' | wc -l` == 0 ]; then sed -i 's#\(dynverse/[^, ]*\)#\1@devel#' DESCRIPTION; fi
  - R -e 'if ("devtools" %in% rownames(installed.packages())) update.packages(oldPkgs = "devtools", ask = FALSE) else install.packages("devtools")'
