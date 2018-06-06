@@ -26,3 +26,7 @@ install:
  - R -e 'devtools::install(dependencies = T, upgrade = T)'
 after_success:
  - R -e 'covr::codecov()'
+script:
+ - echo No R CMD check since this is an init.
+after_success:
+ - echo Init 0 succeeded!

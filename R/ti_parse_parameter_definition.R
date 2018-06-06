@@ -1,18 +1,112 @@
 parse_parameter_definition <- function(parameter_definition) {
   if(!is.null(parameter_definition$forbidden)) {
     forbidden <- quote(parse(text = parameter_definition$forbidden))
+    parameter_definition <- parameter_definition[names(parameter_definition) != "forbidden"]
   } else {
     forbidden <- NULL
   }
 
-  map2(names(parameter_definition), parameter_definition, function(id, p) {
-    if(p$type == "integer") {
-      ParamHelpers::makeIntegerParam(id, lower=p$lower, upper=p$upper, default=p$default)
-    } else if (p$type == "discrete") {
-      ParamHelpers::makeDiscreteParam(id, values=p$values, default=p$default)
+  map2(names(parameter_definition), parameter_definition, function(id, param) {
+    if(!all(c("type", "default") %in% names(param))) {
+      stop("Parameter should at least define type and default")
+    }
+
+    if (is.null(param$special_values)) param$special_values <- list()
+
+    if(param$type %in% c("integer", "numeric", "integer_vector", "numeric_vector")) {
+      if (is.null(param$lower)) param$lower <- param$default
+      if (is.null(param$upper)) param$upper <- param$default
+      if (is.null(param$distribution)) param$distribution <- "uniform"
+      distribution2uniform <- get_distribution2uniform(param)
+      uniform2distribution <- get_uniform2distribution(param)
+
+      if (param$type %in% c("integer", "numeric")) {
+        ParamHelpers::makeNumericParam(
+          id,
+          lower = param$lower %>% distribution2uniform,
+          upper = param$upper %>% distribution2uniform,
+          default = param$default %>% distribution2uniform,
+          trafo = uniform2distribution,
+          special.vals = param$special_values
+        )
+      } else {
+        ParamHelpers::makeNumericVectorParam(
+          id,
+          lower = param$lower %>% distribution2uniform,
+          upper = param$upper %>% distribution2uniform,
+          default = param$default %>% distribution2uniform,
+          trafo = uniform2distribution,
+          len = param$length,
+          special.vals = param$special_values
+        )
+      }
+    } else if (param$type == "discrete") {
+      ParamHelpers::makeDiscreteParam(
+        id,
+        values = param$values,
+        default = param$default,
+        special.vals = param$special_values
+      )
+    } else if (param$type == "discrete_vector") {
+      ParamHelpers::makeDiscreteVectorParam(
+        id,
+        values = as.list(param$values),
+        default = as.list(param$default),
+        len = param$length,
+        special.vals = param$special_values
+      )
+    } else if (param$type == "logical") {
+      ParamHelpers::makeLogicalParam(
+        id,
+        default = param$default
+      )
+    } else if (param$type == "logical_vector") {
+      ParamHelpers::makeLogicalVectorParam(
+        id,
+        default = param$default,
+        len = param$length
+      )
     } else {
       stop("invalid type")
     }
   }) %>%
     invoke(ParamHelpers::makeParamSet, ., forbidden = forbidden)
+}
+
+
+
+
+get_distribution2uniform <- function(param) {
+  switch(
+    param$distribution,
+    normal = {
+      if(is.null(param$mean)) {stop("Provide mean when using a normal distributed parameter")}
+      if(is.null(param$sd)) {stop("Provide sd when using a normal distributed parameter")}
+      function(q) pnorm(q, mean = param$mean, sd = param$sd)
+    },
+    exponential = {
+      if(is.null(param$rate)) {stop("Provide rate when using a normal distributed parameter")}
+      function(q) pexp(q, rate = param$rate)
+    },
+    uniform = {
+      if(param$lower == -Inf) {stop("Provide lower boundary when using an uniformly distributed parameter")}
+      if(param$upper == -Inf) {stop("Provide upper boundary when using an uniformly distributed parameter")}
+      function(q) punif(q, param$lower, param$upper)
+    }
+  )
+}
+
+get_uniform2distribution <- function(param) {
+  uniform2distribution <- switch(
+    param$distribution,
+    normal = function(p) qnorm(p, mean = param$mean, sd = param$sd),
+    exponential = function(p) qexp(p, rate = param$rate),
+    uniform = function(p) qunif(p, param$lower, param$upper)
+  )
+
+  if (param$type %in% c("integer", "integer_vector")) {
+    function(x) round(uniform2distribution(x))
+  } else {
+    uniform2distribution
+  }
 }

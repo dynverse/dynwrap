@@ -49,6 +49,7 @@ Suggests:
   crayon,
   feather,
   hdf5r,
+  lhs,
   scran,
   stevedore,
   viridis,
