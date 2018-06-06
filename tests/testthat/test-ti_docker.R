@@ -33,9 +33,9 @@ test_that("Testing create_docker_ti_method with compone", {
   expect_error(create_docker_ti_method("dynverse/comp1", output_ids = "whatever"))
 })
 
-tags <- c("R_text", "R_rds", "R_dynwrap", "R_feather", "python_text")
+tags <- c("R_text")
 if (Sys.getenv("TRAVIS") != "true") {
-  tags <- c(tags, c("R_hdf5", "python_hdf5"))
+  tags <- c(tags, c("R_hdf5", "python_hdf5", "R_rds", "R_dynwrap", "R_feather", "python_text"))
 }
 for (tag in tags) {
   test_that(paste0("Testing create_docker_ti_method and infer_trajectory with ", tag), {
