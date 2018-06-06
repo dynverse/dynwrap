@@ -50,24 +50,24 @@ add_prior_information <- function(
   #   testthat::expect_true(is_wrapper_with_trajectory(task))
   #   testthat::expect_true(all(end_milestones %in% task$milestone_ids))
   # }
-  if(!is.null(start_cells)) {
+  if (!is.null(start_cells)) {
     testthat::expect_true(all(start_cells %in% task$cell_ids))
   }
-  if(!is.null(end_cells)) {
+  if (!is.null(end_cells)) {
     testthat::expect_true(all(start_cells %in% task$cell_ids))
   }
-  if(!is.null(grouping_assignment)) {
+  if (!is.null(grouping_assignment)) {
     testthat::expect_true(is.data.frame(grouping_assignment))
     testthat::expect_setequal(colnames(grouping_assignment), c("cell_id", "group_id"))
     testthat::expect_setequal(grouping_assignment$cell_ids, task$cell_ids)
   }
-  if(!is.null(grouping_network)) {
+  if (!is.null(grouping_network)) {
     testthat::expect_true(!is.null(grouping_assignment))
     testthat::expect_setequal(colnames(grouping_network), c("from", "to"))
     testthat::expect_setequal(grouping_network$from, grouping_assignment$group_id)
     testthat::expect_setequal(grouping_network$to, grouping_assignment$group_id)
   }
-  if(!is.null(marker_feature_ids)) {
+  if (!is.null(marker_feature_ids)) {
     testthat::expect_true(is_wrapper_with_expression(task))
     testthat::expect_true(all(marker_feature_ids %in% colnames(task$counts)))
   }
@@ -159,7 +159,7 @@ generate_prior_information <- function(
   # define helper function for determining the closest cells
   determine_closest_cells <- function(mids) {
     pseudocell <- paste0("MILESTONECELL_", mids)
-    traj <-
+    tmp <-
       wrap_data(
         id = "tmp",
         cell_ids = c(cell_ids, pseudocell)
@@ -174,7 +174,7 @@ generate_prior_information <- function(
         )
       )
 
-    geo <- compute_tented_geodesic_distances(traj, waypoint_cells = pseudocell)[,cell_ids,drop = FALSE]
+    geo <- compute_tented_geodesic_distances(tmp, waypoint_cells = pseudocell)[,cell_ids,drop = FALSE]
 
     unique(unlist(apply(geo, 1, function(x) {
       sample(names(which(x == min(x))), 1)
