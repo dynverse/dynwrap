@@ -6,8 +6,8 @@ cache: packages
 services:
   - docker
 env:
-  - R_MAX_NUM_DLLS=250
-  - HDF5_VERSION=1.10.1
+  global:
+    - HDF5_VERSION=1.10.1
 addons:
   apt:
     update: true
