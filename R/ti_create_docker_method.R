@@ -242,31 +242,16 @@ save_inputs <- function(
   } else if (input_format == "rds") {
     write_rds(inputs, file.path(dir_input, "data.rds"))
   } else if (input_format == "hdf5") {
-    # save data
-    # hdf5r does not run on ubuntu trusty because it has old libhdf5-dev libraries
-    # file <- hdf5r::H5File$new(file.path(dir_input, "data.h5"))
-    # purrr::walk2(inputs, names(inputs), function(x, name) {
-    #   file$create_dataset(name, x)
-    #
-    #   if(is.matrix(x)) {
-    #     hdf5r::h5attr(file[[name]], "rownames") <- rownames(x)
-    #     hdf5r::h5attr(file[[name]], "colnames") <- colnames(x)
-    #   }
-    # })
-    # file$close_all() # important to do a close_all here, otherwise some parts of the data can still be open, resulting invalid h5 files
-
-    requireNamespace("h5")
-    file <- h5::h5file(file.path(dir_input, "data.h5"))
+    file <- hdf5r::H5File$new(file.path(dir_input, "data.h5"))
     purrr::walk2(inputs, names(inputs), function(x, name) {
-      if (is.matrix(x)) {
-        file[name] <- t(x) # transpose because hdf5 works row based
-        h5::h5attr(file[name], "rownames") <- rownames(x)
-        h5::h5attr(file[name], "colnames") <- colnames(x)
-      } else {
-        file[name] <- x
+      file$create_dataset(name, x)
+
+      if(is.matrix(x)) {
+        hdf5r::h5attr(file[[name]], "rownames") <- rownames(x)
+        hdf5r::h5attr(file[[name]], "colnames") <- colnames(x)
       }
     })
-    h5::h5close(file)
+    file$close_all() # important to do a close_all here, otherwise some parts of the data can still be open, resulting invalid h5 files
 
   } else if (input_format == "feather") {
     requireNamespace("feather")
