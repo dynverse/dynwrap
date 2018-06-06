@@ -17,32 +17,32 @@ task <-
   ) %>%
   add_prior_information(start_cells = cell_ids[[1]])
 
+test_that("Testing create_docker_ti_method with compone", {
+  sink("/dev/null")
+  method0 <- pull_docker_ti_method("dynverse/comp1")
+  sink()
+  expect_equal(method0()$short_name, "componentone")
+
+  method1 <- create_docker_ti_method("dynverse/comp1")
+  expect_equal(method1()$short_name, "componentone")
+
+  method2 <- create_docker_ti_method("dynverse/comp1", "test")
+  expect_equal(method2()$short_name, "test")
+
+  expect_error(create_docker_ti_method("dynverse/comp1", input_ids_required = "whatever"))
+  expect_error(create_docker_ti_method("dynverse/comp1", output_ids = "whatever"))
+})
+
+tags <- c("R_text")
 if (Sys.getenv("TRAVIS") != "true") {
-  test_that("Testing create_docker_ti_method with compone", {
-    sink("/dev/null")
-    method0 <- pull_docker_ti_method("dynverse/comp1")
-    sink()
-    expect_equal(method0()$short_name, "componentone")
-
-    method1 <- create_docker_ti_method("dynverse/comp1")
-    expect_equal(method1()$short_name, "componentone")
-
-    method2 <- create_docker_ti_method("dynverse/comp1", "test")
-    expect_equal(method2()$short_name, "test")
-
-    expect_error(create_docker_ti_method("dynverse/comp1", input_ids_required = "whatever"))
-    expect_error(create_docker_ti_method("dynverse/comp1", output_ids = "whatever"))
-  })
-
-  tags <- c("R_text", "R_hdf5", "python_hdf5", "R_rds", "R_dynwrap", "R_feather", "python_text")
-  for (tag in tags) {
-    test_that(paste0("Testing create_docker_ti_method and infer_trajectory with ", tag), {
-      sink("/dev/null")
-      method <- pull_docker_ti_method(paste0("dynverse/comp1:", tag))()
-      infer_trajectory(task, method)
-      sink()
-    })
-  }
+  tags <- c(tags, c("R_hdf5", "python_hdf5", "R_rds", "R_dynwrap", "R_feather", "python_text"))
 }
-
+for (tag in tags) {
+  test_that(paste0("Testing create_docker_ti_method and infer_trajectory with ", tag), {
+    sink("/dev/null")
+    method <- pull_docker_ti_method(paste0("dynverse/comp1:", tag))()
+    infer_trajectory(task, method)
+    sink()
+  })
+}
 
