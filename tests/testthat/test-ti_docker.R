@@ -18,7 +18,9 @@ task <-
   add_prior_information(start_cells = cell_ids[[1]])
 
 test_that("Testing create_docker_ti_method with compone", {
+  sink("/dev/null")
   method0 <- pull_docker_ti_method("dynverse/comp1")
+  sink()
   expect_equal(method0()$short_name, "componentone")
 
   method1 <- create_docker_ti_method("dynverse/comp1")
@@ -34,8 +36,10 @@ test_that("Testing create_docker_ti_method with compone", {
 tags <- c("R_text", "R_rds", "R_hdf5", "R_dynwrap", "R_feather", "python_text", "python_hdf5")
 for (tag in tags) {
   test_that(paste0("Testing create_docker_ti_method and infer_trajectory with ", tag), {
+    sink("/dev/null")
     method <- pull_docker_ti_method(paste0("dynverse/comp1:", tag))()
     infer_trajectory(task, method)
+    sink()
   })
 }
 
