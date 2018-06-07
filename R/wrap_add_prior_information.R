@@ -50,13 +50,12 @@ add_prior_information <- function(
   if (!is.null(grouping_assignment)) {
     testthat::expect_true(is.data.frame(grouping_assignment))
     testthat::expect_setequal(colnames(grouping_assignment), c("cell_id", "group_id"))
-    testthat::expect_setequal(grouping_assignment$cell_ids, task$cell_ids)
+    testthat::expect_setequal(grouping_assignment$cell_id, task$cell_id)
   }
   if (!is.null(grouping_network)) {
     testthat::expect_true(!is.null(grouping_assignment))
     testthat::expect_setequal(colnames(grouping_network), c("from", "to"))
-    testthat::expect_setequal(grouping_network$from, grouping_assignment$group_id)
-    testthat::expect_setequal(grouping_network$to, grouping_assignment$group_id)
+    testthat::expect_true(all(grouping_assignment$group_id %in% c(grouping_network$to, grouping_network$from)))
   }
   if (!is.null(marker_feature_ids)) {
     testthat::expect_true(is_wrapper_with_expression(task))
