@@ -10,7 +10,7 @@ test_that("Make sure that every output has a text example", {
     intersect(names(dynwrap:::output_object_specifications))
 
   # get all example files
-  found_examples <- list.files(devtools:::shim_system.file("inst/example_outputs/text/", package="dynwrap")) %>% tools::file_path_sans_ext()
+  found_examples <- list.files(devtools:::shim_system.file("example_outputs/text/", package="dynwrap")) %>% tools::file_path_sans_ext()
 
 
   expect_true(all(all_args %in% found_examples))
@@ -19,7 +19,7 @@ test_that("Make sure that every output has a text example", {
 
 
 cell_ids <- jsonlite::read_json(
-  devtools:::shim_system.file("inst/example_outputs/text/cell_ids.json", package="dynwrap"),
+  devtools:::shim_system.file("example_outputs/text/cell_ids.json", package="dynwrap"),
 ) %>% as.character()
 
 base_model <- wrap_data(cell_ids = cell_ids)
