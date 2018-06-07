@@ -8,17 +8,12 @@ cache:
     - $HOME/R/Library
 services:
   - docker
-addons:
-  apt:
-    update: true
-    packages:
-    - libhdf5-dev
 before_install:
   - export HDF5_DIR=$HOME/.cache/hdf5
   - echo $HDF5_DIR
   - export HDF5_VERSION=1.10.1
   - echo $HDF5_VERSION
-  - source <( curl --insecure https://raw.githubusercontent.com/h5py/h5py/master/ci/travis/get_hdf5_if_needed.sh )
+  - source get_hdf5_if_needed.sh
   - ls -lRa $HDF5_DIR
 install:
  - if [ `git branch | grep '* master' | wc -l` == 0 ]; then sed -i 's#\(dynverse/[^, ]*\)#\1@devel#' DESCRIPTION; fi
