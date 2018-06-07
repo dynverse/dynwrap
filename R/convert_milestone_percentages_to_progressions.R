@@ -4,7 +4,12 @@
 #' @param milestone_network Milestone network
 #' @param milestone_percentages Milestone percentages
 #' @export
-convert_milestone_percentages_to_progressions <- function(cell_ids, milestone_ids, milestone_network, milestone_percentages) {
+convert_milestone_percentages_to_progressions <- function(
+  cell_ids,
+  milestone_ids,
+  milestone_network,
+  milestone_percentages
+) {
   bind_rows(lapply(cell_ids, function(cid) {
     relevant_pct <- milestone_percentages %>% filter(cell_id == cid)
 
@@ -35,11 +40,13 @@ convert_milestone_percentages_to_progressions <- function(cell_ids, milestone_id
 
       if (nrow(relevant_net) > 0) {
         # if one or more such edges were found, sample one randomly
-        relevant_net <- sample_n(relevant_net, 1)
+        relevant_net <- relevant_net %>% sample_n(1)
         pct <- 1
       } else {
-        # if no such edge was found, look for all edges where from == cid
-        relevant_net <- milestone_network %>% filter(from %in% relevant_pct$milestone_id)
+        # if no such edge was found, look for all edges where from == cid and sample one randomly
+        relevant_net <- milestone_network %>%
+          filter(from %in% relevant_pct$milestone_id) %>%
+          sample_n(1)
         pct <- 0
       }
 
