@@ -8,6 +8,8 @@
 #'
 #' @export
 #'
+#' @return The trajectory model
+#'
 #' @importFrom testthat expect_is expect_true expect_equal
 #' @importFrom pdist pdist
 add_cluster_graph <- function(
@@ -53,29 +55,3 @@ add_cluster_graph <- function(
     ...
   )
 }
-
-
-
-
-
-
-# Process cluster graph from file ---------------
-
-process_cluster_graph <- function(model, dir_output) {
-  if(!is_wrapper_with_grouping(model)) {
-    model <- process_grouping(model, dir_output)
-  }
-
-  milestone_network <- read_milestone_network(dir_output)
-  model %>% add_cluster_graph(milestone_network)
-}
-
-output_processors <- output_processors %>% add_row(
-  id="cluster_graph",
-  processor=list(process_cluster_graph),
-  required_files=list(c("milestone_network.csv")),
-  optional_files=list(c()),
-  required_output=list(c("grouping")),
-  description="Creates a trajectory by using a cell grouping and a given network between these cell groups",
-  creates_trajectory=TRUE
-)

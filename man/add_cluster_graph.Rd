@@ -13,6 +13,9 @@ add_cluster_graph(data_wrapper, milestone_network, ...)
 
 \item{...}{extra information to be stored in the wrapper.}
 }
+\value{
+The trajectory model
+}
 \description{
 This function will generate the milestone_network and progressions.
 }

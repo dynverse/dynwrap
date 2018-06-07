@@ -21,6 +21,8 @@
 #' @importFrom stringr str_length
 #' @importFrom parallel mclapply
 #' @importFrom testthat expect_true
+#' @importFrom PRISM qsub_lapply is_qsub_config
+#'
 #' @export
 infer_trajectories <- function(
   task,
@@ -130,9 +132,30 @@ infer_trajectories <- function(
     methodi = seq_along(method)
   )
 
-  output <- parallel::mclapply(
+  parfun <-
+    if (PRISM::is_qsub_config(mc_cores)) {
+      function(X, FUN) {
+        PRISM::qsub_lapply(
+          X = X,
+          qsub_config = mc_cores,
+          qsub_packages = c("dynmethods", "dynwrap", "dynutils"),
+          FUN = FUN
+        )
+      }
+    } else if (is.integer(mc_cores) || is.numeric(mc_cores)) {
+      function(X, FUN) {
+        parallel::mclapply(
+          X = X,
+          mc.cores = mc_cores,
+          FUN = FUN
+        )
+      }
+    } else {
+      stop("Invalid ", sQuote("mc_cores"), " argument. Must be an integer or a PRISM config.")
+    }
+
+  output <- parfun(
     X = seq_len(nrow(design)),
-    mc.cores = mc_cores,
     FUN = function(ri) {
       tari <- task[[design$taski[[ri]]]]
       meri <- method[[design$methodi[[ri]]]]
@@ -272,69 +295,72 @@ execute_method_on_task <- function(
     parameters
   )
 
-  # create a temporary directory to set as working directory,
-  # to avoid polluting the working directory if a method starts
-  # producing files :angry_face:
-  tmp_dir <- tempfile(pattern = method$short_name)
-  dir.create(tmp_dir)
-  old_wd <- getwd()
-  setwd(tmp_dir)
+  tryCatch({
+    # create a temporary directory to set as working directory,
+    # to avoid polluting the working directory if a method starts
+    # producing files :angry_face:
+    tmp_dir <- tempfile(pattern = method$short_name)
+    dir.create(tmp_dir)
+    old_wd <- getwd()
+    setwd(tmp_dir)
 
-  # disable seed setting
-  # a method shouldn't set seeds during regular execution,
-  # it should be left up to the user instead
-  orig_setseed <- base::set.seed
-  setseed_detection_file <- tempfile(pattern = "seedsetcheck")
+    # disable seed setting
+    # a method shouldn't set seeds during regular execution,
+    # it should be left up to the user instead
+    orig_setseed <- base::set.seed
+    setseed_detection_file <- tempfile(pattern = "seedsetcheck")
 
-  # run the method and catch the error, if necessary
-  out <-
-    tryCatch({
-      # run method
-      model <- execute_method_internal(method, args, setseed_detection_file)
+    # run the method and catch the error, if necessary
+    out <-
+      tryCatch({
+        # run method
+        model <- execute_method_internal(method, args, setseed_detection_file)
 
-      # add task id and method names to the model
-      model$task_id <- task$id
-      model$method_name <- method$name
-      model$method_short_name <- method$short_name
+        # add task id and method names to the model
+        model$task_id <- task$id
+        model$method_name <- method$name
+        model$method_short_name <- method$short_name
 
-      c(model, list(error = NULL))
-    }, error = function(e) {
-      time_new <- Sys.time()
-      timings_list <- list(
-        method_start = time0,
-        method_afterpreproc = time0,
-        method_aftermethod = time_new,
-        method_afterpostproc = time_new,
-        method_stop = time_new
-      )
-      list(model = NULL, timings_list = timings_list, error = e)
-    })
+        c(model, list(error = NULL))
+      }, error = function(e) {
+        time_new <- Sys.time()
+        timings_list <- list(
+          method_start = time0,
+          method_afterpreproc = time0,
+          method_aftermethod = time_new,
+          method_afterpostproc = time_new,
+          method_stop = time_new
+        )
+        list(model = NULL, timings_list = timings_list, error = e)
+      })
 
-  # retrieve the model, error message, and timings
-  model <- out$model
-  error <- out$error
-  timings_list <- out$timings_list
+    # retrieve the model, error message, and timings
+    model <- out$model
+    error <- out$error
+    timings_list <- out$timings_list
+  }, finally = {
 
-  # check whether the method produced output files and
-  # wd to previous state
-  num_files_created <- length(list.files(tmp_dir, recursive = TRUE))
-  setwd(old_wd)
+    # check whether the method produced output files and
+    # wd to previous state
+    num_files_created <- length(list.files(tmp_dir, recursive = TRUE))
+    setwd(old_wd)
 
-  # Remove temporary folder
-  unlink(tmp_dir, recursive = TRUE, force = TRUE)
+    # Remove temporary folder
+    unlink(tmp_dir, recursive = TRUE, force = TRUE)
 
-  # read how many seeds were set and
-  # restore environment to previous state
-  num_setseed_calls <-
+    # read how many seeds were set and
+    # restore environment to previous state
+    num_setseed_calls <-
+      if (file.exists(setseed_detection_file)) {
+        stringr::str_length(readr::read_file(setseed_detection_file))
+      } else {
+        0
+      }
     if (file.exists(setseed_detection_file)) {
-      stringr::str_length(readr::read_file(setseed_detection_file))
-    } else {
-      0
+      file.remove(setseed_detection_file)
     }
-  if (file.exists(setseed_detection_file)) {
-    file.remove(setseed_detection_file)
-  }
-  dynutils::override_setseed(orig_setseed)
+    dynutils::override_setseed(orig_setseed)
+  })
 
   # stop the timer
   time3 <- Sys.time()

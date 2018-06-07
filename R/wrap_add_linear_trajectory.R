@@ -9,6 +9,8 @@
 #'   Otherwise, will assume the values are already within that range.
 #' @param ... extra information to be stored in the wrapper.
 #'
+#' @return The trajectory model
+#'
 #' @export
 #'
 #' @importFrom testthat expect_is expect_true expect_named
@@ -22,11 +24,7 @@ add_linear_trajectory <- function(
   # check data wrapper
   testthat::expect_true(is_data_wrapper(data_wrapper))
 
-  # check names of pseudotime
-  cell_ids <- data_wrapper$cell_ids
-  testthat::expect_is(pseudotime, "numeric")
-  testthat::expect_named(pseudotime)
-  testthat::expect_true(all(names(pseudotime) %in% cell_ids))
+  pseudotime <- process_pseudotime(data_wrapper, pseudotime)
 
   # scale pseudotime
   if (do_scale_minmax) {
@@ -65,23 +63,3 @@ add_linear_trajectory <- function(
     ...
   )
 }
-
-
-
-
-# Process linear from file -------------------------------------
-process_linear <- function(model, dir_output) {
-  pseudotime <- read_pseudotime(dir_output)
-  model %>% add_linear_trajectory(pseudotime)
-}
-
-output_processors <- output_processors %>% add_row(
-  id="linear",
-  processor=list(process_linear),
-  required_files=list(c("pseudotime.csv")),
-  optional_files=list(c()),
-  required_output=list(c()),
-  description="Creates a linear trajectory from pseudotime",
-  creates_trajectory=TRUE
-)
-

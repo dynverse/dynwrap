@@ -4,8 +4,9 @@
 \alias{add_dimred_projection}
 \title{Add a dimred projection trajectory to a data wrapper}
 \usage{
-add_dimred_projection(data_wrapper, milestone_ids, milestone_network, dimred,
-  dimred_milestones, grouping = NULL, num_segments_per_edge = 100, ...)
+add_dimred_projection(data_wrapper, milestone_ids = NULL, milestone_network,
+  dimred, dimred_milestones, grouping = NULL, num_segments_per_edge = 100,
+  ...)
 }
 \arguments{
 \item{data_wrapper}{A data wrapper to extend upon.}
@@ -24,6 +25,9 @@ Type: Data frame(from = character, to = character, length = numeric, directed = 
 \item{num_segments_per_edge}{The number of pieces each milestone transition will be split info for the calculation of the percentages.}
 
 \item{...}{extra information to be stored in the wrapper.}
+}
+\value{
+The trajectory model
 }
 \description{
 This function will generate the milestone_network and progressions.

@@ -11,11 +11,13 @@
 #'
 #' @export
 #'
+#' @return The trajectory model
+#'
 #' @importFrom testthat expect_is expect_true expect_equal expect_false
 #' @importFrom pdist pdist
 add_dimred_projection <- function(
   data_wrapper,
-  milestone_ids,
+  milestone_ids = NULL,
   milestone_network,
   dimred,
   dimred_milestones,
@@ -28,8 +30,20 @@ add_dimred_projection <- function(
 
   cell_ids <- data_wrapper$cell_ids
 
-  # check dimred
-  testthat::expect_equal(cell_ids, rownames(dimred))
+  # process milestone_ids
+  if(is.null(milestone_ids)) {
+    milestone_ids <- unique(c(milestone_network$from, milestone_network$to))
+  }
+
+  # process grouping
+  if(!is.null(grouping)) {
+    grouping <- process_grouping(data_wrapper, grouping)
+  }
+
+  # add dimred and dimred_milestones
+  dimred <- process_dimred(data_wrapper, dimred)
+  dimred_milestones <- process_dimred(data_wrapper, dimred_milestones, "milestone_id")
+  testthat::expect_setequal(milestone_ids, rownames(dimred_milestones))
 
   # check milestone_network
   check_milestone_network(milestone_ids, milestone_network)
@@ -116,34 +130,3 @@ add_dimred_projection <- function(
   # return output
   out
 }
-
-
-
-
-
-# Process dimred_projection from file ----------------------------------------
-
-process_dimred_projection <- function(model, dir_output) {
-  milestone_network <- read_milestone_network(dir_output)
-  milestone_ids <- read_milestone_ids(dir_output, milestone_network)
-  dimred <- read_dimred(dir_output)
-  dimred_milestones <- read_dimred_milestones_required(dir_output)
-
-  model %>% add_dimred_projection(
-    milestone_ids,
-    milestone_network,
-    dimred,
-    dimred_milestones
-  )
-}
-
-
-output_processors <- output_processors %>% add_row(
-  id="dimred_projection",
-  processor=list(process_dimred_projection),
-  required_files=list(c("dimred.csv", "dimred_milestones.csv", "milestone_network.csv")),
-  optional_files=list(c("milestone_ids.json")),
-  required_output=list(c()),
-  description="Creates a trajectory using the dimensionality reduction of cells and milestones, combined with the milestone network, to project each cell on the paths between the milestones.",
-  creates_trajectory = TRUE
-)

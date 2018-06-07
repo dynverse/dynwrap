@@ -67,7 +67,7 @@ test_that("Testing add_cyclic_trajectory", {
 
 })
 
-test_that("Testing add_cyclic_trajectory", {
+test_that("Testing add_cyclic_trajectory when some cells were filtered by the ti method", {
   wr <-
     wr_orig %>%
     add_cyclic_trajectory(

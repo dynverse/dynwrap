@@ -85,7 +85,7 @@ Following prior information requests are possible:
 ```{r, echo=FALSE}
 data("priors", package = "dynwrap")
 priors %>% 
-  select(`Name of parameter`=prior_id2, `Description`=prior_description) %>% 
+  select(`Name of parameter`=prior_id2, `Description`=description) %>% 
   knitr::kable("markdown")
 ```
 

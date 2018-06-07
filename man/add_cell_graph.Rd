@@ -19,6 +19,9 @@ whether or not a sample is part of the trajectory that is to be kept.}
 
 \item{...}{extra information to be stored in the wrapper.}
 }
+\value{
+The trajectory model
+}
 \description{
 This function will generate the milestone_network and progressions.
 }

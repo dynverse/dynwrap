@@ -1,6 +1,27 @@
 library(tibble)
 
-priors <- dynwrap:::priors
+priors <- tribble(
+  ~prior_id, ~name, ~description, ~prior_id2,
+  "start_id", "Start cell(s)", "One or more start cell identifiers", "start_cells",
+
+  "end_id", "End cell(s)", "One or more end cell identifiers", "end_cells",
+
+  "end_n", "# end states", "The number of end states", "n_end_states",
+
+  "start_n", "# start states", "The number of start states", "n_start_states",
+
+  "states_id", "Cell clustering", "Named character vector linking the cell identifiers to different states/branches", "grouping_assignment",
+
+  "states_n", "# states", "Number of states/branches, including start, end and intermediary states", "n_branches",
+
+  "states_network", "State network", "Dataframe containing the known network between states/branches. Contains a from and to column", "grouping_network",
+
+  "time_id", "Time course", "Named numeric vector linking the cell ids to time points", "time",
+
+  "genes_id", "Marker genes", "Genes/features known to be important in the dynamic process", "marker_features_id",
+
+  "task", "The full dataset", "The full dataset, including gold standard", "task"
+)
 
 prior_usages <- tribble(
   ~prior_usage, ~color,

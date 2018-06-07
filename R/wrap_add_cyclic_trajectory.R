@@ -11,6 +11,8 @@
 #'
 #' @export
 #'
+#' @return The trajectory model
+#'
 #' @importFrom testthat expect_is expect_true expect_named
 add_cyclic_trajectory <- function(
   data_wrapper,
@@ -22,11 +24,7 @@ add_cyclic_trajectory <- function(
   # check data wrapper
   testthat::expect_true(is_data_wrapper(data_wrapper))
 
-  # check names of pseudotime
-  cell_ids <- data_wrapper$cell_ids
-  testthat::expect_is(pseudotime, "numeric")
-  testthat::expect_named(pseudotime)
-  testthat::expect_true(all(names(pseudotime) %in% cell_ids))
+  pseudotime <- process_pseudotime(data_wrapper, pseudotime)
 
   # scale pseudotime
   if (do_scale_minmax) {
