@@ -103,7 +103,7 @@ test_that("Testing add_dimred", {
 
   # testing is_ti_data_wrapper
   expect_true(is_wrapper_with_dimred(wr))
-  expect_false(is_wrapper_with_dimred(list(chvehoie="jihofrewghifu")))
+  expect_false(is_wrapper_with_dimred(list(chvehoie = "jihofrewghifu")))
 
   expect_equivalent(wr$id, id)
   expect_equivalent(wr$cell_ids, cell_ids)

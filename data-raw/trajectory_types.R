@@ -5,7 +5,7 @@ library(colorspace)
 ## Construct trajectory_types ##
 ################################
 
-lighten <- function(color, factor=1.4){
+lighten <- function(color, factor = 1.4){
   purrr::map_chr(color, function(color) {
     col <- col2rgb(color)
     col <- do.call(rgb2hsv, as.list(col))

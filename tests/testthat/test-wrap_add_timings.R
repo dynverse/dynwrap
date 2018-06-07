@@ -34,7 +34,7 @@ test_that("Testing add_timings", {
 
   # testing is_ti_data_wrapper
   expect_true(is_wrapper_with_timings(wr))
-  expect_false(is_wrapper_with_timings(list(chvehoie="jihofrewghifu")))
+  expect_false(is_wrapper_with_timings(list(chvehoie = "jihofrewghifu")))
 
   testthat::expect_equivalent(wr$timings, tl)
   testthat::expect_equivalent(names(tl), c("start", "second", "third", "stop"))

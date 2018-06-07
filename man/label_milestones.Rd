@@ -6,15 +6,15 @@
 \alias{get_milestone_labelling}
 \title{Label milestones based on highest expression of a set of markers}
 \usage{
-label_milestones(traj, labelling, expression_source = "expression",
+label_milestones(trajectory, labelling, expression_source = "expression",
   n_nearest_cells = 20)
 
-is_wrapper_with_milestone_labelling(traj)
+is_wrapper_with_milestone_labelling(trajectory)
 
-get_milestone_labelling(traj, label_milestones = NULL)
+get_milestone_labelling(trajectory, label_milestones = NULL)
 }
 \arguments{
-\item{traj}{The trajectory}
+\item{trajectory}{The trajectory}
 
 \item{labelling}{List containing for each new name of a milestone the genes which will be used as markers}
 

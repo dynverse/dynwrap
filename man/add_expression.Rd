@@ -4,16 +4,16 @@
 \alias{add_expression}
 \alias{is_wrapper_with_expression}
 \alias{get_expression}
-\title{Add count and normalised expression values to a data wrapper}
+\title{Add count and normalised expression values to a model}
 \usage{
-add_expression(data_wrapper, counts, expression, feature_info = NULL, ...)
+add_expression(model, counts, expression, feature_info = NULL, ...)
 
-is_wrapper_with_expression(data_wrapper)
+is_wrapper_with_expression(model)
 
-get_expression(data_wrapper, expression_source = "expression")
+get_expression(model, expression_source = "expression")
 }
 \arguments{
-\item{data_wrapper}{A data wrapper to extend upon}
+\item{model}{The model to which expression will be added}
 
 \item{counts}{The counts with genes in columns and cells in rows}
 
@@ -21,10 +21,10 @@ get_expression(data_wrapper, expression_source = "expression")
 
 \item{feature_info}{Optional meta-information of the features, a data.frame with at least feature_id as column}
 
-\item{...}{extra information to be stored in the wrapper}
+\item{...}{extra information to be stored in the model}
 
-\item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another data wrapper which contains expression}
+\item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another model which contains expression}
 }
 \description{
-Add count and normalised expression values to a data wrapper
+Add count and normalised expression values to a model
 }

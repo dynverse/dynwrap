@@ -4,7 +4,7 @@
 \name{allowed_outputs}
 \alias{allowed_outputs}
 \title{All allowed outputs}
-\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 17 rows and 5 columns.}
+\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 10 rows and 5 columns.}
 \usage{
 allowed_outputs
 }

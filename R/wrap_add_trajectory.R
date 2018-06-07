@@ -1,6 +1,6 @@
-#' Add a trajectory to a data wrapper
+#' Define a trajectory model given its milestone network and milestone percentages or progressions
 #'
-#' @param data_wrapper A data wrapper to extend upon.
+#' @param model The model to which the trajectory will be added.
 #' @param milestone_ids The ids of the milestones in the trajectory. Type: Character vector.
 #' @param milestone_network The network of the milestones.
 #'   Type: Data frame(from = character, to = character, length = numeric, directed = logical).
@@ -12,7 +12,7 @@
 #'   Type: Data frame(cell_id = character, milestone_id = character, percentage = numeric).
 #' @param progressions Specifies the progression of a cell along a transition in the milestone_network.
 #'   Type: Data frame(cell_id = character, from = character, to = character, percentage = numeric).
-#' @param ... extra information to be stored in the wrapper.
+#' @param ... extra information to be stored in the model
 #'
 #' @return The trajectory model
 #'
@@ -20,7 +20,7 @@
 #'
 #' @importFrom testthat expect_is expect_equal expect_true expect_false
 add_trajectory <- function(
-  data_wrapper,
+  model,
   milestone_ids = NULL,
   milestone_network,
   divergence_regions = NULL,
@@ -29,8 +29,8 @@ add_trajectory <- function(
   ...
 ) {
   # check whether object is a data wrapper
-  testthat::expect_true(is_data_wrapper(data_wrapper))
-  cell_ids <- data_wrapper$cell_ids
+  testthat::expect_true(is_data_wrapper(model))
+  cell_ids <- model$cell_ids
 
   # infer milestone_ids if not given
   if(is.null(milestone_ids)) {
@@ -136,7 +136,7 @@ add_trajectory <- function(
   }
 
   # create output structure
-  data_wrapper %>% extend_with(
+  model %>% extend_with(
     "dynwrap::with_trajectory",
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
@@ -148,7 +148,7 @@ add_trajectory <- function(
   )
 }
 
-#' Test whether an object is a data_wrapper and has a trajectory
+#' Test whether an object is a model and has a trajectory
 #'
 #' @param object The object to be tested.
 #'

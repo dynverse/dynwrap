@@ -2,14 +2,13 @@
 % Please edit documentation in R/wrap_add_dimred_projection.R
 \name{add_dimred_projection}
 \alias{add_dimred_projection}
-\title{Add a dimred projection trajectory to a data wrapper}
+\title{Constructs a trajectory by projecting cells within a dimensionality reduction onto a backbone formed by a milestone network. Optionally, a cell grouping can be given which will restrict the edges on which a cell can be projected.}
 \usage{
-add_dimred_projection(data_wrapper, milestone_ids = NULL, milestone_network,
-  dimred, dimred_milestones, grouping = NULL, num_segments_per_edge = 100,
-  ...)
+add_dimred_projection(model, milestone_ids = NULL, milestone_network, dimred,
+  dimred_milestones, grouping = NULL, num_segments_per_edge = 100, ...)
 }
 \arguments{
-\item{data_wrapper}{A data wrapper to extend upon.}
+\item{model}{The model to which the trajectory will be added.}
 
 \item{milestone_ids}{The ids of the milestones in the trajectory. Type: Character vector.}
 

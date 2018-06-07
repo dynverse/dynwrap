@@ -21,14 +21,17 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
 
 <meta property="og:title" content="Function reference" />
+
 
 
 <!-- mathjax -->
@@ -81,6 +84,9 @@
       <a href="../articles/create_ti_method_docker.html">Creating a TI method using docker</a>
     </li>
     <li>
+      <a href="../articles/create_ti_method_docker_file_transfer.html">Transferring files from and to the docker</a>
+    </li>
+    <li>
       <a href="../articles/create_ti_method_r.html">Creating a TI method within R</a>
     </li>
   </ul>
@@ -112,17 +118,165 @@
     <table class="ref-index">
 
     <colgroup>
+      
       <col class="alias" />
       <col class="title" />
     </colgroup>
 
-    
+    <tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-creating-and-adapting-a-trajectory-model" class="hasAnchor"><a href="#section-creating-and-adapting-a-trajectory-model" class="anchor"></a>Creating and adapting a trajectory model</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="add_cell_graph.html">add_cell_graph()</a></code> </p>
+        </td>
+        <td><p>Constructs a trajectory using a graph between cell, by mapping cells onto a set of backbone cells.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_cell_waypoints.html">add_cell_waypoints()</a></code> </p>
+        </td>
+        <td><p>Add cell waypoints to a wrapped object with trajectory</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_cluster_graph.html">add_cluster_graph()</a></code> </p>
+        </td>
+        <td><p>Constructs a trajectory using a cell grouping and a network between groups. Will use an existing grouping if it is present in the model.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_cyclic_trajectory.html">add_cyclic_trajectory()</a></code> </p>
+        </td>
+        <td><p>Constructs a circular trajectory using the pseudotime values of each cell.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_dimred.html">add_dimred()</a></code> <code><a href="add_dimred.html">is_wrapper_with_dimred()</a></code> <code><a href="add_dimred.html">get_dimred()</a></code> </p>
+        </td>
+        <td><p>Add or create a dimensionality reduction</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_dimred_projection.html">add_dimred_projection()</a></code> </p>
+        </td>
+        <td><p>Constructs a trajectory by projecting cells within a dimensionality reduction onto a backbone formed by a milestone network. Optionally, a cell grouping can be given which will restrict the edges on which a cell can be projected.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_expression.html">add_expression()</a></code> <code><a href="add_expression.html">is_wrapper_with_expression()</a></code> <code><a href="add_expression.html">get_expression()</a></code> </p>
+        </td>
+        <td><p>Add count and normalised expression values to a model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_grouping.html">add_grouping()</a></code> <code><a href="add_grouping.html">is_wrapper_with_grouping()</a></code> <code><a href="add_grouping.html">get_grouping()</a></code> </p>
+        </td>
+        <td><p>Add a cell grouping to a data wrapper</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_linear_trajectory.html">add_linear_trajectory()</a></code> </p>
+        </td>
+        <td><p>Constructs a linear trajectory using the pseudotime values of each cell.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_prior_information.html">add_prior_information()</a></code> </p>
+        </td>
+        <td><p>Add prior information to a data wrapper</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_pseudotime.html">calculate_pseudotime()</a></code> <code><a href="add_pseudotime.html">add_pseudotime()</a></code> </p>
+        </td>
+        <td><p>Add or calculate pseudotime as distance from the root</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_root.html">add_root()</a></code> </p>
+        </td>
+        <td><p>Root the trajectory</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_root_using_expression.html">add_root_using_expression()</a></code> </p>
+        </td>
+        <td><p>Add root cell to wrapper using expression of features</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_timing_checkpoint.html">add_timing_checkpoint()</a></code> </p>
+        </td>
+        <td><p>Helper function for storing timings information.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_timings.html">add_timings()</a></code> </p>
+        </td>
+        <td><p>Add count and normalised expression values to a model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_trajectory.html">add_trajectory()</a></code> </p>
+        </td>
+        <td><p>Define a trajectory model given its milestone network and milestone percentages or progressions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_waypoints.html">add_waypoints()</a></code> </p>
+        </td>
+        <td><p>Add or create waypoints to a trajectory</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-creating-a-ti-method" class="hasAnchor"><a href="#section-creating-a-ti-method" class="anchor"></a>Creating a TI method</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="create_docker_ti_method.html">create_docker_ti_method()</a></code> <code><a href="create_docker_ti_method.html">pull_docker_ti_method()</a></code> </p>
+        </td>
+        <td><p>Create a TI method from a docker(hub) image</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="create_ti_method.html">create_ti_method()</a></code> </p>
+        </td>
+        <td><p>Create a TI method wrapper</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-running-a-ti-method" class="hasAnchor"><a href="#section-running-a-ti-method" class="anchor"></a>Running a TI method</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="infer_trajectories.html">infer_trajectories()</a></code> <code><a href="infer_trajectories.html">infer_trajectory()</a></code> </p>
+        </td>
+        <td><p>Infer trajectories</p></td>
+      </tr>
+    </tbody>
     </table>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#section-creating-and-adapting-a-trajectory-model">Creating and adapting a trajectory model</a></li>
+      <li><a href="#section-creating-a-ti-method">Creating a TI method</a></li>
+      <li><a href="#section-running-a-ti-method">Running a TI method</a></li>
     </ul>
   </div>
 </div>

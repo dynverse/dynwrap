@@ -2,13 +2,13 @@
 % Please edit documentation in R/wrap_add_linear_trajectory.R
 \name{add_linear_trajectory}
 \alias{add_linear_trajectory}
-\title{Add a linear trajectory to a data wrapper}
+\title{Constructs a linear trajectory using the pseudotime values of each cell.}
 \usage{
-add_linear_trajectory(data_wrapper, pseudotime, directed = FALSE,
+add_linear_trajectory(model, pseudotime, directed = FALSE,
   do_scale_minmax = TRUE, ...)
 }
 \arguments{
-\item{data_wrapper}{A data wrapper to extend upon.}
+\item{model}{The model to which a linear trajectory will be added.}
 
 \item{pseudotime}{A named vector of pseudo times.}
 

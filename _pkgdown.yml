@@ -1,8 +1,10 @@
 reference:
-  - title: "Wrapping a trajectory"
-    desc: >
-      Functions for creating
-
+  - title: "Creating and adapting a trajectory model"
+    contents:
+      - matches("add_*")
   - title: "Creating a TI method"
-
+    contents:
+      - matches("create_*")
   - title: "Running a TI method"
+    contents:
+      - matches("infer_*")

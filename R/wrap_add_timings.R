@@ -1,27 +1,27 @@
-#' Add count and normalised expression values to a data wrapper
+#' Add count and normalised expression values to a model
 #'
-#' @param data_wrapper A data wrapper to extend upon.
+#' @param model The model to which timings will be added
 #' @param timings A list of timings.
 #'
 #' @export
 #'
 #' @importFrom testthat expect_equal
 add_timings <- function(
-  data_wrapper,
+  model,
   timings
 ) {
-  testthat::expect_true(is_data_wrapper(data_wrapper))
+  testthat::expect_true(is_data_wrapper(model))
 
   testthat::expect_is(timings, "list")
 
   # create output structure
-  data_wrapper %>% extend_with(
+  model %>% extend_with(
     "dynwrap::with_timings",
     timings = timings
   )
 }
 
-#' Test whether an object is a data_wrapper and has timings information
+#' Test whether an object is a model and has timings information
 #'
 #' @param object The object to be tested.
 #'

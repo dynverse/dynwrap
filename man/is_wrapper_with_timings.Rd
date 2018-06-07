@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrap_add_timings.R
 \name{is_wrapper_with_timings}
 \alias{is_wrapper_with_timings}
-\title{Test whether an object is a data_wrapper and has timings information}
+\title{Test whether an object is a model and has timings information}
 \usage{
 is_wrapper_with_timings(object)
 }
@@ -10,5 +10,5 @@ is_wrapper_with_timings(object)
 \item{object}{The object to be tested.}
 }
 \description{
-Test whether an object is a data_wrapper and has timings information
+Test whether an object is a model and has timings information
 }

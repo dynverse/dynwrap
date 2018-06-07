@@ -3,7 +3,7 @@
 #' @param task One or more datasets, as created using dynwrap
 #' @param method One or more methods. Must be one of:
 #' \itemize{
-#'   \item{an object or list of ti_... objects (e.g. [ti_comp1()]),}
+#'   \item{an object or list of ti_... objects (eg. \code{\link[ti_comp1]{ti_comp1()}})}
 #'   \item{a character vector containing the names of methods to execute (e.g. `"scorpius"`), or}
 #'   \item{a dynguidelines data frame.}
 #' }
@@ -461,7 +461,7 @@ get_ti_methods <- function(as_tibble = TRUE, packages = c("dynwrap")) {
 
     lsf.str(asNamespace(package), pattern = "^ti_") %>%
       map(~ do.call(., args = list(), envir = asNamespace(package)))
-  }) %>% unlist(recursive=FALSE)
+  }) %>% unlist(recursive = FALSE)
 
   if (as_tibble) {
     list_as_tibble(ti_methods)

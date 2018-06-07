@@ -2,14 +2,14 @@
 % Please edit documentation in R/wrap_add_trajectory.R
 \name{add_trajectory}
 \alias{add_trajectory}
-\title{Add a trajectory to a data wrapper}
+\title{Define a trajectory model given its milestone network and milestone percentages or progressions}
 \usage{
-add_trajectory(data_wrapper, milestone_ids = NULL, milestone_network,
+add_trajectory(model, milestone_ids = NULL, milestone_network,
   divergence_regions = NULL, milestone_percentages = NULL,
   progressions = NULL, ...)
 }
 \arguments{
-\item{data_wrapper}{A data wrapper to extend upon.}
+\item{model}{The model to which the trajectory will be added.}
 
 \item{milestone_ids}{The ids of the milestones in the trajectory. Type: Character vector.}
 
@@ -27,11 +27,11 @@ Type: Data frame(cell_id = character, milestone_id = character, percentage = num
 \item{progressions}{Specifies the progression of a cell along a transition in the milestone_network.
 Type: Data frame(cell_id = character, from = character, to = character, percentage = numeric).}
 
-\item{...}{extra information to be stored in the wrapper.}
+\item{...}{extra information to be stored in the model}
 }
 \value{
 The trajectory model
 }
 \description{
-Add a trajectory to a data wrapper
+Define a trajectory model given its milestone network and milestone percentages or progressions
 }

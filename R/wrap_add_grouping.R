@@ -1,6 +1,6 @@
 #' Add a cell grouping to a data wrapper
 #'
-#' @param data_wrapper A data wrapper to extend upon.
+#' @param model The model to which the grouping will be added.
 #' @param group_ids All group_ids, optional
 #' @param grouping A grouping of the cells, can be
 #' @param ... Extra information to be stored in the wrapper.
@@ -9,7 +9,7 @@
 #'
 #' @importFrom testthat expect_equal expect_is expect_true
 add_grouping <- function(
-  data_wrapper,
+  model,
   group_ids,
   grouping = NULL,
   ...
@@ -21,18 +21,18 @@ add_grouping <- function(
   }
 
   # process the grouping
-  grouping <- get_grouping(data_wrapper, grouping)
+  grouping <- get_grouping(model, grouping)
 
   # if grouping not provided, have to calculate group_ids here
   if(is.null(group_ids)) group_ids <- unique(grouping)
 
   #
   if(length(names(grouping)) != length(grouping)) {
-    names(grouping) <- data_wrapper$cell_ids
+    names(grouping) <- model$cell_ids
   }
 
   # check whether object is a data wrapper
-  testthat::expect_true(is_data_wrapper(data_wrapper))
+  testthat::expect_true(is_data_wrapper(model))
 
   # check group ids
   testthat::expect_is(group_ids, "character")
@@ -41,16 +41,16 @@ add_grouping <- function(
   # check cell group
   testthat::expect_named(grouping)
   testthat::expect_is(grouping, "character")
-  testthat::expect_true(all(names(grouping) %in% data_wrapper$cell_ids))
+  testthat::expect_true(all(names(grouping) %in% model$cell_ids))
   testthat::expect_true(all(grouping %in% group_ids))
 
   # check milestone ids, if data contains a trajectory
-  if (is_wrapper_with_trajectory(data_wrapper)) {
-    testthat::expect_equal(data_wrapper$milestone_ids, group_ids)
+  if (is_wrapper_with_trajectory(model)) {
+    testthat::expect_equal(model$milestone_ids, group_ids)
   }
 
   # create output structure
-  data_wrapper %>% extend_with(
+  model %>% extend_with(
     "dynwrap::with_grouping",
     group_ids = group_ids,
     grouping = grouping,
@@ -60,20 +60,20 @@ add_grouping <- function(
 
 #' @rdname add_grouping
 #' @export
-is_wrapper_with_grouping <- function(data_wrapper) {
-  is_data_wrapper(data_wrapper) && "dynwrap::with_grouping" %in% class(data_wrapper)
+is_wrapper_with_grouping <- function(model) {
+  is_data_wrapper(model) && "dynwrap::with_grouping" %in% class(model)
 }
 
 #' @rdname add_grouping
 #' @export
-get_grouping <- function(data_wrapper, grouping = NULL) {
+get_grouping <- function(model, grouping = NULL) {
   if(is.null(grouping)) {
-    # no grouping provided, get from data_wrapper
-    if(is_wrapper_with_grouping(data_wrapper)) {
-      grouping <- set_names(data_wrapper$grouping, data_wrapper$cell_ids)
-    } else if (is_wrapper_with_prior_information(data_wrapper)) {
-      if("grouping_assignment" %in% names(data_wrapper$prior_information)) {
-        grouping <- data_wrapper$prior_information$grouping_assignment %>%
+    # no grouping provided, get from model
+    if(is_wrapper_with_grouping(model)) {
+      grouping <- set_names(model$grouping, model$cell_ids)
+    } else if (is_wrapper_with_prior_information(model)) {
+      if("grouping_assignment" %in% names(model$prior_information)) {
+        grouping <- model$prior_information$grouping_assignment %>%
           {set_names(.$group_id, .$cell_id)}
       }
     } else {
@@ -81,32 +81,32 @@ get_grouping <- function(data_wrapper, grouping = NULL) {
     }
   }  else if (length(grouping) == 1 && is.character(grouping)) {
     # extract group from column in cell_info
-    if(grouping %in% colnames(data_wrapper$cell_info)) {
-      grouping <- set_names(data_wrapper$cell_info[[grouping]], data_wrapper$cell_id)
+    if(grouping %in% colnames(model$cell_info)) {
+      grouping <- set_names(model$cell_info[[grouping]], model$cell_id)
     } else {
       stop("Could not find column ", grouping, " in cell_info")
     }
   } else {
-    grouping <- process_grouping(data_wrapper, grouping)
+    grouping <- process_grouping(model, grouping)
   }
 
   if(length(names(grouping)) != length(grouping)) {
-    names(grouping) <- data_wrapper$cell_ids
+    names(grouping) <- model$cell_ids
   }
 
   grouping
 }
 
 
-process_grouping <- function(data_wrapper, grouping) {
+process_grouping <- function(model, grouping) {
   if (is.data.frame(grouping) && all(c("group_id", "cell_id") %in% colnames(grouping))) {
     # dataframe
     grouping <- set_names(grouping$group_id, grouping$cell_id)
-  } else if (length(grouping) == length(data_wrapper$cell_ids)) {
+  } else if (length(grouping) == length(model$cell_ids)) {
     # named vector of all cells
   } else if (length(grouping) == length(names(grouping))) {
     # named vector not containing all cells
-    grouping[setdiff(names(grouping), data_wrapper$cell_id)] <- NA
+    grouping[setdiff(names(grouping), model$cell_id)] <- NA
   } else {
     stop("Could not find grouping")
   }

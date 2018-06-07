@@ -64,7 +64,10 @@ A named list of parameters for the method. A parameter always has a type and a d
 parameter_types %>% knitr::kable()
 ```
 
-- **distribution** The distribution from which to sample numeric or integer parameters. Can be `uniform` (default), `normal` (also specify **mean** and **sd**), or `exponential` (also specify **rate**). 
+- **distribution** The distribution from which to sample numeric or integer parameters. Can be:
+    - `uniform` (default)
+    - `normal` (also specify **mean** and **sd**)
+    - `exponential` (also specify **rate**). 
 - **lower** and **upper** The lower and upper bounds. Can be used with any distribution.
 - **values** A list of possible values for discrete parameters
 - **length** Length of the parameter for vector parameters
@@ -82,14 +85,13 @@ input_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/
 inputs_url <- function(names, xs) glue::collapse(map2_chr(names, xs, input_url), ", ")
 
 tribble(
-  ~output_format, ~description, ~example_script, ~example_input,
+  ~output_format, ~description, ~example_script,
   "hdf5", "HDF5 format", comp1_urls(c("python", "R"), c("python_hdf5", "R_hdf5")), 
   "text", "csv and json files", comp1_urls(c("python", "R"), c("python_text", "R_text")),
   "feather", "[Feather](https://github.com/wesm/feather) dataframe files", comp1_urls(c("python", "R"), c("python_feather", "R_feather")),
   "rds", "R binary files", comp1_urls(c("R"), c("R_rds"))
 ) %>% knitr::kable()
 ```
-
 
 
 - **required**: Required inputs (eg. expression)
@@ -99,7 +101,32 @@ These requested required or optional inputs can be:
 
 ```{r, echo=FALSE}
 data(allowed_inputs, package="dynwrap")
+
+# find example files
+found_input_example_files <- list.files(devtools:::shim_system.file("example_inputs/text/", package="dynwrap"))
+input_examples <- set_names(
+  found_input_example_files, 
+  tools::file_path_sans_ext(found_input_example_files)
+)
+
+# wrap example files around a url
+input_example_url <- function(input_id) {
+  if(input_id %in% names(input_examples)) {
+    glue::glue("[{input_id}](https://github.com/dynverse/dynwrap/blob/master/inst/example_inputs/text/{input_examples[[input_id]]})")
+  } else {
+    input_id
+  }
+}
+
+# put everything in a table
 allowed_inputs %>% 
+  mutate(
+    input_id = map_chr(input_id, input_example_url)
+  ) %>% 
+  select(
+    input_id, 
+    description,
+  ) %>% 
   knitr::kable()
 ```
 
@@ -112,7 +139,7 @@ github_url <- function(x, prefix) {
 
 #### output
 
-The output determines what type of output is produced by the method, and how this can be transformed into a trajectory model.
+The output determines how the output of a method can be transformed into a common trajectory model.
 
 - **format** The format of the output, which can be
 
@@ -121,7 +148,7 @@ comp1_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/
 comp1_urls <- function(names, xs) glue::collapse(map2_chr(names, xs, comp1_url), ", ")
 
 tribble(
-  ~output_format, ~description, ~examples,
+  ~output_format, ~description, ~example_script,
   "text", "csv and json files", comp1_urls(c("python", "R"), c("python_text", "R_text")),
   "feather", "[Feather](https://github.com/wesm/feather) dataframe files", comp1_urls(c("python", "R"), c("python_feather", "R_feather")),
   "rds", "R binary files", comp1_urls(c("R"), c("R_rds")),
@@ -129,23 +156,65 @@ tribble(
 ) %>% knitr::kable()
 ```
 
-- **output_ids** The kinds of output this wrapper produces. This always include at least on output which contains enough information to produce a trajectory. Each of these outputs are further discussed in another vignette **link** , which also discuss the type of objects or files which need to be provided.
+- **output_ids** The kinds of output this wrapper produces. This always include at least one output which contains enough information to produce a trajectory.
 
 ```{r, echo=FALSE}
 data(allowed_outputs, package="dynwrap")
-allowed_outputs %>% 
+
+# find example files
+found_output_example_files <- list.files(devtools:::shim_system.file("example_outputs/text/", package="dynwrap"))
+output_examples <- set_names(
+  found_output_example_files, 
+  tools::file_path_sans_ext(found_output_example_files)
+)
+
+# wrap example files around a url
+output_example_url <- function(output_id) {
+  if(output_id %in% names(output_examples)) {
+    glue::glue("[{output_id}](https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/text/{output_examples[[output_id]]})")
+  } else {
+    output_id
+  }
+}
+output_example_urls <- function(output_ids) {
+  if (length(output_ids) > 0) {
+    map(output_ids, output_example_url) %>% 
+      glue::collapse("<br>") %>% 
+      stringr::str_replace("(.*milestone_percentages.*)<br>(.*progressions.*)", "\\1 or \\2") # put or in between percentages and progressions
+  } else {
+    ""
+  }
+}
+
+# put everything in a table
+outputs <- allowed_outputs %>% 
+  mutate(
+    required = map_chr(required_args, output_example_urls), 
+    optional = map_chr(optional_args, output_example_urls)
+  ) %>% 
+  select(
+    output_id, 
+    description,
+    required,
+    optional,
+    creates_trajectory
+  )
+```
+
+```{r, echo=FALSE}
+outputs %>%
   filter(creates_trajectory) %>% 
-  select(Output = output_id, Description = description, `Required files/objects` = required_params, `Optional files/objects` = optional_params) %>%
-  mutate_if(is.list, ~map(., ~ifelse(length(.), glue::collapse(., ", "), ""))) %>% 
+  select(-creates_trajectory) %>% 
   knitr::kable()
 ```
 
-In addition, a method can also generate other output which will also be added to the model, for example a grouping (`clustering`) or a dimensionality reduction (`dimred`). This can then be used 
+
+In addition, a method can also generate other output which will be added to the model. This includes a grouping/clustering (`grouping`) or a dimensionality reduction (`dimred`).
 
 ```{r, echo=FALSE}
-allowed_outputs %>% 
+outputs %>%
   filter(!creates_trajectory) %>% 
-  select(output = output_id, description) %>% 
+  select(-creates_trajectory) %>% 
   knitr::kable()
 ```
 

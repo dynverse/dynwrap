@@ -1,62 +1,62 @@
-#' Add waypoints to a wrapped traj with trajectory
+#' Add or create waypoints to a trajectory
 #'
 #' @inheritParams select_waypoints
 #' @importFrom testthat expect_true
 #'
 #' @export
 add_waypoints <- function(
-  traj,
+  trajectory,
   n_waypoints = 100,
-  resolution = sum(traj$milestone_network$length)/n_waypoints
+  resolution = sum(trajectory$milestone_network$length)/n_waypoints
 ) {
-  testthat::expect_true(is_wrapper_with_trajectory(traj))
+  testthat::expect_true(is_wrapper_with_trajectory(trajectory))
 
-  waypoints <- with(traj, select_waypoints(
-    traj,
+  waypoints <- with(trajectory, select_waypoints(
+    trajectory,
     n_waypoints,
     resolution
   ))
 
   # create output structure
-  traj %>% extend_with(
+  trajectory %>% extend_with(
     "dynwrap::with_waypoints",
     waypoints = waypoints
   )
 }
 
-#' Test whether an traj is a data_wrapper and waypoints
+#' Test whether an trajectory is a data_wrapper and waypoints
 #'
-#' @param traj The traj to be tested.
+#' @param trajectory The trajectory to be tested.
 #'
 #' @export
-is_wrapper_with_waypoints <- function(traj) {
-  is_wrapper_with_trajectory(traj) && "dynwrap::with_waypoints" %in% class(traj)
+is_wrapper_with_waypoints <- function(trajectory) {
+  is_wrapper_with_trajectory(trajectory) && "dynwrap::with_waypoints" %in% class(trajectory)
 }
 
 #' Select the waypoints
 #'
 #' Waypoints are spread equally over the whole trajectory
 #'
-#' @param traj Wrapper with trajectory
+#' @param trajectory Wrapper with trajectory
 #' @param n_waypoints The number of waypoints
 #' @param resolution The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges, will be automatically computed using n_waypoints
 #'
 #' @export
 select_waypoints <- function(
-  traj,
+  trajectory,
   n_waypoints = 100,
-  resolution = sum(traj$milestone_network$length)/n_waypoints
+  resolution = sum(trajectory$milestone_network$length)/n_waypoints
 ) {
   # create milestone waypoints
   waypoint_milestone_percentages_milestones <- tibble(
-    milestone_id = traj$milestone_ids,
+    milestone_id = trajectory$milestone_ids,
     waypoint_id = paste0("W", milestone_id),
     percentage = 1
   )
 
   # create uniform progressions
   # waypoints which lie on a milestone will get a special name, so that they are the same between milestone network edges
-  waypoint_progressions <- traj$milestone_network %>%
+  waypoint_progressions <- trajectory$milestone_network %>%
     mutate(percentage = map(length, ~c(seq(0, ., min(resolution, .))/., 1))) %>%
     select(-length, -directed) %>%
     unnest(percentage) %>%
@@ -77,14 +77,14 @@ select_waypoints <- function(
     rename(cell_id = waypoint_id) %>%
     convert_progressions_to_milestone_percentages(
       "this argument is unnecessary, I can put everything I want in here!",
-      traj$milestone_ids,
-      traj$milestone_network,
+      trajectory$milestone_ids,
+      trajectory$milestone_network,
       .
     ) %>%
     rename(waypoint_id = cell_id)
 
   # calculate distance
-  waypoint_geodesic_distances <- compute_tented_geodesic_distances(traj, waypoint_milestone_percentages = waypoint_milestone_percentages)
+  waypoint_geodesic_distances <- compute_tented_geodesic_distances(trajectory, waypoint_milestone_percentages = waypoint_milestone_percentages)
 
   # also create network between waypoints
   waypoint_network <- waypoint_progressions %>%

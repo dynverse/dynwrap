@@ -1,11 +1,11 @@
-#' Add a cell graph trajectory to a data wrapper
+#' Constructs a trajectory using a graph between cell, by mapping cells onto a set of backbone cells.
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @param data_wrapper A data wrapper to extend upon.
-#' @param cell_graph The edges between cells. Format: Data frame(from = character, to = character, length = numeric)
+#' @param model The model to extend
+#' @param cell_graph The edges between cells. Format: Data frame(from = character, to = character, length(optional) = numeric, directed(optional) = logical)
 #' @param to_keep A named vector containing booleans containing
-#'   whether or not a sample is part of the trajectory that is to be kept.
+#'   whether or not a cell is part of the backbone. Or, alternatively a character vector containing the backbone cells
 #' @param milestone_prefix A prefix to add to the id of the cell ids when they are used as milestones, in order to avoid any naming conflicts,
 #' @param ... extra information to be stored in the wrapper.
 #'
@@ -15,7 +15,7 @@
 #'
 #' @importFrom testthat expect_is expect_true expect_equal
 add_cell_graph <- function(
-  data_wrapper,
+  model,
   cell_graph,
   to_keep,
   milestone_prefix = "milestone_",
@@ -24,14 +24,25 @@ add_cell_graph <- function(
   requireNamespace("igraph")
 
   # check data wrapper
-  testthat::expect_true(is_data_wrapper(data_wrapper))
+  testthat::expect_true(is_data_wrapper(model))
 
-  cell_ids <- data_wrapper$cell_ids
+  cell_ids <- model$cell_ids
+
+  # optionally add length and directed if not specified
+  if (!"length" %in% colnames(cell_graph)) {
+    cell_graph$length <- 1
+  }
+  if (!"directed" %in% colnames(cell_graph)) {
+    cell_graph$directed <- FALSE
+  }
 
   # check cell_graph
   check_milestone_network(cell_ids, cell_graph)
 
   # check to_keep
+  if (is.character(to_keep)) {
+    to_keep <- (cell_ids %in% to_keep) %>% set_names(cell_ids)
+  }
   testthat::expect_is(to_keep, "logical")
   testthat::expect_true(all(names(to_keep) %in% cell_ids))
   testthat::expect_equal(sort(unique(c(cell_graph$from, cell_graph$to))), sort(names(to_keep)))
@@ -110,7 +121,7 @@ add_cell_graph <- function(
 
   # return output
   add_trajectory(
-    data_wrapper = data_wrapper,
+    model = model,
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
     divergence_regions = NULL,

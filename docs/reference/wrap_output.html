@@ -21,17 +21,25 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
 
 <meta property="og:title" content="Wrap the output of a TI method — wrap_output" />
 
-<meta property="og:description" content="Wrap the output of a TI method" />
+<meta property="og:description" content="Will extract outputs from a given folder given an output format:
+rds: One output.rds file containing all the output. Output can be present as .$pseudotime or as .$linear_trajectory$pseudotime . Parameters specific for an output should be given in .$linear_trajectory$params
+text: Csv and/or json files, including subdirectories. Output can be present as ./pseudotime.csv or as ./linear_trajectory/pseudotime.csv. Parameters specific for an output should be given in ./linear_trajectory/params.json.
+feather: Feather files
+dynwrap: Directly a dynwrap wrapper as an rds file in output.rds
+" />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -84,6 +92,9 @@
       <a href="../articles/create_ti_method_docker.html">Creating a TI method using docker</a>
     </li>
     <li>
+      <a href="../articles/create_ti_method_docker_file_transfer.html">Transferring files from and to the docker</a>
+    </li>
+    <li>
       <a href="../articles/create_ti_method_r.html">Creating a TI method within R</a>
     </li>
   </ul>
@@ -110,17 +121,31 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Wrap the output of a TI method</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/ti_output_processors.R'><code>R/ti_output_processors.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/wrap_output.R'><code>R/wrap_output.R</code></a></small>
     <div class="hidden name"><code>wrap_output.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wrap the output of a TI method</p>
+    <p>Will extract outputs from a given folder given an output format:</p><ul>
+<li><p>rds: One <code>output.rds</code> file containing all the output. Output can be present as <code>.$pseudotime</code> or as <code>.$linear_trajectory$pseudotime</code> . Parameters specific for an output should be given in <code>.$linear_trajectory$params</code></p></li>
+<li><p>text: Csv and/or json files, including subdirectories. Output can be present as <code>./pseudotime.csv</code> or as <code>./linear_trajectory/pseudotime.csv</code>. Parameters specific for an output should be given in <code>./linear_trajectory/params.json</code>.</p></li>
+<li><p>feather: Feather files</p></li>
+<li><p>dynwrap: Directly a dynwrap wrapper as an rds file in <code>output.rds</code></p></li>
+</ul>
     
     </div>
 
-    <pre class="usage"><span class='fu'>wrap_output</span>(<span class='no'>model</span>, <span class='no'>output_ids</span>, <span class='no'>dir_output</span>)</pre>
+    <pre class="usage"><span class='fu'>wrap_output</span>(<span class='no'>model</span>, <span class='no'>output_ids</span>, <span class='no'>dir_output</span>, <span class='kw'>output_format</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"text"</span>, <span class='st'>"rds"</span>,
+  <span class='st'>"feather"</span>, <span class='st'>"dynwrap"</span>))
+
+<span class='fu'>wrap_rds</span>(<span class='no'>model</span>, <span class='no'>output_ids</span>, <span class='no'>dir_output</span>)
+
+<span class='fu'>wrap_text</span>(<span class='no'>model</span>, <span class='no'>output_ids</span>, <span class='no'>dir_output</span>)
+
+<span class='fu'>wrap_hdf5</span>(<span class='no'>model</span>, <span class='no'>output_ids</span>, <span class='no'>dir_output</span>)
+
+<span class='fu'>wrap_feather</span>(<span class='no'>model</span>, <span class='no'>output_ids</span>, <span class='no'>dir_output</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -136,6 +161,10 @@
     <tr>
       <th>dir_output</th>
       <td><p>The directory containing the output files</p></td>
+    </tr>
+    <tr>
+      <th>output_format</th>
+      <td><p>The output format, can be rds, text or dynwrap</p></td>
     </tr>
     </table>
     
