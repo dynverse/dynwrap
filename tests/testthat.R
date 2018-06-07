@@ -6,7 +6,6 @@ library(purrr)
 library(magrittr)
 library(tibble)
 library(tidyr)
-library(devtools)
 
 test_check("dynwrap")
 
