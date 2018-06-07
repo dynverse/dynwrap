@@ -1,4 +1,4 @@
-#' Add a dimred projection trajectory to a data wrapper
+#' Constructs a trajectory by projecting cells within a dimensionality reduction onto a backbone formed by a milestone network. Optionally, a cell grouping can be given which will restrict the edges on which a cell can be projected.
 #'
 #' This function will generate the milestone_network and progressions.
 #'

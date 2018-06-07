@@ -1,4 +1,4 @@
-#' Add a dimensionality reduction to a model
+#' Add or create a dimensionality reduction
 #'
 #' TODO: add possibility to also dimred the milestones and segments. This should be migrated from dynplot!
 #'

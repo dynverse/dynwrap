@@ -4,7 +4,7 @@
 \alias{add_dimred}
 \alias{is_wrapper_with_dimred}
 \alias{get_dimred}
-\title{Add a dimensionality reduction to a model}
+\title{Add or create a dimensionality reduction}
 \usage{
 add_dimred(model, dimred, dimred_milestones = NULL,
   dimred_trajectory_segments = NULL, expression_source = "expression", ...)

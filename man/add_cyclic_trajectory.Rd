@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrap_add_cyclic_trajectory.R
 \name{add_cyclic_trajectory}
 \alias{add_cyclic_trajectory}
-\title{Add a cyclic trajectory to a data wrapper}
+\title{Constructs a circular trajectory using the pseudotime values of each cell.}
 \usage{
 add_cyclic_trajectory(model, pseudotime, directed = FALSE,
   do_scale_minmax = TRUE, ...)

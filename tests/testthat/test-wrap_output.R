@@ -109,6 +109,15 @@ for (output_format in c("feather", "rds", "text")) {
       output_format
     )
     expect_true(is_wrapper_with_trajectory(model))
+
+    # cluster_graph
+    model <- wrap_output(
+      base_model,
+      c("cluster_graph"),
+      dir_output,
+      output_format
+    )
+    expect_true(is_wrapper_with_trajectory(model))
   })
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrap_add_trajectory.R
 \name{add_trajectory}
 \alias{add_trajectory}
-\title{Add a trajectory to a data wrapper}
+\title{Define a trajectory model given its milestone network and milestone percentages or progressions}
 \usage{
 add_trajectory(model, milestone_ids = NULL, milestone_network,
   divergence_regions = NULL, milestone_percentages = NULL,
@@ -33,5 +33,5 @@ Type: Data frame(cell_id = character, from = character, to = character, percenta
 The trajectory model
 }
 \description{
-Add a trajectory to a data wrapper
+Define a trajectory model given its milestone network and milestone percentages or progressions
 }

@@ -1,4 +1,4 @@
-#' Add a linear trajectory to a data wrapper
+#' Constructs a linear trajectory using the pseudotime values of each cell.
 #'
 #' This function will generate the milestone_network and progressions.
 #'

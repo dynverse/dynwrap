@@ -2,14 +2,16 @@
 % Please edit documentation in R/wrap_add_cluster_graph.R
 \name{add_cluster_graph}
 \alias{add_cluster_graph}
-\title{Add a cluster projection trajectory to a data wrapper}
+\title{Constructs a trajectory using a cell grouping and a network between groups. Will use an existing grouping if it is present in the model.}
 \usage{
-add_cluster_graph(model, milestone_network, ...)
+add_cluster_graph(model, milestone_network, grouping = NULL, ...)
 }
 \arguments{
 \item{model}{The model to which a cluster graph will be added. Needs to have a cell grouping created by \code{\link[=add_grouping]{add_grouping()}}.}
 
 \item{milestone_network}{A network of milestones.}
+
+\item{grouping}{A grouping of the cells, can be}
 
 \item{...}{extra information to be stored in the wrapper.}
 }

@@ -24,6 +24,12 @@ allowed_outputs <- map_df(add_ids, function(add_id) {
 
   processor <- get_output_processor(output_id)
 
+  # exception for trajectory
+  if (output_id == "trajectory") {
+    processor$required_args <- c(processor$required_args, "milestone_percentages", "progressions")
+    processor$optional_args <- processor$optional_args[!processor$optional_args %in% c("progressions", "milestone_percentages")]
+  }
+
   if (creates_trajectory || builds_upon_trajectory) {
     tibble(
       output_id = output_id,

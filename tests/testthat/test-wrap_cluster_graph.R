@@ -7,10 +7,12 @@ group_ids <- LETTERS[1:5]
 grouping <- sample(group_ids, length(cell_ids), replace = T) %>% setNames(cell_ids)
 extras <- "banana"
 
-wr_orig <- wrap_data(
+wr_without_grouping <- wrap_data(
   id = id,
   cell_ids = cell_ids
-) %>% add_grouping(
+)
+
+wr_orig <- wr_without_grouping %>% add_grouping(
   group_ids = group_ids,
   grouping = grouping,
   extras = extras
@@ -35,7 +37,7 @@ test_that("Testing add_cluster_graph", {
 
   expect_equivalent(wr$id, id)
   expect_equivalent(wr$group_ids, group_ids)
-  expect_equivalent(wr$milestone_ids, group_ids)
+  expect_setequal(wr$milestone_ids, group_ids)
   expect_equivalent(wr$cell_ids, cell_ids)
   expect_equivalent(wr$extras, extras)
   expect_equivalent(wr$grouping, grouping)
@@ -43,4 +45,13 @@ test_that("Testing add_cluster_graph", {
 
   # percentages are either 0 or 1
   expect_true(all(abs(abs(wr$milestone_percentages$percentage - .5) - .5) < 1e-8))
+
+  # test with providing a grouping in cluster_graph
+  wr <- wr_without_grouping %>%
+    add_cluster_graph(
+      milestone_network = milestone_network,
+      grouping = grouping
+    )
+
+  expect_true(is_wrapper_with_trajectory(wr))
 })

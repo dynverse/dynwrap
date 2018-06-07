@@ -1,4 +1,4 @@
-#' Add a trajectory to a data wrapper
+#' Define a trajectory model given its milestone network and milestone percentages or progressions
 #'
 #' @param model The model to which the trajectory will be added.
 #' @param milestone_ids The ids of the milestones in the trajectory. Type: Character vector.

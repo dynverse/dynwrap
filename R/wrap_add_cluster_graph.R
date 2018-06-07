@@ -1,9 +1,10 @@
-#' Add a cluster projection trajectory to a data wrapper
+#' Constructs a trajectory using a cell grouping and a network between groups. Will use an existing grouping if it is present in the model.
 #'
 #' This function will generate the milestone_network and progressions.
 #'
 #' @param model The model to which a cluster graph will be added. Needs to have a cell grouping created by [add_grouping()].
 #' @param milestone_network A network of milestones.
+#' @inheritParams add_grouping
 #' @param ... extra information to be stored in the wrapper.
 #'
 #' @export
@@ -15,14 +16,21 @@
 add_cluster_graph <- function(
   model,
   milestone_network,
+  grouping = NULL,
   ...
 ) {
   # check data wrapper
   testthat::expect_true(is_data_wrapper(model))
-  testthat::expect_true(is_wrapper_with_grouping(model))
 
-  # get milestone_ids
-  milestone_ids <- model$group_ids
+  # get grouping from model if not provided
+  if (is.null(grouping)) {
+    testthat::expect_true(is_wrapper_with_grouping(model))
+    grouping <- get_grouping(model)
+  } else {
+    grouping <- process_grouping(model, grouping)
+  }
+
+  milestone_ids <- unique(c(milestone_network$to, milestone_network$from))
 
   # check milestone network
   check_milestone_network(milestone_ids, milestone_network)
@@ -35,8 +43,8 @@ add_cluster_graph <- function(
     milestone_network %>% select(from, to) %>% mutate(label = to, percentage = 1)
   )
   progressions <- data_frame(
-    cell_id = names(model$grouping),
-    label = model$grouping
+    cell_id = names(grouping),
+    label = grouping
   ) %>%
     left_join(both_directions, by = "label") %>%
     group_by(cell_id) %>%

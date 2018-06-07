@@ -139,7 +139,7 @@ github_url <- function(x, prefix) {
 
 #### output
 
-The output determines what type of output is produced by the method, and how this can be transformed into a trajectory model.
+The output determines how the output of a method can be transformed into a common trajectory model.
 
 - **format** The format of the output, which can be
 
@@ -178,7 +178,9 @@ output_example_url <- function(output_id) {
 }
 output_example_urls <- function(output_ids) {
   if (length(output_ids) > 0) {
-    map(output_ids, output_example_url) %>% glue::collapse(", ")
+    map(output_ids, output_example_url) %>% 
+      glue::collapse("<br>") %>% 
+      stringr::str_replace("(.*milestone_percentages.*)<br>(.*progressions.*)", "\\1 or \\2") # put or in between percentages and progressions
   } else {
     ""
   }

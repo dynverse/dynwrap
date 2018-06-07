@@ -1,4 +1,4 @@
-#' Add a cell graph trajectory to a data wrapper
+#' Constructs a trajectory using a graph between cell, by mapping cells onto a set of backbone cells.
 #'
 #' This function will generate the milestone_network and progressions.
 #'

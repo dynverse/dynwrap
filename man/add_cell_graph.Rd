@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrap_add_cell_graph.R
 \name{add_cell_graph}
 \alias{add_cell_graph}
-\title{Add a cell graph trajectory to a data wrapper}
+\title{Constructs a trajectory using a graph between cell, by mapping cells onto a set of backbone cells.}
 \usage{
 add_cell_graph(model, cell_graph, to_keep, milestone_prefix = "milestone_",
   ...)
