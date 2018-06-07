@@ -23,11 +23,7 @@ else
         popd
     fi
 
-    echo "copying"
-    sudo cp $HDF5_DIR/lib/* /usr/local/lib/
-    sudo cp $HDF5_DIR/bin/* /usr/local/bin/
-    sudo cp $HDF5_DIR/include/* /usr/local/include/
-    sudo cp $HDF5_DIR/share/* /usr/local/share/
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HDF5_DIR/lib
 
     R -e "install.packages('hdf5r')"
 fi
