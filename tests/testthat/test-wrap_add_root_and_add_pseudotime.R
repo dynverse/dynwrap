@@ -63,5 +63,5 @@ test_that("Testing add_root", {
 
 test_that("Testing calculate_pseudotime", {
   traj <- add_pseudotime(traj)
-  expect_equal(traj$pseudotime, c("a"=0, "b"=1.4, "c"=2.6, "d"=4.3, "e"=4.4, "f"=6.8))
+  expect_equal(traj$pseudotime, c("a" = 0, "b" = 1.4, "c" = 2.6, "d" = 4.3, "e" = 4.4, "f" = 6.8))
 })

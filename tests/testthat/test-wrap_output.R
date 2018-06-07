@@ -3,13 +3,13 @@ context("Testing wrap_output")
 
 test_that("Output processors can process output", {
   cell_ids <- readr::read_csv(
-    devtools:::shim_system.file("example_outputs/text/cell_ids.csv", package="dynwrap"),
-    col_types = readr::cols(cell_id=readr::col_character())
+    devtools:::shim_system.file("example_outputs/text/cell_ids.csv", package = "dynwrap"),
+    col_types = readr::cols(cell_id = readr::col_character())
   )$cell_id
 
   base_model <- wrap_data(cell_ids = cell_ids)
 
-  dir_output <- devtools:::shim_system.file("example_outputs/text/", package="dynwrap")
+  dir_output <- devtools:::shim_system.file("example_outputs/text/", package = "dynwrap")
 
   for (output_format in c("text")) {
     # linear trajectory

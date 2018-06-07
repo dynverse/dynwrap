@@ -51,7 +51,7 @@ ti_comp1 <- create_ti_method(
   package_required = c(),
   par_set = ParamHelpers::makeParamSet(
     ParamHelpers::makeDiscreteParam(id = "dimred", default = "pca", values = names(dyndimred::list_dimred_methods())),
-    ParamHelpers::makeIntegerParam(id="ndim", default = 2, lower=2, upper=30)
+    ParamHelpers::makeIntegerParam(id = "ndim", default = 2, lower = 2, upper = 30)
   ),
   run_fun = run_comp1,
   plot_fun = plot_comp1

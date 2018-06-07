@@ -71,7 +71,7 @@ get_expression <- function(data_wrapper, expression_source = "expression") {
 #' @inheritParams wrap_data
 #'
 #' @export
-wrap_expression <- function(expression, counts, cell_info = NULL, feature_info = NULL, ..., id="") {
+wrap_expression <- function(expression, counts, cell_info = NULL, feature_info = NULL, ..., id = "") {
   testthat::expect_equivalent(dim(expression), dim(counts))
   testthat::expect_equivalent(colnames(expression), colnames(counts))
   testthat::expect_equivalent(rownames(expression), rownames(counts))

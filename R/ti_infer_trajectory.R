@@ -461,7 +461,7 @@ get_ti_methods <- function(as_tibble = TRUE, packages = c("dynwrap")) {
 
     lsf.str(asNamespace(package), pattern = "^ti_") %>%
       map(~ do.call(., args = list(), envir = asNamespace(package)))
-  }) %>% unlist(recursive=FALSE)
+  }) %>% unlist(recursive = FALSE)
 
   if (as_tibble) {
     list_as_tibble(ti_methods)
