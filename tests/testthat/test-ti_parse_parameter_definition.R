@@ -89,7 +89,7 @@ parameter_definition <- list(
 
 par_set <- parse_parameter_definition(parameter_definition)
 
-sampled_parameters <- ParamHelpers::generateDesign(1000, par_set, trafo=TRUE) %>%
+sampled_parameters <- ParamHelpers::generateDesign(1000, par_set, trafo = TRUE) %>%
   ParamHelpers::dfRowsToList(par_set) %>%
   dynutils::list_as_tibble()
 

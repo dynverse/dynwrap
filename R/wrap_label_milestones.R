@@ -69,7 +69,7 @@ is_wrapper_with_milestone_labelling <- function(trajectory) {
 
 #' @rdname label_milestones
 #' @export
-get_milestone_labelling <- function(trajectory, label_milestones=NULL) {
+get_milestone_labelling <- function(trajectory, label_milestones = NULL) {
   if(is.character(label_milestones) && length(names(label_milestones)) == length(label_milestones)) {
     labels <- label_milestones
     labels <- labels[intersect(names(labels), trajectory$milestone_ids)]

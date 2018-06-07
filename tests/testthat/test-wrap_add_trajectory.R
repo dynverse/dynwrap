@@ -80,7 +80,7 @@ test_that("Testing add_trajectory with milestone_percentages", {
 
   # testing is_ti_data_wrapper
   expect_true(is_wrapper_with_trajectory(wr))
-  expect_false(is_wrapper_with_trajectory(list(chvehoie="jihofrewghifu")))
+  expect_false(is_wrapper_with_trajectory(list(chvehoie = "jihofrewghifu")))
 
   expect_equivalent(wr$id, id)
   expect_equivalent(wr$cell_ids, cell_ids)
@@ -110,7 +110,7 @@ test_that("Testing add_trajectory with progressions", {
 
   # testing is_ti_data_wrapper
   expect_true(is_data_wrapper(wr))
-  expect_false(is_data_wrapper(list(chvehoie="jihofrewghifu")))
+  expect_false(is_data_wrapper(list(chvehoie = "jihofrewghifu")))
 
   expect_equivalent(wr$id, id)
   expect_equivalent(wr$cell_ids, cell_ids)

@@ -43,7 +43,7 @@ create_docker_ti_method <- function(
     temp_container <- docker_client$container$create(
       image,
       "bash",
-      entrypoint="bash"
+      entrypoint = "bash"
     )
     definition_path <- tempfile()
     system(glue("docker cp {temp_container$id()}:/code/definition.yml {definition_path}"))
@@ -104,13 +104,13 @@ create_docker_ti_method <- function(
   # parse input ids
   input_ids <- c(input_ids_required, input_ids_optional)
 
-  data(allowed_inputs, package="dynwrap", envir=environment())
+  data(allowed_inputs, package = "dynwrap", envir = environment())
   if (!all(input_ids %in% allowed_inputs$input_id)) {
     stop("Invalid input: ", setdiff(input_ids, allowed_inputs$input_id), ". See dynwrap::allowed_inputs")
   }
 
   # parse output_ids
-  data(allowed_outputs, package="dynwrap", envir=environment())
+  data(allowed_outputs, package = "dynwrap", envir = environment())
   if (length(output_ids) && !all(output_ids %in% allowed_outputs$output_id)) {
     stop("Invalid output: ", setdiff(output_ids, allowed_outputs$output_id), ". See dynwrap::allowed_outputs")
   }
@@ -153,7 +153,7 @@ create_docker_ti_method <- function(
 
     docker_client$container$run(
       image,
-      volumes=c(
+      volumes = c(
         glue("{dir_input}:/input"),
         glue("{dir_output}:/output")
       )
@@ -212,7 +212,7 @@ pull_docker_ti_method <- function(
 ) {
   docker_client$image$pull(image)
 
-  create_docker_ti_method(image, docker_client=docker_client)
+  create_docker_ti_method(image, docker_client = docker_client)
 }
 
 save_inputs <- function(

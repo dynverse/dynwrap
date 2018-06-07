@@ -10,7 +10,7 @@ cell_ids <- paste0("cell_", seq_len(10))
 
 n_genes <- 5
 counts <- rnbinom(length(cell_ids) * n_genes, 1000, 0.99) %>%
-  matrix(nrow=length(cell_ids), dimnames = list(cell_ids, paste0("gene_", seq_len(n_genes))))
+  matrix(nrow = length(cell_ids), dimnames = list(cell_ids, paste0("gene_", seq_len(n_genes))))
 
 expression <- log2(counts + 1)
 
@@ -29,7 +29,7 @@ milestone_network <- tribble(
   group_ids[3], group_ids[5],TRUE,0.5
 )
 
-progressions <- sample_n(milestone_network, length(cell_ids), replace=TRUE) %>%
+progressions <- sample_n(milestone_network, length(cell_ids), replace = TRUE) %>%
   select(from, to) %>%
   mutate(
     cell_id = cell_ids,

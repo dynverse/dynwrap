@@ -26,7 +26,7 @@ add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_mi
     message(paste0("Using '", root_milestone_id, "' as root"))
   }
 
-  milestone_order <- igraph::graph_from_data_frame(trajectory$milestone_network) %>% igraph::ego(nodes=root_milestone_id, 999) %>% first() %>% names()
+  milestone_order <- igraph::graph_from_data_frame(trajectory$milestone_network) %>% igraph::ego(nodes = root_milestone_id, 999) %>% first() %>% names()
 
   # flip edge if from is later than to
   trajectory$milestone_network <- trajectory$milestone_network %>%
@@ -80,7 +80,7 @@ add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_mi
 add_root_using_expression <- function(trajectory, features_oi, expression_source = "expression") {
   expression <- get_expression(trajectory, expression_source)
 
-  root_cell_id <- rownames(expression)[expression[, features_oi, drop=F] %>% rowMeans() %>% which.max()]
+  root_cell_id <- rownames(expression)[expression[, features_oi, drop = F] %>% rowMeans() %>% which.max()]
   trajectory <- add_root(trajectory, root_cell_id)
 
   trajectory
