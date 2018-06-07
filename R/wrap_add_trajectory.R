@@ -95,7 +95,7 @@ add_trajectory <- function(
   for (fr in unique(tents$from)) {
     te <- tents %>% filter(from == fr)
     divreg <- divergence_regions %>% filter(is_start, milestone_id == fr)
-    if (nrow(divreg) > 1) {
+    if (nrow(divreg) >= 1) {
       divreg2 <- divergence_regions %>% filter(divergence_id == divreg$divergence_id)
       testthat::expect_true(all(te$to %in% divreg2$milestone_id), info = "All divergence regions need to be explicitly defined")
     } else {
