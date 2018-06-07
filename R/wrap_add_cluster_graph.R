@@ -2,7 +2,7 @@
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @param data_wrapper A data wrapper to extend upon. Needs to have a cell grouping created by [add_grouping()].
+#' @param model The model to which a cluster graph will be added. Needs to have a cell grouping created by [add_grouping()].
 #' @param milestone_network A network of milestones.
 #' @param ... extra information to be stored in the wrapper.
 #'
@@ -13,16 +13,16 @@
 #' @importFrom testthat expect_is expect_true expect_equal
 #' @importFrom pdist pdist
 add_cluster_graph <- function(
-  data_wrapper,
+  model,
   milestone_network,
   ...
 ) {
   # check data wrapper
-  testthat::expect_true(is_data_wrapper(data_wrapper))
-  testthat::expect_true(is_wrapper_with_grouping(data_wrapper))
+  testthat::expect_true(is_data_wrapper(model))
+  testthat::expect_true(is_wrapper_with_grouping(model))
 
   # get milestone_ids
-  milestone_ids <- data_wrapper$group_ids
+  milestone_ids <- model$group_ids
 
   # check milestone network
   check_milestone_network(milestone_ids, milestone_network)
@@ -35,8 +35,8 @@ add_cluster_graph <- function(
     milestone_network %>% select(from, to) %>% mutate(label = to, percentage = 1)
   )
   progressions <- data_frame(
-    cell_id = names(data_wrapper$grouping),
-    label = data_wrapper$grouping
+    cell_id = names(model$grouping),
+    label = model$grouping
   ) %>%
     left_join(both_directions, by = "label") %>%
     group_by(cell_id) %>%
@@ -47,7 +47,7 @@ add_cluster_graph <- function(
 
   # return output
   add_trajectory(
-    data_wrapper = data_wrapper,
+    model = model,
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
     divergence_regions = NULL,

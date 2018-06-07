@@ -4,11 +4,11 @@
 \alias{add_linear_trajectory}
 \title{Add a linear trajectory to a data wrapper}
 \usage{
-add_linear_trajectory(data_wrapper, pseudotime, directed = FALSE,
+add_linear_trajectory(model, pseudotime, directed = FALSE,
   do_scale_minmax = TRUE, ...)
 }
 \arguments{
-\item{data_wrapper}{A data wrapper to extend upon.}
+\item{model}{The model to which a linear trajectory will be added.}
 
 \item{pseudotime}{A named vector of pseudo times.}
 

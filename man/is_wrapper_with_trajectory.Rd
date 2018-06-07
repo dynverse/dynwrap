@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrap_add_trajectory.R
 \name{is_wrapper_with_trajectory}
 \alias{is_wrapper_with_trajectory}
-\title{Test whether an object is a data_wrapper and has a trajectory}
+\title{Test whether an object is a model and has a trajectory}
 \usage{
 is_wrapper_with_trajectory(object)
 }
@@ -10,5 +10,5 @@ is_wrapper_with_trajectory(object)
 \item{object}{The object to be tested.}
 }
 \description{
-Test whether an object is a data_wrapper and has a trajectory
+Test whether an object is a model and has a trajectory
 }

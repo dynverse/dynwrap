@@ -16,7 +16,7 @@ wrap_expression(expression, counts, cell_info = NULL, feature_info = NULL,
 
 \item{feature_info}{Optional meta-information of the features, a data.frame with at least feature_id as column}
 
-\item{...}{extra information to be stored in the wrapper}
+\item{...}{extra information to be stored in the model}
 
 \item{id}{A unique identifier for the data}
 }

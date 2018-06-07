@@ -48,6 +48,14 @@ dimred <- dyndimred::dimred_pca(expression)
 dimred_milestones <- dimred[sample(seq_len(nrow(dimred)), length(milestone_ids)), ]
 rownames(dimred_milestones) <- milestone_ids
 
+cell_graph <-
+  bind_rows(
+    tibble(from = cell_ids[1:5], to = cell_ids[2:6]),
+    tibble(from = cell_ids[7:10], to = sample(cell_ids[1:6], 4))
+  )
+
+to_keep <- cell_ids[1:6]
+
 # task with prior information
 task <- wrap_data(
   cell_id = cell_ids
@@ -66,6 +74,14 @@ task <- wrap_data(
     grouping_network = milestone_network %>% select(from, to),
     time = pseudotime + runif(length(pseudotime)) * 10 - 5,
     marker_feature_ids = colnames(expression)[1:2]
+  )
+
+# a model
+model <- wrap_data(
+  cell_id = cell_ids
+) %>%
+  add_linear_trajectory(
+    pseudotime
   )
 
 # save the input
@@ -98,25 +114,43 @@ save_inputs(
 )
 
 # save the output
-dir_output <- "inst/example_outputs/"
-output_file <- function(x) file.path(dir_output, x)
+unlink("inst/example_outputs/*", recursive=TRUE, force=TRUE)
 
-output_ids <- c(
-  "cell_ids",
-  "pseudotime",
-
+objects <- lst(
+  cell_ids,
+  pseudotime = pseudotime %>% enframe("cell_id", "pseudotime"),
+  group_ids,
+  grouping = grouping %>% enframe("cell_id", "group_id"),
+  milestone_network,
+  milestone_ids,
+  progressions,
+  milestone_percentages,
+  divergence_regions,
+  dimred = dimred %>% as.data.frame() %>% rownames_to_column("cell_id"),
+  dimred_milestones = dimred_milestones %>% as.data.frame() %>% rownames_to_column("milestone_id"),
+  cell_graph,
+  to_keep
 )
 
-tibble(cell_id=cell_ids) %>% write_csv(output_file("cell_ids.csv"))
-enframe(pseudotime, "cell_id", "pseudotime") %>% write_csv(output_file("pseudotime.csv"))
-group_ids %>% write_json(output_file("group_ids.json"))
-enframe(grouping, "cell_id", "group_id") %>% write_csv(output_file("grouping.csv"))
-milestone_network %>% write_csv(output_file("milestone_network.csv"))
-milestone_ids %>% write_json(output_file("milestone_ids.json"))
-progressions %>% write_csv(output_file("progressions.csv"))
-milestone_percentages %>% write_csv(output_file("milestone_percentages.csv"))
-divergence_regions %>% write_csv(output_file("divergence_regions.csv"))
-dimred %>% as.data.frame() %>% rownames_to_column("cell_id") %>% write_csv(output_file("dimred.csv"))
-dimred_milestones %>% as.data.frame() %>% rownames_to_column("milestone_id") %>% write_csv(output_file("dimred_milestones.csv"))
+dir_output <- "inst/example_outputs/text/"
+dir.create(dir_output, recursive=TRUE)
+walk2(objects, names(objects), function(x, name) {
+  write_text_infer(x, glue::glue("{dir_output}/{name}"))
+})
 
-# hdf5
+# feather
+dir_output <- "inst/example_outputs/feather/"
+dir.create(dir_output)
+walk2(objects, names(objects), function(x, name) {
+  write_feather_infer(x, glue::glue("{dir_output}/{name}.feather"), name)
+})
+
+# rds
+dir_output <- "inst/example_outputs/rds/"
+dir.create(dir_output)
+write_rds(objects, file.path(dir_output, "output.rds"))
+
+# dynwrap
+dir_output <- "inst/example_outputs/dynwrap/"
+dir.create(dir_output)
+write_rds(model, file.path(dir_output, "output.rds"))

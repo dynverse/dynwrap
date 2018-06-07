@@ -1,25 +1,25 @@
-#' Add count and normalised expression values to a data wrapper
+#' Add count and normalised expression values to a model
 #'
-#' @param data_wrapper A data wrapper to extend upon
+#' @param model The model to which expression will be added
 #' @param counts The counts with genes in columns and cells in rows
 #' @param expression The normalised expression values with genes in columns and cells in rows
 #' @param feature_info Optional meta-information of the features, a data.frame with at least feature_id as column
-#' @param ... extra information to be stored in the wrapper
-#' @param expression_source The source of expression, can be "counts", "expression", an expression matrix, or another data wrapper which contains expression
+#' @param ... extra information to be stored in the model
+#' @param expression_source The source of expression, can be "counts", "expression", an expression matrix, or another model which contains expression
 #'
 #' @export
 #'
 #' @importFrom testthat expect_equal expect_is
 add_expression <- function(
-  data_wrapper,
+  model,
   counts,
   expression,
   feature_info = NULL,
   ...
 ) {
-  testthat::expect_true(is_data_wrapper(data_wrapper))
+  testthat::expect_true(is_data_wrapper(model))
 
-  cell_ids <- data_wrapper$cell_ids
+  cell_ids <- model$cell_ids
 
   testthat::expect_is(counts, "matrix")
   testthat::expect_is(expression, "matrix")
@@ -34,7 +34,7 @@ add_expression <- function(
   }
 
   # create output structure
-  data_wrapper %>% extend_with(
+  model %>% extend_with(
     "dynwrap::with_expression",
     counts = counts,
     expression = expression,
@@ -45,16 +45,16 @@ add_expression <- function(
 
 #' @rdname add_expression
 #' @export
-is_wrapper_with_expression <- function(data_wrapper) {
-  is_data_wrapper(data_wrapper) && "dynwrap::with_expression" %in% class(data_wrapper)
+is_wrapper_with_expression <- function(model) {
+  is_data_wrapper(model) && "dynwrap::with_expression" %in% class(model)
 }
 
 #' @rdname add_expression
 #' @export
-get_expression <- function(data_wrapper, expression_source = "expression") {
+get_expression <- function(model, expression_source = "expression") {
   if (is.character(expression_source)) {
-    if(!expression_source %in% names(data_wrapper)) {stop("Expression source not in traj, did you run add_expression?")}
-    expression <- data_wrapper[[expression_source]]
+    if(!expression_source %in% names(model)) {stop("Expression source not in traj, did you run add_expression?")}
+    expression <- model[[expression_source]]
   } else if (is.matrix(expression_source)) {
     expression <- expression_source
   } else if (is_wrapper_with_expression(expression_source)) {

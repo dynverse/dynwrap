@@ -2,13 +2,13 @@
 % Please edit documentation in R/wrap_add_waypoints.R
 \name{is_wrapper_with_waypoints}
 \alias{is_wrapper_with_waypoints}
-\title{Test whether an traj is a data_wrapper and waypoints}
+\title{Test whether an trajectory is a data_wrapper and waypoints}
 \usage{
-is_wrapper_with_waypoints(traj)
+is_wrapper_with_waypoints(trajectory)
 }
 \arguments{
-\item{traj}{The traj to be tested.}
+\item{trajectory}{The trajectory to be tested.}
 }
 \description{
-Test whether an traj is a data_wrapper and waypoints
+Test whether an trajectory is a data_wrapper and waypoints
 }

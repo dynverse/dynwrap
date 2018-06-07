@@ -18,7 +18,6 @@ before_install:
   - sudo cp $HDF5_DIR/bin/* /usr/bin/
   - sudo cp $HDF5_DIR/lib/* /usr/lib/
   - sudo cp $HDF5_DIR/include/* /usr/include/
-  - ls /usr/lib/
   - R -e "install.packages('hdf5r')"
 install:
  - if [ `git branch | grep '* master' | wc -l` == 0 ]; then sed -i 's#\(dynverse/[^, ]*\)#\1@devel#' DESCRIPTION; fi

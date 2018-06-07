@@ -106,13 +106,13 @@ create_docker_ti_method <- function(
 
   data(allowed_inputs, package="dynwrap", envir=environment())
   if (!all(input_ids %in% allowed_inputs$input_id)) {
-    stop("Invalid input: ", setdiff(input_ids, allowed_inputs$input_id), ". See dynwrap:::get_allowed_inputs()")
+    stop("Invalid input: ", setdiff(input_ids, allowed_inputs$input_id), ". See dynwrap::allowed_inputs")
   }
 
   # parse output_ids
   data(allowed_outputs, package="dynwrap", envir=environment())
   if (length(output_ids) && !all(output_ids %in% allowed_outputs$output_id)) {
-    stop("Invalid output: ", setdiff(output_ids, allowed_outputs$output_id), ". See dynwrap:::get_allowed_outputs()")
+    stop("Invalid output: ", setdiff(output_ids, allowed_outputs$output_id), ". See dynwrap::allowed_outputs")
   }
 
   # define run_fun
@@ -231,13 +231,7 @@ save_inputs <- function(
   if(input_format == "text") {
     for (input_id in names(inputs)) {
       input <- inputs[[input_id]]
-      if(is.matrix(input)) {
-        write.csv(input, glue::glue("{dir_input}/{input_id}.csv"))
-      } else if (is.data.frame(input)) {
-        write_csv(input, glue::glue("{dir_input}/{input_id}.csv"))
-      } else {
-        jsonlite::write_json(input, glue::glue("{dir_input}/{input_id}.json"))
-      }
+      write_text_infer(input, glue::glue("{dir_input}/{input_id}"))
     }
   } else if (input_format == "rds") {
     write_rds(inputs, file.path(dir_input, "data.rds"))
@@ -251,21 +245,16 @@ save_inputs <- function(
         hdf5r::h5attr(file[[name]], "colnames") <- colnames(x)
       }
     })
-    file$close_all() # important to do a close_all here, otherwise some parts of the data can still be open, resulting invalid h5 files
-
+    file$close_all() # important to do a close_all here, otherwise some parts of the data can still be open, resulting in invalid h5 files
   } else if (input_format == "feather") {
     requireNamespace("feather")
     for (input_id in names(inputs)) {
       input <- inputs[[input_id]]
-      if(is.matrix(input)) {
-        feather::write_feather(input %>% as.data.frame() %>% rownames_to_column("rownames"), glue::glue("{dir_input}/{input_id}.feather"))
-      } else if (is.data.frame(input)) {
-        feather::write_feather(input, glue::glue("{dir_input}/{input_id}.feather"))
-      } else if (is.vector(input) ){
-        feather::write_feather(tibble(!!input_id := input), glue::glue("{dir_input}/{input_id}.feather"))
-      } else {
-        stop("Feather does not support this output")
-      }
+      write_feather_infer(
+        input,
+        glue::glue("{dir_input}/{input_id}.feather"),
+        input_id
+      )
     }
   }
 
@@ -273,3 +262,24 @@ save_inputs <- function(
   write_json(params, file.path(dir_input, "params.json"), auto_unbox = TRUE)
 }
 
+write_text_infer <- function(x, path) {
+  if(is.matrix(x)) {
+    write.csv(x, paste0(path, ".csv"))
+  } else if (is.data.frame(x)) {
+    write_csv(x, paste0(path, ".csv"))
+  } else {
+    write_json(x, paste0(path, ".json"))
+  }
+}
+
+write_feather_infer <- function(x, path, name) {
+  if(is.matrix(x)) {
+    feather::write_feather(x %>% as.data.frame() %>% rownames_to_column("rownames"), path)
+  } else if (is.data.frame(x)) {
+    feather::write_feather(x, path)
+  } else if (is.vector(x) ){
+    feather::write_feather(tibble(!!name := x), path)
+  } else {
+    stop("Feather does not support this output")
+  }
+}
