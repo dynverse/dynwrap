@@ -4,16 +4,16 @@
 \alias{add_cell_graph}
 \title{Add a cell graph trajectory to a data wrapper}
 \usage{
-add_cell_graph(data_wrapper, cell_graph, to_keep,
-  milestone_prefix = "milestone_", ...)
+add_cell_graph(model, cell_graph, to_keep, milestone_prefix = "milestone_",
+  ...)
 }
 \arguments{
-\item{data_wrapper}{A data wrapper to extend upon.}
+\item{model}{The model to extend}
 
-\item{cell_graph}{The edges between cells. Format: Data frame(from = character, to = character, length = numeric)}
+\item{cell_graph}{The edges between cells. Format: Data frame(from = character, to = character, length(optional) = numeric, directed(optional) = logical)}
 
 \item{to_keep}{A named vector containing booleans containing
-whether or not a sample is part of the trajectory that is to be kept.}
+whether or not a cell is part of the backbone. Or, alternatively a character vector containing the backbone cells}
 
 \item{milestone_prefix}{A prefix to add to the id of the cell ids when they are used as milestones, in order to avoid any naming conflicts,}
 

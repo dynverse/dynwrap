@@ -4,11 +4,11 @@
 \alias{add_cyclic_trajectory}
 \title{Add a cyclic trajectory to a data wrapper}
 \usage{
-add_cyclic_trajectory(data_wrapper, pseudotime, directed = FALSE,
+add_cyclic_trajectory(model, pseudotime, directed = FALSE,
   do_scale_minmax = TRUE, ...)
 }
 \arguments{
-\item{data_wrapper}{A data wrapper to extend upon.}
+\item{model}{The model to which a cyclic trajectory will be added.}
 
 \item{pseudotime}{A named vector of pseudo times.}
 

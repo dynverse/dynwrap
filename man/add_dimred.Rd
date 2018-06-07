@@ -4,17 +4,17 @@
 \alias{add_dimred}
 \alias{is_wrapper_with_dimred}
 \alias{get_dimred}
-\title{Add a dimensionality reduction to a data wrapper}
+\title{Add a dimensionality reduction to a model}
 \usage{
-add_dimred(data_wrapper, dimred, dimred_milestones = NULL,
+add_dimred(model, dimred, dimred_milestones = NULL,
   dimred_trajectory_segments = NULL, expression_source = "expression", ...)
 
-is_wrapper_with_dimred(data_wrapper)
+is_wrapper_with_dimred(model)
 
-get_dimred(data_wrapper, dimred = NULL, expression_source = "expression")
+get_dimred(model, dimred = NULL, expression_source = "expression")
 }
 \arguments{
-\item{data_wrapper}{A data wrapper to extend upon.}
+\item{model}{The model to which a dimensionality reduction will be added.}
 
 \item{dimred}{The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction}
 
@@ -22,7 +22,7 @@ get_dimred(data_wrapper, dimred = NULL, expression_source = "expression")
 
 \item{dimred_trajectory_segments}{An optional dimensionality reduction of the trajectory segments.}
 
-\item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another data wrapper which contains expression}
+\item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another model which contains expression}
 
 \item{...}{extra information to be stored in the wrapper}
 }

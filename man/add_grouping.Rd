@@ -6,14 +6,14 @@
 \alias{get_grouping}
 \title{Add a cell grouping to a data wrapper}
 \usage{
-add_grouping(data_wrapper, group_ids, grouping = NULL, ...)
+add_grouping(model, group_ids, grouping = NULL, ...)
 
-is_wrapper_with_grouping(data_wrapper)
+is_wrapper_with_grouping(model)
 
-get_grouping(data_wrapper, grouping = NULL)
+get_grouping(model, grouping = NULL)
 }
 \arguments{
-\item{data_wrapper}{A data wrapper to extend upon.}
+\item{model}{The model to which the grouping will be added.}
 
 \item{group_ids}{All group_ids, optional}
 

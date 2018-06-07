@@ -28,7 +28,7 @@ add_pseudotime <- function(trajectory, pseudotime = NULL) {
   if (is.null(pseudotime)) {
     pseudotime <- calculate_pseudotime(trajectory)
   } else {
-    pseudotime <- process_pseudotime(data_wrapper, pseudotime)
+    pseudotime <- process_pseudotime(trajectory, pseudotime)
   }
 
   # check names of pseudotime

@@ -32,35 +32,26 @@ wrap_rds <- function(model, output_ids, dir_output) {
   for (output_id in output_ids) {
     processor <- get_output_processor(output_id)
 
-    # get output from output[[output_id]]
-    inner_output_ids <- intersect(processor$params, names(output[[output_id]]))
-    output_oi <- output[[output_id]][inner_output_ids]
+    # define output from which to extract variables
+    output_for_extraction <- output
 
-    # get output from output, but don't select parts which are already in the output_oi
-    outer_output_ids <- setdiff(intersect(processor$params, names(output)), names(output_oi))
-    output_oi <- c(
-      output_oi,
-      output[outer_output_ids]
-    )
-
-    # also add extra params
-    if(!is.null(output[[output_id]]) && !is.null(output[[output_id]]$params)) {
-      output_oi <- c(
-        output_oi,
-        as.list(output[[output_oi]]$params)
+    # also include output[[outpit_id]] if it is a list and not a dataframe
+    if (is.list(output[[output_id]]) && !is.data.frame(output[[output_id]])) {
+      output_for_extraction <- c(
+        output_for_extraction,
+        output[[outpit_id]]
       )
     }
+
+    output_oi <- c(
+      output_for_extraction[intersect(processor$args, names(output_for_extraction))]
+    )
 
     # always give model as first argument
     output_oi <- c(
       list(model),
       output_oi
     )
-
-    # check required outputs
-    # if (!all(processor$required_params %in% names(output_oi))) {
-    #   stop("Some outputs were not found but are required: ", setdiff(processor$required_params, names(output_oi)))
-    # }
 
     model <- invoke(processor$processor, output_oi)
   }
@@ -80,14 +71,14 @@ wrap_text <- function(model, output_ids, dir_output) {
 
     files <- c(inner_files, outer_files)
 
-    for(param in processor$params) {
-      matching <- stringr::str_subset(files, glue::glue(".*\\/{param}\\..*"))
+    for(arg in processor$args) {
+      matching <- stringr::str_subset(files, glue::glue(".*\\/{arg}\\..*"))
       if(length(matching)) {
-        output_oi[[param]] <- read_infer(first(matching), param)
+        output_oi[[arg]] <- read_infer(first(matching), arg)
       }
     }
 
-    # also add extra params, both from the output_id folder as well as from the main folder
+    # also add extra params for this output
     if(file.exists(file.path(dir_output, output_id, "params.json"))) {
       output_oi <- c(
         output_oi,
@@ -95,17 +86,11 @@ wrap_text <- function(model, output_ids, dir_output) {
       )
     }
 
-
     # always give model as first argument
     output_oi <- c(
       list(model),
       output_oi
     )
-
-    # check required outputs
-    # if (!all(processor$required_params %in% names(output_oi))) {
-    #   stop("Some outputs were not found but are required: ", setdiff(processor$required_params, names(output_oi)))
-    # }
 
     model <- invoke(processor$processor, output_oi)
   }
@@ -124,11 +109,11 @@ wrap_hdf5 <- function(model, output_ids, dir_output) {
     processor <- get_output_processor(output_id)
 
     # get output from output[[output_id]]
-    inner_output_ids <- intersect(processor$params, names(output[[output_id]]))
+    inner_output_ids <- intersect(processor$args, names(output[[output_id]]))
     output_oi <- output[[output_id]][inner_output_ids]
 
     # get output from output, but don't select parts which are already in the output_oi
-    outer_output_ids <- setdiff(intersect(processor$params, names(output)), names(output_oi))
+    outer_output_ids <- setdiff(intersect(processor$args, names(output)), names(output_oi))
     output_oi <- c(
       output_oi,
       output[outer_output_ids]
@@ -147,11 +132,6 @@ wrap_hdf5 <- function(model, output_ids, dir_output) {
       list(model),
       output_oi
     )
-
-    # check required outputs
-    # if (!all(processor$required_params %in% names(output_oi))) {
-    #   stop("Some outputs were not found but are required: ", setdiff(processor$required_params, names(output_oi)))
-    # }
 
     model <- invoke(processor$processor, output_oi)
   }
@@ -174,10 +154,10 @@ wrap_feather <- function(model, output_ids, dir_output) {
 
     files <- c(inner_files, outer_files)
 
-    for(param in processor$params) {
-      matching <- stringr::str_subset(files, glue::glue(".*\\/{param}.feather"))
+    for(arg in processor$args) {
+      matching <- stringr::str_subset(files, glue::glue(".*\\/{arg}.feather"))
       if(length(matching)) {
-        output_oi[[param]] <- feather::read_feather(first(matching))
+        output_oi[[arg]] <- feather::read_feather(first(matching))
       }
     }
 
@@ -189,11 +169,22 @@ wrap_feather <- function(model, output_ids, dir_output) {
       )
     }
 
+    # feather can only save tibbles, if something else needs to be saved it will be saved as a one-column tibble with colname equal to output_id
+    # here we simplify this again
+    output_oi <- map2(output_oi, names(output_oi), function(x, name) {
+      if(is.data.frame(x) && ncol(x) == 1 && colnames(x) == name) {
+        x[[name]]
+      } else {
+        x
+      }
+    })
+
     # always give model as first argument
     output_oi <- c(
       list(model),
       output_oi
     )
+
 
     model <- invoke(processor$processor, output_oi)
   }
@@ -201,46 +192,85 @@ wrap_feather <- function(model, output_ids, dir_output) {
 }
 
 
-read_infer <- function(file, param) {
-  if(endsWith(file, ".csv")) {
-
-    col_types <- switch(
-      param,
-      milestone_network = cols(
-        from = col_character(),
-        to = col_character(),
-        length = col_double(),
-        directed = col_logical()
-      ),
-      dimred = cols(
-        cell_id = col_character(),
-        .default = col_double()
-      ),
-      dimred_milestones = cols(
-        milestone_id = col_character(),
-        .default = col_double()
-      ),
-      cols()
-    )
-
-    read_csv(file, col_types = col_types)
-  } else if (endsWith(file, ".json")) {
-    jsonlite::read_json(file, TRUE)
+# read text output -----------------------------
+# specify how to read a text output
+output_object_specifications <- list(
+  pseudotime = cols(
+    cell_id = col_character(),
+    pseudotime = col_double()
+  ),
+  milestone_network = cols(
+    from = col_character(),
+    to = col_character(),
+    length = col_double(),
+    directed = col_logical()
+  ),
+  dimred = cols(
+    cell_id = col_character(),
+    .default = col_double()
+  ),
+  dimred_milestones = cols(
+    milestone_id = col_character(),
+    .default = col_double()
+  ),
+  divergence_regions = cols(
+    milestone_id = col_character(),
+    divergence_id = col_character(),
+    is_start = col_logical()
+  ),
+  milestone_percentages = cols(
+    cell_id = col_character(),
+    milestone_id = col_character(),
+    percentage = col_double()
+  ),
+  progressions = cols(
+    cell_id = col_character(),
+    from = col_character(),
+    to = col_character(),
+    percentage = col_double()
+  ),
+  cell_ids = function(x) as.character(unlist(x)),
+  cell_graph = cols(
+    from = col_character(),
+    to = col_character()
+  ),
+  to_keep = function(x) as.character(unlist(x)),
+  group_ids = function(x) as.character(unlist(x)),
+  grouping = cols(
+    cell_id = col_character(),
+    group_id = col_character()
+  ),
+  milestone_ids = function(x) as.character(unlist(x))
+)
+# read text output
+read_infer <- function(file, arg) {
+  if(arg %in% names(output_object_specifications)) {
+    # read as csv or json depending on the specification
+    specification <- output_object_specifications[[arg]]
+    if(is.function(specification)) {
+      object <- specification(jsonlite::read_json(file, TRUE))
+    } else {
+      object <- read_csv(file, col_types = specification)
+    }
+  } else {
+    stop("No specification for > ", arg)
   }
+
+  object
 }
 
 
 get_output_processor <- function(output_id) {
   processor <- get(paste0("add_", output_id), "package:dynwrap")
 
-  required_params <- names(as.list(formals(processor)) %>% map_chr(class) %>% keep(~. == "name"))
-  required_params <- setdiff(required_params, c("data_wrapper", "traj", "model", "pred", "object", "..."))
-  optional_params <- names(as.list(formals(processor)) %>% map_chr(class) %>% keep(~. != "name"))
+  required_args <- names(as.list(formals(processor)) %>% map_chr(class) %>% keep(~. == "name"))
+  required_args <- setdiff(required_args, c("data_wrapper", "traj", "model", "pred", "object", "trajectory", "..."))
+  optional_args <- names(as.list(formals(processor)) %>% map_chr(class) %>% keep(~. != "name"))
 
   lst(
     processor,
-    required_params,
-    optional_params,
-    params = c(required_params, optional_params)
+    required_args,
+    optional_args,
+    args = c(required_args, optional_args)
   )
 }

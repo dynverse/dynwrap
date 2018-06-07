@@ -4,11 +4,11 @@
 \alias{select_waypoints}
 \title{Select the waypoints}
 \usage{
-select_waypoints(traj, n_waypoints = 100,
-  resolution = sum(traj$milestone_network$length)/n_waypoints)
+select_waypoints(trajectory, n_waypoints = 100,
+  resolution = sum(trajectory$milestone_network$length)/n_waypoints)
 }
 \arguments{
-\item{traj}{Wrapper with trajectory}
+\item{trajectory}{Wrapper with trajectory}
 
 \item{n_waypoints}{The number of waypoints}
 

@@ -1,8 +1,8 @@
-#' Add a dimensionality reduction to a data wrapper
+#' Add a dimensionality reduction to a model
 #'
 #' TODO: add possibility to also dimred the milestones and segments. This should be migrated from dynplot!
 #'
-#' @param data_wrapper A data wrapper to extend upon.
+#' @param model The model to which a dimensionality reduction will be added.
 #' @param dimred The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction
 #' @param dimred_milestones An optional dimensionality reduction of the milestones.
 #' @param dimred_trajectory_segments An optional dimensionality reduction of the trajectory segments.
@@ -14,28 +14,28 @@
 #'
 #' @importFrom testthat expect_equal expect_is expect_true
 add_dimred <- function(
-  data_wrapper,
+  model,
   dimred,
   dimred_milestones = NULL,
   dimred_trajectory_segments = NULL,
   expression_source = "expression",
   ...
 ) {
-  testthat::expect_true(is_data_wrapper(data_wrapper))
+  testthat::expect_true(is_data_wrapper(model))
 
   # run or process dimred
-  cell_ids <- data_wrapper$cell_ids
+  cell_ids <- model$cell_ids
   if (is.matrix(dimred) || is.data.frame(dimred)) {
-    dimred <- process_dimred(data_wrapper, dimred)
-    testthat::expect_setequal(data_wrapper$cell_id, rownames(dimred))
+    dimred <- process_dimred(model, dimred)
+    testthat::expect_setequal(model$cell_id, rownames(dimred))
   } else {
-    dimred <- get_dimred(data_wrapper, dimred, expression_source)
+    dimred <- get_dimred(model, dimred, expression_source)
   }
 
   if (!is.null(dimred_milestones)) {
-    dimred_milestones <- process_dimred(data_wrapper, dimred_milestones, "milestone_id")
-    if (is_wrapper_with_trajectory(data_wrapper)) {
-      milestone_ids <- data_wrapper$milestone_ids
+    dimred_milestones <- process_dimred(model, dimred_milestones, "milestone_id")
+    if (is_wrapper_with_trajectory(model)) {
+      milestone_ids <- model$milestone_ids
       dimred_milestones <- dimred_milestones[milestone_ids, ]
       testthat::expect_equal(rownames(dimred_milestones), milestone_ids)
     }
@@ -51,7 +51,7 @@ add_dimred <- function(
   }
 
   # create output structure
-  data_wrapper %>% extend_with(
+  model %>% extend_with(
     "dynwrap::with_dimred",
     dimred = dimred,
     dimred_milestones = dimred_milestones,
@@ -62,22 +62,22 @@ add_dimred <- function(
 
 #' @rdname add_dimred
 #' @export
-is_wrapper_with_dimred <- function(data_wrapper) {
-  is_data_wrapper(data_wrapper) && "dynwrap::with_dimred" %in% class(data_wrapper)
+is_wrapper_with_dimred <- function(model) {
+  is_data_wrapper(model) && "dynwrap::with_dimred" %in% class(model)
 }
 
 #' @rdname add_dimred
 #' @export
-get_dimred <- function(data_wrapper, dimred = NULL, expression_source = "expression") {
+get_dimred <- function(model, dimred = NULL, expression_source = "expression") {
   if(is.function(dimred)) {
     # function
-    expression <- get_expression(data_wrapper, expression_source)
+    expression <- get_expression(model, expression_source)
     dimred <- dimred(expression)
   } else if (is.matrix(dimred)) {
     # matrix
     testthat::expect_true(is.numeric(dimred))
     testthat::expect_true(length(rownames(dimred)) == nrow(dimred))
-    testthat::expect_setequal(data_wrapper$cell_ids, rownames(dimred))
+    testthat::expect_setequal(model$cell_ids, rownames(dimred))
 
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   } else if (is.data.frame(dimred)) {
@@ -90,16 +90,16 @@ get_dimred <- function(data_wrapper, dimred = NULL, expression_source = "express
     }
     testthat::expect_true(is.numeric(dimred))
     testthat::expect_true(length(rownames(dimred)) == nrow(dimred))
-    testthat::expect_setequal(data_wrapper$cell_ids, rownames(dimred))
+    testthat::expect_setequal(model$cell_ids, rownames(dimred))
 
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
-  } else if (is_wrapper_with_dimred(data_wrapper)) {
+  } else if (is_wrapper_with_dimred(model)) {
     # dimred within wrapper
-    if(is.list(data_wrapper$dimred)) {
-      testthat::expect_true(dimred %in% names(data_wrapper$dimred))
-      dimred <- data_wrapper$dimred[[dimred]]
+    if(is.list(model$dimred)) {
+      testthat::expect_true(dimred %in% names(model$dimred))
+      dimred <- model$dimred[[dimred]]
     } else {
-      dimred <- data_wrapper$dimred
+      dimred <- model$dimred
     }
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   } else {
@@ -110,7 +110,7 @@ get_dimred <- function(data_wrapper, dimred = NULL, expression_source = "express
 }
 
 
-process_dimred <- function(data_wrapper, dimred, identifier = "cell_id") {
+process_dimred <- function(model, dimred, identifier = "cell_id") {
   if (is.matrix(dimred)) {
     # matrix
     testthat::expect_true(is.numeric(dimred))

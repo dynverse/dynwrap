@@ -2,7 +2,7 @@
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @param data_wrapper A data wrapper to extend upon.
+#' @param model The model to which a linear trajectory will be added.
 #' @param pseudotime A named vector of pseudo times.
 #' @param directed Whether or not the directionality of the pseudotime is predicted.
 #' @param do_scale_minmax Whether or not to scale the pseudotime between 0 and 1.
@@ -15,16 +15,16 @@
 #'
 #' @importFrom testthat expect_is expect_true expect_named
 add_linear_trajectory <- function(
-  data_wrapper,
+  model,
   pseudotime,
   directed = FALSE,
   do_scale_minmax = TRUE,
   ...
 ) {
   # check data wrapper
-  testthat::expect_true(is_data_wrapper(data_wrapper))
+  testthat::expect_true(is_data_wrapper(model))
 
-  pseudotime <- process_pseudotime(data_wrapper, pseudotime)
+  pseudotime <- process_pseudotime(model, pseudotime)
 
   # scale pseudotime
   if (do_scale_minmax) {
@@ -54,7 +54,7 @@ add_linear_trajectory <- function(
 
   # return output
   add_trajectory(
-    data_wrapper = data_wrapper,
+    model = model,
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
     divergence_regions = NULL,

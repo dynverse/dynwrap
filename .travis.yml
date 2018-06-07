@@ -18,7 +18,6 @@ before_install:
   - sudo cp $HDF5_DIR/bin/* /usr/bin/
   - sudo cp $HDF5_DIR/lib/* /usr/lib/
   - sudo cp $HDF5_DIR/include/* /usr/include/
-  - ls /usr/lib/
   - R -e "install.packages('hdf5r')"
 install:
  - if [ `git branch | grep '* master' | wc -l` == 0 ]; then sed -i 's#\(dynverse/[^, ]*\)#\1@devel#' DESCRIPTION; fi
@@ -27,6 +26,7 @@ install:
  - R -e 'setRepositories(ind = 1:2)'
  - R -e 'devtools::install(dependencies = T, upgrade = T)'
 script:
- - echo No R CMD check since this is an init.
+- R CMD build .
+- R CMD check *tar.gz
 after_success:
- - echo Init 0 succeeded!
+ - R -e 'covr::codecov()'
