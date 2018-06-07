@@ -85,8 +85,8 @@ add_trajectory <- function(
 
   # check whether cells in tents are explicitly mentioned in divergence_regions
   tents <- progressions %>%
-    group_by(cell_id, from) %>%
-    filter(n() == 2) %>%
+    group_by(cell_id) %>%
+    filter(n() > 1) %>%
     ungroup() %>%
     group_by(from, to) %>%
     summarise() %>%
@@ -95,8 +95,12 @@ add_trajectory <- function(
   for (fr in unique(tents$from)) {
     te <- tents %>% filter(from == fr)
     divreg <- divergence_regions %>% filter(is_start, milestone_id == fr)
-    divreg2 <- divergence_regions %>% filter(divergence_id == divreg$divergence_id)
-    testthat::expect_true(all(te$to %in% divreg2$milestone_id), info = "All divergence regions need to be explicitly defined")
+    if (nrow(divreg) > 1) {
+      divreg2 <- divergence_regions %>% filter(divergence_id == divreg$divergence_id)
+      testthat::expect_true(all(te$to %in% divreg2$milestone_id), info = "All divergence regions need to be explicitly defined")
+    } else {
+      stop("Not all divergence regions are specified; check progressions or divergence regions")
+    }
   }
 
   ## Find out trajectory type from milestone network (before adding FILTERED_CELLS)
