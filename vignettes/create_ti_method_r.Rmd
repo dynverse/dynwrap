@@ -27,8 +27,8 @@ To test our method, we will use a very simple toy data example.
 
 ```{r, message=FALSE}
 library(dynwrap)
-library(tidyverse)
 library(ParamHelpers)
+library(dplyr)
 ```
 
 The main function will receive three different types of input parameters: the expression data, extra parameters and prior information.

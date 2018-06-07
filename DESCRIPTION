@@ -50,13 +50,11 @@ Suggests:
   feather,
   hdf5r,
   lhs,
-  scran,
   stevedore,
   viridis,
   yaml,
   knitr,
-  rmarkdown,
-  tidyverse
+  rmarkdown
 Remotes:
   berndbischl/ParamHelpers,
   dynverse/dynutils,

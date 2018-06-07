@@ -6,7 +6,7 @@ test_that("Testing create_ti_method and get_default_parameters with dummy method
     name = "dummy 1",
     short_name = "dum1",
     package_loaded = c("dynverse"),
-    package_required = c("tidyverse"),
+    package_required = c("dplyr"),
     par_set = ParamHelpers::makeParamSet(
       ParamHelpers::makeDiscreteParam(id = "param", default = "banana", values = c("apple", "banana", "cherry"))
     ),
@@ -19,7 +19,7 @@ test_that("Testing create_ti_method and get_default_parameters with dummy method
   expect_equal( dummy_instance$name, "dummy 1" )
   expect_equal( dummy_instance$short_name, "dum1" )
   expect_equal( dummy_instance$package_loaded, "dynverse" )
-  expect_equal( dummy_instance$package_required, "tidyverse" )
+  expect_equal( dummy_instance$package_required, "dplyr" )
   expect_is( dummy_instance$par_set, "ParamSet" )
   expect_is( dummy_instance$run_fun, "function" )
   # take into account parameter overwriting by parmamset

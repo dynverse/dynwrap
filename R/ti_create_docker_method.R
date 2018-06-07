@@ -236,13 +236,13 @@ save_inputs <- function(
       } else if (is.data.frame(input)) {
         write_csv(input, glue::glue("{dir_input}/{input_id}.csv"))
       } else {
-        jsonlite::write_json(input,  glue::glue("{dir_input}/{input_id}.json"))
+        jsonlite::write_json(input, glue::glue("{dir_input}/{input_id}.json"))
       }
     }
   } else if (input_format == "rds") {
     write_rds(inputs, file.path(dir_input, "data.rds"))
   } else if (input_format == "hdf5") {
-    file <- hdf5r::H5File$new(file.path(dir_input, "data.h5"))
+    file <- hdf5r::H5File$new(file.path(dir_input, "data.h5"), "w")
     purrr::walk2(inputs, names(inputs), function(x, name) {
       file$create_dataset(name, x)
 

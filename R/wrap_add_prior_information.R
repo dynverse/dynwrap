@@ -10,8 +10,10 @@
 #' @param grouping_network The network between groups, a dataframe with from and to
 #' @param marker_feature_ids The features (genes) important for the trajectory
 #' @param n_branches Number of branches
+#' @param n_start_states Number of start states
 #' @param n_end_states Number of end states
 #' @param time The time for every cell
+#' @param verbose Whether or not to print informative messages or not
 #'
 #' @export
 #'
@@ -25,31 +27,23 @@ add_prior_information <- function(
   grouping_network = NULL,
   marker_feature_ids = NULL,
   n_branches = NULL,
+  n_start_states = NULL,
   n_end_states = NULL,
-  time = NULL
+  time = NULL,
+  verbose = TRUE
 ) {
   prior_information <- lst(
-    # start_milestones,
     start_cells,
-    # end_milestones,
     end_cells,
     grouping_assignment,
     grouping_network,
     marker_feature_ids,
     n_branches,
     time,
+    n_start_states,
     n_end_states
   ) %>% discard(is.null)
 
-  # check input
-  # if(!is.null(start_milestones)) {
-  #   testthat::expect_true(is_wrapper_with_trajectory(task))
-  #   testthat::expect_true(all(start_milestones %in% task$milestone_ids))
-  # }
-  # if(!is.null(end_milestones)) {
-  #   testthat::expect_true(is_wrapper_with_trajectory(task))
-  #   testthat::expect_true(all(end_milestones %in% task$milestone_ids))
-  # }
   if (!is.null(start_cells)) {
     testthat::expect_true(all(start_cells %in% task$cell_ids))
   }
@@ -59,13 +53,12 @@ add_prior_information <- function(
   if (!is.null(grouping_assignment)) {
     testthat::expect_true(is.data.frame(grouping_assignment))
     testthat::expect_setequal(colnames(grouping_assignment), c("cell_id", "group_id"))
-    testthat::expect_setequal(grouping_assignment$cell_ids, task$cell_ids)
+    testthat::expect_setequal(grouping_assignment$cell_id, task$cell_id)
   }
   if (!is.null(grouping_network)) {
     testthat::expect_true(!is.null(grouping_assignment))
     testthat::expect_setequal(colnames(grouping_network), c("from", "to"))
-    testthat::expect_setequal(grouping_network$from, grouping_assignment$group_id)
-    testthat::expect_setequal(grouping_network$to, grouping_assignment$group_id)
+    testthat::expect_true(all(grouping_assignment$group_id %in% c(grouping_network$to, grouping_network$from)))
   }
   if (!is.null(marker_feature_ids)) {
     testthat::expect_true(is_wrapper_with_expression(task))
@@ -73,7 +66,7 @@ add_prior_information <- function(
   }
 
   if (is_wrapper_with_trajectory(task) && is_wrapper_with_expression(task)) {
-    message("Calculating prior information using trajectory")
+    if (verbose) message("Calculating prior information using trajectory")
 
     # compute prior information and add it to the wrapper
     calculated_prior_information <-
@@ -209,7 +202,8 @@ generate_prior_information <- function(
       pull(feature_id)
   } else {
     if ("scran" %in% rownames(installed.packages())) {
-      markers <- scran::findMarkers(t(expression), grouping_assignment %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
+      findMarkers <- get("findMarkers", "package:scran")
+      markers <- findMarkers(t(expression), grouping_assignment %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
 
       marker_feature_ids <- map(markers, as, "data.frame") %>%
         map(rownames_to_column, "gene") %>%
@@ -226,7 +220,10 @@ generate_prior_information <- function(
   ## NUMBER OF BRANCHES ##
   n_branches <- nrow(milestone_network)
 
-  ## NUMBER OF NUMBER OF END STATES ##
+  ## NUMBER OF START STATES ##
+  n_start_states <- length(start_milestones)
+
+  ## NUMBER OF END STATES ##
   n_end_states <- length(end_milestones)
 
   ## TIME AND TIME COURSE ##
@@ -256,6 +253,7 @@ generate_prior_information <- function(
     n_branches,
     time,
     timecourse,
+    n_start_states,
     n_end_states
   )
 }

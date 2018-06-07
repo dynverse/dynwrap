@@ -234,7 +234,7 @@ get_output_processor <- function(output_id) {
   processor <- get(paste0("add_", output_id), "package:dynwrap")
 
   required_params <- names(as.list(formals(processor)) %>% map_chr(class) %>% keep(~. == "name"))
-  required_params <- setdiff(required_params, c("data_wrapper", "traj", "model", "pred", "..."))
+  required_params <- setdiff(required_params, c("data_wrapper", "traj", "model", "pred", "object", "..."))
   optional_params <- names(as.list(formals(processor)) %>% map_chr(class) %>% keep(~. != "name"))
 
   lst(
