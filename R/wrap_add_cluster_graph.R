@@ -25,10 +25,10 @@ add_cluster_graph <- function(
   # get grouping from model if not provided
   if (is.null(grouping)) {
     testthat::expect_true(is_wrapper_with_grouping(model))
-    grouping <- get_grouping(model)
   } else {
-    grouping <- process_grouping(model, grouping)
+    model <- model %>% add_grouping(grouping)
   }
+  grouping <- get_grouping(model)
 
   milestone_ids <- unique(c(milestone_network$to, milestone_network$from))
 
