@@ -22,6 +22,7 @@ install:
  - R -e 'setRepositories(ind = 1:2)'
  - R -e 'devtools::install(dependencies = T, upgrade = T)'
 script:
- - echo No R CMD check since this is an init.
+- R CMD build .
+- R CMD check *tar.gz
 after_success:
- - echo Init 0 succeeded!
+ - R -e 'covr::codecov()'

@@ -6,8 +6,8 @@
 \usage{
 add_prior_information(task, start_cells = NULL, end_cells = NULL,
   grouping_assignment = NULL, grouping_network = NULL,
-  marker_feature_ids = NULL, n_branches = NULL, n_end_states = NULL,
-  time = NULL, verbose = TRUE)
+  marker_feature_ids = NULL, n_branches = NULL, n_start_states = NULL,
+  n_end_states = NULL, time = NULL, verbose = TRUE)
 }
 \arguments{
 \item{task}{A data wrapper to extend upon.}
@@ -23,6 +23,8 @@ add_prior_information(task, start_cells = NULL, end_cells = NULL,
 \item{marker_feature_ids}{The features (genes) important for the trajectory}
 
 \item{n_branches}{Number of branches}
+
+\item{n_start_states}{Number of start states}
 
 \item{n_end_states}{Number of end states}
 

@@ -9,17 +9,19 @@ vignette: >
 ---
 
 ```{r setup, echo=FALSE, message=FALSE}
-library(tidyverse)
+library(dplyr)
+library(readr)
+library(purrr)
 ```
 
-This vignette describes how to include your own method into the dynverse workflow. We'll illustrate this with a very basic method: using one of the components of a PCA as the pseudotime. The files for this example are also available at [https://github.com/dynverse/comp1](https://github.com/dynverse/comp1).
+This vignette describes how to include your own method into the dynverse workflow. We'll illustrate this with a very basic method: using one of the components of a PCA as the pseudotime.
 
 There are two main ways to add a new method:
 
 * **Directly within R**. In this case you create an R function or R packages. The user will have to install all dependencies. This is use case is described in another vignette.
 * **Using a docker**. In this case you create a docker which uses some input files (eg. a file containing the expression) and returns some output files. This use case is described here.
 
-A TI docker requires at least three files.
+A TI docker requires at least three files. The files for this example are also available at [https://github.com/dynverse/comp1](https://github.com/dynverse/comp1).
 
 * A definition yaml or json file, used to determine the format of input, output and parameters.
 * A Dockerfile, used to construct the docker.
@@ -30,7 +32,7 @@ A TI docker requires at least three files.
 An example of a `definition.yml` file (as can be found on the [github](https://github.com/dynverse/comp1)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/comp1/master/R_text/definition.yml") %>%
+read_file("https://raw.githubusercontent.com/dynverse/comp1/master/R_feather/definition.yml") %>%
   paste0("```yaml\n", ., "\n```") %>% 
   cat()
 ```
@@ -56,44 +58,46 @@ parameter_types <- tribble(
 )
 ```
 
-A named list of parameters for the method. A parameter always has a type and a default value, and 
-
-Optionally, parameters can also have other properties which define the parameter space. These are used for parameter tuning:
+A named list of parameters for the method. A parameter always has a type and a default value.  Optionally, parameters can also have other properties which define the parameter space. These are used for parameter tuning:
 
 ```{r, echo=FALSE}
 parameter_types %>% knitr::kable()
 ```
 
-- **lower** and **upper** The lower and upper bounds
-- **distribution** The distribution from which to sample numeric or integer parameters. Can be `uniform` (default), `normal` (also specify mean and sd), or `exponential` (also specify rate).
+- **distribution** The distribution from which to sample numeric or integer parameters. Can be `uniform` (default), `normal` (also specify **mean** and **sd**), or `exponential` (also specify **rate**). 
+- **lower** and **upper** The lower and upper bounds. Can be used with any distribution.
 - **values** A list of possible values for discrete parameters
 - **length** Length of the parameter for vector parameters
 
 #### input & input_optional
 
-```{r}
-github_url <- function(x, prefix) {
-  if(length(x)) {
-    glue::glue("[{x}](https://github.com/dynverse/dynwrap/blob/master/{prefix}{x})")
-  } else {
-    ""
-  }
-}
-```
-
 
 The input determines which kind of expression and prior information is given to the method. It contains the following properties:
 
-- **format** The format of the input, which can be
-    - `text`: csv or json files
-    - `hdf5`: hdf5 files
-    - `rds`: R binary files
+- **format** The format of the input, which can be:
+```{r, echo=FALSE}
+comp1_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/comp1/tree/master/{x})")
+comp1_urls <- function(names, xs) glue::collapse(map2_chr(names, xs, comp1_url), ", ")
+input_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/comp1/tree/master/inst/example_inputs/{x})")
+inputs_url <- function(names, xs) glue::collapse(map2_chr(names, xs, input_url), ", ")
+
+tribble(
+  ~output_format, ~description, ~example_script, ~example_input,
+  "hdf5", "HDF5 format", comp1_urls(c("python", "R"), c("python_hdf5", "R_hdf5")), 
+  "text", "csv and json files", comp1_urls(c("python", "R"), c("python_text", "R_text")),
+  "feather", "[Feather](https://github.com/wesm/feather) dataframe files", comp1_urls(c("python", "R"), c("python_feather", "R_feather")),
+  "rds", "R binary files", comp1_urls(c("R"), c("R_rds"))
+) %>% knitr::kable()
+```
+
+
+
 - **required**: Required inputs (eg. expression)
 - **optional**: Optional inputs (eg. start_cells)
 
 These requested required or optional inputs can be:
 
-```{r}
+```{r, echo=FALSE}
 data(allowed_inputs, package="dynwrap")
 allowed_inputs %>% 
   knitr::kable()
@@ -111,10 +115,20 @@ github_url <- function(x, prefix) {
 The output determines what type of output is produced by the method, and how this can be transformed into a trajectory model.
 
 - **format** The format of the output, which can be
-    - `text`: csv or json files
-    - `rds`: R binary files
-    - `dynwrap`: A model directly generated by the [dynwrap](https://github.com/dynverse/dynwrap) function
-    - `feather`: [Feather](https://github.com/wesm/feather) dataframes
+
+```{r, echo=FALSE}
+comp1_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/comp1/tree/master/{x})")
+comp1_urls <- function(names, xs) glue::collapse(map2_chr(names, xs, comp1_url), ", ")
+
+tribble(
+  ~output_format, ~description, ~examples,
+  "text", "csv and json files", comp1_urls(c("python", "R"), c("python_text", "R_text")),
+  "feather", "[Feather](https://github.com/wesm/feather) dataframe files", comp1_urls(c("python", "R"), c("python_feather", "R_feather")),
+  "rds", "R binary files", comp1_urls(c("R"), c("R_rds")),
+  "dynwrap", "directly wrapped using [dynwrap](https://github.com/dynverse/dynwrap) functions", comp1_urls(c("R"), c("R_dynwrap"))
+) %>% knitr::kable()
+```
+
 - **output_ids** The kinds of output this wrapper produces. This always include at least on output which contains enough information to produce a trajectory. Each of these outputs are further discussed in another vignette **link** , which also discuss the type of objects or files which need to be provided.
 
 ```{r, echo=FALSE}
@@ -140,7 +154,7 @@ allowed_outputs %>%
 An example of a `Dockerfile` (as can be found on the [github](https://github.com/dynverse/comp1)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/comp1/master/R_text/Dockerfile") %>%
+read_file("https://raw.githubusercontent.com/dynverse/comp1/master/R_feather/Dockerfile") %>%
   paste0("```Dockerfile\n", ., "\n```") %>% 
   cat()
 ```
@@ -156,7 +170,7 @@ This file should always contain an entrypoint, which will be called when the TI 
 All input files requested in the `definition.yml` will be mounted in the `/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/output` directory. An example (as can be found on the [github](https://github.com/dynverse/comp1)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/comp1/master/R_text/run.R") %>%
+read_file("https://raw.githubusercontent.com/dynverse/comp1/master/R_feather/run.R") %>%
   paste0("```r\n", ., "\n```") %>% 
   cat()
 ```

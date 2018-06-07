@@ -10,6 +10,7 @@
 #' @param grouping_network The network between groups, a dataframe with from and to
 #' @param marker_feature_ids The features (genes) important for the trajectory
 #' @param n_branches Number of branches
+#' @param n_start_states Number of start states
 #' @param n_end_states Number of end states
 #' @param time The time for every cell
 #' @param verbose Whether or not to print informative messages or not
@@ -26,6 +27,7 @@ add_prior_information <- function(
   grouping_network = NULL,
   marker_feature_ids = NULL,
   n_branches = NULL,
+  n_start_states = NULL,
   n_end_states = NULL,
   time = NULL,
   verbose = TRUE
@@ -38,6 +40,7 @@ add_prior_information <- function(
     marker_feature_ids,
     n_branches,
     time,
+    n_start_states,
     n_end_states
   ) %>% discard(is.null)
 
@@ -199,7 +202,8 @@ generate_prior_information <- function(
       pull(feature_id)
   } else {
     if ("scran" %in% rownames(installed.packages())) {
-      markers <- scran::findMarkers(t(expression), grouping_assignment %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
+      findMarkers <- get("findMarkers", "package:scran")
+      markers <- findMarkers(t(expression), grouping_assignment %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
 
       marker_feature_ids <- map(markers, as, "data.frame") %>%
         map(rownames_to_column, "gene") %>%
@@ -216,7 +220,10 @@ generate_prior_information <- function(
   ## NUMBER OF BRANCHES ##
   n_branches <- nrow(milestone_network)
 
-  ## NUMBER OF NUMBER OF END STATES ##
+  ## NUMBER OF START STATES ##
+  n_start_states <- length(start_milestones)
+
+  ## NUMBER OF END STATES ##
   n_end_states <- length(end_milestones)
 
   ## TIME AND TIME COURSE ##
@@ -246,6 +253,7 @@ generate_prior_information <- function(
     n_branches,
     time,
     timecourse,
+    n_start_states,
     n_end_states
   )
 }

@@ -48,27 +48,64 @@ dimred <- dyndimred::dimred_pca(expression)
 dimred_milestones <- dimred[sample(seq_len(nrow(dimred)), length(milestone_ids)), ]
 rownames(dimred_milestones) <- milestone_ids
 
-# prior information
-prior_information <- list(
-  start_cells = names(pseudotime)[which.min(pseudotime)],
-  end_cells = sample(cell_ids, 2),
-  n_end_states = 2,
-  n_start_states = 1,
-  grouping_assignment = grouping,
-  n_branches = length(group_ids),
-  grouping_network = milestone_network %>% select(from, to),
-  time = pseudotime + runif(length(pseudotime)) * 10 - 5,
-  marker_features_id = colnames(expression)[1:2]
-)
+# task with prior information
+task <- wrap_data(
+  cell_id = cell_ids
+) %>%
+  add_expression(
+    counts,
+    expression
+  ) %>%
+  add_prior_information(
+    start_cells = names(pseudotime)[which.min(pseudotime)],
+    end_cells = sample(cell_ids, 2),
+    n_start_states = 1,
+    n_end_states = 2,
+    grouping_assignment = enframe(grouping, "cell_id", "group_id"),
+    n_branches = length(group_ids),
+    grouping_network = milestone_network %>% select(from, to),
+    time = pseudotime + runif(length(pseudotime)) * 10 - 5,
+    marker_feature_ids = colnames(expression)[1:2]
+  )
 
 # save the input
-counts %>% as.data.frame() %>% rownames_to_column("cell_id") %>% write_csv("inst/example_inputs/counts.csv")
-expression %>% as.data.frame %>% rownames_to_column("cell_id") %>% write_csv("inst/example_inputs/expression.csv")
-jsonlite::write_json(prior_information, "inst/example_inputs/prior_information.json")
+save_inputs(
+  list2env(c(task, task$prior_information)),
+  dir_input = "inst/example_inputs/text/",
+  input_format = "text",
+  input_ids = allowed_inputs$input_id
+)
+
+save_inputs(
+  list2env(c(task, task$prior_information)),
+  dir_input = "inst/example_inputs/hdf5/",
+  input_format = "hdf5",
+  input_ids = allowed_inputs$input_id[allowed_inputs$input_id != "task"]
+)
+
+save_inputs(
+  list2env(c(task, task$prior_information)),
+  dir_input = "inst/example_inputs/feather/",
+  input_format = "feather",
+  input_ids = allowed_inputs$input_id[allowed_inputs$input_id != "task"]
+)
+
+save_inputs(
+  list2env(c(task, task$prior_information)),
+  dir_input = "inst/example_inputs/rds/",
+  input_format = "rds",
+  input_ids = allowed_inputs$input_id[allowed_inputs$input_id != "task"]
+)
 
 # save the output
 dir_output <- "inst/example_outputs/"
 output_file <- function(x) file.path(dir_output, x)
+
+output_ids <- c(
+  "cell_ids",
+  "pseudotime",
+
+)
 
 tibble(cell_id=cell_ids) %>% write_csv(output_file("cell_ids.csv"))
 enframe(pseudotime, "cell_id", "pseudotime") %>% write_csv(output_file("pseudotime.csv"))
@@ -81,3 +118,5 @@ milestone_percentages %>% write_csv(output_file("milestone_percentages.csv"))
 divergence_regions %>% write_csv(output_file("divergence_regions.csv"))
 dimred %>% as.data.frame() %>% rownames_to_column("cell_id") %>% write_csv(output_file("dimred.csv"))
 dimred_milestones %>% as.data.frame() %>% rownames_to_column("milestone_id") %>% write_csv(output_file("dimred_milestones.csv"))
+
+# hdf5
