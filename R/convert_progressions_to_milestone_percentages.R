@@ -4,7 +4,12 @@
 #' @param milestone_network Milestone network
 #' @param progressions Progressions dataframe
 #' @export
-convert_progressions_to_milestone_percentages <- function(cell_ids, milestone_ids, milestone_network, progressions) {
+convert_progressions_to_milestone_percentages <- function(
+  cell_ids,
+  milestone_ids,
+  milestone_network,
+  progressions
+) {
   check_froms <- progressions %>%
     group_by(cell_id) %>%
     summarise(n = length(unique(from)))

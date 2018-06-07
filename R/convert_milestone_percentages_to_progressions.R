@@ -4,7 +4,12 @@
 #' @param milestone_network Milestone network
 #' @param milestone_percentages Milestone percentages
 #' @export
-convert_milestone_percentages_to_progressions <- function(cell_ids, milestone_ids, milestone_network, milestone_percentages) {
+convert_milestone_percentages_to_progressions <- function(
+  cell_ids,
+  milestone_ids,
+  milestone_network,
+  milestone_percentages
+) {
   bind_rows(lapply(cell_ids, function(cid) {
     relevant_pct <- milestone_percentages %>% filter(cell_id == cid)
 
