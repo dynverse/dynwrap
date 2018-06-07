@@ -113,25 +113,25 @@ test_that("Parameters are sampled from the correct distributions", {
   for(col in c("numeric", "numeric_vector")) {
     numbers <- sampled_parameters[,col ] %>% unlist()
 
-    expect_gt(ks.test(numbers, runif(10000, 10, 20))$p.value, 0.5)
+    expect_gt(ks.test(numbers, runif(10000, 10, 20))$p.value, 0.1)
   }
 
   for(col in c("integer",  "integer_vector")) {
     numbers <- sampled_parameters[,col ] %>% unlist()
 
     suppressWarnings(
-      expect_gt(ks.test(numbers, round(runif(10000, 10, 20)))$p.value, 0.5)
+      expect_gt(ks.test(numbers, round(runif(10000, 10, 20)))$p.value, 0.1)
     )
   }
 
   col <- "numeric_norm"
   numbers <- sampled_parameters[,col ] %>% unlist()
-  expect_gt(ks.test(numbers, rnorm(10000, 15, 0.5))$p.value, 0.5)
+  expect_gt(ks.test(numbers, rnorm(10000, 15, 0.5))$p.value, 0.1)
 
   col <- "integer_norm"
   numbers <- sampled_parameters[,col ] %>% unlist()
   suppressWarnings(
-    expect_gt(ks.test(numbers, round(rnorm(10000, 15, 0.5)))$p.value, 0.5)
+    expect_gt(ks.test(numbers, round(rnorm(10000, 15, 0.5)))$p.value, 0.1)
   )
 
   col <- "numeric_exp"
@@ -139,7 +139,7 @@ test_that("Parameters are sampled from the correct distributions", {
   numbers2 <- rexp(100000, 1) + 10
   numbers2 <- numbers2[numbers2 < 20]
   suppressWarnings(
-    expect_gt(ks.test(numbers, numbers2)$p.value, 0.5)
+    expect_gt(ks.test(numbers, numbers2)$p.value, 0.1)
   )
 
   col <- "integer_exp"
@@ -147,6 +147,6 @@ test_that("Parameters are sampled from the correct distributions", {
   numbers2 <- rexp(100000, 1) + 10
   numbers2 <- round(numbers2[numbers2 < 20])
   suppressWarnings(
-    expect_gt(ks.test(numbers, numbers2)$p.value, 0.5)
+    expect_gt(ks.test(numbers, numbers2)$p.value, 0.1)
   )
 })
