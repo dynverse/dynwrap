@@ -21,9 +21,11 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
@@ -32,6 +34,7 @@
 
 <meta property="og:description" content="Simplify an igraph network such that consecutive linear edges are removed" />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -82,6 +85,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/create_ti_method_docker.html">Creating a TI method using docker</a>
+    </li>
+    <li>
+      <a href="../articles/create_ti_method_docker_file_transfer.html">Transferring files from and to the docker</a>
     </li>
     <li>
       <a href="../articles/create_ti_method_r.html">Creating a TI method within R</a>
@@ -141,9 +147,9 @@
   <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>F</span>
 )
 <span class='no'>gr</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>igraph</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/igraph/topics/graph_from_data_frame'>graph_from_data_frame</a></span>(<span class='no'>net</span>)
-<span class='fu'>simplify_igraph_network</span>(<span class='no'>gr</span>)</div><div class='output co'>#&gt; IGRAPH 1fc9c50 DNW- 2 1 -- 
+<span class='fu'>simplify_igraph_network</span>(<span class='no'>gr</span>)</div><div class='output co'>#&gt; IGRAPH a550177 DNW- 2 1 -- 
 #&gt; + attr: name (v/c), length (e/n), directed (e/l), weight (e/n)
-#&gt; + edge from 1fc9c50 (vertex names):
+#&gt; + edge from a550177 (vertex names):
 #&gt; [1] 1-&gt;3</div><div class='input'>
 <span class='no'>net</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(
   <span class='kw'>from</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>1</span>),
@@ -153,9 +159,9 @@
     <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>F</span>
 )
 <span class='no'>gr</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>igraph</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/igraph/topics/graph_from_data_frame'>graph_from_data_frame</a></span>(<span class='no'>net</span>)
-<span class='fu'>simplify_igraph_network</span>(<span class='no'>gr</span>)</div><div class='output co'>#&gt; IGRAPH 6efa5b7 DNW- 2 2 -- 
+<span class='fu'>simplify_igraph_network</span>(<span class='no'>gr</span>)</div><div class='output co'>#&gt; IGRAPH 36465e6 DNW- 2 2 -- 
 #&gt; + attr: name (v/c), length (e/n), directed (e/l), weight (e/n)
-#&gt; + edges from 6efa5b7 (vertex names):
+#&gt; + edges from 36465e6 (vertex names):
 #&gt; [1] 1-&gt;4 1-&gt;1</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
