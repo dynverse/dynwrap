@@ -7,7 +7,7 @@
 add_prior_information(task, start_cells = NULL, end_cells = NULL,
   grouping_assignment = NULL, grouping_network = NULL,
   marker_feature_ids = NULL, n_branches = NULL, n_end_states = NULL,
-  time = NULL)
+  time = NULL, verbose = TRUE)
 }
 \arguments{
 \item{task}{A data wrapper to extend upon.}
@@ -27,6 +27,8 @@ add_prior_information(task, start_cells = NULL, end_cells = NULL,
 \item{n_end_states}{Number of end states}
 
 \item{time}{The time for every cell}
+
+\item{verbose}{Whether or not to print informative messages or not}
 }
 \description{
 Note that the given data wrapper requires a trajectory and expression values

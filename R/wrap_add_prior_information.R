@@ -12,6 +12,7 @@
 #' @param n_branches Number of branches
 #' @param n_end_states Number of end states
 #' @param time The time for every cell
+#' @param verbose Whether or not to print informative messages or not
 #'
 #' @export
 #'
@@ -26,12 +27,11 @@ add_prior_information <- function(
   marker_feature_ids = NULL,
   n_branches = NULL,
   n_end_states = NULL,
-  time = NULL
+  time = NULL,
+  verbose = TRUE
 ) {
   prior_information <- lst(
-    # start_milestones,
     start_cells,
-    # end_milestones,
     end_cells,
     grouping_assignment,
     grouping_network,
@@ -41,15 +41,6 @@ add_prior_information <- function(
     n_end_states
   ) %>% discard(is.null)
 
-  # check input
-  # if(!is.null(start_milestones)) {
-  #   testthat::expect_true(is_wrapper_with_trajectory(task))
-  #   testthat::expect_true(all(start_milestones %in% task$milestone_ids))
-  # }
-  # if(!is.null(end_milestones)) {
-  #   testthat::expect_true(is_wrapper_with_trajectory(task))
-  #   testthat::expect_true(all(end_milestones %in% task$milestone_ids))
-  # }
   if (!is.null(start_cells)) {
     testthat::expect_true(all(start_cells %in% task$cell_ids))
   }
@@ -73,7 +64,7 @@ add_prior_information <- function(
   }
 
   if (is_wrapper_with_trajectory(task) && is_wrapper_with_expression(task)) {
-    message("Calculating prior information using trajectory")
+    if (verbose) message("Calculating prior information using trajectory")
 
     # compute prior information and add it to the wrapper
     calculated_prior_information <-
