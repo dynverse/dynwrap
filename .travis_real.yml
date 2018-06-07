@@ -24,7 +24,10 @@ install:
  - if [ `git branch | grep '* master' | wc -l` == 0 ]; then sed -i 's#\(dynverse/[^, ]*\)#\1@devel#' DESCRIPTION; fi
  - R -e 'if ("devtools" %in% rownames(installed.packages())) update.packages(oldPkgs = "devtools", ask = FALSE) else install.packages("devtools")'
  - R -e 'devtools::install_cran("covr")'
+ - R -e 'setRepositories(ind = 1:2)'
+ - R -e 'devtools::install(dependencies = T, upgrade = T)'
 script:
- - echo No R CMD check since this is an init.
+- R CMD build .
+- R CMD check *tar.gz
 after_success:
- - echo Init 0 succeeded!
+ - R -e 'covr::codecov()'

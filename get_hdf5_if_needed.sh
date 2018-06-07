@@ -22,10 +22,4 @@ else
         popd
         popd
     fi
-
-    sudo cp $HDF5_DIR/bin/* /usr/local/bin/
-    sudo cp $HDF5_DIR/lib/* /usr/local/lib/
-    sudo cp $HDF5_DIR/include/* /usr/local/include/
-
-    R -e "install.packages('hdf5r')"
 fi
