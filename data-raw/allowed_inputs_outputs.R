@@ -38,6 +38,7 @@ allowed_outputs <- map_df(add_ids, function(add_id) {
 })
 
 # allowed inputs --------------------------------
+# will use expression/counts and all priors EXCEPT task
 data(priors, package = "dynwrap", envir = environment())
 
 allowed_inputs <- tribble(
@@ -46,6 +47,9 @@ allowed_inputs <- tribble(
   "counts", "Raw counts matrix"
 ) %>% bind_rows(
   priors %>% select(input_id = prior_id2, description = description)
-)
+) %>%
+  filter(
+    !input_id %in% c("task")
+  )
 
 usethis::use_data(allowed_outputs, allowed_inputs, overwrite = TRUE)

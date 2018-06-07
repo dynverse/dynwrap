@@ -101,7 +101,32 @@ These requested required or optional inputs can be:
 
 ```{r, echo=FALSE}
 data(allowed_inputs, package="dynwrap")
+
+# find example files
+found_input_example_files <- list.files(devtools:::shim_system.file("example_inputs/text/", package="dynwrap"))
+input_examples <- set_names(
+  found_input_example_files, 
+  tools::file_path_sans_ext(found_input_example_files)
+)
+
+# wrap example files around a url
+input_example_url <- function(input_id) {
+  if(input_id %in% names(input_examples)) {
+    glue::glue("[{input_id}](https://github.com/dynverse/dynwrap/blob/master/inst/example_inputs/text/{input_examples[[input_id]]})")
+  } else {
+    input_id
+  }
+}
+
+# put everything in a table
 allowed_inputs %>% 
+  mutate(
+    input_id = map_chr(input_id, input_example_url)
+  ) %>% 
+  select(
+    input_id, 
+    description,
+  ) %>% 
   knitr::kable()
 ```
 
