@@ -1,0 +1,19 @@
+---
+title: "Transferring files from and to the docker"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Transferring files from and to the docker}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, echo=FALSE, message=FALSE}
+library(dplyr)
+library(readr)
+library(purrr)
+```
+
+```{r}
+```
+
