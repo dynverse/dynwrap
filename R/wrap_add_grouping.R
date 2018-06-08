@@ -95,7 +95,7 @@ get_grouping <- function(model, grouping = NULL) {
 process_grouping <- function(model, grouping) {
   if (is.data.frame(grouping) && all(c("group_id", "cell_id") %in% colnames(grouping))) {
     # dataframe
-    grouping <- set_names(grouping$group_id, grouping$cell_id)
+    grouping <- set_names(as.character(grouping$group_id), grouping$cell_id)
   } else if (length(grouping) == length(model$cell_ids)) {
     # named vector of all cells
   } else if (length(grouping) == length(names(grouping))) {

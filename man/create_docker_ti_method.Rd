@@ -27,6 +27,5 @@ Optional, as the definition file will be automatically loaded from the images \c
 \item{definition_location}{The location of the definition file within the image}
 }
 \description{
-\code{create_docker_ti_method} will use a local docker image, \code{pull_docker_ti_method} will
-pull the latest docker image from the \href{https://hub.docker.com/}{docker hub}
+These functions create a TI method from a docker image, either locally (\code{create_docker_ti_method}) or from \href{https://hub.docker.com/}{docker hub}  \code{pull_docker_ti_method}.
 }

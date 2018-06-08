@@ -79,10 +79,11 @@ wrap_text <- function(model, output_ids, dir_output) {
     }
 
     # also add extra params for this output
-    if(file.exists(file.path(dir_output, output_id, "params.json"))) {
+    matching <- stringr::str_subset(files, glue::glue(".*{arg}[_/]params.json"))
+    if (length(matching)) {
       output_oi <- c(
         output_oi,
-        jsonlite::read_json(file.path(dir_output, output_id, "params.json"))
+        jsonlite::read_json(first(matching))
       )
     }
 
@@ -96,50 +97,6 @@ wrap_text <- function(model, output_ids, dir_output) {
   }
   model
 }
-
-
-
-
-
-#' @rdname wrap_output
-wrap_hdf5 <- function(model, output_ids, dir_output) {
-  output <- read_rds(file.path(dir_output, "output.rds"))
-
-  for (output_id in output_ids) {
-    processor <- get_output_processor(output_id)
-
-    # get output from output[[output_id]]
-    inner_output_ids <- intersect(processor$args, names(output[[output_id]]))
-    output_oi <- output[[output_id]][inner_output_ids]
-
-    # get output from output, but don't select parts which are already in the output_oi
-    outer_output_ids <- setdiff(intersect(processor$args, names(output)), names(output_oi))
-    output_oi <- c(
-      output_oi,
-      output[outer_output_ids]
-    )
-
-    # also add extra params
-    if(!is.null(output[[output_id]]) && !is.null(output[[output_id]]$params)) {
-      output_oi <- c(
-        output_oi,
-        as.list(output[[output_oi]]$params)
-      )
-    }
-
-    # always give model as first argument
-    output_oi <- c(
-      list(model),
-      output_oi
-    )
-
-    model <- invoke(processor$processor, output_oi)
-  }
-  model
-}
-
-
-
 
 #' @rdname wrap_output
 wrap_feather <- function(model, output_ids, dir_output) {
@@ -170,7 +127,7 @@ wrap_feather <- function(model, output_ids, dir_output) {
     }
 
     # feather can only save tibbles, if something else needs to be saved it will be saved as a one-column tibble with colname equal to output_id
-    # here we simplify this again
+    # here we simplify this again to a vector
     output_oi <- map2(output_oi, names(output_oi), function(x, name) {
       if(is.data.frame(x) && ncol(x) == 1 && colnames(x) == name) {
         x[[name]]

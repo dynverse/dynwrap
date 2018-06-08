@@ -168,8 +168,7 @@ create_image_ti_method <- function(
 
 #' Create a TI method from a docker image
 #'
-#' `create_docker_ti_method` will use a local docker image, `pull_docker_ti_method` will
-#' pull the latest docker image from the [docker hub](https://hub.docker.com/)
+#' These functions create a TI method from a docker image, either locally (`create_docker_ti_method`) or from [docker hub](https://hub.docker.com/)  `pull_docker_ti_method`.
 #'
 #' @param image The name of the docker image, eg. `dynverse/comp1`. Can contain tags such as `dynverse/comp1:R_feather`
 #' @param definition The method definition, a list containing the name, input, output and parameters of a method.
@@ -187,8 +186,7 @@ create_docker_ti_method <- function(
 
 #' Create a TI method from a singularity image
 #'
-#' `create_singularity_ti_method` will use a local singularity image, `pull_singularity_ti_method`
-#' (not yet implemented) will pull the latest singularity image from the [singularity hub](https://singularity-hub.org/)
+#' This function creates a TI method from a singularity image. This image can be build using `singularity build` from a docker image (eg. `singularity build comp1.simg docker://dynverse/comp1`)
 #'
 #' @param image The location of the singularity image file, eg. `comp1.simg`.
 #' @param definition The method definition, a list containing the name, input, output and parameters of a method.
@@ -199,6 +197,9 @@ create_singularity_ti_method <- function(
   image,
   definition = extract_definition_from_singularity_image(image)
 ) {
+  # get absolutate path to image
+  image <- normalizePath(image)
+
   create_image_ti_method(image, definition, "singularity")
 }
 
