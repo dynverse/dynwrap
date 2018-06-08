@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Constructs a trajectory by projecting cells within a dimensionality reduction onto a backbone formed by a milestone network. Optionally, a cell grouping can be given which will restrict the edges on which a cell can be projected. — add_dimred_projection • dynwrap</title>
+<title>Create a TI method from a singularity image — create_singularity_ti_method • dynwrap</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,10 @@
 
 
 
-<meta property="og:title" content="Constructs a trajectory by projecting cells within a dimensionality reduction onto a backbone formed by a milestone network. Optionally, a cell grouping can be given which will restrict the edges on which a cell can be projected. — add_dimred_projection" />
+<meta property="og:title" content="Create a TI method from a singularity image — create_singularity_ti_method" />
 
-<meta property="og:description" content="This function will generate the milestone_network and progressions." />
+<meta property="og:description" content="create_singularity_ti_method will use a local singularity image, pull_singularity_ti_method
+(not yet implemented) will pull the latest singularity image from the singularity hub" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -115,61 +116,41 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Constructs a trajectory by projecting cells within a dimensionality reduction onto a backbone formed by a milestone network. Optionally, a cell grouping can be given which will restrict the edges on which a cell can be projected.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/wrap_add_dimred_projection.R'><code>R/wrap_add_dimred_projection.R</code></a></small>
-    <div class="hidden name"><code>add_dimred_projection.Rd</code></div>
+    <h1>Create a TI method from a singularity image</h1>
+    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/ti_create_image_method.R'><code>R/ti_create_image_method.R</code></a></small>
+    <div class="hidden name"><code>create_singularity_ti_method.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function will generate the milestone_network and progressions.</p>
+    <p><code>create_singularity_ti_method</code> will use a local singularity image, <code>pull_singularity_ti_method</code>
+(not yet implemented) will pull the latest singularity image from the <a href='https://singularity-hub.org/'>singularity hub</a></p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>add_dimred_projection</span>(<span class='no'>model</span>, <span class='kw'>milestone_ids</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>milestone_network</span>, <span class='no'>dimred</span>,
-  <span class='no'>dimred_milestones</span>, <span class='kw'>grouping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>num_segments_per_edge</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>create_singularity_ti_method</span>(<span class='no'>image</span>,
+  <span class='kw'>definition</span> <span class='kw'>=</span> <span class='fu'>extract_definition_from_singularity_image</span>(<span class='no'>image</span>))
+
+<span class='fu'>extract_definition_from_singularity_image</span>(<span class='no'>image</span>,
+  <span class='kw'>definition_location</span> <span class='kw'>=</span> <span class='st'>"/code/definition.yml"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>model</th>
-      <td><p>The model to which the trajectory will be added.</p></td>
+      <th>image</th>
+      <td><p>The location of the singularity image file, eg. <code>comp1.simg</code>.</p></td>
     </tr>
     <tr>
-      <th>milestone_ids</th>
-      <td><p>The ids of the milestones in the trajectory. Type: Character vector.</p></td>
+      <th>definition</th>
+      <td><p>The method definition, a list containing the name, input, output and parameters of a method.
+Optional, as the definition file will be automatically loaded from the images <code>/code/definition.yml</code> using extract_definition_from_singularity_image.</p></td>
     </tr>
     <tr>
-      <th>milestone_network</th>
-      <td><p>The network of the milestones.
-Type: Data frame(from = character, to = character, length = numeric, directed = logical).</p></td>
-    </tr>
-    <tr>
-      <th>dimred</th>
-      <td><p>The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction</p></td>
-    </tr>
-    <tr>
-      <th>dimred_milestones</th>
-      <td><p>An optional dimensionality reduction of the milestones.</p></td>
-    </tr>
-    <tr>
-      <th>grouping</th>
-      <td><p>A grouping of the cells, can be a named vector or a dataframe with group_id (character) and cell_id (character)</p></td>
-    </tr>
-    <tr>
-      <th>num_segments_per_edge</th>
-      <td><p>The number of pieces each milestone transition will be split info for the calculation of the percentages.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>extra information to be stored in the wrapper.</p></td>
+      <th>definition_location</th>
+      <td><p>The location of the definition file within the image</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>The trajectory model</p>
     
 
   </div>
@@ -177,9 +158,7 @@ Type: Data frame(from = character, to = character, length = numeric, directed = 
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>

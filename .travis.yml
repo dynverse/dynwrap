@@ -13,7 +13,7 @@ before_install:
   - echo $HDF5_DIR
   - export HDF5_VERSION=1.10.1
   - echo $HDF5_VERSION
-  - source get_hdf5_if_needed.sh
+  - source .travis_get_hdf5_if_needed.sh
   - ls -lRa $HDF5_DIR
   - sudo cp $HDF5_DIR/bin/* /usr/bin/
   - sudo cp $HDF5_DIR/lib/* /usr/lib/
@@ -26,7 +26,7 @@ install:
  - R -e 'setRepositories(ind = 1:2)'
  - R -e 'devtools::install(dependencies = T, upgrade = T)'
 script:
-- R CMD build .
-- R CMD check *tar.gz
+  - R CMD build .
+  - R CMD check *tar.gz
 after_success:
  - R -e 'covr::codecov()'

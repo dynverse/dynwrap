@@ -8,3 +8,7 @@ reference:
   - title: "Running a TI method"
     contents:
       - matches("infer_*")
+articles:
+  - title: "Creating a TI method"
+    contents:
+      - matches("create_*")

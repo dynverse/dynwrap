@@ -19,7 +19,7 @@ Type: Data frame(from = character, to = character, length = numeric, directed = 
 
 \item{dimred_milestones}{An optional dimensionality reduction of the milestones.}
 
-\item{grouping}{A grouping of the cells, can be}
+\item{grouping}{A grouping of the cells, can be a named vector or a dataframe with group_id (character) and cell_id (character)}
 
 \item{num_segments_per_edge}{The number of pieces each milestone transition will be split info for the calculation of the percentages.}
 

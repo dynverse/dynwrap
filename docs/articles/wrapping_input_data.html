@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Transferring files from and to the docker • dynwrap</title>
+<title>Creating a TI method using docker • dynwrap</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Transferring files from and to the docker">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Creating a TI method using docker">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -60,6 +60,9 @@
     <li>
       <a href="../articles/create_ti_method_r.html">Creating a TI method within R</a>
     </li>
+    <li>
+      <a href="../articles/wrapping_input_data.html">Creating a TI method using docker</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -82,60 +85,18 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Transferring files from and to the docker</h1>
+      <h1>Creating a TI method using docker</h1>
             
             <h4 class="date">2018-06-08</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/dynverse/dynwrap/blob/master/vignettes/create_ti_method_docker_file_transfer.Rmd"><code>vignettes/create_ti_method_docker_file_transfer.Rmd</code></a></small>
-      <div class="hidden name"><code>create_ti_method_docker_file_transfer.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/dynverse/dynwrap/blob/master/vignettes/wrapping_input_data.Rmd"><code>vignettes/wrapping_input_data.Rmd</code></a></small>
+      <div class="hidden name"><code>wrapping_input_data.Rmd</code></div>
 
     </div>
 
     
     
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># # generate tasks</span>
-<span class="co"># n_genes &lt;- 10</span>
-<span class="co"># tasks &lt;- map(round(seq(10, 10, length.out = 1)), function(n_cells) {</span>
-<span class="co">#   expression &lt;- matrix(runif(n_cells * n_genes), nrow=n_cells, ncol = n_genes)</span>
-<span class="co">#   rownames(expression) &lt;- paste0("C", seq_len(n_cells))</span>
-<span class="co">#   colnames(expression) &lt;- paste0("G", seq_len(n_genes))</span>
-<span class="co">#   wrap_expression(expression, expression)</span>
-<span class="co"># })</span>
-<span class="co"># task_design &lt;- tibble(</span>
-<span class="co">#   task = tasks,</span>
-<span class="co">#   n_cells = map_int(tasks, ~nrow(.$expression))</span>
-<span class="co"># ) %&gt;% </span>
-<span class="co">#   mutate(task_ix = row_number())</span>
-<span class="co"># </span>
-<span class="co"># # methods</span>
-<span class="co"># input_formats &lt;- formals(dynwrap:::save_inputs)$input_format %&gt;% eval</span>
-<span class="co"># output_formats &lt;- formals(dynwrap:::wrap_output)$output_format %&gt;% eval</span>
-<span class="co"># definition &lt;- extract_definition_from_docker_image("dynverse/clustermst")</span>
-<span class="co"># method_design &lt;- crossing(</span>
-<span class="co">#   tibble(input_format = input_formats),</span>
-<span class="co">#   tibble(output_format = output_formats),</span>
-<span class="co"># ) %&gt;%</span>
-<span class="co">#   mutate(</span>
-<span class="co">#     method = pmap(., function(input_format, output_format, ...) {</span>
-<span class="co">#       definition$output$format &lt;- output_format</span>
-<span class="co">#       definition$input$format &lt;- input_format</span>
-<span class="co">#       create_docker_ti_method("dynverse/clustermst", definition)()</span>
-<span class="co">#   }),</span>
-<span class="co">#   method_ix = row_number()</span>
-<span class="co"># )</span>
-<span class="co"># </span>
-<span class="co"># # do TI</span>
-<span class="co"># output &lt;- infer_trajectories(tasks, method_design$method)</span>
-<span class="co"># models &lt;- output %&gt;%</span>
-<span class="co">#   left_join(task_design %&gt;% select(task_ix, n_cells), "task_ix") %&gt;%</span>
-<span class="co">#   left_join(method_design, "method_ix") %&gt;%</span>
-<span class="co">#   mutate(time = map_dbl(summary, "time_method"))</span>
-<span class="co"># </span>
-<span class="co"># # plot</span>
-<span class="co"># models %&gt;% </span>
-<span class="co">#   filter(n_cells == max(n_cells)) %&gt;% </span>
-<span class="co">#   ggplot(aes(input_format, output_format)) +</span>
-<span class="co">#     geom_tile(aes(fill = time))</span></code></pre></div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

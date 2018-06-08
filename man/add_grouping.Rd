@@ -6,7 +6,7 @@
 \alias{get_grouping}
 \title{Add a cell grouping to a data wrapper}
 \usage{
-add_grouping(model, group_ids, grouping = NULL, ...)
+add_grouping(model, grouping, group_ids = NULL, ...)
 
 is_wrapper_with_grouping(model)
 
@@ -15,9 +15,9 @@ get_grouping(model, grouping = NULL)
 \arguments{
 \item{model}{The model to which the grouping will be added.}
 
-\item{group_ids}{All group_ids, optional}
+\item{grouping}{A grouping of the cells, can be a named vector or a dataframe with group_id (character) and cell_id (character)}
 
-\item{grouping}{A grouping of the cells, can be}
+\item{group_ids}{All group_ids, optional}
 
 \item{...}{Extra information to be stored in the wrapper.}
 }

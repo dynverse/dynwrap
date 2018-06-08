@@ -111,6 +111,8 @@ is_wrapper_with_prior_information <- function(object) {
 #' @inheritParams add_expression
 #' @param marker_fdr Maximal FDR value for a gene to be considered a marker
 #'
+#' @importFrom utils installed.packages head
+#'
 #' @export
 generate_prior_information <- function(
   cell_ids,
@@ -201,7 +203,7 @@ generate_prior_information <- function(
       filter(!housekeeping) %>%
       pull(feature_id)
   } else {
-    if ("scran" %in% rownames(installed.packages())) {
+    if ("scran" %in% rownames(utils::installed.packages())) {
       findMarkers <- get("findMarkers", "package:scran")
       markers <- findMarkers(t(expression), grouping_assignment %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
 
@@ -213,7 +215,7 @@ generate_prior_information <- function(
     } else {
       warning("scran should be installed to determine marker features, will simply order by standard deviation")
 
-      marker_feature_ids <- apply(expression, 2, sd) %>% sort() %>% rownames() %>% {head(., round(length(.)*0.1))}
+      marker_feature_ids <- apply(expression, 2, sd) %>% sort() %>% rownames() %>% {utils::head(., round(length(.)*0.1))}
     }
   }
 
@@ -229,14 +231,14 @@ generate_prior_information <- function(
   ## TIME AND TIME COURSE ##
   time <-
     if (!is.null(cell_info) && "simulationtime" %in% colnames(cell_info)) {
-      setNames(cell_info$simulationtime, cell_info$cell_id)
+      set_names(cell_info$simulationtime, cell_info$cell_id)
     } else {
       NULL
     }
 
   timecourse <-
     if (!is.null(cell_info) && "timepoint" %in% colnames(cell_info)) {
-      setNames(cell_info$timepoint, cell_info$cell_id)
+      set_names(cell_info$timepoint, cell_info$cell_id)
     } else {
       NULL
     }
