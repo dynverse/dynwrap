@@ -25,5 +25,8 @@ install:
  - R -e 'devtools::install_cran("covr")'
  - R -e 'setRepositories(ind = 1:2)'
  - R -e 'devtools::install(dependencies = T, upgrade = T)'
+script:
+  - R CMD build .
+  - R CMD check *tar.gz
 after_success:
  - R -e 'covr::codecov()'
