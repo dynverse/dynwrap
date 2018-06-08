@@ -3,3 +3,6 @@
 ^\.travis
 ^\.git$
 ^_pkgdown\.yml$
+^data-raw$
+^docs$
+^.travis_get_hdf5_if_needed.sh$

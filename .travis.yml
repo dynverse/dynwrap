@@ -13,7 +13,7 @@ before_install:
   - echo $HDF5_DIR
   - export HDF5_VERSION=1.10.1
   - echo $HDF5_VERSION
-  - source get_hdf5_if_needed.sh
+  - source .travis_get_hdf5_if_needed.sh
   - ls -lRa $HDF5_DIR
   - sudo cp $HDF5_DIR/bin/* /usr/bin/
   - sudo cp $HDF5_DIR/lib/* /usr/lib/
