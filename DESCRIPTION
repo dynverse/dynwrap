@@ -75,7 +75,7 @@ Collate:
     'simplify_igraph_network.R'
     'ti_create_method.R'
     'ti_comp1.R'
-    'ti_create_docker_method.R'
+    'ti_create_image_method.R'
     'ti_infer_trajectory.R'
     'ti_parse_parameter_definition.R'
     'wrap_add_cell_graph.R'

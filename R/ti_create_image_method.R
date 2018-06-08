@@ -172,7 +172,7 @@ create_image_ti_method <- function(
 #' `create_docker_ti_method` will use a local docker image, `pull_docker_ti_method` will pull the latest docker image from the [docker hub](https://hub.docker.com/)
 #'
 #' @param image The name of the docker image, eg. `dynverse/comp1`. Can contain tags such as `dynvezrse/comp1:R_feather`
-#' @param definition The method definition, a list containing the name, input, output and parameters of a method. Optional, as the definition file will be automatically loaded from the images `/code/definition.yml` using `extract_definition_from_image`.
+#' @param definition The method definition, a list containing the name, input, output and parameters of a method. Optional, as the definition file will be automatically loaded from the images `/code/definition.yml` using `extract_definition_from_docker_image`.
 #' @param docker_client Optional, a [stevedore::docker_client()]
 #'
 #' @export
@@ -189,7 +189,7 @@ create_docker_ti_method <- function(
 #' `create_singularity_ti_method` will use a local singularity image, `pull_singularity_ti_method` (not yet implemented) will pull the latest singularity image from the [singularity hub](https://singularity-hub.org/)
 #'
 #' @param image The location of the singularity image file, eg. `comp1.simg`.
-#' @param definition The method definition, a list containing the name, input, output and parameters of a method. Optional, as the definition file will be automatically loaded from the images `/code/definition.yml` using `extract_definition_from_image`.
+#' @param definition The method definition, a list containing the name, input, output and parameters of a method. Optional, as the definition file will be automatically loaded from the images `/code/definition.yml` using `extract_definition_from_singularity_image`.
 #'
 #' @export
 create_singularity_ti_method <- function(
