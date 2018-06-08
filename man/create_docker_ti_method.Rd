@@ -2,21 +2,29 @@
 % Please edit documentation in R/ti_create_docker_method.R
 \name{create_docker_ti_method}
 \alias{create_docker_ti_method}
+\alias{extract_definition_from_docker_image}
 \alias{pull_docker_ti_method}
-\title{Create a TI method from a docker(hub) image}
+\title{Create a TI method from a docker image}
 \usage{
-create_docker_ti_method(image, definition = load_definition_from_image(image,
-  docker_client = docker_client), docker_client = stevedore::docker_client())
+create_docker_ti_method(image,
+  definition = extract_definition_from_docker_image(image),
+  docker_client = stevedore::docker_client())
+
+extract_definition_from_docker_image(image,
+  definition_location = "/code/definition.yml",
+  docker_client = stevedore::docker_client())
 
 pull_docker_ti_method(image, docker_client = stevedore::docker_client())
 }
 \arguments{
-\item{image}{The name of the image. Required}
+\item{image}{The name of the docker image, eg. \code{dynverse/comp1}. Can contain tags such as \code{dynvezrse/comp1:R_feather}}
 
-\item{definition}{The method definition, a list containing the name, image, input, output and parameters of a method. Optional, as the definition file will be automatically loaded from the image's \code{/code/definition.yml} using \link{load_definition_from_image}.}
+\item{definition}{The method definition, a list containing the name, input, output and parameters of a method. Optional, as the definition file will be automatically loaded from the images \code{/code/definition.yml} using \code{extract_definition_from_image}.}
 
 \item{docker_client}{Optional, a \code{\link[stevedore:docker_client]{stevedore::docker_client()}}}
+
+\item{definition_location}{The location of the definition file within the image}
 }
 \description{
-\code{create_docker_ti_method} will use a local docker image, \code{pull_docker_ti_method} will pull the latest docker image from the docker hub
+\code{create_docker_ti_method} will use a local docker image, \code{pull_docker_ti_method} will pull the latest docker image from the \href{https://hub.docker.com/}{docker hub}
 }
