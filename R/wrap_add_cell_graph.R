@@ -1,4 +1,4 @@
-#' Constructs a trajectory using a graph between cell, by mapping cells onto a set of backbone cells.
+#' Constructs a trajectory using a graph between cells, by mapping cells onto a set of backbone cells.
 #'
 #' This function will generate the milestone_network and progressions.
 #'
