@@ -131,10 +131,10 @@ create_image_ti_method <- function(
   } else {
     run_container <- function(image, volumes, debug) {
       if (debug) {
-        cat(glue("Debug: ", crayon::bold("singularity exec -B {glue::collapse(volumes, ',')} {normalizePath(image)} bash \n")))
+        cat(glue("Debug: ", crayon::bold("singularity exec -B {glue::collapse(volumes, ',')} {image} bash \n")))
       }
 
-      system(glue("singularity run -B {glue::collapse(volumes, ',')} {normalizePath(image)}"))
+      system(glue("singularity run -B {glue::collapse(volumes, ',')} {image}"))
     }
   }
 
@@ -198,6 +198,9 @@ create_singularity_ti_method <- function(
   image,
   definition = extract_definition_from_singularity_image(image)
 ) {
+  # get absolutate path to image
+  image <- normalizePath(image)
+
   create_image_ti_method(image, definition, "singularity")
 }
 
