@@ -131,10 +131,10 @@ create_image_ti_method <- function(
   } else {
     run_container <- function(image, volumes, debug) {
       if (debug) {
-        cat(glue("Debug: ", crayon::bold("singularity exec -B {glue::collapse(volumes, ',')} {image} bash \n")))
+        cat(glue("Debug: ", crayon::bold("singularity exec -B {glue::collapse(volumes, ',')} {normalizePath(image)} bash \n")))
       }
 
-      system(glue("singularity run -B {glue::collapse(volumes, ',')} {image}"))
+      system(glue("singularity run -B {glue::collapse(volumes, ',')} {normalizePath(image)}"))
     }
   }
 
@@ -168,8 +168,7 @@ create_image_ti_method <- function(
 
 #' Create a TI method from a docker image
 #'
-#' `create_docker_ti_method` will use a local docker image, `pull_docker_ti_method` will
-#' pull the latest docker image from the [docker hub](https://hub.docker.com/)
+#' These functions create a TI method from a docker image, either locally (`create_docker_ti_method`) or from [docker hub](https://hub.docker.com/)  `pull_docker_ti_method`.
 #'
 #' @param image The name of the docker image, eg. `dynverse/comp1`. Can contain tags such as `dynverse/comp1:R_feather`
 #' @param definition The method definition, a list containing the name, input, output and parameters of a method.
