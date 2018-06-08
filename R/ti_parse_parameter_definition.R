@@ -75,33 +75,34 @@ parse_parameter_definition <- function(parameter_definition) {
 
 
 
-
+#' @importFrom stats pnorm pexp punif
 get_distribution2uniform <- function(param) {
   switch(
     param$distribution,
     normal = {
       if(is.null(param$mean)) {stop("Provide mean when using a normal distributed parameter")}
       if(is.null(param$sd)) {stop("Provide sd when using a normal distributed parameter")}
-      function(q) pnorm(q, mean = param$mean, sd = param$sd)
+      function(q) stats::pnorm(q, mean = param$mean, sd = param$sd)
     },
     exponential = {
       if(is.null(param$rate)) {stop("Provide rate when using a normal distributed parameter")}
-      function(q) pexp(q, rate = param$rate)
+      function(q) stats::pexp(q, rate = param$rate)
     },
     uniform = {
       if(param$lower == -Inf) {stop("Provide lower boundary when using an uniformly distributed parameter")}
       if(param$upper == -Inf) {stop("Provide upper boundary when using an uniformly distributed parameter")}
-      function(q) punif(q, param$lower, param$upper)
+      function(q) stats::punif(q, param$lower, param$upper)
     }
   )
 }
 
+#' @importFrom stats qnorm qexp qunif
 get_uniform2distribution <- function(param) {
   uniform2distribution <- switch(
     param$distribution,
-    normal = function(p) qnorm(p, mean = param$mean, sd = param$sd),
-    exponential = function(p) qexp(p, rate = param$rate),
-    uniform = function(p) qunif(p, param$lower, param$upper)
+    normal = function(p) stats::qnorm(p, mean = param$mean, sd = param$sd),
+    exponential = function(p) stats::qexp(p, rate = param$rate),
+    uniform = function(p) stats::qunif(p, param$lower, param$upper)
   )
 
   if (param$type %in% c("integer", "integer_vector")) {

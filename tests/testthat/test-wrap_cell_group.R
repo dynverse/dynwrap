@@ -4,7 +4,7 @@ context("Testing add_grouping")
 id <- "a"
 cell_ids <- letters
 group_ids <- LETTERS[1:5]
-grouping <- sample(group_ids, length(cell_ids), replace = T) %>% setNames(cell_ids)
+grouping <- sample(group_ids, length(cell_ids), replace = T) %>% set_names(cell_ids)
 extras <- "banana"
 
 wr_orig <- wrap_data(
@@ -67,7 +67,7 @@ test_that("Testing add_grouping fails when groupings is not in the correct forma
     wr_orig %>%
       add_grouping(
         group_ids = group_ids,
-        grouping = rep(1, length(cell_ids)) %>% setNames(cell_ids),
+        grouping = rep(1, length(cell_ids)) %>% set_names(cell_ids),
         extras = extras
       )
   )

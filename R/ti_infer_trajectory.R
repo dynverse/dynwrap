@@ -16,7 +16,7 @@
 #' @param mc_cores The number of cores to use, allowing to parallellise the different tasks
 #' @param verbose Whether or not to print information output
 #'
-#' @importFrom utils capture.output
+#' @importFrom utils capture.output adist installed.packages
 #' @importFrom readr read_file
 #' @importFrom stringr str_length
 #' @importFrom parallel mclapply
@@ -46,7 +46,7 @@ infer_trajectories <- function(
     # names of method
 
     # get a list of all methods
-    packages <- if("dynmethods" %in% rownames(installed.packages())) {
+    packages <- if("dynmethods" %in% rownames(utils::installed.packages())) {
       c("dynmethods", "dynwrap")
     } else {
       "dynwrap"
@@ -58,7 +58,7 @@ infer_trajectories <- function(
       map_int(
         method,
         function(x) {
-          distances <- adist(x, c(all_desc$name, all_desc$short_name))
+          distances <- utils::adist(x, c(all_desc$name, all_desc$short_name))
           id <- as.integer(((which.min(distances)-1) %% nrow(all_desc)) + 1)
           if(min(distances) > 0) {
             message(stringr::str_glue("Fuzzy matching {x} -> {all_desc$name[[id]]} / {all_desc$short_name[[id]]}"))
@@ -466,6 +466,6 @@ get_ti_methods <- function(as_tibble = TRUE, packages = c("dynwrap")) {
   if (as_tibble) {
     list_as_tibble(ti_methods)
   } else {
-    ti_methods %>% setNames(ti_methods %>% map_chr(~.$short_name))
+    ti_methods %>% set_names(ti_methods %>% map_chr(~.$short_name))
   }
 }

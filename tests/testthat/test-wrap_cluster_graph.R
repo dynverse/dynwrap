@@ -4,7 +4,7 @@ context("Testing add_cluster_graph")
 id <- "a"
 cell_ids <- letters
 group_ids <- LETTERS[1:5]
-grouping <- sample(group_ids, length(cell_ids), replace = T) %>% setNames(cell_ids)
+grouping <- sample(group_ids, length(cell_ids), replace = T) %>% set_names(cell_ids)
 extras <- "banana"
 
 wr_without_grouping <- wrap_data(

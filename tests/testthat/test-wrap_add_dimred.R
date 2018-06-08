@@ -91,7 +91,7 @@ dimred_trajectory_segments <- cbind(
 )
 
 # clustering data
-grouping <- sample(milestone_ids, length(cell_ids), replace = TRUE) %>% setNames(cell_ids)
+grouping <- sample(milestone_ids, length(cell_ids), replace = TRUE) %>% set_names(cell_ids)
 
 
 test_that("Testing add_dimred", {

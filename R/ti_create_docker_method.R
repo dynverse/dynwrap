@@ -3,7 +3,8 @@
 #' `create_docker_ti_method` will use a local docker image, `pull_docker_ti_method` will pull the latest docker image from the docker hub
 #'
 #' @param image The name of the image. Required
-#' @param definition The method definition, a list containing the name, image, input, output and parameters of a method. Optional, as the definition file will be automatically loaded from the image's `/code/definition.yml` using [load_definition_from_image].
+#' @param definition The method definition, a list containing the name, image, input, output and parameters of a method.
+#'   Optional, as the definition file will be automatically loaded from the image's `/code/definition.yml` using \code{\link{load_definition_from_image}}.
 #' @param docker_client Optional, a [stevedore::docker_client()]
 #'
 #' @importFrom jsonlite write_json read_json
@@ -229,9 +230,10 @@ save_inputs <- function(
   write_json(params, file.path(dir_input, "params.json"), auto_unbox = TRUE)
 }
 
+#' @importFrom stats write.csv
 write_text_infer <- function(x, path) {
   if(is.matrix(x)) {
-    write.csv(x, paste0(path, ".csv"))
+    utils::write.csv(x, paste0(path, ".csv"))
   } else if (is.data.frame(x)) {
     write_csv(x, paste0(path, ".csv"))
   } else {
