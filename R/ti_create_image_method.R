@@ -27,7 +27,7 @@ create_image_ti_method <- function(
   testthat::expect_true(length(input_ids_required) > 0)
   testthat::expect_true(is.character(input_ids_required))
 
-  input_ids_optional <- definition$input$optional
+  input_ids_optional <- if (!is.null(definition$input$optional)) {definition$input$optional} else {character()}
   testthat::expect_true(is.character(input_ids_optional))
 
   input_ids <- c(input_ids_required, input_ids_optional)
