@@ -1,8 +1,8 @@
 #' Add a cell grouping to a data wrapper
 #'
 #' @param model The model to which the grouping will be added.
+#' @param grouping A grouping of the cells, can be a named vector or a dataframe with group_id (character) and cell_id (character)
 #' @param group_ids All group_ids, optional
-#' @param grouping A grouping of the cells, can be
 #' @param ... Extra information to be stored in the wrapper.
 #'
 #' @export
@@ -10,18 +10,12 @@
 #' @importFrom testthat expect_equal expect_is expect_true
 add_grouping <- function(
   model,
-  group_ids,
-  grouping = NULL,
+  grouping,
+  group_ids = NULL,
   ...
 ) {
-  # if grouping not provided, will use group_ids
-  if (is.null(grouping)) {
-    grouping <- group_ids
-    group_ids <- NULL
-  }
-
   # process the grouping
-  grouping <- get_grouping(model, grouping)
+  grouping <- process_grouping(model, grouping)
 
   # if grouping not provided, have to calculate group_ids here
   if(is.null(group_ids)) group_ids <- unique(grouping)

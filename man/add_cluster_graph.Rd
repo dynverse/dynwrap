@@ -11,7 +11,7 @@ add_cluster_graph(model, milestone_network, grouping = NULL, ...)
 
 \item{milestone_network}{A network of milestones.}
 
-\item{grouping}{A grouping of the cells, can be}
+\item{grouping}{A grouping of the cells, can be a named vector or a dataframe with group_id (character) and cell_id (character)}
 
 \item{...}{extra information to be stored in the wrapper.}
 }

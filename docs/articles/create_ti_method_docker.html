@@ -84,7 +84,7 @@
     <div class="page-header toc-ignore">
       <h1>Creating a TI method using docker</h1>
             
-            <h4 class="date">2018-06-07</h4>
+            <h4 class="date">2018-06-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dynverse/dynwrap/blob/master/vignettes/create_ti_method_docker.Rmd"><code>vignettes/create_ti_method_docker.Rmd</code></a></small>
       <div class="hidden name"><code>create_ti_method_docker.Rmd</code></div>
@@ -429,18 +429,24 @@
 <a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/text/dimred_milestones.csv">dimred_milestones</a><br>dimred_trajectory_segments<br>expression_source</td>
 </tr>
 <tr class="even">
+<td align="left">grouping</td>
+<td align="left">Add a cell grouping to a data wrapper</td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/text/grouping.csv">grouping</a></td>
+<td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/text/group_ids.json">group_ids</a></td>
+</tr>
+<tr class="odd">
 <td align="left">pseudotime</td>
 <td align="left">Add or calculate pseudotime as distance from the root</td>
 <td align="left"></td>
 <td align="left"><a href="https://github.com/dynverse/dynwrap/blob/master/inst/example_outputs/text/pseudotime.csv">pseudotime</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">root</td>
 <td align="left">Root the trajectory</td>
 <td align="left"></td>
 <td align="left">root_cell_id<br>root_milestone_id</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">waypoints</td>
 <td align="left">Add or create waypoints to a trajectory</td>
 <td align="left"></td>
@@ -520,7 +526,6 @@ ti_comp1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr
 <pre><code>## Pulling from dynverse/comp1 latest
 ## Digest: sha256:d69ab724a089e467a0bc74fa840f192f72a31e9dc92befd380c733746c6ec28f
 ## Status: Image is up to date for dynverse/comp1:latest</code></pre>
-<pre><code>## Extracting method definition from image definitions.yml file</code></pre>
 <p>Then we’ll use some test data</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ncells &lt;-<span class="st"> </span><span class="dv">1000</span>
 pseudotime &lt;-<span class="st"> </span><span class="kw">runif</span>(ncells)
@@ -546,23 +551,12 @@ task &lt;-<span class="st"> </span><span class="kw"><a href="../reference/wrap_e
 ) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/add_prior_information.html">add_prior_information</a></span>(<span class="dt">start_cells=</span>start_cells)</code></pre></div>
 <p>Now infer a trajectory</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model &lt;-<span class="st"> </span><span class="kw"><a href="../reference/infer_trajectories.html">infer_trajectory</a></span>(task, <span class="kw"><a href="../reference/ti_comp1.html">ti_comp1</a></span>())</code></pre></div>
-<pre><code>## input saved to /tmp/RtmpzUer8c/input: 
-##  expression.csv
-##  params.json
-## output saved in /tmp/RtmpzUer8c/output: 
-##  pseudotime.csv</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="st">"dynplot"</span> <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tibble/topics/rownames">rownames</a></span>(<span class="kw">installed.packages</span>())) {
   dynplot<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/dynplot/topics/plot_dimred">plot_dimred</a></span>(model, <span class="dt">color_cells =</span> <span class="st">"pseudotime"</span> , <span class="dt">expression_source =</span> task<span class="op">$</span>expression)
 }</code></pre></div>
 <p><img src="create_ti_method_docker_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
 <p>Give some optional prior information</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model &lt;-<span class="st"> </span><span class="kw"><a href="../reference/infer_trajectories.html">infer_trajectory</a></span>(task, <span class="kw"><a href="../reference/ti_comp1.html">ti_comp1</a></span>(), <span class="dt">give_priors =</span> <span class="st">"start_cells"</span>)</code></pre></div>
-<pre><code>## input saved to /tmp/RtmpzUer8c/input: 
-##  expression.csv
-##  params.json
-##  start_cells.json
-## output saved in /tmp/RtmpzUer8c/output: 
-##  pseudotime.csv</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="st">"dynplot"</span> <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tibble/topics/rownames">rownames</a></span>(<span class="kw">installed.packages</span>())) {
   dynplot<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/dynplot/topics/plot_dimred">plot_dimred</a></span>(model, <span class="dt">color_cells =</span> <span class="st">"pseudotime"</span> , <span class="dt">expression_source =</span> task<span class="op">$</span>expression)
 }</code></pre></div>

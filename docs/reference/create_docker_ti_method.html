@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a TI method from a docker(hub) image — create_docker_ti_method • dynwrap</title>
+<title>Create a TI method from a docker image — create_docker_ti_method • dynwrap</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,10 @@
 
 
 
-<meta property="og:title" content="Create a TI method from a docker(hub) image — create_docker_ti_method" />
+<meta property="og:title" content="Create a TI method from a docker image — create_docker_ti_method" />
 
-<meta property="og:description" content="create_docker_ti_method will use a local docker image, pull_docker_ti_method will pull the latest docker image from the docker hub" />
+<meta property="og:description" content="create_docker_ti_method will use a local docker image, pull_docker_ti_method will
+pull the latest docker image from the docker hub" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -115,21 +116,25 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a TI method from a docker(hub) image</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/ti_create_docker_method.R'><code>R/ti_create_docker_method.R</code></a></small>
+    <h1>Create a TI method from a docker image</h1>
+    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/ti_create_image_method.R'><code>R/ti_create_image_method.R</code></a></small>
     <div class="hidden name"><code>create_docker_ti_method.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p><code>create_docker_ti_method</code> will use a local docker image, <code>pull_docker_ti_method</code> will pull the latest docker image from the docker hub</p>
+    <p><code>create_docker_ti_method</code> will use a local docker image, <code>pull_docker_ti_method</code> will
+pull the latest docker image from the <a href='https://hub.docker.com/'>docker hub</a></p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>create_docker_ti_method</span>(<span class='no'>image</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>input_ids_required</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>input_ids_optional</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>input_format</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>output_ids</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>output_format</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>par_set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>definition</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>docker_client</span> <span class='kw'>=</span> <span class='kw pkg'>stevedore</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stevedore/topics/docker_client'>docker_client</a></span>())
+    <pre class="usage"><span class='fu'>create_docker_ti_method</span>(<span class='no'>image</span>,
+  <span class='kw'>definition</span> <span class='kw'>=</span> <span class='fu'>extract_definition_from_docker_image</span>(<span class='no'>image</span>),
+  <span class='kw'>docker_client</span> <span class='kw'>=</span> <span class='kw pkg'>stevedore</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stevedore/topics/docker_client'>docker_client</a></span>())
+
+<span class='fu'>extract_definition_from_docker_image</span>(<span class='no'>image</span>,
+  <span class='kw'>definition_location</span> <span class='kw'>=</span> <span class='st'>"/code/definition.yml"</span>,
+  <span class='kw'>docker_client</span> <span class='kw'>=</span> <span class='kw pkg'>stevedore</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stevedore/topics/docker_client'>docker_client</a></span>())
 
 <span class='fu'>pull_docker_ti_method</span>(<span class='no'>image</span>, <span class='kw'>docker_client</span> <span class='kw'>=</span> <span class='kw pkg'>stevedore</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stevedore/topics/docker_client'>docker_client</a></span>())</pre>
     
@@ -138,47 +143,20 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>image</th>
-      <td><p>The name of the image. Required</p></td>
-    </tr>
-    <tr>
-      <th>name</th>
-      <td><p>The name of the method. Optional, will be extracted from the image definition.yml file</p></td>
-    </tr>
-    <tr>
-      <th>input_ids_required</th>
-      <td><p>Names of required input data, such as expression, counts or some <a href='priors.html'>priors</a></p></td>
-    </tr>
-    <tr>
-      <th>input_ids_optional</th>
-      <td><p>Names of optional input data, such as expression, counts, or some <a href='priors.html'>priors</a></p></td>
-    </tr>
-    <tr>
-      <th>input_format</th>
-      <td><p>The format of the input, can be hdf5, text or rds</p></td>
-    </tr>
-    <tr>
-      <th>output_ids</th>
-      <td><p>Output generated by the method</p></td>
-    </tr>
-    <tr>
-      <th>output_format</th>
-      <td><p>The format of the output, can be hdf5, text or rds</p></td>
-    </tr>
-    <tr>
-      <th>par_set</th>
-      <td><p>The parameter set as created by <a href='http://www.rdocumentation.org/packages/ParamHelpers/topics/makeParamSet'>ParamHelpers::makeParamSet</a></p></td>
-    </tr>
-    <tr>
-      <th>parameters</th>
-      <td><p>A named list of parameters, containing the type of parameter and additional parameters such as lower and upper bounds, default value and/or possible values. Optional, will be extracted from the image definition.yml file</p></td>
+      <td><p>The name of the docker image, eg. <code>dynverse/comp1</code>. Can contain tags such as <code>dynverse/comp1:R_feather</code></p></td>
     </tr>
     <tr>
       <th>definition</th>
-      <td><p>A list containing the name, image, input, output and parameters of a method. Usually used for when these values are loaded from a yaml or json file</p></td>
+      <td><p>The method definition, a list containing the name, input, output and parameters of a method.
+Optional, as the definition file will be automatically loaded from the images <code>/code/definition.yml</code> using extract_definition_from_docker_image.</p></td>
     </tr>
     <tr>
       <th>docker_client</th>
       <td><p>Optional, a <code><a href='http://www.rdocumentation.org/packages/stevedore/topics/docker_client'>stevedore::docker_client()</a></code></p></td>
+    </tr>
+    <tr>
+      <th>definition_location</th>
+      <td><p>The location of the definition file within the image</p></td>
     </tr>
     </table>
     
