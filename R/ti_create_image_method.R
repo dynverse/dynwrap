@@ -1,23 +1,11 @@
-#' Create a TI method from a docker(hub) image
-#'
-#' `create_docker_ti_method` will use a local docker image, `pull_docker_ti_method` will pull the latest docker image from the docker hub
-#'
-#' @param image The name of the image. Required
-#' @param definition The method definition, a list containing the name, image, input, output and parameters of a method.
-#'   Optional, as the definition file will be automatically loaded from the image's `/code/definition.yml` automatically.
-#' @param docker_client Optional, a [stevedore::docker_client()]
-#'
 #' @importFrom jsonlite write_json read_json
-#' @importFrom glue glue
-#'
-#' @export
-create_docker_ti_method <- function(
+create_image_ti_method <- function(
   image,
-  definition = load_definition_from_image(image, docker_client = docker_client),
+  definition,
+  image_type = c("docker", "singularity"),
   docker_client = stevedore::docker_client()
 ) {
-  requireNamespace("crayon")
-  requireNamespace("yaml")
+  image_type <- match.arg(image_type)
 
   testthat::expect_s3_class(docker_client, "docker_client")
 
@@ -71,7 +59,7 @@ create_docker_ti_method <- function(
   testthat::expect_true(is.character(output_format))
 
   # define run_fun ------------------------------------------------------------------------
-  run_fun <- function() {
+  run_fun <- function(input_ids, param_ids, output_ids, run_container) {
     # create input directory
     dir_input <- file.path(tempdir(), "input")
     if(dir.exists(dir_input)) {
@@ -83,12 +71,16 @@ create_docker_ti_method <- function(
     # save data & params, see save_inputs function
     save_inputs(environment(), dir_input, input_format, input_ids, c(param_ids, "input_format", "output_format"))
 
-    # print provided input files
-    list.files(dir_input) %>%
-      crayon::bold() %>%
-      glue::collapse("\n\t") %>%
-      paste0("input saved to ", dir_input, ": \n\t", ., "\n") %>%
-      cat
+    if (verbose) {
+      # print provided input files
+      requireNamespace("crayon")
+      list.files(dir_input) %>%
+        crayon::bold() %>%
+        glue::collapse("\n\t") %>%
+        paste0("input saved to ", dir_input, ": \n\t", ., "\n") %>%
+        cat
+    }
+
 
     # create output directory
     dir_output <- file.path(tempdir(), "output")
@@ -98,26 +90,25 @@ create_docker_ti_method <- function(
       dir.create(dir_output)
     }
 
-    # run docker image
-    if (debug) {
-      cat(glue::glue("Debug: docker run --entrypoint 'bash' -it -v {dir_input}:/input -v {dir_output}:/output {image}\n\n"))
-    }
-
-    docker_client$container$run(
+    # run container
+    run_container(
       image,
       volumes = c(
         glue("{dir_input}:/input"),
         glue("{dir_output}:/output")
-      )
+      ),
+      debug
     )
 
-
-    # print found output files
-    list.files(dir_output) %>%
-      crayon::bold() %>%
-      glue::collapse("\n\t") %>%
-      paste0("output saved in ", dir_output, ": \n\t", ., "\n") %>%
-      cat
+    if (verbose) {
+      # print found output files
+      requireNamespace("crayon")
+      list.files(dir_output) %>%
+        crayon::bold() %>%
+        glue::collapse("\n\t") %>%
+        paste0("output saved in ", dir_output, ": \n\t", ., "\n") %>%
+        cat
+    }
 
     # wrap output
     if("counts" %in% input_ids) {cell_ids <- rownames(counts)} else {cell_ids <- rownames(expression)}
@@ -127,8 +118,28 @@ create_docker_ti_method <- function(
     model
   }
 
+  # define run_container function
+  if (image_type == "docker") {
+    run_container <- function(image, volumes, debug) {
+      if (debug) {
+        requireNamespace("crayon")
+        cat(glue("Debug: ", crayon::bold("docker run --entrypoint 'bash' -it {paste0(paste0('-v ', volumes), collapse = ' ')} {image}\n")))
+      }
+
+      docker_client$container$run(image, volumes = volumes)
+    }
+  } else {
+    run_container <- function(image, volumes, debug) {
+      if (debug) {
+        cat(glue("Debug: ", crayon::bold("singularity exec -B {glue::collapse(volumes, ',')} {image} bash \n")))
+      }
+
+      system(glue("singularity run -B {glue::collapse(volumes, ',')} {image}"))
+    }
+  }
+
   # adapt run_fun environment
-  environment(run_fun) <- list2env(lst(input_ids, param_ids, output_ids))
+  environment(run_fun) <- list2env(lst(input_format, input_ids, param_ids, output_format, output_ids, run_container))
 
   # adapt run_fun arguments, some hocus pocus going on here ;)
   # the `list(expr())` creates a required function argument
@@ -139,12 +150,9 @@ create_docker_ti_method <- function(
     rep(list(NULL), length(input_ids_optional)) %>% set_names(input_ids_optional),
     alist(
       docker_client = stevedore::docker_client(),
-      debug = FALSE
-    ), # default arguments (evaluated when running run_fun)
-    list(
-      output_format = output_format,
-      input_format = input_format
-    ) # default arguments (evaluated now)
+      debug = FALSE,
+      verbose = FALSE
+    ) # default arguments (evaluated when running run_fun)
   )
   formals(run_fun) <- arguments
 
@@ -157,18 +165,84 @@ create_docker_ti_method <- function(
   )
 }
 
-load_definition_from_image <- function(image, definition_location = "/code/definition.yml", docker_client = stevedore::docker_client()) {
+
+#' Create a TI method from a docker image
+#'
+#' `create_docker_ti_method` will use a local docker image, `pull_docker_ti_method` will
+#' pull the latest docker image from the [docker hub](https://hub.docker.com/)
+#'
+#' @param image The name of the docker image, eg. `dynverse/comp1`. Can contain tags such as `dynverse/comp1:R_feather`
+#' @param definition The method definition, a list containing the name, input, output and parameters of a method.
+#'   Optional, as the definition file will be automatically loaded from the images `/code/definition.yml` using [extract_definition_from_docker_image].
+#' @param docker_client Optional, a [stevedore::docker_client()]
+#'
+#' @export
+create_docker_ti_method <- function(
+  image,
+  definition = extract_definition_from_docker_image(image),
+  docker_client = stevedore::docker_client()
+) {
+  create_image_ti_method(image, definition, "docker", docker_client)
+}
+
+#' Create a TI method from a singularity image
+#'
+#' `create_singularity_ti_method` will use a local singularity image, `pull_singularity_ti_method`
+#' (not yet implemented) will pull the latest singularity image from the [singularity hub](https://singularity-hub.org/)
+#'
+#' @param image The location of the singularity image file, eg. `comp1.simg`.
+#' @param definition The method definition, a list containing the name, input, output and parameters of a method.
+#'  Optional, as the definition file will be automatically loaded from the images `/code/definition.yml` using [extract_definition_from_singularity_image].
+#'
+#' @export
+create_singularity_ti_method <- function(
+  image,
+  definition = extract_definition_from_singularity_image(image)
+) {
+  create_image_ti_method(image, definition, "singularity")
+}
+
+#' @rdname create_docker_ti_method
+#'
+#' @param definition_location The location of the definition file within the image
+#'
+#' @export
+extract_definition_from_docker_image <- function(
+  image,
+  definition_location = "/code/definition.yml",
+  docker_client = stevedore::docker_client()
+) {
+  requireNamespace("yaml")
+
   temp_container <- docker_client$container$create(
     image,
     "bash",
     entrypoint = "bash"
   )
-  definition_path <- tempfile()
-  system(glue("docker cp {temp_container$id()}:{definition_location} {definition_path}"))
+  definition_location_local <- tempfile()
+  system(glue("docker cp {temp_container$id()}:{definition_location} {definition_location_local}"))
   temp_container$remove()
 
-  definition <- yaml::read_yaml(definition_path)
+  definition <- yaml::read_yaml(definition_location_local)
+  definition
+}
 
+#' @rdname create_singularity_ti_method
+#' @param definition_location The location of the definition file within the image
+#'
+#' @export
+extract_definition_from_singularity_image <- function(
+  image,
+  definition_location = "/code/definition.yml"
+) {
+  requireNamespace("yaml")
+
+  definition_folder_local <- tempdir()
+  system(glue("singularity exec -B {definition_folder_local}:/tmp_definition {image} cp {definition_location} /tmp_definition"))
+
+  definition_location_local <- file.path(definition_folder_local, basename(definition_location))
+
+  definition <- yaml::read_yaml(definition_location_local)
   definition
 }
 

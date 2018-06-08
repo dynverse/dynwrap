@@ -111,7 +111,7 @@ is_wrapper_with_prior_information <- function(object) {
 #' @inheritParams add_expression
 #' @param marker_fdr Maximal FDR value for a gene to be considered a marker
 #'
-#' @importFrom utils installed.packages
+#' @importFrom utils installed.packages head
 #'
 #' @export
 generate_prior_information <- function(
@@ -215,7 +215,7 @@ generate_prior_information <- function(
     } else {
       warning("scran should be installed to determine marker features, will simply order by standard deviation")
 
-      marker_feature_ids <- apply(expression, 2, sd) %>% sort() %>% rownames() %>% {head(., round(length(.)*0.1))}
+      marker_feature_ids <- apply(expression, 2, sd) %>% sort() %>% rownames() %>% {utils::head(., round(length(.)*0.1))}
     }
   }
 
