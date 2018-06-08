@@ -460,7 +460,7 @@ test_that("Testing filtered cells", {
 
 
 test_that("Testing combination with add_grouping", {
-  grouping <- sample(milestone_ids, length(cell_ids), replace = TRUE) %>% setNames(cell_ids)
+  grouping <- sample(milestone_ids, length(cell_ids), replace = TRUE) %>% set_names(cell_ids)
 
   wr <-
     wrap_data(

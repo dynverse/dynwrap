@@ -14,10 +14,12 @@ extract_definition_from_singularity_image(image,
 \arguments{
 \item{image}{The location of the singularity image file, eg. \code{comp1.simg}.}
 
-\item{definition}{The method definition, a list containing the name, input, output and parameters of a method. Optional, as the definition file will be automatically loaded from the images \code{/code/definition.yml} using \code{extract_definition_from_singularity_image}.}
+\item{definition}{The method definition, a list containing the name, input, output and parameters of a method.
+Optional, as the definition file will be automatically loaded from the images \code{/code/definition.yml} using \link{extract_definition_from_singularity_image}.}
 
 \item{definition_location}{The location of the definition file within the image}
 }
 \description{
-\code{create_singularity_ti_method} will use a local singularity image, \code{pull_singularity_ti_method} (not yet implemented) will pull the latest singularity image from the \href{https://singularity-hub.org/}{singularity hub}
+\code{create_singularity_ti_method} will use a local singularity image, \code{pull_singularity_ti_method}
+(not yet implemented) will pull the latest singularity image from the \href{https://singularity-hub.org/}{singularity hub}
 }

@@ -200,7 +200,7 @@ test_that("Testing add_prior_information", {
 # with undirected cyclical dataset
 orig_cell_ids <- c("a", "b", "c", "d", "e", "f")
 cell_ids <- orig_cell_ids %>% map(~paste0(., seq_len(20))) %>% unlist()
-orig_map <- setNames(gsub("[0-9]+", "", cell_ids), cell_ids)
+orig_map <- set_names(gsub("[0-9]+", "", cell_ids), cell_ids)
 milestone_ids <- c("X", "Y", "Z")
 
 milestone_network <- tribble(

@@ -17,14 +17,16 @@ extract_definition_from_docker_image(image,
 pull_docker_ti_method(image, docker_client = stevedore::docker_client())
 }
 \arguments{
-\item{image}{The name of the docker image, eg. \code{dynverse/comp1}. Can contain tags such as \code{dynvezrse/comp1:R_feather}}
+\item{image}{The name of the docker image, eg. \code{dynverse/comp1}. Can contain tags such as \code{dynverse/comp1:R_feather}}
 
-\item{definition}{The method definition, a list containing the name, input, output and parameters of a method. Optional, as the definition file will be automatically loaded from the images \code{/code/definition.yml} using \code{extract_definition_from_docker_image}.}
+\item{definition}{The method definition, a list containing the name, input, output and parameters of a method.
+Optional, as the definition file will be automatically loaded from the images \code{/code/definition.yml} using \link{extract_definition_from_docker_image}.}
 
 \item{docker_client}{Optional, a \code{\link[stevedore:docker_client]{stevedore::docker_client()}}}
 
 \item{definition_location}{The location of the definition file within the image}
 }
 \description{
-\code{create_docker_ti_method} will use a local docker image, \code{pull_docker_ti_method} will pull the latest docker image from the \href{https://hub.docker.com/}{docker hub}
+\code{create_docker_ti_method} will use a local docker image, \code{pull_docker_ti_method} will
+pull the latest docker image from the \href{https://hub.docker.com/}{docker hub}
 }

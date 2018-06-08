@@ -33,7 +33,7 @@ milestone_network <- tribble(
 )
 
 # grouping info
-grouping <- sample(milestone_ids, length(cell_ids), replace = T) %>% setNames(cell_ids)
+grouping <- sample(milestone_ids, length(cell_ids), replace = T) %>% set_names(cell_ids)
 
 # dimred data
 num_dims <- round(runif(1, 3, 10))

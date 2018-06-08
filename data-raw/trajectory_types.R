@@ -117,7 +117,7 @@ trajectory_type_dag <- bind_rows(
 trajectory_type_ancestors <- trajectory_type_dag %>%
   igraph::ego(99999999, mode = "out") %>%
   map(names) %>%
-  setNames(names(igraph::V(trajectory_type_dag)))
+  set_names(names(igraph::V(trajectory_type_dag)))
 
 trajectory_types$ancestors <- trajectory_type_ancestors[trajectory_types$id]
 
