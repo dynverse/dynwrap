@@ -4,7 +4,7 @@
 #'
 #' @param image The name of the image. Required
 #' @param definition The method definition, a list containing the name, image, input, output and parameters of a method.
-#'   Optional, as the definition file will be automatically loaded from the image's `/code/definition.yml` using \code{\link{load_definition_from_image}}.
+#'   Optional, as the definition file will be automatically loaded from the image's `/code/definition.yml` automatically.
 #' @param docker_client Optional, a [stevedore::docker_client()]
 #'
 #' @importFrom jsonlite write_json read_json
@@ -230,7 +230,7 @@ save_inputs <- function(
   write_json(params, file.path(dir_input, "params.json"), auto_unbox = TRUE)
 }
 
-#' @importFrom stats write.csv
+#' @importFrom utils write.csv
 write_text_infer <- function(x, path) {
   if(is.matrix(x)) {
     utils::write.csv(x, paste0(path, ".csv"))

@@ -14,7 +14,7 @@ pull_docker_ti_method(image, docker_client = stevedore::docker_client())
 \item{image}{The name of the image. Required}
 
 \item{definition}{The method definition, a list containing the name, image, input, output and parameters of a method.
-Optional, as the definition file will be automatically loaded from the image's \code{/code/definition.yml} using \code{\link{load_definition_from_image}}.}
+Optional, as the definition file will be automatically loaded from the image's \code{/code/definition.yml} automatically.}
 
 \item{docker_client}{Optional, a \code{\link[stevedore:docker_client]{stevedore::docker_client()}}}
 }
