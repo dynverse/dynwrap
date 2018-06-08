@@ -20,6 +20,5 @@ Optional, as the definition file will be automatically loaded from the images \c
 \item{definition_location}{The location of the definition file within the image}
 }
 \description{
-\code{create_singularity_ti_method} will use a local singularity image, \code{pull_singularity_ti_method}
-(not yet implemented) will pull the latest singularity image from the \href{https://singularity-hub.org/}{singularity hub}
+This function creates a TI method from a singularity image. This image can be build using \code{singularity build} from a docker image (eg. \code{singularity build comp1.simg docker://dynverse/comp1})
 }

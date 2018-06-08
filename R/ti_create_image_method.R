@@ -186,8 +186,7 @@ create_docker_ti_method <- function(
 
 #' Create a TI method from a singularity image
 #'
-#' `create_singularity_ti_method` will use a local singularity image, `pull_singularity_ti_method`
-#' (not yet implemented) will pull the latest singularity image from the [singularity hub](https://singularity-hub.org/)
+#' This function creates a TI method from a singularity image. This image can be build using `singularity build` from a docker image (eg. `singularity build comp1.simg docker://dynverse/comp1`)
 #'
 #' @param image The location of the singularity image file, eg. `comp1.simg`.
 #' @param definition The method definition, a list containing the name, input, output and parameters of a method.

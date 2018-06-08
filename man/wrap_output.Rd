@@ -4,7 +4,6 @@
 \alias{wrap_output}
 \alias{wrap_rds}
 \alias{wrap_text}
-\alias{wrap_hdf5}
 \alias{wrap_feather}
 \title{Wrap the output of a TI method}
 \usage{
@@ -14,8 +13,6 @@ wrap_output(model, output_ids, dir_output, output_format = c("text", "rds",
 wrap_rds(model, output_ids, dir_output)
 
 wrap_text(model, output_ids, dir_output)
-
-wrap_hdf5(model, output_ids, dir_output)
 
 wrap_feather(model, output_ids, dir_output)
 }
