@@ -56,6 +56,11 @@ cell_graph <-
 
 to_keep <- cell_ids[1:6]
 
+end_state_ids <- LETTERS[1:5]
+end_state_probabilities <- matrix(runif(length(cell_ids) * length(end_state_ids)), nrow = length(cell_ids))
+colnames(end_state_probabilities) <- end_state_ids
+end_state_probabilities <- end_state_probabilities %>% as.data.frame() %>% mutate(cell_id = cell_ids)
+
 # task with prior information
 task <- wrap_data(
   cell_id = cell_ids
@@ -129,7 +134,8 @@ objects <- lst(
   dimred = dimred %>% as.data.frame() %>% rownames_to_column("cell_id"),
   dimred_milestones = dimred_milestones %>% as.data.frame() %>% rownames_to_column("milestone_id"),
   cell_graph,
-  to_keep
+  to_keep,
+  end_state_probabilities
 )
 
 dir_output <- "inst/example_outputs/text/"

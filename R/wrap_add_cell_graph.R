@@ -26,8 +26,6 @@ add_cell_graph <- function(
   # check data wrapper
   testthat::expect_true(is_data_wrapper(model))
 
-  cell_ids <- model$cell_ids
-
   # optionally add length and directed if not specified
   if (!"length" %in% colnames(cell_graph)) {
     cell_graph$length <- 1
@@ -36,16 +34,19 @@ add_cell_graph <- function(
     cell_graph$directed <- FALSE
   }
 
-  # check cell_graph
-  check_milestone_network(cell_ids, cell_graph)
-
   # check to_keep
   if (is.character(to_keep)) {
+    cell_ids <- unique(c(cell_graph$from, cell_graph$to))
     to_keep <- (cell_ids %in% to_keep) %>% set_names(cell_ids)
+  } else {
+    cell_ids <- names(to_keep)
   }
   testthat::expect_is(to_keep, "logical")
-  testthat::expect_true(all(names(to_keep) %in% cell_ids))
+  testthat::expect_true(all(cell_ids %in% model$cell_ids))
   testthat::expect_equal(sort(unique(c(cell_graph$from, cell_graph$to))), sort(names(to_keep)))
+
+  # check cell_graph
+  check_milestone_network(cell_ids, cell_graph)
 
   # check is_directed
   is_directed <- any(cell_graph$directed)

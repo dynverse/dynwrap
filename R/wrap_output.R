@@ -197,7 +197,11 @@ output_object_specifications <- list(
     cell_id = col_character(),
     group_id = col_character()
   ),
-  milestone_ids = function(x) as.character(unlist(x))
+  milestone_ids = function(x) as.character(unlist(x)),
+  end_state_probabilities = cols(
+    cell_id = col_character(),
+    .default = col_double()
+  )
 )
 # read text output
 read_infer <- function(file, arg) {
