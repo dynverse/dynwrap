@@ -72,7 +72,7 @@ parameter_types %>% knitr::kable()
 - **values** A list of possible values for discrete parameters
 - **length** Length of the parameter for vector parameters
 
-#### input & input_optional
+#### input
 
 
 The input determines which kind of expression and prior information is given to the method. It contains the following properties:
@@ -94,10 +94,7 @@ tribble(
 ```
 
 
-- **required**: Required inputs (eg. expression)
-- **optional**: Optional inputs (eg. start_cells)
-
-These requested required or optional inputs can be:
+- **required** inputs (eg. expression) and/or **optional** inputs (eg. start_cells):
 
 ```{r, echo=FALSE}
 data(allowed_inputs, package="dynwrap")
