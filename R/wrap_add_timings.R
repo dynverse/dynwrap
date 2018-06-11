@@ -44,6 +44,6 @@ add_timing_checkpoint <- function(timings, name) {
   if (is.null(timings)) {
     timings <- list()
   }
-  timings[[name]] <- Sys.time()
+  timings[[name]] <- as.numeric(Sys.time())
   timings
 }
