@@ -3,7 +3,8 @@ create_image_ti_method <- function(
   image,
   definition,
   image_type = c("docker", "singularity"),
-  docker_client = NULL
+  docker_client = NULL,
+  plot_fun = NULL
 ) {
   image_type <- match.arg(image_type)
 
@@ -162,7 +163,8 @@ create_image_ti_method <- function(
     name,
     par_set,
     run_fun,
-    short_name = short_name
+    short_name = short_name,
+    plot_fun = plot_fun
   )
 }
 
@@ -180,9 +182,10 @@ create_image_ti_method <- function(
 create_docker_ti_method <- function(
   image,
   definition = extract_definition_from_docker_image(image),
-  docker_client = stevedore::docker_client()
+  docker_client = stevedore::docker_client(),
+  ...
 ) {
-  create_image_ti_method(image, definition, "docker", docker_client)
+  create_image_ti_method(image, definition, "docker", docker_client, ...)
 }
 
 #' Create a TI method from a singularity image
@@ -196,12 +199,13 @@ create_docker_ti_method <- function(
 #' @export
 create_singularity_ti_method <- function(
   image,
-  definition = extract_definition_from_singularity_image(image)
+  definition = extract_definition_from_singularity_image(image),
+  ...
 ) {
   # get absolutate path to image
   image <- normalizePath(image)
 
-  create_image_ti_method(image, definition, "singularity")
+  create_image_ti_method(image, definition, "singularity", ...)
 }
 
 #' @rdname create_docker_ti_method
