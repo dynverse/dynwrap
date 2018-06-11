@@ -280,6 +280,7 @@ save_inputs <- function(
   } else if (input_format == "rds") {
     write_rds(inputs, file.path(dir_input, "data.rds"))
   } else if (input_format == "hdf5") {
+    requireNamespace("hdf5r")
     file <- hdf5r::H5File$new(file.path(dir_input, "data.h5"), "w")
     purrr::walk2(inputs, names(inputs), function(x, name) {
       file$create_dataset(name, x)
