@@ -182,6 +182,7 @@ create_image_ti_method <- function(
 #' @param definition The method definition, a list containing the name, input, output and parameters of a method.
 #'   Optional, as the definition file will be automatically loaded from the images `/code/definition.yml` using [extract_definition_from_docker_image].
 #' @param docker_client Optional, a [stevedore::docker_client()]
+#' @param ... Other information about the method
 #'
 #' @export
 create_docker_ti_method <- function(
@@ -208,6 +209,7 @@ create_docker_ti_method <- function(
 #' @param image The location of the singularity image file, eg. `comp1.simg`.
 #' @param definition The method definition, a list containing the name, input, output and parameters of a method.
 #'  Optional, as the definition file will be automatically loaded from the images `/code/definition.yml` using [extract_definition_from_singularity_image].
+#' @param ... Other information about the method
 #'
 #' @export
 create_singularity_ti_method <- function(
@@ -340,8 +342,12 @@ write_feather_infer <- function(x, path, name) {
     feather::write_feather(x %>% as.data.frame() %>% rownames_to_column("rownames"), path)
   } else if (is.data.frame(x)) {
     feather::write_feather(x, path)
-  } else if (is.vector(x) ){
-    feather::write_feather(tibble(!!name := x), path)
+  } else if (is.vector(x) || is.list(x)) {
+    if (is.null(names(x))) {
+      feather::write_feather(tibble(!!name := unlist(x)), path)
+    } else {
+      feather::write_feather(tibble(!!name := unlist(x), name = names(x)), path)
+    }
   } else {
     stop("Feather does not support this output")
   }

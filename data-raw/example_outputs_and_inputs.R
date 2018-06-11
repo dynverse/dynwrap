@@ -61,6 +61,8 @@ end_state_probabilities <- matrix(runif(length(cell_ids) * length(end_state_ids)
 colnames(end_state_probabilities) <- end_state_ids
 end_state_probabilities <- end_state_probabilities %>% as.data.frame() %>% mutate(cell_id = cell_ids)
 
+timings <- list("method_afterpreproc" = as.numeric(Sys.time()), "method_aftermethod" = as.numeric(Sys.time()) + 10)
+
 # task with prior information
 task <- wrap_data(
   cell_id = cell_ids
@@ -135,7 +137,8 @@ objects <- lst(
   dimred_milestones = dimred_milestones %>% as.data.frame() %>% rownames_to_column("milestone_id"),
   cell_graph,
   to_keep,
-  end_state_probabilities
+  end_state_probabilities,
+  timings
 )
 
 dir_output <- "inst/example_outputs/text/"

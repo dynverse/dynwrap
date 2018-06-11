@@ -283,7 +283,7 @@ execute_method_on_task <- function(
   verbose = FALSE
 ) {
   # start the timer
-  time0 <- Sys.time()
+  time0 <- as.numeric(Sys.time())
 
   # test whether the task contains expression
   testthat::expect_true(is_data_wrapper(task))
@@ -323,7 +323,7 @@ execute_method_on_task <- function(
 
         c(model, list(error = NULL))
       }, error = function(e) {
-        time_new <- Sys.time()
+        time_new <- as.numeric(Sys.time())
         timings_list <- list(
           method_start = time0,
           method_afterpreproc = time0,
@@ -363,19 +363,19 @@ execute_method_on_task <- function(
   })
 
   # stop the timer
-  time3 <- Sys.time()
+  time3 <- as.numeric(Sys.time())
 
   # create a summary tibble
   summary <- tibble(
     method_name = method$name,
     method_short_name = method$short_name,
     task_id = task$id,
-    time_sessionsetup = as.numeric(difftime(timings_list$method_start, time0, units = "sec")),
-    time_preprocessing = as.numeric(difftime(timings_list$method_afterpreproc, timings_list$method_start, units = "sec")),
-    time_method = as.numeric(difftime(timings_list$method_aftermethod, timings_list$method_afterpreproc, units = "sec")),
-    time_postprocessing = as.numeric(difftime(timings_list$method_afterpostproc, timings_list$method_aftermethod, units = "sec")),
-    time_wrapping = as.numeric(difftime(timings_list$method_stop, timings_list$method_afterpostproc, units = "sec")),
-    time_sessioncleanup = as.numeric(difftime(time3, timings_list$method_stop, units = "sec")),
+    time_sessionsetup = timings_list$method_start - time0,
+    time_preprocessing = timings_list$method_afterpreproc - timings_list$method_start,
+    time_method = timings_list$method_aftermethod - timings_list$method_afterpreproc,
+    time_postprocessing = timings_list$method_afterpostproc - timings_list$method_aftermethod,
+    time_wrapping = timings_list$method_stop - timings_list$method_afterpostproc,
+    time_sessioncleanup = time3 - timings_list$method_stop,
     error = list(error),
     num_files_created = num_files_created,
     num_setseed_calls = num_setseed_calls,
@@ -434,9 +434,9 @@ execute_method_internal <- function(method, arglist, setseed_detection_file) {
 
   # fetch timings from within method (and place them in order of execution, just to make sure)
   timings_list <- c(
-    list(method_start = time_start),
+    list(method_start = as.numeric(time_start)),
     model$timings,
-    list(method_stop = time_stop)
+    list(method_stop = as.numeric(time_stop))
   )
 
   model$timings <- NULL
