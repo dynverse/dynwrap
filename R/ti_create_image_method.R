@@ -3,7 +3,7 @@ create_image_ti_method <- function(
   image,
   definition,
   image_type = c("docker", "singularity"),
-  docker_client = stevedore::docker_client()
+  docker_client = NULL
 ) {
   image_type <- match.arg(image_type)
 
