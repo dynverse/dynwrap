@@ -203,7 +203,8 @@ output_object_specifications <- list(
   end_state_probabilities = cols(
     cell_id = col_character(),
     .default = col_double()
-  )
+  ),
+  timings = function(x) x
 )
 # read text output
 read_infer <- function(file, arg) {

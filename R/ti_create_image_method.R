@@ -116,6 +116,11 @@ create_image_ti_method <- function(
     model <- wrap_data(cell_ids = cell_ids) %>%
       wrap_output(output_ids, dir_output, output_format)
 
+    # add timing
+    if(!is.null(model$timings)) {
+      model$timings$method_afterpostproc <- as.numeric(Sys.time())
+    }
+
     model
   }
 
@@ -185,6 +190,14 @@ create_docker_ti_method <- function(
   docker_client = stevedore::docker_client(),
   ...
 ) {
+  # first test if image is pulled
+  result <- try(docker_client$image$get("dynverse/scuba"), silent=TRUE)
+
+  if ("try-error" %in% class(result)) {
+    message(image, " not found locally, trying to pull image...")
+    docker_client$image$pull(image)
+  }
+
   create_image_ti_method(image, definition, "docker", docker_client, ...)
 }
 
