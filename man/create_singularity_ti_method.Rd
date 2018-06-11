@@ -6,7 +6,7 @@
 \title{Create a TI method from a singularity image}
 \usage{
 create_singularity_ti_method(image,
-  definition = extract_definition_from_singularity_image(image))
+  definition = extract_definition_from_singularity_image(image), ...)
 
 extract_definition_from_singularity_image(image,
   definition_location = "/code/definition.yml")

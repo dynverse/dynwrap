@@ -8,7 +8,7 @@
 \usage{
 create_docker_ti_method(image,
   definition = extract_definition_from_docker_image(image),
-  docker_client = stevedore::docker_client())
+  docker_client = stevedore::docker_client(), ...)
 
 extract_definition_from_docker_image(image,
   definition_location = "/code/definition.yml",
