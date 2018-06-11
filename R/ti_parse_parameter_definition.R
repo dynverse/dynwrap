@@ -95,6 +95,8 @@ get_distribution2uniform <- function(param) {
     },
     exponential = {
       if(is.null(param$rate)) {stop("Provide rate when using a normal distributed parameter")}
+      if(is.null(param$upper)) {stop("Provide upper when using a normal distributed parameter")}
+
       function(q) stats::pexp(q, rate = param$rate)
     },
     uniform = {
