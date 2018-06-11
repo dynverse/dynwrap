@@ -130,9 +130,12 @@ wrap_feather <- function(model, output_ids, dir_output) {
 
     # feather can only save tibbles, if something else needs to be saved it will be saved as a one-column tibble with colname equal to output_id
     # here we simplify this again to a vector
+    # alternatively: if we need a named vector, the tibble will contain a column with "name"
     output_oi <- map2(output_oi, names(output_oi), function(x, name) {
       if(is.data.frame(x) && ncol(x) == 1 && colnames(x) == name) {
         x[[name]]
+      } else if (is.data.frame(x) && ncol(x) == 2 && c("name", name) %in% colnames(x)) {
+        set_names(x[[name]], x[["name"]])
       } else {
         x
       }
