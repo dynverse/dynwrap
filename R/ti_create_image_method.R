@@ -126,6 +126,8 @@ create_image_ti_method <- function(
         cat(glue("Debug: ", crayon::bold("docker run --entrypoint 'bash' -it {paste0(paste0('-v ', volumes), collapse = ' ')} {image}\n")))
       }
 
+      docker_client <- stevedore::docker_client()
+
       docker_client$container$run(image, volumes = volumes)
     }
   } else {
@@ -149,7 +151,6 @@ create_image_ti_method <- function(
     rep(list(expr()), length(param_ids)) %>% set_names(param_ids),
     rep(list(NULL), length(input_ids_optional)) %>% set_names(input_ids_optional),
     alist(
-      docker_client = stevedore::docker_client(),
       debug = FALSE,
       verbose = FALSE
     ) # default arguments (evaluated when running run_fun)
