@@ -17,6 +17,7 @@ parse_parameter_definition <- function(parameter_definition) {
       if (is.null(param$lower)) param$lower <- param$default
       if (is.null(param$upper)) param$upper <- param$default
       if (is.null(param$distribution)) param$distribution <- "uniform"
+      if (is.null(param$tunable)) param$tunable <- TRUE
       distribution2uniform <- get_distribution2uniform(param)
       uniform2distribution <- get_uniform2distribution(param)
 
@@ -27,7 +28,8 @@ parse_parameter_definition <- function(parameter_definition) {
           upper = param$upper %>% distribution2uniform,
           default = param$default %>% distribution2uniform,
           trafo = uniform2distribution,
-          special.vals = param$special_values
+          special.vals = param$special_values,
+          tunable = param$tunable
         )
       } else {
         ParamHelpers::makeNumericVectorParam(
@@ -37,7 +39,8 @@ parse_parameter_definition <- function(parameter_definition) {
           default = param$default %>% distribution2uniform,
           trafo = uniform2distribution,
           len = param$length,
-          special.vals = param$special_values
+          special.vals = param$special_values,
+          tunable = param$tunable
         )
       }
     } else if (param$type == "discrete") {
@@ -45,7 +48,8 @@ parse_parameter_definition <- function(parameter_definition) {
         id,
         values = param$values,
         default = param$default,
-        special.vals = param$special_values
+        special.vals = param$special_values,
+        tunable = param$tunable
       )
     } else if (param$type == "discrete_vector") {
       ParamHelpers::makeDiscreteVectorParam(
@@ -53,18 +57,23 @@ parse_parameter_definition <- function(parameter_definition) {
         values = as.list(param$values),
         default = as.list(param$default),
         len = param$length,
-        special.vals = param$special_values
+        special.vals = param$special_values,
+        tunable = param$tunable
       )
     } else if (param$type == "logical") {
       ParamHelpers::makeLogicalParam(
         id,
-        default = param$default
+        default = param$default,
+        special.vals = param$special_values,
+        tunable = param$tunable
       )
     } else if (param$type == "logical_vector") {
       ParamHelpers::makeLogicalVectorParam(
         id,
         default = param$default,
-        len = param$length
+        len = param$length,
+        special.vals = param$special_values,
+        tunable = param$tunable
       )
     } else {
       stop("invalid type")
@@ -86,6 +95,8 @@ get_distribution2uniform <- function(param) {
     },
     exponential = {
       if(is.null(param$rate)) {stop("Provide rate when using a normal distributed parameter")}
+      if(is.null(param$upper)) {stop("Provide upper when using a normal distributed parameter")}
+
       function(q) stats::pexp(q, rate = param$rate)
     },
     uniform = {

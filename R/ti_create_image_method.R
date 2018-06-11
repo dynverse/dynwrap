@@ -3,11 +3,11 @@ create_image_ti_method <- function(
   image,
   definition,
   image_type = c("docker", "singularity"),
-  docker_client = stevedore::docker_client()
+  docker_client = NULL
 ) {
   image_type <- match.arg(image_type)
 
-  testthat::expect_s3_class(docker_client, "docker_client")
+  testthat::expect_true("docker_client" %in% class(docker_client) || is.null(docker_client))
 
   # some checking of definition file -----------------------------------------------------
   # name
@@ -126,6 +126,8 @@ create_image_ti_method <- function(
         cat(glue("Debug: ", crayon::bold("docker run --entrypoint 'bash' -it {paste0(paste0('-v ', volumes), collapse = ' ')} {image}\n")))
       }
 
+      docker_client <- stevedore::docker_client()
+
       docker_client$container$run(image, volumes = volumes)
     }
   } else {
@@ -149,7 +151,6 @@ create_image_ti_method <- function(
     rep(list(expr()), length(param_ids)) %>% set_names(param_ids),
     rep(list(NULL), length(input_ids_optional)) %>% set_names(input_ids_optional),
     alist(
-      docker_client = stevedore::docker_client(),
       debug = FALSE,
       verbose = FALSE
     ) # default arguments (evaluated when running run_fun)
@@ -279,6 +280,7 @@ save_inputs <- function(
   } else if (input_format == "rds") {
     write_rds(inputs, file.path(dir_input, "data.rds"))
   } else if (input_format == "hdf5") {
+    requireNamespace("hdf5r")
     file <- hdf5r::H5File$new(file.path(dir_input, "data.h5"), "w")
     purrr::walk2(inputs, names(inputs), function(x, name) {
       file$create_dataset(name, x)
