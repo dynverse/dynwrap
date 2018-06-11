@@ -415,13 +415,13 @@ execute_method_internal <- function(method, arglist, setseed_detection_file) {
   }
 
   # measure second time point
-  time_start <- Sys.time()
+  time_start <- as.numeric(Sys.time())
 
   # execute method and return model
   model <- do.call(method$run_fun, arglist)
 
   # measure third time point
-  time_stop <- Sys.time()
+  time_stop <- as.numeric(Sys.time())
 
   # add missing timings
   if (is.null(model$timings)) {
