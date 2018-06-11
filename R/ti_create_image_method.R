@@ -7,7 +7,7 @@ create_image_ti_method <- function(
 ) {
   image_type <- match.arg(image_type)
 
-  testthat::expect_s3_class(docker_client, "docker_client")
+  testthat::expect_true("docker_client" %in% class(docker_client) || is.null(docker_client))
 
   # some checking of definition file -----------------------------------------------------
   # name
