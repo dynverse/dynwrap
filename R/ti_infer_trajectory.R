@@ -53,15 +53,15 @@ infer_trajectories <- function(
     }
     all_desc <- get_ti_methods(packages = packages)
 
-    # do some fuzzy matching, try both short name and real name
+    # do some fuzzy matching
     method <- all_desc %>% slice(
       map_int(
         method,
         function(x) {
-          distances <- utils::adist(x, c(all_desc$name, all_desc$short_name))
-          id <- as.integer(((which.min(distances)-1) %% nrow(all_desc)) + 1)
+          distances <- utils::adist(x, all_desc$method_id)
+          id <- as.integer(which.min(distances))
           if(min(distances) > 0) {
-            message(stringr::str_glue("Fuzzy matching {x} -> {all_desc$name[[id]]} / {all_desc$short_name[[id]]}"))
+            message(stringr::str_glue("Fuzzy matching {x} -> {all_desc$method_id[[id]]}"))
           }
 
           id
@@ -69,7 +69,7 @@ infer_trajectories <- function(
       )
     )
 
-    method
+    method <- list_as_tibble(map(method$method_func, ~.()))
   } else if (is_ti_method(method)) {
     # single method
     method <- list_as_tibble(list(method))
@@ -456,16 +456,19 @@ execute_method_internal <- function(method, arglist, setseed_detection_file) {
 #' @importFrom utils lsf.str
 #' @export
 get_ti_methods <- function(as_tibble = TRUE, packages = c("dynwrap")) {
-  ti_methods <- map(packages, function(package) {
+  ti_methods <- map_df(packages, function(package) {
     requireNamespace(package)
 
-    lsf.str(asNamespace(package), pattern = "^ti_") %>%
-      map(~ do.call(., args = list(), envir = asNamespace(package)))
-  }) %>% unlist(recursive = FALSE)
+    function_names <- lsf.str(asNamespace(package), pattern = "^ti_")
+    functions <- map(function_names, get, asNamespace(package))
+    method_ids <- stringr::str_sub(function_names, 4)
+
+    tibble(method_id = method_ids, method_func = functions)
+  })
 
   if (as_tibble) {
-    list_as_tibble(ti_methods)
+    ti_methods
   } else {
-    ti_methods %>% set_names(ti_methods %>% map_chr(~.$short_name))
+    map(seq_len(nrow(ti_methods)), dynutils::extract_row_to_list, tib = ti_methods)
   }
 }
