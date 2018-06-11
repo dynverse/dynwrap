@@ -24,6 +24,8 @@ Optional, as the definition file will be automatically loaded from the images \c
 
 \item{docker_client}{Optional, a \code{\link[stevedore:docker_client]{stevedore::docker_client()}}}
 
+\item{...}{Other information about the method}
+
 \item{definition_location}{The location of the definition file within the image}
 }
 \description{

@@ -17,6 +17,8 @@ extract_definition_from_singularity_image(image,
 \item{definition}{The method definition, a list containing the name, input, output and parameters of a method.
 Optional, as the definition file will be automatically loaded from the images \code{/code/definition.yml} using \link{extract_definition_from_singularity_image}.}
 
+\item{...}{Other information about the method}
+
 \item{definition_location}{The location of the definition file within the image}
 }
 \description{
