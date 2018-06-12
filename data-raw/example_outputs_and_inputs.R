@@ -77,7 +77,7 @@ task <- wrap_data(
     start_n = 1,
     end_n = 2,
     groups_id = enframe(grouping, "cell_id", "group_id"),
-    n_branches = length(group_ids),
+    groups_n = length(group_ids),
     grouping_network = milestone_network %>% select(from, to),
     time = pseudotime + runif(length(pseudotime)) * 10 - 5,
     marker_feature_ids = colnames(expression)[1:2]

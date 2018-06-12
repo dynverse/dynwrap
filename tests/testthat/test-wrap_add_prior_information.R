@@ -79,7 +79,7 @@ test_that("Testing generate_prior_information", {
     "groups_id",
     "grouping_network",
     "marker_feature_ids",
-    "n_branches",
+    "groups_n",
     "time",
     "timecourse",
     "end_n"
@@ -109,7 +109,7 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
 
-  testthat::expect_equal(prior_info$n_branches, 4)
+  testthat::expect_equal(prior_info$groups_n, 4)
 
   testthat::expect_equal(prior_info$time, set_names(cell_info$simulationtime, cell_info$cell_id))
 
@@ -152,7 +152,7 @@ test_that("Testing add_prior_information", {
     "groups_id",
     "grouping_network",
     "marker_feature_ids",
-    "n_branches",
+    "groups_n",
     "time",
     "timecourse",
     "start_n",
@@ -183,7 +183,7 @@ test_that("Testing add_prior_information", {
 
   testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
 
-  testthat::expect_equal(prior_info$n_branches, 4)
+  testthat::expect_equal(prior_info$groups_n, 4)
 
   testthat::expect_equal(prior_info$time, set_names(cell_info$simulationtime, cell_info$cell_id))
 
@@ -266,7 +266,7 @@ test_that("Testing generate_prior_information", {
     "groups_id",
     "grouping_network",
     "marker_feature_ids",
-    "n_branches",
+    "groups_n",
     "time",
     "timecourse",
     "end_n"
@@ -296,7 +296,7 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
 
-  testthat::expect_equal(prior_info$n_branches, 3)
+  testthat::expect_equal(prior_info$groups_n, 3)
 
   testthat::expect_equal(prior_info$time, NULL)
 
@@ -337,7 +337,7 @@ test_that("Testing add_prior_information", {
     "groups_id",
     "grouping_network",
     "marker_feature_ids",
-    "n_branches",
+    "groups_n",
     "time",
     "timecourse",
     "end_n"
@@ -367,7 +367,7 @@ test_that("Testing add_prior_information", {
 
   testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
 
-  testthat::expect_equal(prior_info$n_branches, 3)
+  testthat::expect_equal(prior_info$groups_n, 3)
 
   testthat::expect_equal(prior_info$time, NULL)
 

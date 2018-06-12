@@ -12,7 +12,7 @@ priors <- tribble(
 
   "groups_id", "Cell clustering", "Named character vector linking the cell identifiers to different states/branches", "groups_id",
 
-  "groups_n", "# states", "Number of states/branches, including start, end and intermediary states", "n_branches",
+  "groups_n", "# states", "Number of states/branches, including start, end and intermediary states", "groups_n",
 
   "groups_network", "State network", "Dataframe containing the known network between states/branches. Contains a from and to column", "grouping_network",
 

@@ -9,7 +9,7 @@
 #' @param groups_id The grouping of cells, a dataframe with cell_id and group_id
 #' @param grouping_network The network between groups, a dataframe with from and to
 #' @param marker_feature_ids The features (genes) important for the trajectory
-#' @param n_branches Number of branches
+#' @param groups_n Number of branches
 #' @param start_n Number of start states
 #' @param end_n Number of end states
 #' @param time The time for every cell
@@ -26,7 +26,7 @@ add_prior_information <- function(
   groups_id = NULL,
   grouping_network = NULL,
   marker_feature_ids = NULL,
-  n_branches = NULL,
+  groups_n = NULL,
   start_n = NULL,
   end_n = NULL,
   time = NULL,
@@ -38,7 +38,7 @@ add_prior_information <- function(
     groups_id,
     grouping_network,
     marker_feature_ids,
-    n_branches,
+    groups_n,
     time,
     start_n,
     end_n
@@ -220,7 +220,7 @@ generate_prior_information <- function(
   }
 
   ## NUMBER OF BRANCHES ##
-  n_branches <- nrow(milestone_network)
+  groups_n <- nrow(milestone_network)
 
   ## NUMBER OF START STATES ##
   start_n <- length(start_milestones)
@@ -252,7 +252,7 @@ generate_prior_information <- function(
     groups_id,
     grouping_network,
     marker_feature_ids,
-    n_branches,
+    groups_n,
     time,
     timecourse,
     start_n,
