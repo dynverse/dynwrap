@@ -72,7 +72,7 @@ task <- wrap_data(
     expression
   ) %>%
   add_prior_information(
-    start_cells = names(pseudotime)[which.min(pseudotime)],
+    start_id = names(pseudotime)[which.min(pseudotime)],
     end_cells = sample(cell_ids, 2),
     n_start_states = 1,
     n_end_states = 2,

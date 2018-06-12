@@ -4,7 +4,7 @@
 #' to have been added already.
 #'
 #' @param task A data wrapper to extend upon.
-#' @param start_cells The start cells
+#' @param start_id The start cells
 #' @param end_cells The end cells
 #' @param grouping_assignment The grouping of cells, a dataframe with cell_id and group_id
 #' @param grouping_network The network between groups, a dataframe with from and to
@@ -21,7 +21,7 @@
 #' @importFrom purrr discard list_modify
 add_prior_information <- function(
   task,
-  start_cells = NULL,
+  start_id = NULL,
   end_cells = NULL,
   grouping_assignment = NULL,
   grouping_network = NULL,
@@ -33,7 +33,7 @@ add_prior_information <- function(
   verbose = TRUE
 ) {
   prior_information <- lst(
-    start_cells,
+    start_id,
     end_cells,
     grouping_assignment,
     grouping_network,
@@ -44,11 +44,11 @@ add_prior_information <- function(
     n_end_states
   ) %>% discard(is.null)
 
-  if (!is.null(start_cells)) {
-    testthat::expect_true(all(start_cells %in% task$cell_ids))
+  if (!is.null(start_id)) {
+    testthat::expect_true(all(start_id %in% task$cell_ids))
   }
   if (!is.null(end_cells)) {
-    testthat::expect_true(all(start_cells %in% task$cell_ids))
+    testthat::expect_true(all(start_id %in% task$cell_ids))
   }
   if (!is.null(grouping_assignment)) {
     testthat::expect_true(is.data.frame(grouping_assignment))
@@ -178,9 +178,9 @@ generate_prior_information <- function(
 
   # determine start cells
   if (length(start_milestones) > 0) {
-    start_cells <- determine_closest_cells(start_milestones)
+    start_id <- determine_closest_cells(start_milestones)
   } else {
-    start_cells <- unique(progressions$cell_id)
+    start_id <- unique(progressions$cell_id)
   }
 
   # determine end cells
@@ -246,7 +246,7 @@ generate_prior_information <- function(
   # return output
   lst(
     start_milestones,
-    start_cells,
+    start_id,
     end_milestones,
     end_cells,
     grouping_assignment,

@@ -16,7 +16,7 @@ if (Sys.getenv("TRAVIS") != "true") {
       expression,
       counts
     ) %>%
-    add_prior_information(start_cells = cell_ids[[1]])
+    add_prior_information(start_id = cell_ids[[1]])
 
   test_that("Testing create_docker_ti_method with compone", {
     sink("/dev/null")

@@ -94,7 +94,7 @@ tribble(
 ```
 
 
-- **required** inputs (eg. expression) and/or **optional** inputs (eg. start_cells):
+- **required** inputs (eg. expression) and/or **optional** inputs (eg. start_id):
 
 ```{r, echo=FALSE}
 data(allowed_inputs, package="dynwrap")
@@ -292,14 +292,14 @@ expression <- matrix(
 )
 expression <- expression + rnorm(length(expression), sd = 0.02)
 
-start_cells = rownames(expression)[which.min(pseudotime)]
+start_id = rownames(expression)[which.min(pseudotime)]
 
 counts <- round(expression)
 
 task <- wrap_expression(
   expression,
   counts
-) %>% add_prior_information(start_cells=start_cells)
+) %>% add_prior_information(start_id=start_id)
 ```
 
 Now infer a trajectory
@@ -316,7 +316,7 @@ if ("dynplot" %in% rownames(installed.packages())) {
 
 Give some optional prior information
 ```{r}
-model <- infer_trajectory(task, ti_comp1(), give_priors = "start_cells")
+model <- infer_trajectory(task, ti_comp1(), give_priors = "start_id")
 ```
 
 ```{r}

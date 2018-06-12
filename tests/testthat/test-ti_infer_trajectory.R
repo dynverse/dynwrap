@@ -31,7 +31,7 @@ test_that("Testing infer_trajectory with control methods", {
       extras1 = extras1,
       extras2 = extras2
     ) %>%
-    add_prior_information(start_cells = cell_ids[[1]])
+    add_prior_information(start_id = cell_ids[[1]])
 
 
 
@@ -40,7 +40,7 @@ test_that("Testing infer_trajectory with control methods", {
   model <- infer_trajectory(task, method)
   expect_s3_class(model, "dynwrap::with_trajectory")
 
-  model <- infer_trajectory(task, method, give_priors = c("start_cells"))
+  model <- infer_trajectory(task, method, give_priors = c("start_id"))
   expect_s3_class(model, "dynwrap::with_trajectory")
 
   expect_error(infer_trajectory(task, method, give_priors = c("to be or not to be")))

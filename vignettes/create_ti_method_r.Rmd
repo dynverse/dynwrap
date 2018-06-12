@@ -89,16 +89,16 @@ priors %>%
   knitr::kable("markdown")
 ```
 
-In this example we will use the `start_cells`...
+In this example we will use the `start_id`...
 ```{r}
-start_cells <- as.character(which.min(pseudotime))
+start_id <- as.character(which.min(pseudotime))
 ```
 
 as follows
 
 ```{r}
-if (!is.null(start_cells)) {
-  if(mean(pseudotime[start_cells]) > 0.5) {
+if (!is.null(start_id)) {
+  if(mean(pseudotime[start_id]) > 0.5) {
     pseudotime <- 1-pseudotime
   }
 }
@@ -193,15 +193,15 @@ if ("dynplot" %in% rownames(installed.packages())) {
 Combining everything in a function:
 
 ```{r}
-run_fun <- function(expression, component, start_cells = NULL) {
+run_fun <- function(expression, component, start_id = NULL) {
   # do pca and extract pseudotime
   pca <- prcomp(expression)
   
   pseudotime <- pca$x[, component]
   
-  # flip pseudotime using start_cells
-  if (!is.null(start_cells)) {
-    if(mean(pseudotime[start_cells]) > 0.5) {
+  # flip pseudotime using start_id
+  if (!is.null(start_id)) {
+    if(mean(pseudotime[start_id]) > 0.5) {
       pseudotime <- 1-pseudotime
     }
   }

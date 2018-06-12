@@ -4,7 +4,7 @@
 \alias{add_prior_information}
 \title{Add prior information to a data wrapper}
 \usage{
-add_prior_information(task, start_cells = NULL, end_cells = NULL,
+add_prior_information(task, start_id = NULL, end_cells = NULL,
   grouping_assignment = NULL, grouping_network = NULL,
   marker_feature_ids = NULL, n_branches = NULL, n_start_states = NULL,
   n_end_states = NULL, time = NULL, verbose = TRUE)
@@ -12,7 +12,7 @@ add_prior_information(task, start_cells = NULL, end_cells = NULL,
 \arguments{
 \item{task}{A data wrapper to extend upon.}
 
-\item{start_cells}{The start cells}
+\item{start_id}{The start cells}
 
 \item{end_cells}{The end cells}
 

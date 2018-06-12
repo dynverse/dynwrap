@@ -73,7 +73,7 @@ test_that("Testing generate_prior_information", {
 
   expected_prior <- c(
     "start_milestones",
-    "start_cells",
+    "start_id",
     "end_milestones",
     "end_cells",
     "grouping_assignment",
@@ -89,7 +89,7 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_equal(prior_info$start_milestones, "W")
 
-  testthat::expect_equal(gsub("[0-9]+", "", prior_info$start_cells), "a")
+  testthat::expect_equal(gsub("[0-9]+", "", prior_info$start_id), "a")
 
   testthat::expect_equal(prior_info$end_milestones %>% sort, c("A", "Y"))
 
@@ -146,7 +146,7 @@ test_that("Testing add_prior_information", {
   # copy paste tests
   expected_prior <- c(
     "start_milestones",
-    "start_cells",
+    "start_id",
     "end_milestones",
     "end_cells",
     "grouping_assignment",
@@ -163,7 +163,7 @@ test_that("Testing add_prior_information", {
 
   testthat::expect_equal(prior_info$start_milestones, "W")
 
-  testthat::expect_equal(gsub("[0-9]+", "", prior_info$start_cells), "a")
+  testthat::expect_equal(gsub("[0-9]+", "", prior_info$start_id), "a")
 
   testthat::expect_equal(prior_info$end_milestones %>% sort, c("A", "Y"))
 
@@ -260,7 +260,7 @@ test_that("Testing generate_prior_information", {
 
   expected_prior <- c(
     "start_milestones",
-    "start_cells",
+    "start_id",
     "end_milestones",
     "end_cells",
     "grouping_assignment",
@@ -276,7 +276,7 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_equal(prior_info$start_milestones, character(0))
 
-  testthat::expect_equal(prior_info$start_cells, cell_ids)
+  testthat::expect_equal(prior_info$start_id, cell_ids)
 
   testthat::expect_equal(prior_info$end_milestones, character(0))
 
@@ -331,7 +331,7 @@ test_that("Testing add_prior_information", {
   # copy paste tests
   expected_prior <- c(
     "start_milestones",
-    "start_cells",
+    "start_id",
     "end_milestones",
     "end_cells",
     "grouping_assignment",
@@ -347,7 +347,7 @@ test_that("Testing add_prior_information", {
 
   testthat::expect_equal(prior_info$start_milestones, character(0))
 
-  testthat::expect_equal(prior_info$start_cells, cell_ids)
+  testthat::expect_equal(prior_info$start_id, cell_ids)
 
   testthat::expect_equal(prior_info$end_milestones, character(0))
 
