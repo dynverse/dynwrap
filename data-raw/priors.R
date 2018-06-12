@@ -18,7 +18,7 @@ priors <- tribble(
 
   "time", "Time course", "Named numeric vector linking the cell ids to time points", "time",
 
-  "features_id", "Marker genes", "Genes/features known to be important in the dynamic process", "marker_feature_ids",
+  "features_id", "Marker genes", "Genes/features known to be important in the dynamic process", "features_id",
 
   "task", "The full dataset", "The full dataset, including gold standard", "task"
 )

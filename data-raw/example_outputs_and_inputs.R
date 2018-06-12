@@ -80,7 +80,7 @@ task <- wrap_data(
     groups_n = length(group_ids),
     groups_network = milestone_network %>% select(from, to),
     time = pseudotime + runif(length(pseudotime)) * 10 - 5,
-    marker_feature_ids = colnames(expression)[1:2]
+    features_id = colnames(expression)[1:2]
   )
 
 # a model

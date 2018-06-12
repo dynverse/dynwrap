@@ -78,7 +78,7 @@ test_that("Testing generate_prior_information", {
     "end_id",
     "groups_id",
     "groups_network",
-    "marker_feature_ids",
+    "features_id",
     "groups_n",
     "time",
     "timecourse",
@@ -107,7 +107,7 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
 
-  testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
+  testthat::expect_true(all(prior_info$features_id %in% gene_ids))
 
   testthat::expect_equal(prior_info$groups_n, 4)
 
@@ -151,7 +151,7 @@ test_that("Testing add_prior_information", {
     "end_id",
     "groups_id",
     "groups_network",
-    "marker_feature_ids",
+    "features_id",
     "groups_n",
     "time",
     "timecourse",
@@ -181,7 +181,7 @@ test_that("Testing add_prior_information", {
 
   testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
 
-  testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
+  testthat::expect_true(all(prior_info$features_id %in% gene_ids))
 
   testthat::expect_equal(prior_info$groups_n, 4)
 
@@ -265,7 +265,7 @@ test_that("Testing generate_prior_information", {
     "end_id",
     "groups_id",
     "groups_network",
-    "marker_feature_ids",
+    "features_id",
     "groups_n",
     "time",
     "timecourse",
@@ -294,7 +294,7 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
 
-  testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
+  testthat::expect_true(all(prior_info$features_id %in% gene_ids))
 
   testthat::expect_equal(prior_info$groups_n, 3)
 
@@ -336,7 +336,7 @@ test_that("Testing add_prior_information", {
     "end_id",
     "groups_id",
     "groups_network",
-    "marker_feature_ids",
+    "features_id",
     "groups_n",
     "time",
     "timecourse",
@@ -365,7 +365,7 @@ test_that("Testing add_prior_information", {
 
   testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
 
-  testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
+  testthat::expect_true(all(prior_info$features_id %in% gene_ids))
 
   testthat::expect_equal(prior_info$groups_n, 3)
 

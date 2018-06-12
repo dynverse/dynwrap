@@ -8,7 +8,7 @@
 #' @param end_id The end cells
 #' @param groups_id The grouping of cells, a dataframe with cell_id and group_id
 #' @param groups_network The network between groups, a dataframe with from and to
-#' @param marker_feature_ids The features (genes) important for the trajectory
+#' @param features_id The features (genes) important for the trajectory
 #' @param groups_n Number of branches
 #' @param start_n Number of start states
 #' @param end_n Number of end states
@@ -25,7 +25,7 @@ add_prior_information <- function(
   end_id = NULL,
   groups_id = NULL,
   groups_network = NULL,
-  marker_feature_ids = NULL,
+  features_id = NULL,
   groups_n = NULL,
   start_n = NULL,
   end_n = NULL,
@@ -37,7 +37,7 @@ add_prior_information <- function(
     end_id,
     groups_id,
     groups_network,
-    marker_feature_ids,
+    features_id,
     groups_n,
     time,
     start_n,
@@ -60,9 +60,9 @@ add_prior_information <- function(
     testthat::expect_setequal(colnames(groups_network), c("from", "to"))
     testthat::expect_true(all(groups_id$group_id %in% c(groups_network$to, groups_network$from)))
   }
-  if (!is.null(marker_feature_ids)) {
+  if (!is.null(features_id)) {
     testthat::expect_true(is_wrapper_with_expression(task))
-    testthat::expect_true(all(marker_feature_ids %in% colnames(task$counts)))
+    testthat::expect_true(all(features_id %in% colnames(task$counts)))
   }
 
   if (is_wrapper_with_trajectory(task) && is_wrapper_with_expression(task)) {
@@ -199,7 +199,7 @@ generate_prior_information <- function(
 
   ## MARKER GENES ##
   if (!is.null(feature_info) && "housekeeping" %in% colnames(feature_info)) {
-    marker_feature_ids <- feature_info %>%
+    features_id <- feature_info %>%
       filter(!housekeeping) %>%
       pull(feature_id)
   } else {
@@ -207,7 +207,7 @@ generate_prior_information <- function(
       findMarkers <- get("findMarkers", "package:scran")
       markers <- findMarkers(t(expression), groups_id %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
 
-      marker_feature_ids <- map(markers, as, "data.frame") %>%
+      features_id <- map(markers, as, "data.frame") %>%
         map(rownames_to_column, "gene") %>%
         bind_rows() %>%
         filter(FDR < marker_fdr) %>%
@@ -215,7 +215,7 @@ generate_prior_information <- function(
     } else {
       warning("scran should be installed to determine marker features, will simply order by standard deviation")
 
-      marker_feature_ids <- apply(expression, 2, sd) %>% sort() %>% rownames() %>% {utils::head(., round(length(.)*0.1))}
+      features_id <- apply(expression, 2, sd) %>% sort() %>% rownames() %>% {utils::head(., round(length(.)*0.1))}
     }
   }
 
@@ -251,7 +251,7 @@ generate_prior_information <- function(
     end_id,
     groups_id,
     groups_network,
-    marker_feature_ids,
+    features_id,
     groups_n,
     time,
     timecourse,
