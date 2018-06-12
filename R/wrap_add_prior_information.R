@@ -10,7 +10,7 @@
 #' @param grouping_network The network between groups, a dataframe with from and to
 #' @param marker_feature_ids The features (genes) important for the trajectory
 #' @param n_branches Number of branches
-#' @param n_start_states Number of start states
+#' @param start_n Number of start states
 #' @param end_n Number of end states
 #' @param time The time for every cell
 #' @param verbose Whether or not to print informative messages or not
@@ -27,7 +27,7 @@ add_prior_information <- function(
   grouping_network = NULL,
   marker_feature_ids = NULL,
   n_branches = NULL,
-  n_start_states = NULL,
+  start_n = NULL,
   end_n = NULL,
   time = NULL,
   verbose = TRUE
@@ -40,7 +40,7 @@ add_prior_information <- function(
     marker_feature_ids,
     n_branches,
     time,
-    n_start_states,
+    start_n,
     end_n
   ) %>% discard(is.null)
 
@@ -223,7 +223,7 @@ generate_prior_information <- function(
   n_branches <- nrow(milestone_network)
 
   ## NUMBER OF START STATES ##
-  n_start_states <- length(start_milestones)
+  start_n <- length(start_milestones)
 
   ## NUMBER OF END STATES ##
   end_n <- length(end_milestones)
@@ -255,7 +255,7 @@ generate_prior_information <- function(
     n_branches,
     time,
     timecourse,
-    n_start_states,
+    start_n,
     end_n
   )
 }

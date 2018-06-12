@@ -8,7 +8,7 @@ priors <- tribble(
 
   "end_n", "# end states", "The number of end states", "end_n",
 
-  "start_n", "# start states", "The number of start states", "n_start_states",
+  "start_n", "# start states", "The number of start states", "start_n",
 
   "states_id", "Cell clustering", "Named character vector linking the cell identifiers to different states/branches", "grouping_assignment",
 

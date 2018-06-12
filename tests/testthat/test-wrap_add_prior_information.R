@@ -155,7 +155,7 @@ test_that("Testing add_prior_information", {
     "n_branches",
     "time",
     "timecourse",
-    "n_start_states",
+    "start_n",
     "end_n"
   )
 
@@ -191,7 +191,7 @@ test_that("Testing add_prior_information", {
 
   testthat::expect_equal(prior_info$end_n, 2)
 
-  testthat::expect_equal(prior_info$n_start_states, 1)
+  testthat::expect_equal(prior_info$start_n, 1)
 })
 
 
