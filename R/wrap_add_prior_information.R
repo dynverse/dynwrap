@@ -7,7 +7,7 @@
 #' @param start_id The start cells
 #' @param end_id The end cells
 #' @param groups_id The grouping of cells, a dataframe with cell_id and group_id
-#' @param grouping_network The network between groups, a dataframe with from and to
+#' @param groups_network The network between groups, a dataframe with from and to
 #' @param marker_feature_ids The features (genes) important for the trajectory
 #' @param groups_n Number of branches
 #' @param start_n Number of start states
@@ -24,7 +24,7 @@ add_prior_information <- function(
   start_id = NULL,
   end_id = NULL,
   groups_id = NULL,
-  grouping_network = NULL,
+  groups_network = NULL,
   marker_feature_ids = NULL,
   groups_n = NULL,
   start_n = NULL,
@@ -36,7 +36,7 @@ add_prior_information <- function(
     start_id,
     end_id,
     groups_id,
-    grouping_network,
+    groups_network,
     marker_feature_ids,
     groups_n,
     time,
@@ -55,10 +55,10 @@ add_prior_information <- function(
     testthat::expect_setequal(colnames(groups_id), c("cell_id", "group_id"))
     testthat::expect_setequal(groups_id$cell_id, task$cell_id)
   }
-  if (!is.null(grouping_network)) {
+  if (!is.null(groups_network)) {
     testthat::expect_true(!is.null(groups_id))
-    testthat::expect_setequal(colnames(grouping_network), c("from", "to"))
-    testthat::expect_true(all(groups_id$group_id %in% c(grouping_network$to, grouping_network$from)))
+    testthat::expect_setequal(colnames(groups_network), c("from", "to"))
+    testthat::expect_true(all(groups_id$group_id %in% c(groups_network$to, groups_network$from)))
   }
   if (!is.null(marker_feature_ids)) {
     testthat::expect_true(is_wrapper_with_expression(task))
@@ -195,7 +195,7 @@ generate_prior_information <- function(
     milestone_percentages %>%
     group_by(cell_id) %>%
     summarise(group_id = milestone_id[which.max(percentage)])
-  grouping_network <- milestone_network %>% select(from, to)
+  groups_network <- milestone_network %>% select(from, to)
 
   ## MARKER GENES ##
   if (!is.null(feature_info) && "housekeeping" %in% colnames(feature_info)) {
@@ -250,7 +250,7 @@ generate_prior_information <- function(
     end_milestones,
     end_id,
     groups_id,
-    grouping_network,
+    groups_network,
     marker_feature_ids,
     groups_n,
     time,

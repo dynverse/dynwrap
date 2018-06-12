@@ -12,7 +12,7 @@
 #'   If multiple methods were provided in the `method` parameter,
 #'    `parameters` must be an unnamed list of the same length.
 #' @param give_priors All the priors a method is allowed to receive. Must be a subset of: `"start_milestones"`,
-#'  `"start_id"`, `"end_milestones"`, `"end_id"`, `"groups_id"` and `"grouping_network"`
+#'  `"start_id"`, `"end_milestones"`, `"end_id"`, `"groups_id"` and `"groups_network"`
 #' @param mc_cores The number of cores to use, allowing to parallellise the different tasks
 #' @param verbose Whether or not to print information output
 #'

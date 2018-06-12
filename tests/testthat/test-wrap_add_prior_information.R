@@ -77,7 +77,7 @@ test_that("Testing generate_prior_information", {
     "end_milestones",
     "end_id",
     "groups_id",
-    "grouping_network",
+    "groups_network",
     "marker_feature_ids",
     "groups_n",
     "time",
@@ -105,7 +105,7 @@ test_that("Testing generate_prior_information", {
     full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
-  testthat::expect_equal(prior_info$grouping_network, milestone_network %>% select(from, to))
+  testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
 
   testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
 
@@ -150,7 +150,7 @@ test_that("Testing add_prior_information", {
     "end_milestones",
     "end_id",
     "groups_id",
-    "grouping_network",
+    "groups_network",
     "marker_feature_ids",
     "groups_n",
     "time",
@@ -179,7 +179,7 @@ test_that("Testing add_prior_information", {
     full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
-  testthat::expect_equal(prior_info$grouping_network, milestone_network %>% select(from, to))
+  testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
 
   testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
 
@@ -264,7 +264,7 @@ test_that("Testing generate_prior_information", {
     "end_milestones",
     "end_id",
     "groups_id",
-    "grouping_network",
+    "groups_network",
     "marker_feature_ids",
     "groups_n",
     "time",
@@ -292,7 +292,7 @@ test_that("Testing generate_prior_information", {
     full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
-  testthat::expect_equal(prior_info$grouping_network, milestone_network %>% select(from, to))
+  testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
 
   testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
 
@@ -335,7 +335,7 @@ test_that("Testing add_prior_information", {
     "end_milestones",
     "end_id",
     "groups_id",
-    "grouping_network",
+    "groups_network",
     "marker_feature_ids",
     "groups_n",
     "time",
@@ -363,7 +363,7 @@ test_that("Testing add_prior_information", {
     full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
-  testthat::expect_equal(prior_info$grouping_network, milestone_network %>% select(from, to))
+  testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
 
   testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
 

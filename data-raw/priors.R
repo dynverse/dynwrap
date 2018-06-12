@@ -14,7 +14,7 @@ priors <- tribble(
 
   "groups_n", "# states", "Number of states/branches, including start, end and intermediary states", "groups_n",
 
-  "groups_network", "State network", "Dataframe containing the known network between states/branches. Contains a from and to column", "grouping_network",
+  "groups_network", "State network", "Dataframe containing the known network between states/branches. Contains a from and to column", "groups_network",
 
   "time_id", "Time course", "Named numeric vector linking the cell ids to time points", "time",
 
