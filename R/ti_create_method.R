@@ -9,6 +9,7 @@
 #' @param run_fun A function to run the TI, needs to have 'counts' as its first param.
 #' @param plot_fun A function to plot the results of a TI, needs to have 'prediction' as its first param.
 #'   of `run_fun` with those described in `par_set`.
+#' @param ... Other information about the wrapper, eg. apt_dependencies
 #'
 #' @export
 create_ti_method <- function(
@@ -19,7 +20,8 @@ create_ti_method <- function(
   plot_fun = NULL,
   package_loaded = c(),
   package_required = c(),
-  short_name = NULL
+  short_name = NULL,
+  ...
 ) {
   # create nice short name
   if(is.null(short_name)) {
@@ -50,7 +52,8 @@ create_ti_method <- function(
     package_loaded,
     package_required,
     par_set,
-    parameters
+    parameters,
+    ...
   ) %>% add_class("dynwrap::ti_method")
 
   ti_fun_constructor_with_params <- function(...) {
