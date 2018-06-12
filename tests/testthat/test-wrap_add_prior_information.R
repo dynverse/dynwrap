@@ -82,7 +82,7 @@ test_that("Testing generate_prior_information", {
     "n_branches",
     "time",
     "timecourse",
-    "n_end_states"
+    "end_n"
   )
 
   testthat::expect_true(all(expected_prior %in% names(prior_info)))
@@ -115,7 +115,7 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_equal(prior_info$timecourse, set_names(cell_info$timepoint, cell_info$cell_id))
 
-  testthat::expect_equal(prior_info$n_end_states, 2)
+  testthat::expect_equal(prior_info$end_n, 2)
 })
 
 
@@ -156,7 +156,7 @@ test_that("Testing add_prior_information", {
     "time",
     "timecourse",
     "n_start_states",
-    "n_end_states"
+    "end_n"
   )
 
   testthat::expect_true(all(expected_prior %in% names(prior_info)))
@@ -189,7 +189,7 @@ test_that("Testing add_prior_information", {
 
   testthat::expect_equal(prior_info$timecourse, set_names(cell_info$timepoint, cell_info$cell_id))
 
-  testthat::expect_equal(prior_info$n_end_states, 2)
+  testthat::expect_equal(prior_info$end_n, 2)
 
   testthat::expect_equal(prior_info$n_start_states, 1)
 })
@@ -269,7 +269,7 @@ test_that("Testing generate_prior_information", {
     "n_branches",
     "time",
     "timecourse",
-    "n_end_states"
+    "end_n"
   )
 
   testthat::expect_true(all(expected_prior %in% names(prior_info)))
@@ -302,7 +302,7 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_equal(prior_info$timecourse, NULL)
 
-  testthat::expect_equal(prior_info$n_end_states, 0)
+  testthat::expect_equal(prior_info$end_n, 0)
 })
 
 
@@ -340,7 +340,7 @@ test_that("Testing add_prior_information", {
     "n_branches",
     "time",
     "timecourse",
-    "n_end_states"
+    "end_n"
   )
 
   testthat::expect_true(all(expected_prior %in% names(prior_info)))
@@ -373,5 +373,5 @@ test_that("Testing add_prior_information", {
 
   testthat::expect_equal(prior_info$timecourse, NULL)
 
-  testthat::expect_equal(prior_info$n_end_states, 0)
+  testthat::expect_equal(prior_info$end_n, 0)
 })

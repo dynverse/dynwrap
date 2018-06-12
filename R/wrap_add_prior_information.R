@@ -11,7 +11,7 @@
 #' @param marker_feature_ids The features (genes) important for the trajectory
 #' @param n_branches Number of branches
 #' @param n_start_states Number of start states
-#' @param n_end_states Number of end states
+#' @param end_n Number of end states
 #' @param time The time for every cell
 #' @param verbose Whether or not to print informative messages or not
 #'
@@ -28,7 +28,7 @@ add_prior_information <- function(
   marker_feature_ids = NULL,
   n_branches = NULL,
   n_start_states = NULL,
-  n_end_states = NULL,
+  end_n = NULL,
   time = NULL,
   verbose = TRUE
 ) {
@@ -41,7 +41,7 @@ add_prior_information <- function(
     n_branches,
     time,
     n_start_states,
-    n_end_states
+    end_n
   ) %>% discard(is.null)
 
   if (!is.null(start_id)) {
@@ -226,7 +226,7 @@ generate_prior_information <- function(
   n_start_states <- length(start_milestones)
 
   ## NUMBER OF END STATES ##
-  n_end_states <- length(end_milestones)
+  end_n <- length(end_milestones)
 
   ## TIME AND TIME COURSE ##
   time <-
@@ -256,6 +256,6 @@ generate_prior_information <- function(
     time,
     timecourse,
     n_start_states,
-    n_end_states
+    end_n
   )
 }
