@@ -365,6 +365,8 @@ execute_method_on_task <- function(
   # stop the timer
   time3 <- as.numeric(Sys.time())
 
+  timings_list <- map(timings_list, as.numeric)
+
   # create a summary tibble
   summary <- tibble(
     method_name = method$name,
