@@ -7,7 +7,7 @@
 parse_parameter_definition(parameter_definition)
 }
 \arguments{
-\item{parameter_definition}{A named list containing the parameters. Each list has at least a type (integer, numeric, interger_vector, numeric_vector, discrete, discrete_vector, logical, logical_vector) and a default value. Other properties specify the parameter space (distribution, lower, upper, mean, sd, rate)}
+\item{parameter_definition}{A named list containing the parameters. Each list has at least a type (integer, numeric, interger_vector, numeric_vector, discrete, discrete_vector, logical, logical_vector) and a default value. Other properties specify the parameter space (distribution, lower, upper, mean, sd, rate). A parameter forbidden can also be specified.}
 }
 \description{
 Parse a parameter definition
