@@ -80,7 +80,7 @@ create_ti_method <- function(
     ) %>% mutate(
       type = case_when(
         input_id %in% c("counts", "expression") ~ "expression",
-        input_id %in% priors$prior_id2 ~ "prior_information",
+        input_id %in% priors$prior_id ~ "prior_information",
         TRUE ~ "parameter"
       )
     )

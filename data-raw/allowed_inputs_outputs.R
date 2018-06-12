@@ -52,7 +52,7 @@ allowed_inputs <- tribble(
   "expression", "Expression matrix",
   "counts", "Raw counts matrix"
 ) %>% bind_rows(
-  priors %>% select(input_id = prior_id2, description = description)
+  priors %>% select(input_id = prior_id, description = description)
 ) %>%
   filter(
     !input_id %in% c("task")

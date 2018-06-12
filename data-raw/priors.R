@@ -1,26 +1,26 @@
 library(tibble)
 
 priors <- tribble(
-  ~prior_id, ~name, ~description, ~prior_id2,
-  "start_id", "Start cell(s)", "One or more start cell identifiers", "start_id",
+  ~prior_id, ~name, ~description,
+  "start_id", "Start cell(s)", "One or more start cell identifiers",
 
-  "end_id", "End cell(s)", "One or more end cell identifiers", "end_id",
+  "end_id", "End cell(s)", "One or more end cell identifiers",
 
-  "end_n", "# end states", "The number of end states", "end_n",
+  "end_n", "# end states", "The number of end states",
 
-  "start_n", "# start states", "The number of start states", "start_n",
+  "start_n", "# start states", "The number of start states",
 
-  "groups_id", "Cell clustering", "Named character vector linking the cell identifiers to different states/branches", "groups_id",
+  "groups_id", "Cell clustering", "Named character vector linking the cell identifiers to different states/branches",
 
-  "groups_n", "# states", "Number of states/branches, including start, end and intermediary states", "groups_n",
+  "groups_n", "# states", "Number of states/branches, including start, end and intermediary states",
 
-  "groups_network", "State network", "Dataframe containing the known network between states/branches. Contains a from and to column", "groups_network",
+  "groups_network", "State network", "Dataframe containing the known network between states/branches. Contains a from and to column",
 
-  "time", "Time course", "Named numeric vector linking the cell ids to time points", "time",
+  "time", "Time course", "Named numeric vector linking the cell ids to time points",
 
-  "features_id", "Marker genes", "Genes/features known to be important in the dynamic process", "features_id",
+  "features_id", "Marker genes", "Genes/features known to be important in the dynamic process",
 
-  "task", "The full dataset", "The full dataset, including gold standard", "task"
+  "task", "The full dataset", "The full dataset, including gold standard"
 )
 
 prior_usages <- tribble(
