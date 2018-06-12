@@ -10,11 +10,11 @@ priors <- tribble(
 
   "start_n", "# start states", "The number of start states", "start_n",
 
-  "states_id", "Cell clustering", "Named character vector linking the cell identifiers to different states/branches", "grouping_assignment",
+  "groups_id", "Cell clustering", "Named character vector linking the cell identifiers to different states/branches", "groups_id",
 
-  "states_n", "# states", "Number of states/branches, including start, end and intermediary states", "n_branches",
+  "groups_n", "# states", "Number of states/branches, including start, end and intermediary states", "n_branches",
 
-  "states_network", "State network", "Dataframe containing the known network between states/branches. Contains a from and to column", "grouping_network",
+  "groups_network", "State network", "Dataframe containing the known network between states/branches. Contains a from and to column", "grouping_network",
 
   "time_id", "Time course", "Named numeric vector linking the cell ids to time points", "time",
 

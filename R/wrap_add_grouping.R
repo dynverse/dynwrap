@@ -66,8 +66,8 @@ get_grouping <- function(model, grouping = NULL) {
     if(is_wrapper_with_grouping(model)) {
       grouping <- set_names(model$grouping, model$cell_ids)
     } else if (is_wrapper_with_prior_information(model)) {
-      if("grouping_assignment" %in% names(model$prior_information)) {
-        grouping <- model$prior_information$grouping_assignment %>%
+      if("groups_id" %in% names(model$prior_information)) {
+        grouping <- model$prior_information$groups_id %>%
           {set_names(.$group_id, .$cell_id)}
       }
     } else {

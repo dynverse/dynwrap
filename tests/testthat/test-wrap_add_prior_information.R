@@ -76,7 +76,7 @@ test_that("Testing generate_prior_information", {
     "start_id",
     "end_milestones",
     "end_id",
-    "grouping_assignment",
+    "groups_id",
     "grouping_network",
     "marker_feature_ids",
     "n_branches",
@@ -102,7 +102,7 @@ test_that("Testing generate_prior_information", {
     slice(1) %>%
     select(-percentage) %>%
     ungroup() %>%
-    full_join(prior_info$grouping_assignment, by = "cell_id")
+    full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
   testthat::expect_equal(prior_info$grouping_network, milestone_network %>% select(from, to))
@@ -149,7 +149,7 @@ test_that("Testing add_prior_information", {
     "start_id",
     "end_milestones",
     "end_id",
-    "grouping_assignment",
+    "groups_id",
     "grouping_network",
     "marker_feature_ids",
     "n_branches",
@@ -176,7 +176,7 @@ test_that("Testing add_prior_information", {
     slice(1) %>%
     select(-percentage) %>%
     ungroup() %>%
-    full_join(prior_info$grouping_assignment, by = "cell_id")
+    full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
   testthat::expect_equal(prior_info$grouping_network, milestone_network %>% select(from, to))
@@ -263,7 +263,7 @@ test_that("Testing generate_prior_information", {
     "start_id",
     "end_milestones",
     "end_id",
-    "grouping_assignment",
+    "groups_id",
     "grouping_network",
     "marker_feature_ids",
     "n_branches",
@@ -289,7 +289,7 @@ test_that("Testing generate_prior_information", {
     slice(1) %>%
     select(-percentage) %>%
     ungroup() %>%
-    full_join(prior_info$grouping_assignment, by = "cell_id")
+    full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
   testthat::expect_equal(prior_info$grouping_network, milestone_network %>% select(from, to))
@@ -334,7 +334,7 @@ test_that("Testing add_prior_information", {
     "start_id",
     "end_milestones",
     "end_id",
-    "grouping_assignment",
+    "groups_id",
     "grouping_network",
     "marker_feature_ids",
     "n_branches",
@@ -360,7 +360,7 @@ test_that("Testing add_prior_information", {
     slice(1) %>%
     select(-percentage) %>%
     ungroup() %>%
-    full_join(prior_info$grouping_assignment, by = "cell_id")
+    full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
   testthat::expect_equal(prior_info$grouping_network, milestone_network %>% select(from, to))

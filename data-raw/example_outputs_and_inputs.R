@@ -76,7 +76,7 @@ task <- wrap_data(
     end_id = sample(cell_ids, 2),
     start_n = 1,
     end_n = 2,
-    grouping_assignment = enframe(grouping, "cell_id", "group_id"),
+    groups_id = enframe(grouping, "cell_id", "group_id"),
     n_branches = length(group_ids),
     grouping_network = milestone_network %>% select(from, to),
     time = pseudotime + runif(length(pseudotime)) * 10 - 5,

@@ -6,7 +6,7 @@
 #' @param task A data wrapper to extend upon.
 #' @param start_id The start cells
 #' @param end_id The end cells
-#' @param grouping_assignment The grouping of cells, a dataframe with cell_id and group_id
+#' @param groups_id The grouping of cells, a dataframe with cell_id and group_id
 #' @param grouping_network The network between groups, a dataframe with from and to
 #' @param marker_feature_ids The features (genes) important for the trajectory
 #' @param n_branches Number of branches
@@ -23,7 +23,7 @@ add_prior_information <- function(
   task,
   start_id = NULL,
   end_id = NULL,
-  grouping_assignment = NULL,
+  groups_id = NULL,
   grouping_network = NULL,
   marker_feature_ids = NULL,
   n_branches = NULL,
@@ -35,7 +35,7 @@ add_prior_information <- function(
   prior_information <- lst(
     start_id,
     end_id,
-    grouping_assignment,
+    groups_id,
     grouping_network,
     marker_feature_ids,
     n_branches,
@@ -50,15 +50,15 @@ add_prior_information <- function(
   if (!is.null(end_id)) {
     testthat::expect_true(all(start_id %in% task$cell_ids))
   }
-  if (!is.null(grouping_assignment)) {
-    testthat::expect_true(is.data.frame(grouping_assignment))
-    testthat::expect_setequal(colnames(grouping_assignment), c("cell_id", "group_id"))
-    testthat::expect_setequal(grouping_assignment$cell_id, task$cell_id)
+  if (!is.null(groups_id)) {
+    testthat::expect_true(is.data.frame(groups_id))
+    testthat::expect_setequal(colnames(groups_id), c("cell_id", "group_id"))
+    testthat::expect_setequal(groups_id$cell_id, task$cell_id)
   }
   if (!is.null(grouping_network)) {
-    testthat::expect_true(!is.null(grouping_assignment))
+    testthat::expect_true(!is.null(groups_id))
     testthat::expect_setequal(colnames(grouping_network), c("from", "to"))
-    testthat::expect_true(all(grouping_assignment$group_id %in% c(grouping_network$to, grouping_network$from)))
+    testthat::expect_true(all(groups_id$group_id %in% c(grouping_network$to, grouping_network$from)))
   }
   if (!is.null(marker_feature_ids)) {
     testthat::expect_true(is_wrapper_with_expression(task))
@@ -191,7 +191,7 @@ generate_prior_information <- function(
   }
 
   ## CELL GROUPING ##
-  grouping_assignment <-
+  groups_id <-
     milestone_percentages %>%
     group_by(cell_id) %>%
     summarise(group_id = milestone_id[which.max(percentage)])
@@ -205,7 +205,7 @@ generate_prior_information <- function(
   } else {
     if ("scran" %in% rownames(utils::installed.packages())) {
       findMarkers <- get("findMarkers", "package:scran")
-      markers <- findMarkers(t(expression), grouping_assignment %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
+      markers <- findMarkers(t(expression), groups_id %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
 
       marker_feature_ids <- map(markers, as, "data.frame") %>%
         map(rownames_to_column, "gene") %>%
@@ -249,7 +249,7 @@ generate_prior_information <- function(
     start_id,
     end_milestones,
     end_id,
-    grouping_assignment,
+    groups_id,
     grouping_network,
     marker_feature_ids,
     n_branches,
