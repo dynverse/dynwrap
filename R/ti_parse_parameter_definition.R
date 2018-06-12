@@ -1,6 +1,10 @@
+#' Parse a parameter definition
+#'
+#' @param parameter_definition A named list containing the parameters. Each list has at least a type (integer, numeric, interger_vector, numeric_vector, discrete, discrete_vector, logical, logical_vector) and a default value. Other properties specify the parameter space (distribution, lower, upper, mean, sd, rate). A parameter forbidden can also be specified.
+#' @export
 parse_parameter_definition <- function(parameter_definition) {
   if(!is.null(parameter_definition$forbidden)) {
-    forbidden <- quote(parse(text = parameter_definition$forbidden))
+    forbidden <- parse(text = parameter_definition$forbidden)
     parameter_definition <- parameter_definition[names(parameter_definition) != "forbidden"]
   } else {
     forbidden <- NULL

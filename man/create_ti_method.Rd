@@ -4,11 +4,14 @@
 \alias{create_ti_method}
 \title{Create a TI method wrapper}
 \usage{
-create_ti_method(name, par_set, run_fun, plot_fun = NULL,
-  package_loaded = c(), package_required = c(), short_name = NULL)
+create_ti_method(name, parameters = NULL, par_set = NULL, run_fun,
+  plot_fun = NULL, package_loaded = c(), package_required = c(),
+  short_name = NULL)
 }
 \arguments{
 \item{name}{The name of the TI method}
+
+\item{parameters}{A list of parameters, which can be parsed using \code{\link[=parse_parameter_definition]{parse_parameter_definition()}}}
 
 \item{par_set}{A bunch of parameters created by \code{\link[ParamHelpers:makeParamSet]{ParamHelpers::makeParamSet()}}}
 

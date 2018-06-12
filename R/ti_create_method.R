@@ -4,6 +4,7 @@
 #' @param short_name A short name for the method, max 8 characters
 #' @param package_loaded The packages that need to be loaded before executing the method
 #' @param package_required The packages that need to be installed before executing the method
+#' @param parameters A list of parameters, which can be parsed using [parse_parameter_definition()]
 #' @param par_set A bunch of parameters created by [ParamHelpers::makeParamSet()]
 #' @param run_fun A function to run the TI, needs to have 'counts' as its first param.
 #' @param plot_fun A function to plot the results of a TI, needs to have 'prediction' as its first param.
@@ -12,7 +13,8 @@
 #' @export
 create_ti_method <- function(
   name,
-  par_set,
+  parameters = NULL,
+  par_set = NULL,
   run_fun,
   plot_fun = NULL,
   package_loaded = c(),
@@ -28,17 +30,28 @@ create_ti_method <- function(
     plot_fun <- function(prediction) ggplot()
   }
 
+  # process parameters
+  if (is.null(parameters) == is.null(par_set)) {
+    stop("Either parameters or par_set should be specified")
+  }
+
+  if (is.null(par_set)) {
+    par_set <- parse_parameter_definition(parameters)
+  }
+
+  default_params <- par_set %>%
+    ParamHelpers::generateDesignOfDefaults(trafo = TRUE) %>%
+    ParamHelpers::dfRowToList(par_set, 1)
+
+  # create description
   desc <- lst(
     name,
     short_name,
     package_loaded,
     package_required,
-    par_set
+    par_set,
+    parameters
   ) %>% add_class("dynwrap::ti_method")
-
-  default_params <- par_set %>%
-    ParamHelpers::generateDesignOfDefaults(trafo = TRUE) %>%
-    ParamHelpers::dfRowToList(par_set, 1)
 
   ti_fun_constructor_with_params <- function(...) {
     run_fun <- get_function(run_fun)

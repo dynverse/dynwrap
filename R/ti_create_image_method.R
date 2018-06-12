@@ -20,8 +20,7 @@ create_image_ti_method <- function(
 
   # parameters
   parameters <- definition$parameters
-  par_set <- parse_parameter_definition(parameters)
-  param_ids <- names(par_set$pars)
+  param_ids <- names(parameters) %>% setdiff(c("forbidden"))
 
   # input
   input_ids_required <- definition$input$required
@@ -166,8 +165,8 @@ create_image_ti_method <- function(
   # create ti_method
   create_ti_method(
     name,
-    par_set,
-    run_fun,
+    parameters = parameters,
+    run_fun = run_fun,
     short_name = short_name,
     plot_fun = plot_fun
   )
