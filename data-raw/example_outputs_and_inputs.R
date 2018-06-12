@@ -73,7 +73,7 @@ task <- wrap_data(
   ) %>%
   add_prior_information(
     start_id = names(pseudotime)[which.min(pseudotime)],
-    end_cells = sample(cell_ids, 2),
+    end_id = sample(cell_ids, 2),
     n_start_states = 1,
     n_end_states = 2,
     grouping_assignment = enframe(grouping, "cell_id", "group_id"),

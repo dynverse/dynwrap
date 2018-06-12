@@ -4,7 +4,7 @@ priors <- tribble(
   ~prior_id, ~name, ~description, ~prior_id2,
   "start_id", "Start cell(s)", "One or more start cell identifiers", "start_id",
 
-  "end_id", "End cell(s)", "One or more end cell identifiers", "end_cells",
+  "end_id", "End cell(s)", "One or more end cell identifiers", "end_id",
 
   "end_n", "# end states", "The number of end states", "n_end_states",
 

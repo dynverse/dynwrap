@@ -75,7 +75,7 @@ test_that("Testing generate_prior_information", {
     "start_milestones",
     "start_id",
     "end_milestones",
-    "end_cells",
+    "end_id",
     "grouping_assignment",
     "grouping_network",
     "marker_feature_ids",
@@ -93,7 +93,7 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_equal(prior_info$end_milestones %>% sort, c("A", "Y"))
 
-  testthat::expect_equal(gsub("[0-9]+", "", prior_info$end_cells), c("b", "f"))
+  testthat::expect_equal(gsub("[0-9]+", "", prior_info$end_id), c("b", "f"))
 
   join_check <-
     milestone_percentages %>%
@@ -148,7 +148,7 @@ test_that("Testing add_prior_information", {
     "start_milestones",
     "start_id",
     "end_milestones",
-    "end_cells",
+    "end_id",
     "grouping_assignment",
     "grouping_network",
     "marker_feature_ids",
@@ -167,7 +167,7 @@ test_that("Testing add_prior_information", {
 
   testthat::expect_equal(prior_info$end_milestones %>% sort, c("A", "Y"))
 
-  testthat::expect_equal(gsub("[0-9]+", "", prior_info$end_cells), c("b", "f"))
+  testthat::expect_equal(gsub("[0-9]+", "", prior_info$end_id), c("b", "f"))
 
   join_check <-
     milestone_percentages %>%
@@ -262,7 +262,7 @@ test_that("Testing generate_prior_information", {
     "start_milestones",
     "start_id",
     "end_milestones",
-    "end_cells",
+    "end_id",
     "grouping_assignment",
     "grouping_network",
     "marker_feature_ids",
@@ -280,7 +280,7 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_equal(prior_info$end_milestones, character(0))
 
-  testthat::expect_equal(prior_info$end_cells, NULL)
+  testthat::expect_equal(prior_info$end_id, NULL)
 
   join_check <-
     milestone_percentages %>%
@@ -333,7 +333,7 @@ test_that("Testing add_prior_information", {
     "start_milestones",
     "start_id",
     "end_milestones",
-    "end_cells",
+    "end_id",
     "grouping_assignment",
     "grouping_network",
     "marker_feature_ids",
@@ -351,7 +351,7 @@ test_that("Testing add_prior_information", {
 
   testthat::expect_equal(prior_info$end_milestones, character(0))
 
-  testthat::expect_equal(prior_info$end_cells, NULL)
+  testthat::expect_equal(prior_info$end_id, NULL)
 
   join_check <-
     milestone_percentages %>%

@@ -5,7 +5,7 @@
 #'
 #' @param task A data wrapper to extend upon.
 #' @param start_id The start cells
-#' @param end_cells The end cells
+#' @param end_id The end cells
 #' @param grouping_assignment The grouping of cells, a dataframe with cell_id and group_id
 #' @param grouping_network The network between groups, a dataframe with from and to
 #' @param marker_feature_ids The features (genes) important for the trajectory
@@ -22,7 +22,7 @@
 add_prior_information <- function(
   task,
   start_id = NULL,
-  end_cells = NULL,
+  end_id = NULL,
   grouping_assignment = NULL,
   grouping_network = NULL,
   marker_feature_ids = NULL,
@@ -34,7 +34,7 @@ add_prior_information <- function(
 ) {
   prior_information <- lst(
     start_id,
-    end_cells,
+    end_id,
     grouping_assignment,
     grouping_network,
     marker_feature_ids,
@@ -47,7 +47,7 @@ add_prior_information <- function(
   if (!is.null(start_id)) {
     testthat::expect_true(all(start_id %in% task$cell_ids))
   }
-  if (!is.null(end_cells)) {
+  if (!is.null(end_id)) {
     testthat::expect_true(all(start_id %in% task$cell_ids))
   }
   if (!is.null(grouping_assignment)) {
@@ -185,9 +185,9 @@ generate_prior_information <- function(
 
   # determine end cells
   if (length(end_milestones) > 0) {
-    end_cells <- determine_closest_cells(end_milestones)
+    end_id <- determine_closest_cells(end_milestones)
   } else {
-    end_cells <- c()
+    end_id <- c()
   }
 
   ## CELL GROUPING ##
@@ -248,7 +248,7 @@ generate_prior_information <- function(
     start_milestones,
     start_id,
     end_milestones,
-    end_cells,
+    end_id,
     grouping_assignment,
     grouping_network,
     marker_feature_ids,
