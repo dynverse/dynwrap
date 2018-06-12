@@ -219,8 +219,8 @@ We can now create the TI object
 ```{r}
 ti_dummy <- create_ti_method(
   "dummy", 
-  par_set,
-  run_fun
+  par_set = par_set,
+  run_fun = run_fun
 )
 ```
 
