@@ -16,9 +16,9 @@ priors <- tribble(
 
   "groups_network", "State network", "Dataframe containing the known network between states/branches. Contains a from and to column", "groups_network",
 
-  "time_id", "Time course", "Named numeric vector linking the cell ids to time points", "time",
+  "time", "Time course", "Named numeric vector linking the cell ids to time points", "time",
 
-  "genes_id", "Marker genes", "Genes/features known to be important in the dynamic process", "marker_feature_ids",
+  "features_id", "Marker genes", "Genes/features known to be important in the dynamic process", "marker_feature_ids",
 
   "task", "The full dataset", "The full dataset, including gold standard", "task"
 )
