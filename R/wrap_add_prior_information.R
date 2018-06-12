@@ -204,7 +204,7 @@ generate_prior_information <- function(
       pull(feature_id)
   } else {
     if ("scran" %in% rownames(utils::installed.packages())) {
-      findMarkers <- get("findMarkers", "package:scran")
+      findMarkers <- get("findMarkers", asNamespace("scran"))
       markers <- findMarkers(t(expression), groups_id %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
 
       features_id <- map(markers, as, "data.frame") %>%
