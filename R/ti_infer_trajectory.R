@@ -12,7 +12,7 @@
 #'   If multiple methods were provided in the `method` parameter,
 #'    `parameters` must be an unnamed list of the same length.
 #' @param give_priors All the priors a method is allowed to receive. Must be a subset of: `"start_milestones"`,
-#'  `"start_cells"`, `"end_milestones"`, `"end_cells"`, `"grouping_assignment"` and `"grouping_network"`
+#'  `"start_id"`, `"end_milestones"`, `"end_id"`, `"groups_id"` and `"groups_network"`
 #' @param mc_cores The number of cores to use, allowing to parallellise the different tasks
 #' @param verbose Whether or not to print information output
 #'
@@ -53,15 +53,15 @@ infer_trajectories <- function(
     }
     all_desc <- get_ti_methods(packages = packages)
 
-    # do some fuzzy matching, try both short name and real name
+    # do some fuzzy matching
     method <- all_desc %>% slice(
       map_int(
         method,
         function(x) {
-          distances <- utils::adist(x, c(all_desc$name, all_desc$short_name))
-          id <- as.integer(((which.min(distances)-1) %% nrow(all_desc)) + 1)
+          distances <- utils::adist(x, all_desc$method_id)
+          id <- as.integer(which.min(distances))
           if(min(distances) > 0) {
-            message(stringr::str_glue("Fuzzy matching {x} -> {all_desc$name[[id]]} / {all_desc$short_name[[id]]}"))
+            message(stringr::str_glue("Fuzzy matching {x} -> {all_desc$method_id[[id]]}"))
           }
 
           id
@@ -69,7 +69,7 @@ infer_trajectories <- function(
       )
     )
 
-    method
+    method <- list_as_tibble(map(method$method_func, ~.()))
   } else if (is_ti_method(method)) {
     # single method
     method <- list_as_tibble(list(method))
@@ -218,7 +218,7 @@ extract_args_from_task <- function(
   inputs,
   give_priors = NULL
 ) {
-  if(any(!give_priors %in% priors$prior_id2)) {
+  if(any(!give_priors %in% priors$prior_id)) {
     stop("Invalid priors requested: ", give_priors)
   }
 
@@ -283,7 +283,7 @@ execute_method_on_task <- function(
   verbose = FALSE
 ) {
   # start the timer
-  time0 <- Sys.time()
+  time0 <- as.numeric(Sys.time())
 
   # test whether the task contains expression
   testthat::expect_true(is_data_wrapper(task))
@@ -323,7 +323,7 @@ execute_method_on_task <- function(
 
         c(model, list(error = NULL))
       }, error = function(e) {
-        time_new <- Sys.time()
+        time_new <- as.numeric(Sys.time())
         timings_list <- list(
           method_start = time0,
           method_afterpreproc = time0,
@@ -363,19 +363,21 @@ execute_method_on_task <- function(
   })
 
   # stop the timer
-  time3 <- Sys.time()
+  time3 <- as.numeric(Sys.time())
+
+  timings_list <- map(timings_list, as.numeric)
 
   # create a summary tibble
   summary <- tibble(
     method_name = method$name,
     method_short_name = method$short_name,
     task_id = task$id,
-    time_sessionsetup = as.numeric(difftime(timings_list$method_start, time0, units = "sec")),
-    time_preprocessing = as.numeric(difftime(timings_list$method_afterpreproc, timings_list$method_start, units = "sec")),
-    time_method = as.numeric(difftime(timings_list$method_aftermethod, timings_list$method_afterpreproc, units = "sec")),
-    time_postprocessing = as.numeric(difftime(timings_list$method_afterpostproc, timings_list$method_aftermethod, units = "sec")),
-    time_wrapping = as.numeric(difftime(timings_list$method_stop, timings_list$method_afterpostproc, units = "sec")),
-    time_sessioncleanup = as.numeric(difftime(time3, timings_list$method_stop, units = "sec")),
+    time_sessionsetup = timings_list$method_start - time0,
+    time_preprocessing = timings_list$method_afterpreproc - timings_list$method_start,
+    time_method = timings_list$method_aftermethod - timings_list$method_afterpreproc,
+    time_postprocessing = timings_list$method_afterpostproc - timings_list$method_aftermethod,
+    time_wrapping = timings_list$method_stop - timings_list$method_afterpostproc,
+    time_sessioncleanup = time3 - timings_list$method_stop,
     error = list(error),
     num_files_created = num_files_created,
     num_setseed_calls = num_setseed_calls,
@@ -415,13 +417,13 @@ execute_method_internal <- function(method, arglist, setseed_detection_file) {
   }
 
   # measure second time point
-  time_start <- Sys.time()
+  time_start <- as.numeric(Sys.time())
 
   # execute method and return model
   model <- do.call(method$run_fun, arglist)
 
   # measure third time point
-  time_stop <- Sys.time()
+  time_stop <- as.numeric(Sys.time())
 
   # add missing timings
   if (is.null(model$timings)) {
@@ -434,9 +436,9 @@ execute_method_internal <- function(method, arglist, setseed_detection_file) {
 
   # fetch timings from within method (and place them in order of execution, just to make sure)
   timings_list <- c(
-    list(method_start = time_start),
+    list(method_start = as.numeric(time_start)),
     model$timings,
-    list(method_stop = time_stop)
+    list(method_stop = as.numeric(time_stop))
   )
 
   model$timings <- NULL
@@ -456,16 +458,19 @@ execute_method_internal <- function(method, arglist, setseed_detection_file) {
 #' @importFrom utils lsf.str
 #' @export
 get_ti_methods <- function(as_tibble = TRUE, packages = c("dynwrap")) {
-  ti_methods <- map(packages, function(package) {
+  ti_methods <- map_df(packages, function(package) {
     requireNamespace(package)
 
-    lsf.str(asNamespace(package), pattern = "^ti_") %>%
-      map(~ do.call(., args = list(), envir = asNamespace(package)))
-  }) %>% unlist(recursive = FALSE)
+    function_names <- lsf.str(asNamespace(package), pattern = "^ti_")
+    functions <- map(function_names, get, asNamespace(package))
+    method_ids <- stringr::str_sub(function_names, 4)
+
+    tibble(method_id = method_ids, method_func = functions)
+  })
 
   if (as_tibble) {
-    list_as_tibble(ti_methods)
+    ti_methods
   } else {
-    ti_methods %>% set_names(ti_methods %>% map_chr(~.$short_name))
+    map(seq_len(nrow(ti_methods)), dynutils::extract_row_to_list, tib = ti_methods)
   }
 }

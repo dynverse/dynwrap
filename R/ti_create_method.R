@@ -4,37 +4,57 @@
 #' @param short_name A short name for the method, max 8 characters
 #' @param package_loaded The packages that need to be loaded before executing the method
 #' @param package_required The packages that need to be installed before executing the method
+#' @param parameters A list of parameters, which can be parsed using [parse_parameter_definition()]
 #' @param par_set A bunch of parameters created by [ParamHelpers::makeParamSet()]
 #' @param run_fun A function to run the TI, needs to have 'counts' as its first param.
 #' @param plot_fun A function to plot the results of a TI, needs to have 'prediction' as its first param.
 #'   of `run_fun` with those described in `par_set`.
+#' @param ... Other information about the wrapper, eg. apt_dependencies
 #'
 #' @export
 create_ti_method <- function(
   name,
-  par_set,
+  parameters = NULL,
+  par_set = NULL,
   run_fun,
-  plot_fun = function(prediction) ggplot(),
+  plot_fun = NULL,
   package_loaded = c(),
   package_required = c(),
-  short_name = NULL
+  short_name = NULL,
+  ...
 ) {
   # create nice short name
   if(is.null(short_name)) {
     short_name <- name %>% gsub("[^A-Za-z1-9 ]", "", .) %>% gsub("[ ]", "_", .)
   }
 
+  if (is.null(plot_fun)) {
+    plot_fun <- function(prediction) ggplot()
+  }
+
+  # process parameters
+  if (is.null(parameters) == is.null(par_set)) {
+    stop("Either parameters or par_set should be specified")
+  }
+
+  if (is.null(par_set)) {
+    par_set <- parse_parameter_definition(parameters)
+  }
+
+  default_params <- par_set %>%
+    ParamHelpers::generateDesignOfDefaults(trafo = TRUE) %>%
+    ParamHelpers::dfRowToList(par_set, 1)
+
+  # create description
   desc <- lst(
     name,
     short_name,
     package_loaded,
     package_required,
-    par_set
+    par_set,
+    parameters,
+    ...
   ) %>% add_class("dynwrap::ti_method")
-
-  default_params <- par_set %>%
-    ParamHelpers::generateDesignOfDefaults(trafo = TRUE) %>%
-    ParamHelpers::dfRowToList(par_set, 1)
 
   ti_fun_constructor_with_params <- function(...) {
     run_fun <- get_function(run_fun)
@@ -63,7 +83,7 @@ create_ti_method <- function(
     ) %>% mutate(
       type = case_when(
         input_id %in% c("counts", "expression") ~ "expression",
-        input_id %in% priors$prior_id2 ~ "prior_information",
+        input_id %in% priors$prior_id ~ "prior_information",
         TRUE ~ "parameter"
       )
     )

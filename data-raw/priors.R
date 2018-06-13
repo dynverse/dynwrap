@@ -1,26 +1,26 @@
 library(tibble)
 
 priors <- tribble(
-  ~prior_id, ~name, ~description, ~prior_id2,
-  "start_id", "Start cell(s)", "One or more start cell identifiers", "start_cells",
+  ~prior_id, ~name, ~description,
+  "start_id", "Start cell(s)", "One or more start cell identifiers",
 
-  "end_id", "End cell(s)", "One or more end cell identifiers", "end_cells",
+  "end_id", "End cell(s)", "One or more end cell identifiers",
 
-  "end_n", "# end states", "The number of end states", "n_end_states",
+  "end_n", "# end states", "The number of end states",
 
-  "start_n", "# start states", "The number of start states", "n_start_states",
+  "start_n", "# start states", "The number of start states",
 
-  "states_id", "Cell clustering", "Named character vector linking the cell identifiers to different states/branches", "grouping_assignment",
+  "groups_id", "Cell clustering", "Named character vector linking the cell identifiers to different states/branches",
 
-  "states_n", "# states", "Number of states/branches, including start, end and intermediary states", "n_branches",
+  "groups_n", "# states", "Number of states/branches, including start, end and intermediary states",
 
-  "states_network", "State network", "Dataframe containing the known network between states/branches. Contains a from and to column", "grouping_network",
+  "groups_network", "State network", "Dataframe containing the known network between states/branches. Contains a from and to column",
 
-  "time_id", "Time course", "Named numeric vector linking the cell ids to time points", "time",
+  "time", "Time course", "Named numeric vector linking the cell ids to time points",
 
-  "genes_id", "Marker genes", "Genes/features known to be important in the dynamic process", "marker_feature_ids",
+  "features_id", "Marker genes", "Genes/features known to be important in the dynamic process",
 
-  "task", "The full dataset", "The full dataset, including gold standard", "task"
+  "task", "The full dataset", "The full dataset, including gold standard"
 )
 
 prior_usages <- tribble(

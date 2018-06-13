@@ -3,7 +3,8 @@ create_image_ti_method <- function(
   image,
   definition,
   image_type = c("docker", "singularity"),
-  docker_client = NULL
+  docker_client = NULL,
+  plot_fun = NULL
 ) {
   image_type <- match.arg(image_type)
 
@@ -19,8 +20,7 @@ create_image_ti_method <- function(
 
   # parameters
   parameters <- definition$parameters
-  par_set <- parse_parameter_definition(parameters)
-  param_ids <- names(par_set$pars)
+  param_ids <- names(parameters) %>% setdiff(c("forbidden"))
 
   # input
   input_ids_required <- definition$input$required
@@ -115,6 +115,11 @@ create_image_ti_method <- function(
     model <- wrap_data(cell_ids = cell_ids) %>%
       wrap_output(output_ids, dir_output, output_format)
 
+    # add timing
+    if(!is.null(model$timings)) {
+      model$timings$method_afterpostproc <- as.numeric(Sys.time())
+    }
+
     model
   }
 
@@ -160,9 +165,10 @@ create_image_ti_method <- function(
   # create ti_method
   create_ti_method(
     name,
-    par_set,
-    run_fun,
-    short_name = short_name
+    parameters = parameters,
+    run_fun = run_fun,
+    short_name = short_name,
+    plot_fun = plot_fun
   )
 }
 
@@ -175,14 +181,24 @@ create_image_ti_method <- function(
 #' @param definition The method definition, a list containing the name, input, output and parameters of a method.
 #'   Optional, as the definition file will be automatically loaded from the images `/code/definition.yml` using [extract_definition_from_docker_image].
 #' @param docker_client Optional, a [stevedore::docker_client()]
+#' @param ... Other information about the method
 #'
 #' @export
 create_docker_ti_method <- function(
   image,
   definition = extract_definition_from_docker_image(image),
-  docker_client = stevedore::docker_client()
+  docker_client = stevedore::docker_client(),
+  ...
 ) {
-  create_image_ti_method(image, definition, "docker", docker_client)
+  # first test if image is pulled
+  result <- try(docker_client$image$get("dynverse/scuba"), silent=TRUE)
+
+  if ("try-error" %in% class(result)) {
+    message(image, " not found locally, trying to pull image...")
+    docker_client$image$pull(image)
+  }
+
+  create_image_ti_method(image, definition, "docker", docker_client, ...)
 }
 
 #' Create a TI method from a singularity image
@@ -192,16 +208,18 @@ create_docker_ti_method <- function(
 #' @param image The location of the singularity image file, eg. `comp1.simg`.
 #' @param definition The method definition, a list containing the name, input, output and parameters of a method.
 #'  Optional, as the definition file will be automatically loaded from the images `/code/definition.yml` using [extract_definition_from_singularity_image].
+#' @param ... Other information about the method
 #'
 #' @export
 create_singularity_ti_method <- function(
   image,
-  definition = extract_definition_from_singularity_image(image)
+  definition = extract_definition_from_singularity_image(image),
+  ...
 ) {
   # get absolutate path to image
   image <- normalizePath(image)
 
-  create_image_ti_method(image, definition, "singularity")
+  create_image_ti_method(image, definition, "singularity", ...)
 }
 
 #' @rdname create_docker_ti_method
@@ -323,8 +341,12 @@ write_feather_infer <- function(x, path, name) {
     feather::write_feather(x %>% as.data.frame() %>% rownames_to_column("rownames"), path)
   } else if (is.data.frame(x)) {
     feather::write_feather(x, path)
-  } else if (is.vector(x) ){
-    feather::write_feather(tibble(!!name := x), path)
+  } else if (is.vector(x) || is.list(x)) {
+    if (is.null(names(x))) {
+      feather::write_feather(tibble(!!name := unlist(x)), path)
+    } else {
+      feather::write_feather(tibble(!!name := unlist(x), name = names(x)), path)
+    }
   } else {
     stop("Feather does not support this output")
   }

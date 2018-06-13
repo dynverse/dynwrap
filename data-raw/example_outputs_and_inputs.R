@@ -61,6 +61,8 @@ end_state_probabilities <- matrix(runif(length(cell_ids) * length(end_state_ids)
 colnames(end_state_probabilities) <- end_state_ids
 end_state_probabilities <- end_state_probabilities %>% as.data.frame() %>% mutate(cell_id = cell_ids)
 
+timings <- list("method_afterpreproc" = as.numeric(Sys.time()), "method_aftermethod" = as.numeric(Sys.time()) + 10)
+
 # task with prior information
 task <- wrap_data(
   cell_id = cell_ids
@@ -70,15 +72,15 @@ task <- wrap_data(
     expression
   ) %>%
   add_prior_information(
-    start_cells = names(pseudotime)[which.min(pseudotime)],
-    end_cells = sample(cell_ids, 2),
-    n_start_states = 1,
-    n_end_states = 2,
-    grouping_assignment = enframe(grouping, "cell_id", "group_id"),
-    n_branches = length(group_ids),
-    grouping_network = milestone_network %>% select(from, to),
+    start_id = names(pseudotime)[which.min(pseudotime)],
+    end_id = sample(cell_ids, 2),
+    start_n = 1,
+    end_n = 2,
+    groups_id = enframe(grouping, "cell_id", "group_id"),
+    groups_n = length(group_ids),
+    groups_network = milestone_network %>% select(from, to),
     time = pseudotime + runif(length(pseudotime)) * 10 - 5,
-    marker_feature_ids = colnames(expression)[1:2]
+    features_id = colnames(expression)[1:2]
   )
 
 # a model
@@ -135,7 +137,8 @@ objects <- lst(
   dimred_milestones = dimred_milestones %>% as.data.frame() %>% rownames_to_column("milestone_id"),
   cell_graph,
   to_keep,
-  end_state_probabilities
+  end_state_probabilities,
+  timings
 )
 
 dir_output <- "inst/example_outputs/text/"

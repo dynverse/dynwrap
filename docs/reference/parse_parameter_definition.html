@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Metadata on priors — priors • dynwrap</title>
+<title>Parse a parameter definition — parse_parameter_definition • dynwrap</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Metadata on priors — priors" />
+<meta property="og:title" content="Parse a parameter definition — parse_parameter_definition" />
 
-<meta property="og:description" content="Metadata on priors" />
+<meta property="og:description" content="Parse a parameter definition" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -115,31 +115,35 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Metadata on priors</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>priors.Rd</code></div>
+    <h1>Parse a parameter definition</h1>
+    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/ti_parse_parameter_definition.R'><code>R/ti_parse_parameter_definition.R</code></a></small>
+    <div class="hidden name"><code>parse_parameter_definition.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Metadata on priors</p>
+    <p>Parse a parameter definition</p>
     
     </div>
 
-    <pre class="usage"><span class='no'>priors</span></pre>
-        
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
-
-    <p>An object of class <code>tbl_df</code> (inherits from <code>tbl</code>, <code>data.frame</code>) with 10 rows and 3 columns.</p>
+    <pre class="usage"><span class='fu'>parse_parameter_definition</span>(<span class='no'>parameter_definition</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>parameter_definition</th>
+      <td><p>A named list containing the parameters. Each list has at least a type (integer, numeric, interger_vector, numeric_vector, discrete, discrete_vector, logical, logical_vector) and a default value. Other properties specify the parameter space (distribution, lower, upper, mean, sd, rate). A parameter forbidden can also be specified.</p></td>
+    </tr>
+    </table>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      
-      <li><a href="#format">Format</a></li>
-          </ul>
+      <li><a href="#arguments">Arguments</a></li>
+                </ul>
 
   </div>
 </div>

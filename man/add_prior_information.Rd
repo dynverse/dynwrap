@@ -4,29 +4,29 @@
 \alias{add_prior_information}
 \title{Add prior information to a data wrapper}
 \usage{
-add_prior_information(task, start_cells = NULL, end_cells = NULL,
-  grouping_assignment = NULL, grouping_network = NULL,
-  marker_feature_ids = NULL, n_branches = NULL, n_start_states = NULL,
-  n_end_states = NULL, time = NULL, verbose = TRUE)
+add_prior_information(task, start_id = NULL, end_id = NULL,
+  groups_id = NULL, groups_network = NULL, features_id = NULL,
+  groups_n = NULL, start_n = NULL, end_n = NULL, time = NULL,
+  verbose = TRUE)
 }
 \arguments{
 \item{task}{A data wrapper to extend upon.}
 
-\item{start_cells}{The start cells}
+\item{start_id}{The start cells}
 
-\item{end_cells}{The end cells}
+\item{end_id}{The end cells}
 
-\item{grouping_assignment}{The grouping of cells, a dataframe with cell_id and group_id}
+\item{groups_id}{The grouping of cells, a dataframe with cell_id and group_id}
 
-\item{grouping_network}{The network between groups, a dataframe with from and to}
+\item{groups_network}{The network between groups, a dataframe with from and to}
 
-\item{marker_feature_ids}{The features (genes) important for the trajectory}
+\item{features_id}{The features (genes) important for the trajectory}
 
-\item{n_branches}{Number of branches}
+\item{groups_n}{Number of branches}
 
-\item{n_start_states}{Number of start states}
+\item{start_n}{Number of start states}
 
-\item{n_end_states}{Number of end states}
+\item{end_n}{Number of end states}
 
 \item{time}{The time for every cell}
 

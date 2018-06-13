@@ -6,7 +6,7 @@ devtools::load_all()
 # all functions which start with an "add", but filtered by:
 # if they contain "The trajectory model." as return value in documentation
 # or if they are one of:
-output_ids_builds_upon_trajectory <- c("root", "pseudotime", "waypoints", "dimred", "grouping")
+output_ids_builds_upon_trajectory <- c("root", "pseudotime", "waypoints", "dimred", "grouping", "timings")
 
 requireNamespace("dynwrap")
 add_ids <- as.character(lsf.str(asNamespace("dynwrap"))) %>%
@@ -52,7 +52,7 @@ allowed_inputs <- tribble(
   "expression", "Expression matrix",
   "counts", "Raw counts matrix"
 ) %>% bind_rows(
-  priors %>% select(input_id = prior_id2, description = description)
+  priors %>% select(input_id = prior_id, description = description)
 ) %>%
   filter(
     !input_id %in% c("task")

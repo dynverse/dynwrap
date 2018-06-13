@@ -127,7 +127,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>create_singularity_ti_method</span>(<span class='no'>image</span>,
-  <span class='kw'>definition</span> <span class='kw'>=</span> <span class='fu'>extract_definition_from_singularity_image</span>(<span class='no'>image</span>))
+  <span class='kw'>definition</span> <span class='kw'>=</span> <span class='fu'>extract_definition_from_singularity_image</span>(<span class='no'>image</span>), <span class='no'>...</span>)
 
 <span class='fu'>extract_definition_from_singularity_image</span>(<span class='no'>image</span>,
   <span class='kw'>definition_location</span> <span class='kw'>=</span> <span class='st'>"/code/definition.yml"</span>)</pre>
@@ -143,6 +143,10 @@
       <th>definition</th>
       <td><p>The method definition, a list containing the name, input, output and parameters of a method.
 Optional, as the definition file will be automatically loaded from the images <code>/code/definition.yml</code> using extract_definition_from_singularity_image.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other information about the method</p></td>
     </tr>
     <tr>
       <th>definition_location</th>

@@ -73,27 +73,27 @@ test_that("Testing generate_prior_information", {
 
   expected_prior <- c(
     "start_milestones",
-    "start_cells",
+    "start_id",
     "end_milestones",
-    "end_cells",
-    "grouping_assignment",
-    "grouping_network",
-    "marker_feature_ids",
-    "n_branches",
+    "end_id",
+    "groups_id",
+    "groups_network",
+    "features_id",
+    "groups_n",
     "time",
     "timecourse",
-    "n_end_states"
+    "end_n"
   )
 
   testthat::expect_true(all(expected_prior %in% names(prior_info)))
 
   testthat::expect_equal(prior_info$start_milestones, "W")
 
-  testthat::expect_equal(gsub("[0-9]+", "", prior_info$start_cells), "a")
+  testthat::expect_equal(gsub("[0-9]+", "", prior_info$start_id), "a")
 
   testthat::expect_equal(prior_info$end_milestones %>% sort, c("A", "Y"))
 
-  testthat::expect_equal(gsub("[0-9]+", "", prior_info$end_cells), c("b", "f"))
+  testthat::expect_equal(gsub("[0-9]+", "", prior_info$end_id), c("b", "f"))
 
   join_check <-
     milestone_percentages %>%
@@ -102,20 +102,20 @@ test_that("Testing generate_prior_information", {
     slice(1) %>%
     select(-percentage) %>%
     ungroup() %>%
-    full_join(prior_info$grouping_assignment, by = "cell_id")
+    full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
-  testthat::expect_equal(prior_info$grouping_network, milestone_network %>% select(from, to))
+  testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
 
-  testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
+  testthat::expect_true(all(prior_info$features_id %in% gene_ids))
 
-  testthat::expect_equal(prior_info$n_branches, 4)
+  testthat::expect_equal(prior_info$groups_n, 4)
 
   testthat::expect_equal(prior_info$time, set_names(cell_info$simulationtime, cell_info$cell_id))
 
   testthat::expect_equal(prior_info$timecourse, set_names(cell_info$timepoint, cell_info$cell_id))
 
-  testthat::expect_equal(prior_info$n_end_states, 2)
+  testthat::expect_equal(prior_info$end_n, 2)
 })
 
 
@@ -146,28 +146,28 @@ test_that("Testing add_prior_information", {
   # copy paste tests
   expected_prior <- c(
     "start_milestones",
-    "start_cells",
+    "start_id",
     "end_milestones",
-    "end_cells",
-    "grouping_assignment",
-    "grouping_network",
-    "marker_feature_ids",
-    "n_branches",
+    "end_id",
+    "groups_id",
+    "groups_network",
+    "features_id",
+    "groups_n",
     "time",
     "timecourse",
-    "n_start_states",
-    "n_end_states"
+    "start_n",
+    "end_n"
   )
 
   testthat::expect_true(all(expected_prior %in% names(prior_info)))
 
   testthat::expect_equal(prior_info$start_milestones, "W")
 
-  testthat::expect_equal(gsub("[0-9]+", "", prior_info$start_cells), "a")
+  testthat::expect_equal(gsub("[0-9]+", "", prior_info$start_id), "a")
 
   testthat::expect_equal(prior_info$end_milestones %>% sort, c("A", "Y"))
 
-  testthat::expect_equal(gsub("[0-9]+", "", prior_info$end_cells), c("b", "f"))
+  testthat::expect_equal(gsub("[0-9]+", "", prior_info$end_id), c("b", "f"))
 
   join_check <-
     milestone_percentages %>%
@@ -176,22 +176,22 @@ test_that("Testing add_prior_information", {
     slice(1) %>%
     select(-percentage) %>%
     ungroup() %>%
-    full_join(prior_info$grouping_assignment, by = "cell_id")
+    full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
-  testthat::expect_equal(prior_info$grouping_network, milestone_network %>% select(from, to))
+  testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
 
-  testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
+  testthat::expect_true(all(prior_info$features_id %in% gene_ids))
 
-  testthat::expect_equal(prior_info$n_branches, 4)
+  testthat::expect_equal(prior_info$groups_n, 4)
 
   testthat::expect_equal(prior_info$time, set_names(cell_info$simulationtime, cell_info$cell_id))
 
   testthat::expect_equal(prior_info$timecourse, set_names(cell_info$timepoint, cell_info$cell_id))
 
-  testthat::expect_equal(prior_info$n_end_states, 2)
+  testthat::expect_equal(prior_info$end_n, 2)
 
-  testthat::expect_equal(prior_info$n_start_states, 1)
+  testthat::expect_equal(prior_info$start_n, 1)
 })
 
 
@@ -260,27 +260,27 @@ test_that("Testing generate_prior_information", {
 
   expected_prior <- c(
     "start_milestones",
-    "start_cells",
+    "start_id",
     "end_milestones",
-    "end_cells",
-    "grouping_assignment",
-    "grouping_network",
-    "marker_feature_ids",
-    "n_branches",
+    "end_id",
+    "groups_id",
+    "groups_network",
+    "features_id",
+    "groups_n",
     "time",
     "timecourse",
-    "n_end_states"
+    "end_n"
   )
 
   testthat::expect_true(all(expected_prior %in% names(prior_info)))
 
   testthat::expect_equal(prior_info$start_milestones, character(0))
 
-  testthat::expect_equal(prior_info$start_cells, cell_ids)
+  testthat::expect_equal(prior_info$start_id, cell_ids)
 
   testthat::expect_equal(prior_info$end_milestones, character(0))
 
-  testthat::expect_equal(prior_info$end_cells, NULL)
+  testthat::expect_equal(prior_info$end_id, NULL)
 
   join_check <-
     milestone_percentages %>%
@@ -289,20 +289,20 @@ test_that("Testing generate_prior_information", {
     slice(1) %>%
     select(-percentage) %>%
     ungroup() %>%
-    full_join(prior_info$grouping_assignment, by = "cell_id")
+    full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
-  testthat::expect_equal(prior_info$grouping_network, milestone_network %>% select(from, to))
+  testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
 
-  testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
+  testthat::expect_true(all(prior_info$features_id %in% gene_ids))
 
-  testthat::expect_equal(prior_info$n_branches, 3)
+  testthat::expect_equal(prior_info$groups_n, 3)
 
   testthat::expect_equal(prior_info$time, NULL)
 
   testthat::expect_equal(prior_info$timecourse, NULL)
 
-  testthat::expect_equal(prior_info$n_end_states, 0)
+  testthat::expect_equal(prior_info$end_n, 0)
 })
 
 
@@ -331,27 +331,27 @@ test_that("Testing add_prior_information", {
   # copy paste tests
   expected_prior <- c(
     "start_milestones",
-    "start_cells",
+    "start_id",
     "end_milestones",
-    "end_cells",
-    "grouping_assignment",
-    "grouping_network",
-    "marker_feature_ids",
-    "n_branches",
+    "end_id",
+    "groups_id",
+    "groups_network",
+    "features_id",
+    "groups_n",
     "time",
     "timecourse",
-    "n_end_states"
+    "end_n"
   )
 
   testthat::expect_true(all(expected_prior %in% names(prior_info)))
 
   testthat::expect_equal(prior_info$start_milestones, character(0))
 
-  testthat::expect_equal(prior_info$start_cells, cell_ids)
+  testthat::expect_equal(prior_info$start_id, cell_ids)
 
   testthat::expect_equal(prior_info$end_milestones, character(0))
 
-  testthat::expect_equal(prior_info$end_cells, NULL)
+  testthat::expect_equal(prior_info$end_id, NULL)
 
   join_check <-
     milestone_percentages %>%
@@ -360,18 +360,18 @@ test_that("Testing add_prior_information", {
     slice(1) %>%
     select(-percentage) %>%
     ungroup() %>%
-    full_join(prior_info$grouping_assignment, by = "cell_id")
+    full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
-  testthat::expect_equal(prior_info$grouping_network, milestone_network %>% select(from, to))
+  testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
 
-  testthat::expect_true(all(prior_info$marker_feature_ids %in% gene_ids))
+  testthat::expect_true(all(prior_info$features_id %in% gene_ids))
 
-  testthat::expect_equal(prior_info$n_branches, 3)
+  testthat::expect_equal(prior_info$groups_n, 3)
 
   testthat::expect_equal(prior_info$time, NULL)
 
   testthat::expect_equal(prior_info$timecourse, NULL)
 
-  testthat::expect_equal(prior_info$n_end_states, 0)
+  testthat::expect_equal(prior_info$end_n, 0)
 })

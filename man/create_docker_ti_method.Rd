@@ -8,7 +8,7 @@
 \usage{
 create_docker_ti_method(image,
   definition = extract_definition_from_docker_image(image),
-  docker_client = stevedore::docker_client())
+  docker_client = stevedore::docker_client(), ...)
 
 extract_definition_from_docker_image(image,
   definition_location = "/code/definition.yml",
@@ -23,6 +23,8 @@ pull_docker_ti_method(image, docker_client = stevedore::docker_client())
 Optional, as the definition file will be automatically loaded from the images \code{/code/definition.yml} using \link{extract_definition_from_docker_image}.}
 
 \item{docker_client}{Optional, a \code{\link[stevedore:docker_client]{stevedore::docker_client()}}}
+
+\item{...}{Other information about the method}
 
 \item{definition_location}{The location of the definition file within the image}
 }

@@ -10,7 +10,7 @@ add_end_state_probabilities(model, end_state_probabilities, pseudotime = NULL,
 \arguments{
 \item{model}{The model to which a linear trajectory will be added.}
 
-\item{end_state_probabilities}{A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone.}
+\item{end_state_probabilities}{A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone. If the data_frame contains only a cell_id column, the data will be processed using \code{add_linear_trajectory}}
 
 \item{pseudotime}{A named vector of pseudo times.}
 
