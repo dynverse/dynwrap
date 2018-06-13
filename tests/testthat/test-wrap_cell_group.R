@@ -80,13 +80,5 @@ test_that("Testing add_grouping fails when groupings is not in the correct forma
         extras = extras
       )
   )
-  expect_error(
-    wr_orig %>%
-      add_grouping(
-        group_ids = group_ids,
-        grouping = matrix(grouping, ncol = 1),
-        extras = extras
-      )
-  )
 })
 

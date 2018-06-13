@@ -35,8 +35,9 @@ add_grouping <- function(
   # check cell group
   testthat::expect_named(grouping)
   testthat::expect_is(grouping, "character")
+
   testthat::expect_true(all(names(grouping) %in% model$cell_ids))
-  testthat::expect_true(all(grouping %in% group_ids))
+  testthat::expect_true(all(grouping[!is.na(grouping)] %in% group_ids))
 
   # check milestone ids, if data contains a trajectory
   if (is_wrapper_with_trajectory(model)) {
@@ -98,11 +99,17 @@ process_grouping <- function(model, grouping) {
     grouping <- set_names(as.character(grouping$group_id), grouping$cell_id)
   } else if (length(grouping) == length(model$cell_ids)) {
     # named vector of all cells
+    if (is.null(names(grouping))) {
+      names(grouping) <- model$cell_ids
+    }
   } else if (length(grouping) == length(names(grouping))) {
     # named vector not containing all cells
-    grouping[setdiff(names(grouping), model$cell_id)] <- NA
   } else {
     stop("Could not find grouping")
   }
+
+  # cells which are not grouped are given group NA
+  grouping[setdiff(model$cell_ids, names(grouping))] <- NA
+
   grouping
 }
