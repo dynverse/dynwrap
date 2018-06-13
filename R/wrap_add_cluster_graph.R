@@ -29,6 +29,7 @@ add_cluster_graph <- function(
     model <- model %>% add_grouping(grouping)
   }
   grouping <- get_grouping(model)
+  grouping <- grouping[!is.na(grouping)]
 
   milestone_ids <- unique(c(milestone_network$to, milestone_network$from))
 

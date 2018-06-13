@@ -104,5 +104,9 @@ process_grouping <- function(model, grouping) {
   } else {
     stop("Could not find grouping")
   }
+
+  # cells which are not grouped are given group NA
+  grouping[setdiff(model$cell_ids, names(grouping))] <- NA
+
   grouping
 }
