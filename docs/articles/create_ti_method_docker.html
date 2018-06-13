@@ -123,7 +123,7 @@
   <span class="fu">required:</span>
     <span class="kw">-</span> expression
   <span class="fu">optional:</span>
-    <span class="kw">-</span> start_cells
+    <span class="kw">-</span> start_id
 <span class="fu">output:</span>
   <span class="fu">format:</span><span class="at"> feather</span>
   <span class="fu">outputs:</span>
@@ -226,14 +226,14 @@
 <td align="left">hdf5</td>
 <td align="left">HDF5 format</td>
 <td align="left">
-<a href="https://github.com/dynverse/comp1/tree/master/python_hdf5">python</a>, <a href="https://github.com/dynverse/comp1/tree/master/R_hdf5">R</a>
+<a href="https://github.com/dynverse/comp1/tree/devel/python_hdf5">python</a>, <a href="https://github.com/dynverse/comp1/tree/devel/R_hdf5">R</a>
 </td>
 </tr>
 <tr class="even">
 <td align="left">text</td>
 <td align="left">csv and json files</td>
 <td align="left">
-<a href="https://github.com/dynverse/comp1/tree/master/python_text">python</a>, <a href="https://github.com/dynverse/comp1/tree/master/R_text">R</a>
+<a href="https://github.com/dynverse/comp1/tree/devel/python_text">python</a>, <a href="https://github.com/dynverse/comp1/tree/devel/R_text">R</a>
 </td>
 </tr>
 <tr class="odd">
@@ -241,13 +241,13 @@
 <td align="left">
 <a href="https://github.com/wesm/feather">Feather</a> dataframe files</td>
 <td align="left">
-<a href="https://github.com/dynverse/comp1/tree/master/python_feather">python</a>, <a href="https://github.com/dynverse/comp1/tree/master/R_feather">R</a>
+<a href="https://github.com/dynverse/comp1/tree/devel/python_feather">python</a>, <a href="https://github.com/dynverse/comp1/tree/devel/R_feather">R</a>
 </td>
 </tr>
 <tr class="even">
 <td align="left">rds</td>
 <td align="left">R binary files</td>
-<td align="left"><a href="https://github.com/dynverse/comp1/tree/master/R_rds">R</a></td>
+<td align="left"><a href="https://github.com/dynverse/comp1/tree/devel/R_rds">R</a></td>
 </tr>
 </tbody>
 </table>
@@ -327,7 +327,7 @@
 <td align="left">text</td>
 <td align="left">csv and json files</td>
 <td align="left">
-<a href="https://github.com/dynverse/comp1/tree/master/python_text">python</a>, <a href="https://github.com/dynverse/comp1/tree/master/R_text">R</a>
+<a href="https://github.com/dynverse/comp1/tree/devel/python_text">python</a>, <a href="https://github.com/dynverse/comp1/tree/devel/R_text">R</a>
 </td>
 </tr>
 <tr class="even">
@@ -335,18 +335,18 @@
 <td align="left">
 <a href="https://github.com/wesm/feather">Feather</a> dataframe files</td>
 <td align="left">
-<a href="https://github.com/dynverse/comp1/tree/master/python_feather">python</a>, <a href="https://github.com/dynverse/comp1/tree/master/R_feather">R</a>
+<a href="https://github.com/dynverse/comp1/tree/devel/python_feather">python</a>, <a href="https://github.com/dynverse/comp1/tree/devel/R_feather">R</a>
 </td>
 </tr>
 <tr class="odd">
 <td align="left">rds</td>
 <td align="left">R binary files</td>
-<td align="left"><a href="https://github.com/dynverse/comp1/tree/master/R_rds">R</a></td>
+<td align="left"><a href="https://github.com/dynverse/comp1/tree/devel/R_rds">R</a></td>
 </tr>
 <tr class="even">
 <td align="left">dynwrap</td>
 <td align="left">directly wrapped using <a href="https://github.com/dynverse/dynwrap">dynwrap</a> functions</td>
-<td align="left"><a href="https://github.com/dynverse/comp1/tree/master/R_dynwrap">R</a></td>
+<td align="left"><a href="https://github.com/dynverse/comp1/tree/devel/R_dynwrap">R</a></td>
 </tr>
 </tbody>
 </table>
@@ -494,10 +494,10 @@
 expression &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/feather/topics/read_feather">read_feather</a></span>(<span class="st">"/input/expression.feather"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tibble/topics/rownames">column_to_rownames</a></span>(<span class="st">"rownames"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">as.matrix</span>()
-<span class="cf">if</span>(<span class="kw">file.exists</span>(<span class="st">"/input/start_cells.feather"</span>)) {
-  start_cells &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/feather/topics/read_feather">read_feather</a></span>(<span class="st">"/input/start_cells.feather"</span>)<span class="op">$</span>start_cells
+<span class="cf">if</span>(<span class="kw">file.exists</span>(<span class="st">"/input/start_id.feather"</span>)) {
+  start_id &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/feather/topics/read_feather">read_feather</a></span>(<span class="st">"/input/start_id.feather"</span>)<span class="op">$</span>start_id
 } <span class="cf">else</span> {
-  start_cells &lt;-<span class="st"> </span><span class="ot">NULL</span>
+  start_id &lt;-<span class="st"> </span><span class="ot">NULL</span>
 }
 
 params &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/jsonlite/topics/read_json">read_json</a></span>(<span class="st">"/input/params.json"</span>, <span class="dt">simplifyVector =</span> <span class="ot">TRUE</span>)
@@ -509,9 +509,9 @@ pca &lt;-<span class="st"> </span><span class="kw">prcomp</span>(expression)
 <span class="co"># extract the component and use it as pseudotimes</span>
 pseudotime &lt;-<span class="st"> </span>pca<span class="op">$</span>x[, params<span class="op">$</span>component]
 
-<span class="co"># flip pseudotimes using start_cells</span>
-<span class="cf">if</span> (<span class="op">!</span><span class="kw">is.null</span>(start_cells)) {
-  <span class="cf">if</span>(<span class="kw">mean</span>(pseudotime[start_cells]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>) {
+<span class="co"># flip pseudotimes using start_id</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">is.null</span>(start_id)) {
+  <span class="cf">if</span>(<span class="kw">mean</span>(pseudotime[start_id]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>) {
     pseudotime &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">-</span>pseudotime
   }
 }

@@ -32,7 +32,7 @@ A TI docker requires at least three files. The files for this example are also a
 An example of a `definition.yml` file (as can be found on the [github](https://github.com/dynverse/comp1)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/comp1/master/R_feather/definition.yml") %>%
+read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/R_feather/definition.yml") %>%
   paste0("```yaml\n", ., "\n```") %>% 
   cat()
 ```
@@ -79,9 +79,9 @@ The input determines which kind of expression and prior information is given to 
 
 - **format** The format of the input, which can be:
 ```{r, echo=FALSE}
-comp1_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/comp1/tree/master/{x})")
+comp1_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/comp1/tree/devel/{x})")
 comp1_urls <- function(names, xs) glue::collapse(map2_chr(names, xs, comp1_url), ", ")
-input_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/comp1/tree/master/inst/example_inputs/{x})")
+input_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/comp1/tree/devel/inst/example_inputs/{x})")
 inputs_url <- function(names, xs) glue::collapse(map2_chr(names, xs, input_url), ", ")
 
 tribble(
@@ -141,7 +141,7 @@ The output determines how the output of a method can be transformed into a commo
 - **format** The format of the output, which can be
 
 ```{r, echo=FALSE}
-comp1_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/comp1/tree/master/{x})")
+comp1_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/comp1/tree/devel/{x})")
 comp1_urls <- function(names, xs) glue::collapse(map2_chr(names, xs, comp1_url), ", ")
 
 tribble(
@@ -220,7 +220,7 @@ outputs %>%
 An example of a `Dockerfile` (as can be found on the [github](https://github.com/dynverse/comp1)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/comp1/master/R_feather/Dockerfile") %>%
+read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/R_feather/Dockerfile") %>%
   paste0("```Dockerfile\n", ., "\n```") %>% 
   cat()
 ```
@@ -236,7 +236,7 @@ This file should always contain an entrypoint, which will be called when the TI 
 All input files requested in the `definition.yml` will be mounted in the `/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/output` directory. An example (as can be found on the [github](https://github.com/dynverse/comp1)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/comp1/master/R_feather/run.R") %>%
+read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/R_feather/run.R") %>%
   paste0("```r\n", ., "\n```") %>% 
   cat()
 ```
