@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Metadata on priors — priors • dynwrap</title>
+<title>Constructs a multifurcating trajectory using the pseudotime values of each cell and their end state probabilities. If pseudotime values are not given, will use pseudotime already present in the model. — add_end_state_probabilities • dynwrap</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Metadata on priors — priors" />
+<meta property="og:title" content="Constructs a multifurcating trajectory using the pseudotime values of each cell and their end state probabilities. If pseudotime values are not given, will use pseudotime already present in the model. — add_end_state_probabilities" />
 
-<meta property="og:description" content="Metadata on priors" />
+<meta property="og:description" content="This function will generate the milestone_network and progressions." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -115,30 +115,58 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Metadata on priors</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>priors.Rd</code></div>
+    <h1>Constructs a multifurcating trajectory using the pseudotime values of each cell and their end state probabilities. If pseudotime values are not given, will use pseudotime already present in the model.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/wrap_add_end_state_probabilities.R'><code>R/wrap_add_end_state_probabilities.R</code></a></small>
+    <div class="hidden name"><code>add_end_state_probabilities.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Metadata on priors</p>
+    <p>This function will generate the milestone_network and progressions.</p>
     
     </div>
 
-    <pre class="usage"><span class='no'>priors</span></pre>
-        
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <pre class="usage"><span class='fu'>add_end_state_probabilities</span>(<span class='no'>model</span>, <span class='no'>end_state_probabilities</span>, <span class='kw'>pseudotime</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>do_scale_minmax</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>model</th>
+      <td><p>The model to which a linear trajectory will be added.</p></td>
+    </tr>
+    <tr>
+      <th>end_state_probabilities</th>
+      <td><p>A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone. If the data_frame contains only a cell_id column, the data will be processed using <code>add_linear_trajectory</code></p></td>
+    </tr>
+    <tr>
+      <th>pseudotime</th>
+      <td><p>A named vector of pseudo times.</p></td>
+    </tr>
+    <tr>
+      <th>do_scale_minmax</th>
+      <td><p>Whether or not to scale the pseudotime between 0 and 1.
+Otherwise, will assume the values are already within that range.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Extras to be added to the model</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class <code>tbl_df</code> (inherits from <code>tbl</code>, <code>data.frame</code>) with 10 rows and 3 columns.</p>
+    <p>The trajectory model</p>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#format">Format</a></li>
+      <li><a href="#value">Value</a></li>
           </ul>
 
   </div>

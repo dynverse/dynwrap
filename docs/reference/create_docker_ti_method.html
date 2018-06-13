@@ -128,7 +128,7 @@
 
     <pre class="usage"><span class='fu'>create_docker_ti_method</span>(<span class='no'>image</span>,
   <span class='kw'>definition</span> <span class='kw'>=</span> <span class='fu'>extract_definition_from_docker_image</span>(<span class='no'>image</span>),
-  <span class='kw'>docker_client</span> <span class='kw'>=</span> <span class='kw pkg'>stevedore</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stevedore/topics/docker_client'>docker_client</a></span>())
+  <span class='kw'>docker_client</span> <span class='kw'>=</span> <span class='kw pkg'>stevedore</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stevedore/topics/docker_client'>docker_client</a></span>(), <span class='no'>...</span>)
 
 <span class='fu'>extract_definition_from_docker_image</span>(<span class='no'>image</span>,
   <span class='kw'>definition_location</span> <span class='kw'>=</span> <span class='st'>"/code/definition.yml"</span>,
@@ -151,6 +151,10 @@ Optional, as the definition file will be automatically loaded from the images <c
     <tr>
       <th>docker_client</th>
       <td><p>Optional, a <code><a href='http://www.rdocumentation.org/packages/stevedore/topics/docker_client'>stevedore::docker_client()</a></code></p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other information about the method</p></td>
     </tr>
     <tr>
       <th>definition_location</th>

@@ -126,8 +126,8 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>create_ti_method</span>(<span class='no'>name</span>, <span class='no'>par_set</span>, <span class='no'>run_fun</span>, <span class='kw'>plot_fun</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>prediction</span>)
-  <span class='fu'>ggplot</span>(), <span class='kw'>package_loaded</span> <span class='kw'>=</span> <span class='fu'>c</span>(), <span class='kw'>package_required</span> <span class='kw'>=</span> <span class='fu'>c</span>(),
+    <pre class="usage"><span class='fu'>create_ti_method</span>(<span class='no'>name</span>, <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>par_set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>run_fun</span>,
+  <span class='kw'>plot_fun</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>package_loaded</span> <span class='kw'>=</span> <span class='fu'>c</span>(), <span class='kw'>package_required</span> <span class='kw'>=</span> <span class='fu'>c</span>(),
   <span class='kw'>short_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -136,6 +136,10 @@
     <tr>
       <th>name</th>
       <td><p>The name of the TI method</p></td>
+    </tr>
+    <tr>
+      <th>parameters</th>
+      <td><p>A list of parameters, which can be parsed using <code><a href='parse_parameter_definition.html'>parse_parameter_definition()</a></code></p></td>
     </tr>
     <tr>
       <th>par_set</th>

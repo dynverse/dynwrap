@@ -6,7 +6,7 @@
 \usage{
 create_ti_method(name, parameters = NULL, par_set = NULL, run_fun,
   plot_fun = NULL, package_loaded = c(), package_required = c(),
-  short_name = NULL)
+  short_name = NULL, ...)
 }
 \arguments{
 \item{name}{The name of the TI method}
@@ -25,6 +25,8 @@ of \code{run_fun} with those described in \code{par_set}.}
 \item{package_required}{The packages that need to be installed before executing the method}
 
 \item{short_name}{A short name for the method, max 8 characters}
+
+\item{...}{Other information about the wrapper, eg. apt_dependencies}
 }
 \description{
 Create a TI method wrapper

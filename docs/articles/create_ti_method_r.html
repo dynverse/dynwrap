@@ -84,7 +84,7 @@
     <div class="page-header toc-ignore">
       <h1>Creating a TI method within R</h1>
             
-            <h4 class="date">2018-06-08</h4>
+            <h4 class="date">2018-06-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dynverse/dynwrap/blob/master/vignettes/create_ti_method_r.Rmd"><code>vignettes/create_ti_method_r.Rmd</code></a></small>
       <div class="hidden name"><code>create_ti_method_r.Rmd</code></div>
@@ -152,10 +152,10 @@ pseudotime &lt;-<span class="st"> </span>(pseudotime <span class="op">-</span><s
 <a href="#prior-information" class="anchor"></a>Prior information</h3>
 <p>Prior information can be required (no default) or optional (default is <code>NULL</code>).</p>
 <p>Following prior information requests are possible:</p>
-<table style="width:100%;" class="table">
+<table class="table">
 <colgroup>
-<col width="18%">
-<col width="81%">
+<col width="16%">
+<col width="83%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Name of parameter</th>
@@ -163,31 +163,31 @@ pseudotime &lt;-<span class="st"> </span>(pseudotime <span class="op">-</span><s
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">start_cells</td>
+<td align="left">start_id</td>
 <td align="left">One or more start cell identifiers</td>
 </tr>
 <tr class="even">
-<td align="left">end_cells</td>
+<td align="left">end_id</td>
 <td align="left">One or more end cell identifiers</td>
 </tr>
 <tr class="odd">
-<td align="left">n_end_states</td>
+<td align="left">end_n</td>
 <td align="left">The number of end states</td>
 </tr>
 <tr class="even">
-<td align="left">n_start_states</td>
+<td align="left">start_n</td>
 <td align="left">The number of start states</td>
 </tr>
 <tr class="odd">
-<td align="left">grouping_assignment</td>
+<td align="left">groups_id</td>
 <td align="left">Named character vector linking the cell identifiers to different states/branches</td>
 </tr>
 <tr class="even">
-<td align="left">n_branches</td>
+<td align="left">groups_n</td>
 <td align="left">Number of states/branches, including start, end and intermediary states</td>
 </tr>
 <tr class="odd">
-<td align="left">grouping_network</td>
+<td align="left">groups_network</td>
 <td align="left">Dataframe containing the known network between states/branches. Contains a from and to column</td>
 </tr>
 <tr class="even">
@@ -195,7 +195,7 @@ pseudotime &lt;-<span class="st"> </span>(pseudotime <span class="op">-</span><s
 <td align="left">Named numeric vector linking the cell ids to time points</td>
 </tr>
 <tr class="odd">
-<td align="left">marker_feature_ids</td>
+<td align="left">features_id</td>
 <td align="left">Genes/features known to be important in the dynamic process</td>
 </tr>
 <tr class="even">
@@ -204,11 +204,11 @@ pseudotime &lt;-<span class="st"> </span>(pseudotime <span class="op">-</span><s
 </tr>
 </tbody>
 </table>
-<p>In this example we will use the <code>start_cells</code>…</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">start_cells &lt;-<span class="st"> </span><span class="kw">as.character</span>(<span class="kw">which.min</span>(pseudotime))</code></pre></div>
+<p>In this example we will use the <code>start_id</code>…</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">start_id &lt;-<span class="st"> </span><span class="kw">as.character</span>(<span class="kw">which.min</span>(pseudotime))</code></pre></div>
 <p>as follows</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="op">!</span><span class="kw">is.null</span>(start_cells)) {
-  <span class="cf">if</span>(<span class="kw">mean</span>(pseudotime[start_cells]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="op">!</span><span class="kw">is.null</span>(start_id)) {
+  <span class="cf">if</span>(<span class="kw">mean</span>(pseudotime[start_id]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>) {
     pseudotime &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">-</span>pseudotime
   }
 }</code></pre></div>
@@ -287,15 +287,15 @@ divergence_regions &lt;-<span class="st"> </span><span class="kw"><a href="http:
 <h2 class="hasAnchor">
 <a href="#creating-the-method-object" class="anchor"></a>Creating the method object</h2>
 <p>Combining everything in a function:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">run_fun &lt;-<span class="st"> </span><span class="cf">function</span>(expression, component, <span class="dt">start_cells =</span> <span class="ot">NULL</span>) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">run_fun &lt;-<span class="st"> </span><span class="cf">function</span>(expression, component, <span class="dt">start_id =</span> <span class="ot">NULL</span>) {
   <span class="co"># do pca and extract pseudotime</span>
   pca &lt;-<span class="st"> </span><span class="kw">prcomp</span>(expression)
   
   pseudotime &lt;-<span class="st"> </span>pca<span class="op">$</span>x[, component]
   
-  <span class="co"># flip pseudotime using start_cells</span>
-  <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.null</span>(start_cells)) {
-    <span class="cf">if</span>(<span class="kw">mean</span>(pseudotime[start_cells]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>) {
+  <span class="co"># flip pseudotime using start_id</span>
+  <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.null</span>(start_id)) {
+    <span class="cf">if</span>(<span class="kw">mean</span>(pseudotime[start_id]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>) {
       pseudotime &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">-</span>pseudotime
     }
   }
@@ -309,8 +309,8 @@ divergence_regions &lt;-<span class="st"> </span><span class="kw"><a href="http:
 <p>We can now create the TI object</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ti_dummy &lt;-<span class="st"> </span><span class="kw"><a href="../reference/create_ti_method.html">create_ti_method</a></span>(
   <span class="st">"dummy"</span>, 
-  par_set,
-  run_fun
+  <span class="dt">par_set =</span> par_set,
+  <span class="dt">run_fun =</span> run_fun
 )</code></pre></div>
 <p>This function also has several optional parameters, among which:</p>
 <ul>
