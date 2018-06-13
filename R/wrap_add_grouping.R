@@ -36,7 +36,7 @@ add_grouping <- function(
   testthat::expect_named(grouping)
   testthat::expect_is(grouping, "character")
   testthat::expect_true(all(names(grouping) %in% model$cell_ids))
-  testthat::expect_true(all(grouping %in% group_ids))
+  testthat::expect_true(all(grouping[!is.na(grouping)] %in% group_ids))
 
   # check milestone ids, if data contains a trajectory
   if (is_wrapper_with_trajectory(model)) {
