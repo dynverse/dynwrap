@@ -1,6 +1,7 @@
 #' Simplify an igraph network such that consecutive linear edges are removed
 #'
 #' @param gr an igraph object
+#' @param allow_duplicated_edges Whether or not to allow duplicated edges between nodes.
 #'
 #' @importFrom igraph V E are_adjacent is_directed degree graph_from_data_frame distances
 #'
@@ -26,7 +27,7 @@
 #' )
 #' gr <- igraph::graph_from_data_frame(net)
 #' simplify_igraph_network(gr)
-simplify_igraph_network <- function(gr) {
+simplify_igraph_network <- function(gr, allow_duplicated_edges = TRUE) {
   is_loop <- igraph::V(gr) %>%
     map_lgl(~ igraph::are_adjacent(gr, ., .))
 
@@ -65,8 +66,6 @@ simplify_igraph_network <- function(gr) {
       neighs_out <- seq_len(num_vs) %>% map(~igraph::neighbors(gr, ., mode = "out") %>% as.integer)
       to_process <- !keep_v
 
-      edges_to_add <- list()
-
       for (v_rem in seq_len(num_vs)) {
         if (to_process[[v_rem]]) {
           to_process[[v_rem]] <- FALSE
@@ -74,43 +73,52 @@ simplify_igraph_network <- function(gr) {
           # search for in end
           i <- neighs_in[[v_rem]]
           i_prev <- v_rem
-          dis_rem <- igraph::E(gr)[i %->% i_prev]$weight
+          dis_rem_l <- igraph::E(gr)[i %->% i_prev]$weight
           while (to_process[[i]]) {
             to_process[[i]] <- FALSE
             i_prev <- i
             i <- neighs_in[[i]]
-            dis_rem <- dis_rem + igraph::E(gr)[i %->% i_prev]$weight
+            dis_rem_l <- dis_rem_l + igraph::E(gr)[i %->% i_prev]$weight
           }
 
           # search for out end
           j <- neighs_out[[v_rem]]
           j_prev <- v_rem
-          dis_rem <- dis_rem + igraph::E(gr)[j_prev %->% j]$weight
+          dis_rem_r <- igraph::E(gr)[j_prev %->% j]$weight
           while (to_process[[j]]) {
             to_process[[j]] <- FALSE
             j_prev <- j
             j <- neighs_out[[j]]
-            dis_rem <- dis_rem + igraph::E(gr)[j_prev %->% j]$weight
+            dis_rem_r <- dis_rem_r + igraph::E(gr)[j_prev %->% j]$weight
           }
 
-          edges_to_add[[length(edges_to_add)+1]] <- list(from = i, to = j, weight = dis_rem)
+          # if adding an edge between i and j would cause duplicates and this is not allowed
+          if (length(igraph::E(gr)[i %->% j]) != 0 && !allow_duplicated_edges) {
+            if (i_prev != v_rem) {
+              gr <- gr %>% igraph::add.edges(
+                c(i, v_rem), attr = list(weight = dis_rem_l, directed = is_directed)
+              )
+            }
+            if (j_prev != v_rem) {
+              gr <- gr %>% igraph::add.edges(
+                c(v_rem, j), attr = list(weight = dis_rem_r, directed = is_directed)
+              )
+            }
+            keep_v[v_rem] <- TRUE
+          } else {
+            gr <- gr %>% igraph::add.edges(
+              c(i, j),
+              attr = list(
+                weight = dis_rem_l + dis_rem_r,
+                directed = is_directed
+              )
+            )
+          }
+
         }
       }
 
-      weights_to_add <- edges_to_add %>% map_dbl(~.$weight)
-      weights_to_add[weights_to_add == 0] <- sum(igraph::E(gr)$weight)
-
-      gr2 <- gr
-      if (length(edges_to_add) > 0) {
-        gr2 <- gr2 %>% igraph::add.edges(
-          unlist(edges_to_add %>% map(~.[-3])),
-          attr = list(
-            weight = weights_to_add,
-            directed = is_directed
-          )
-        )
-      }
-      gr2 %>% igraph::delete.vertices(which(!keep_v))
+      gr %>% igraph::delete.vertices(which(!keep_v))
     }
   } else {
     degr <- igraph::degree(gr)
@@ -143,7 +151,7 @@ simplify_igraph_network <- function(gr) {
           i <- neighs[[v_rem]][[1]]
           i_prev <- v_rem
 
-          dis_rem <- igraph::E(gr)[i %--% i_prev]$weight
+          dis_rem_l <- igraph::E(gr)[i %--% i_prev]$weight
 
           while (to_process[[i]]) {
             to_process[[i]] <- FALSE
@@ -151,7 +159,7 @@ simplify_igraph_network <- function(gr) {
             if (length(i_new) > 0) {
               i_prev <- i
               i <- i_new
-              dis_rem <- dis_rem + igraph::E(gr)[i %--% i_prev]$weight
+              dis_rem_l <- dis_rem_l + igraph::E(gr)[i %--% i_prev]$weight
             }
           }
 
@@ -159,35 +167,43 @@ simplify_igraph_network <- function(gr) {
           j <- neighs[[v_rem]][[2]]
           j_prev <- v_rem
 
-          dis_rem <- dis_rem + igraph::E(gr)[j %--% j_prev]$weight
+          dis_rem_r <- igraph::E(gr)[j %--% j_prev]$weight
           while (to_process[[j]]) {
             to_process[[j]] <- FALSE
             j_new <- setdiff(neighs[[j]], j_prev)
             if (length(j_new) > 0) {
               j_prev <- j
               j <- j_new
-              dis_rem <- dis_rem + igraph::E(gr)[j %--% j_prev]$weight
+              dis_rem_r <- dis_rem_r + igraph::E(gr)[j %--% j_prev]$weight
             }
           }
 
-          edges_to_add[[length(edges_to_add)+1]] <- list(from = i, to = j, weight = dis_rem)
+          # if adding an edge between i and j would cause duplicates and this is not allowed
+          if (length(igraph::E(gr)[i %--% j]) != 0 && !allow_duplicated_edges) {
+            if (i_prev != v_rem) {
+              gr <- gr %>% igraph::add.edges(
+                c(i, v_rem), attr = list(weight = dis_rem_l, directed = is_directed)
+              )
+            }
+            if (j_prev != v_rem) {
+              gr <- gr %>% igraph::add.edges(
+                c(v_rem, j), attr = list(weight = dis_rem_r, directed = is_directed)
+              )
+            }
+            keep_v[v_rem] <- TRUE
+          } else {
+            gr <- gr %>% igraph::add.edges(
+              c(i, j),
+              attr = list(
+                weight = dis_rem_l + dis_rem_r,
+                directed = is_directed
+              )
+            )
+          }
         }
       }
 
-      weights_to_add <- edges_to_add %>% map_dbl(~.$weight)
-      weights_to_add[weights_to_add == 0] <- sum(igraph::E(gr)$weight)
-
-      gr2 <- gr
-      if (length(edges_to_add) > 0) {
-        gr2 <- gr2 %>% igraph::add.edges(
-          unlist(edges_to_add %>% map(~.[-3])),
-          attr = list(
-            weight = weights_to_add,
-            directed = is_directed
-          )
-        )
-      }
-      gr2 %>% igraph::delete.vertices(which(!keep_v))
+      gr %>% igraph::delete.vertices(which(!keep_v))
     }
   }
 

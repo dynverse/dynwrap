@@ -177,3 +177,18 @@ for (test in tests) {
   })
 }
 
+
+test_that("simplify_igraph_network's allow_duplicated_edges parameter", {
+  net <- data.frame(from = c(1,1,2,3), to = c(2,3,4,4), weight = c(1, 2, 4, 8), directed = TRUE)
+  gr <- igraph::graph_from_data_frame(net, directed = TRUE, vertices = 1:4)
+
+  gr1 <- simplify_igraph_network(gr, allow_duplicated_edges = FALSE)
+  expect_equal(length(igraph::E(gr1)), 3)
+  gr1df <- igraph::as_data_frame(gr1)
+
+  gr2 <- simplify_igraph_network(gr, allow_duplicated_edges = TRUE)
+  expect_equal(length(igraph::E(gr2)), 2)
+  gr2df <- igraph::as_data_frame(gr2)
+
+  # TODO: expand test to make sure the right weights are being calculated
+})
