@@ -9,8 +9,8 @@
 \usage{
 label_milestones(trajectory, labelling)
 
-label_milestones_markers(trajectory, markers, expression_source,
-  n_nearest_cells)
+label_milestones_markers(trajectory, markers,
+  expression_source = "expression", n_nearest_cells = 20)
 
 is_wrapper_with_milestone_labelling(trajectory)
 

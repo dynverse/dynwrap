@@ -35,7 +35,7 @@ label_milestones <- function(trajectory, labelling) {
 
 #' @rdname label_milestones
 #' @export
-label_milestones_markers <- function(trajectory, markers, expression_source, n_nearest_cells) {
+label_milestones_markers <- function(trajectory, markers, expression_source = "expression", n_nearest_cells = 20) {
   milestone_ids <- trajectory$milestone_ids
   expression <- get_expression(trajectory, expression_source)
 

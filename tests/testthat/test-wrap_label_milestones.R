@@ -78,7 +78,7 @@ test_that("Testing milestone labelling with expression", {
 })
 
 test_that("Testing get milestone labelling with expression", {
-  expect_true(all(is.na(get_milestone_labelling(wr))))
-  expect_true(get_milestone_labelling(wr, label_milestones = c("one" = "begin"))["one"] == "begin")
-  expect_error(get_milestone_labelling(wr, label_milestones = c("wow" = "so much wow")))
+  expect_true(all(get_milestone_labelling(wr_orig) == wr_orig$milestone_ids))
+  expect_true(get_milestone_labelling(wr_orig, label_milestones = c("one" = "begin"))["one"] == "begin")
+  expect_error(get_milestone_labelling(wr_orig, label_milestones = c("wow" = "so much wow")))
 })
