@@ -1,4 +1,4 @@
-# dynwrap
+# dynwrap <img src="man/img/logo.svg" align="right" />
 
 [![Build Status](https://travis-ci.org/dynverse/dynwrap.svg)](https://travis-ci.org/dynverse/dynwrap)
 [![codecov](https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynwrap)
