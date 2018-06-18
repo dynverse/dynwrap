@@ -39,17 +39,15 @@ test_that("Testing add_cell_graph", {
 
   # testing milestone ids
   expect_equal(wr$cell_ids, cell_ids)
-  expect_equal(length(wr$milestone_ids), 6)
-  expect_equal(nrow(wr$milestone_network), 5)
+  expect_equal(length(wr$milestone_ids), 4)
+  expect_equal(nrow(wr$milestone_network), 3)
   expect_equal(nrow(wr$progressions), length(cell_ids))
 
-  expect_equal(wr$milestone_ids, paste0("ML_", c("A", "B", "C", "D", "E", "F")))
+  expect_equal(wr$milestone_ids, paste0("ML_", c("A", "D", "E", "F")))
 
   test_strs <- wr$milestone_network %>% {paste(.$from, .$to, .$length, .$directed, sep = "|")} %>% sort
   expected_strs <- c(
-    "ML_A|ML_B|0.5|FALSE",
-    "ML_B|ML_C|0.6|FALSE",
-    "ML_C|ML_D|0.7|FALSE",
+    "ML_A|ML_D|1.8|FALSE",
     "ML_D|ML_E|0.8|FALSE",
     "ML_D|ML_F|0.9|FALSE"
   ) %>% sort
@@ -57,16 +55,16 @@ test_that("Testing add_cell_graph", {
 
   test_strs <- wr$progressions %>% {paste(.$cell_id, .$from, .$to, round(.$percentage, 2), sep = "|")} %>% sort
   expected_strs <- c(
-    'a|ML_A|ML_B|0',
-    'A|ML_A|ML_B|0',
-    'b|ML_A|ML_B|1',
-    'B|ML_A|ML_B|1',
-    'bb|ML_A|ML_B|1',
-    'c|ML_B|ML_C|1',
-    'C|ML_B|ML_C|1',
-    'cc|ML_B|ML_C|1',
-    'd|ML_C|ML_D|1',
-    'D|ML_C|ML_D|1',
+    'a|ML_A|ML_D|0',
+    'A|ML_A|ML_D|0',
+    'b|ML_A|ML_D|0.28',
+    'B|ML_A|ML_D|0.28',
+    'bb|ML_A|ML_D|0.28',
+    'c|ML_A|ML_D|0.61',
+    'C|ML_A|ML_D|0.61',
+    'cc|ML_A|ML_D|0.61',
+    'd|ML_D|ML_E|0',
+    'D|ML_D|ML_E|0',
     'E|ML_D|ML_E|1',
     'F|ML_D|ML_F|1'
   ) %>% sort
