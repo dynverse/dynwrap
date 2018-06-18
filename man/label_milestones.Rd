@@ -2,12 +2,15 @@
 % Please edit documentation in R/wrap_label_milestones.R
 \name{label_milestones}
 \alias{label_milestones}
+\alias{label_milestones_markers}
 \alias{is_wrapper_with_milestone_labelling}
 \alias{get_milestone_labelling}
-\title{Label milestones based on highest expression of a set of markers}
+\title{Label milestones either manually (\code{label_milestones}) or using marker genes (\code{label_milestones_markers})}
 \usage{
-label_milestones(trajectory, labelling, expression_source = "expression",
-  n_nearest_cells = 20)
+label_milestones(trajectory, labelling)
+
+label_milestones_markers(trajectory, markers, expression_source,
+  n_nearest_cells)
 
 is_wrapper_with_milestone_labelling(trajectory)
 
@@ -16,14 +19,16 @@ get_milestone_labelling(trajectory, label_milestones = NULL)
 \arguments{
 \item{trajectory}{The trajectory}
 
-\item{labelling}{List containing for each new name of a milestone the genes which will be used as markers}
+\item{labelling}{Named character vector containing for a milestone a new label}
+
+\item{markers}{List containing for each label a list of marker genes}
 
 \item{expression_source}{The expression source}
 
 \item{n_nearest_cells}{The number of nearest cells to use for extracting milestone expression}
 
-\item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels as milestone_ids will be used), a named character vector, or FALSE}
+\item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
 }
 \description{
-Label milestones based on highest expression of a set of markers
+Label milestones either manually (\code{label_milestones}) or using marker genes (\code{label_milestones_markers})
 }

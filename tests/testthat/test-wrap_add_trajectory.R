@@ -500,4 +500,3 @@ test_that("Testing combination with add_grouping", {
 
   testthat::expect_equal(wr$group_ids, wr$milestone_ids)
 })
-
