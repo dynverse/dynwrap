@@ -191,7 +191,7 @@ create_docker_ti_method <- function(
   ...
 ) {
   # first test if image is pulled
-  result <- try(docker_client$image$get("dynverse/scuba"), silent=TRUE)
+  result <- try(docker_client$image$get(image), silent=TRUE)
 
   if ("try-error" %in% class(result)) {
     message(image, " not found locally, trying to pull image...")
