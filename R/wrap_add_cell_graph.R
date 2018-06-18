@@ -66,7 +66,7 @@ add_cell_graph <- function(
 
   # remove nodes with degree with degree 2, if undirected,
   # or in degree 1 and out degree 1, if directed
-  sgr <- gr
+  sgr <- simplify_igraph_network(gr, allow_duplicated_edges = FALSE)
   milestone_ids <- igraph::V(sgr)$name
 
   # STEP 3: Calculate progressions of cell_ids
