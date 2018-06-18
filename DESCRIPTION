@@ -50,7 +50,6 @@ Suggests:
   feather,
   hdf5r,
   lhs,
-  stevedore,
   viridis,
   yaml,
   knitr,
@@ -59,7 +58,6 @@ Remotes:
   berndbischl/ParamHelpers,
   dynverse/dynutils,
   dynverse/dyndimred,
-  richfitz/stevedore,
   rcannood/PRISM
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr

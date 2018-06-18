@@ -3,12 +3,9 @@ create_image_ti_method <- function(
   image,
   definition,
   image_type = c("docker", "singularity"),
-  docker_client = NULL,
   plot_fun = NULL
 ) {
   image_type <- match.arg(image_type)
-
-  testthat::expect_true("docker_client" %in% class(docker_client) || is.null(docker_client))
 
   # some checking of definition file -----------------------------------------------------
   # name
@@ -131,9 +128,7 @@ create_image_ti_method <- function(
         cat(glue("Debug: ", crayon::bold("docker run --entrypoint 'bash' -it {paste0(paste0('-v ', volumes), collapse = ' ')} {image}\n")))
       }
 
-      docker_client <- stevedore::docker_client()
-
-      docker_client$container$run(image, volumes = volumes)
+      system(glue::glue("docker run {paste0(paste0('-v ', volumes), collapse = ' ')} {image}"))
     }
   } else {
     run_container <- function(image, volumes, debug) {
@@ -180,25 +175,23 @@ create_image_ti_method <- function(
 #' @param image The name of the docker image, eg. `dynverse/comp1`. Can contain tags such as `dynverse/comp1:R_feather`
 #' @param definition The method definition, a list containing the name, input, output and parameters of a method.
 #'   Optional, as the definition file will be automatically loaded from the images `/code/definition.yml` using [extract_definition_from_docker_image].
-#' @param docker_client Optional, a [stevedore::docker_client()]
 #' @param ... Other information about the method
 #'
 #' @export
 create_docker_ti_method <- function(
   image,
   definition = extract_definition_from_docker_image(image),
-  docker_client = stevedore::docker_client(),
   ...
 ) {
-  # first test if image is pulled
-  result <- try(docker_client$image$get(image), silent=TRUE)
+  tryCatch(
+    system(glue::glue("docker inspect --type=image {image}"), intern = TRUE),
+    warning = function(x) {
+      message("Image not found locally, pulling image... Stay tuned!")
+      system(glue::glue("docker pull {image}"))
+      }
+  )
 
-  if ("try-error" %in% class(result)) {
-    message(image, " not found locally, trying to pull image...")
-    docker_client$image$pull(image)
-  }
-
-  create_image_ti_method(image, definition, "docker", docker_client, ...)
+  create_image_ti_method(image, definition, "docker", ...)
 }
 
 #' Create a TI method from a singularity image
@@ -229,20 +222,23 @@ create_singularity_ti_method <- function(
 #' @export
 extract_definition_from_docker_image <- function(
   image,
-  definition_location = "/code/definition.yml",
-  docker_client = stevedore::docker_client()
+  definition_location = "/code/definition.yml"
 ) {
   requireNamespace("yaml")
 
-  temp_container <- docker_client$container$create(
-    image,
-    "bash",
-    entrypoint = "bash"
-  )
-  definition_location_local <- tempfile()
-  system(glue("docker cp {temp_container$id()}:{definition_location} {definition_location_local}"))
-  temp_container$remove()
+  # start container
+  output <- system(glue::glue("docker create --entrypoint='bash' {image}"), intern = TRUE)
+  id <- output[length(output)]
+  if (!stringr::str_detect(id, "[A-Za-z0-9]*")) {stop("Docker errored ", output)}
 
+  # copy file from container
+  definition_location_local <- tempfile()
+  system(glue::glue("docker cp {id}:{definition_location} {definition_location_local}"))
+
+  # remove container
+  system(glue::glue("docker rm {id}"))
+
+  # read definition file
   definition <- yaml::read_yaml(definition_location_local)
   definition
 }
@@ -269,12 +265,11 @@ extract_definition_from_singularity_image <- function(
 #' @rdname create_docker_ti_method
 #' @export
 pull_docker_ti_method <- function(
-  image,
-  docker_client = stevedore::docker_client()
+  image
 ) {
-  docker_client$image$pull(image)
+  system(glue::glue("docker pull {image}"))
 
-  create_docker_ti_method(image, docker_client = docker_client)
+  create_docker_ti_method(image)
 }
 
 save_inputs <- function(
