@@ -49,6 +49,7 @@ Suggests:
   crayon,
   feather,
   hdf5r,
+  ggplot2,
   lhs,
   viridis,
   yaml,
@@ -58,7 +59,8 @@ Remotes:
   berndbischl/ParamHelpers,
   dynverse/dynutils,
   dynverse/dyndimred,
-  rcannood/PRISM
+  rcannood/PRISM,
+  tidyverse/ggplot2
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Collate: 

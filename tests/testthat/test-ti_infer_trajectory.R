@@ -33,13 +33,15 @@ test_that("Testing infer_trajectory with control methods", {
     ) %>%
     add_prior_information(start_id = cell_ids[[1]])
 
-
-
   method <- ti_comp1()
 
   model <- infer_trajectory(task, method)
   expect_s3_class(model, "dynwrap::with_trajectory")
 
+  # test plotting
+  expect_true("ggplot" %in% class(method$plot_fun(model)))
+
+  # test priors
   model <- infer_trajectory(task, method, give_priors = c("start_id"))
   expect_s3_class(model, "dynwrap::with_trajectory")
 
