@@ -100,6 +100,10 @@ wrap_text <- function(model, output_ids, dir_output) {
 
 #' @rdname wrap_output
 wrap_feather <- function(model, output_ids, dir_output) {
+  # install feather if not available
+  if(!require("feather")) {
+    dynutils::install_packages("feather", "dynwrap")
+  }
   requireNamespace("feather")
 
   outer_files <- list.files(dir_output, full.names = TRUE)

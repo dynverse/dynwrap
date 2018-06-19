@@ -293,7 +293,12 @@ save_inputs <- function(
   } else if (input_format == "rds") {
     write_rds(inputs, file.path(dir_input, "data.rds"))
   } else if (input_format == "hdf5") {
+    # install hdf5r if not available
+    if(!require("hdf5r")) {
+      dynutils::install_packages("hdf5r", "dynwrap")
+    }
     requireNamespace("hdf5r")
+
     file <- hdf5r::H5File$new(file.path(dir_input, "data.h5"), "w")
     purrr::walk2(inputs, names(inputs), function(x, name) {
       file$create_dataset(name, x)
@@ -305,7 +310,12 @@ save_inputs <- function(
     })
     file$close_all() # important to do a close_all here, otherwise some parts of the data can still be open, resulting in invalid h5 files
   } else if (input_format == "feather") {
+    # install feather if not available
+    if(!require("feather")) {
+      dynutils::install_packages("feather", "dynwrap")
+    }
     requireNamespace("feather")
+
     for (input_id in names(inputs)) {
       input <- inputs[[input_id]]
       write_feather_infer(
