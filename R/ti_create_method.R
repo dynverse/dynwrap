@@ -56,6 +56,8 @@ create_ti_method <- function(
     ...
   ) %>% add_class("dynwrap::ti_method")
 
+  if (is.null(desc$method_id)) {desc$method_id <- desc$short_name}
+
   ti_fun_constructor_with_params <- function(...) {
     run_fun <- get_function(run_fun)
 

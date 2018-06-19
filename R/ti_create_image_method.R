@@ -52,21 +52,6 @@ create_image_ti_method <- function(
   output_format <- definition$output$format[[1]]
   testthat::expect_true(is.character(output_format))
 
-  # authors
-  if (!is.null(definition$authors)) {
-    definition$authors <- map(definition$authors, function(author) {
-      testthat::expect_true(is.list(author))
-
-      # add given, family, etc
-      args <- author[intersect(names(formals(person)), names(author))]
-
-      # add github, orcid, etc to comment
-      args$comment <- unlist(author[setdiff(names(author), names(formals(person)))], use.names = TRUE)
-
-      do.call(person, args)
-    })
-  }
-
   # define run_fun ------------------------------------------------------------------------
   definition$run_fun <- function(input_ids, param_ids, output_ids, run_container) {
     # create input directory
