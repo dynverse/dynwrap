@@ -304,12 +304,6 @@ execute_method_on_task <- function(
     old_wd <- getwd()
     setwd(tmp_dir)
 
-    # disable seed setting
-    # a method shouldn't set seeds during regular execution,
-    # it should be left up to the user instead
-    orig_setseed <- base::set.seed
-    setseed_detection_file <- tempfile(pattern = "seedsetcheck")
-
     # run the method and catch the error, if necessary
     out <-
       tryCatch({
@@ -347,19 +341,6 @@ execute_method_on_task <- function(
 
     # Remove temporary folder
     unlink(tmp_dir, recursive = TRUE, force = TRUE)
-
-    # read how many seeds were set and
-    # restore environment to previous state
-    num_setseed_calls <-
-      if (file.exists(setseed_detection_file)) {
-        stringr::str_length(readr::read_file(setseed_detection_file))
-      } else {
-        0
-      }
-    if (file.exists(setseed_detection_file)) {
-      file.remove(setseed_detection_file)
-    }
-    dynutils::override_setseed(orig_setseed)
   })
 
   # stop the timer
@@ -380,7 +361,6 @@ execute_method_on_task <- function(
     time_sessioncleanup = time3 - timings_list$method_stop,
     error = list(error),
     num_files_created = num_files_created,
-    num_setseed_calls = num_setseed_calls,
     prior_df = list(method$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(args)))
   )
 
@@ -400,14 +380,6 @@ execute_method_on_task <- function(
 #' @export
 #' @importFrom readr write_file
 execute_method_internal <- function(method, arglist, setseed_detection_file) {
-  # disable seed setting
-  # a method shouldn't set seeds during regular execution,
-  # it should be left up to the user instead
-  new_setseed <- function(i) {
-    readr::write_file("1", setseed_detection_file, append = TRUE)
-  }
-  dynutils::override_setseed(new_setseed)
-
   # Load required packages and namespaces
   for (pack in method$package_loaded) {
     suppressMessages(do.call(require, list(pack)))
