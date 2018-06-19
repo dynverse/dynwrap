@@ -216,20 +216,26 @@ extract_definition_from_docker_image <- function(
 ) {
   requireNamespace("yaml")
 
-  # start container
-  output <- system(glue::glue("docker create --entrypoint='bash' {image}"), intern = TRUE)
-  id <- output[length(output)]
-  if (!stringr::str_detect(id, "[A-Za-z0-9]*")) {stop("Docker errored ", output)}
+  # first try to find definition by inspecting the image
+  definition <- yaml::yaml.load(system(paste0("docker inspect -f {{.Config.Labels.definition}} ", image), intern = TRUE))
 
-  # copy file from container
-  definition_location_local <- tempfile()
-  system(glue::glue("docker cp {id}:{definition_location} {definition_location_local}"))
+  if (definition == "<no value>") {
+    # start container
+    output <- system(glue::glue("docker create --entrypoint='bash' {image}"), intern = TRUE)
+    id <- output[length(output)]
+    if (!stringr::str_detect(id, "[A-Za-z0-9]*")) {stop("Docker errored ", output)}
 
-  # remove container
-  system(glue::glue("docker rm {id}"))
+    # copy file from container
+    definition_location_local <- tempfile()
+    system(glue::glue("docker cp {id}:{definition_location} {definition_location_local}"))
 
-  # read definition file
-  definition <- yaml::read_yaml(definition_location_local)
+    # remove container
+    system(glue::glue("docker rm {id}"))
+
+    # read definition file
+    definition <- yaml::read_yaml(definition_location_local)
+  }
+
   definition
 }
 
