@@ -9,15 +9,12 @@ create_image_ti_method <- function(
 
   # some checking of definition file -----------------------------------------------------
   # name
-  name <- definition$name
-  testthat::expect_true(is.character(name))
+  testthat::expect_true(is.character(definition$name))
 
-  short_name <- definition$short_name
-  testthat::expect_true(is.character(short_name) || is.null(short_name))
+  testthat::expect_true(is.character(definition$short_name) || is.null(definition$short_name))
 
   # parameters
-  parameters <- definition$parameters
-  param_ids <- names(parameters) %>% setdiff(c("forbidden"))
+  param_ids <- names(definition$parameters) %>% setdiff(c("forbidden"))
 
   # input
   input_ids_required <- definition$input$required
@@ -56,7 +53,7 @@ create_image_ti_method <- function(
   testthat::expect_true(is.character(output_format))
 
   # define run_fun ------------------------------------------------------------------------
-  run_fun <- function(input_ids, param_ids, output_ids, run_container) {
+  definition$run_fun <- function(input_ids, param_ids, output_ids, run_container) {
     # create input directory
     dir_input <- file.path(tempdir(), "input")
     if(dir.exists(dir_input)) {
@@ -141,7 +138,7 @@ create_image_ti_method <- function(
   }
 
   # adapt run_fun environment
-  environment(run_fun) <- list2env(lst(input_format, input_ids, param_ids, output_format, output_ids, run_container))
+  environment(definition$run_fun) <- list2env(lst(input_format, input_ids, param_ids, output_format, output_ids, run_container))
 
   # adapt run_fun arguments, some hocus pocus going on here ;)
   # the `list(expr())` creates a required function argument
@@ -155,16 +152,9 @@ create_image_ti_method <- function(
       verbose = FALSE
     ) # default arguments (evaluated when running run_fun)
   )
-  formals(run_fun) <- arguments
+  formals(definition$run_fun) <- arguments
 
-  # create ti_method
-  create_ti_method(
-    name,
-    parameters = parameters,
-    run_fun = run_fun,
-    short_name = short_name,
-    plot_fun = plot_fun
-  )
+  do.call(create_ti_method, definition)
 }
 
 

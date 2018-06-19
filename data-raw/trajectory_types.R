@@ -115,7 +115,7 @@ trajectory_type_dag <- bind_rows(
   tidygraph::as_tbl_graph()
 
 trajectory_type_ancestors <- trajectory_type_dag %>%
-  igraph::ego(99999999, mode = "out") %>%
+  igraph::ego(99999999, mode = "in") %>%
   map(names) %>%
   set_names(names(igraph::V(trajectory_type_dag)))
 

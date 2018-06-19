@@ -8,14 +8,14 @@ Authors@R: c(
       "Cannoodt", 
       email = "rcannood@gmail.com", 
       role = c("aut", "cre"),
-      comment = c(ORCID = "0000-0003-3641-729X")
+      comment = c(ORCID = "0000-0003-3641-729X", github = "rcannood")
     ),
     person(
       "Wouter", 
       "Saelens", 
       email = "wouter.saelens@ugent.be", 
       role = c("aut"), 
-      comment = c(ORCID = "0000-0002-7114-6248")
+      comment = c(ORCID = "0000-0002-7114-6248", github = "zouter")
     )
   )
 URL: https://github.com/dynverse/dynwrap
@@ -49,6 +49,7 @@ Suggests:
   crayon,
   feather,
   hdf5r,
+  ggplot2,
   lhs,
   viridis,
   yaml,
@@ -58,7 +59,8 @@ Remotes:
   berndbischl/ParamHelpers,
   dynverse/dynutils,
   dynverse/dyndimred,
-  rcannood/PRISM
+  rcannood/PRISM,
+  tidyverse/ggplot2
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Collate: 
