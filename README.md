@@ -1,7 +1,7 @@
-# dynwrap <img src="man/img/logo.svg" align="right" />
-
 [![Build Status](https://travis-ci.org/dynverse/dynwrap.svg)](https://travis-ci.org/dynverse/dynwrap)
-[![codecov](https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynwrap)
+[![codecov](https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynwrap) <img src="man/img/logo.png" align="right" />
+
+# Tools for inferring and wrapping single-cell trajectories
 
 **dynwrap** contains the code for a common model of single-cell trajectories. The package can
 
@@ -10,7 +10,9 @@
 * Wrap the output of a TI method, such as the pseudotime, a clustering or a branch network, and convert it into a common trajectory model
 * Further postprocess the output, such as labelling milestones and rooting the trajectory
 
-![dynwrap](docs/figures/overview_wrapping_v1.svg)
+![](docs/figures/overview_wrapping_v1.svg)
+
+
 
 
 The advantage of using a common model is that it allows
