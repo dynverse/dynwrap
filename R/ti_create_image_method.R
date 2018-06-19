@@ -296,9 +296,8 @@ save_inputs <- function(
     # install hdf5r if not available
     if(!require("hdf5r")) {
       dynutils::install_packages("hdf5r", "dynwrap")
-    } else {
-      requireNamespace("hdf5r")
     }
+    requireNamespace("hdf5r")
 
     file <- hdf5r::H5File$new(file.path(dir_input, "data.h5"), "w")
     purrr::walk2(inputs, names(inputs), function(x, name) {
@@ -314,9 +313,8 @@ save_inputs <- function(
     # install feather if not available
     if(!require("feather")) {
       dynutils::install_packages("feather", "dynwrap")
-    } else {
-      requireNamespace("feather")
     }
+    requireNamespace("feather")
 
     for (input_id in names(inputs)) {
       input <- inputs[[input_id]]
