@@ -61,7 +61,7 @@ create_image_ti_method <- function(
       args <- author[intersect(names(formals(person)), names(author))]
 
       # add github, orcid, etc to comment
-      args$comment <- as.character(author[setdiff(names(author), names(formals(person)))])
+      args$comment <- unlist(author[setdiff(names(author), names(formals(person)))], use.names = TRUE)
 
       do.call(person, args)
     })
