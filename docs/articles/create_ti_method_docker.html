@@ -84,7 +84,7 @@
     <div class="page-header toc-ignore">
       <h1>Creating a TI method using docker</h1>
             
-            <h4 class="date">2018-06-13</h4>
+            <h4 class="date">2018-06-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dynverse/dynwrap/blob/master/vignettes/create_ti_method_docker.Rmd"><code>vignettes/create_ti_method_docker.Rmd</code></a></small>
       <div class="hidden name"><code>create_ti_method_docker.Rmd</code></div>
@@ -110,7 +110,7 @@
 <div id="method-definition-file-definition-yml" class="section level2">
 <h2 class="hasAnchor">
 <a href="#method-definition-file-definition-yml" class="anchor"></a>Method definition file (<code>definition.yml</code>)</h2>
-<p>An example of a <code>definition.yml</code> file (as can be found on the <a href="https://github.com/dynverse/comp1">github</a>):</p>
+<p>An example of a <code>definition.yml</code> file (as can be found on the <a href="https://github.com/dynverse/comp1/blob/devel/R_feather/definition.yml">github</a>):</p>
 <div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">name:</span><span class="at"> component_one</span>
 <span class="fu">parameters:</span>
   <span class="fu">component:</span>
@@ -470,7 +470,7 @@
 <h2 class="hasAnchor">
 <a href="#the-dockerfile" class="anchor"></a>The <code>Dockerfile</code>
 </h2>
-<p>An example of a <code>Dockerfile</code> (as can be found on the <a href="https://github.com/dynverse/comp1">github</a>):</p>
+<p>An example of a <code>Dockerfile</code> (as can be found on the <a href="https://github.com/dynverse/comp1/blob/devel/R_feather/Dockerfile">github</a>):</p>
 <div class="sourceCode"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span class="co"># docker build R_feather -t dynverse/comp1:R_feather</span>
 <span class="kw">FROM</span> rocker/tidyverse
 <span class="kw">RUN</span> R -e <span class="st">'install.packages("feather")'</span>
@@ -483,7 +483,7 @@
 <div id="doing-trajectory-inference" class="section level2">
 <h2 class="hasAnchor">
 <a href="#doing-trajectory-inference" class="anchor"></a>Doing trajectory inference</h2>
-<p>All input files requested in the <code>definition.yml</code> will be mounted in the <code>/input</code> directory of the docker. After inferring a trajectory, the method should write output files into the <code>/output</code> directory. An example (as can be found on the <a href="https://github.com/dynverse/comp1">github</a>):</p>
+<p>All input files requested in the <code>definition.yml</code> will be mounted in the <code>/input</code> directory of the docker. After inferring a trajectory, the method should write output files into the <code>/output</code> directory. An example (as can be found on the <a href="https://github.com/dynverse/comp1/blob/devel/R_feather/run.R">github</a>):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr, <span class="dt">warn.conflicts =</span> <span class="ot">FALSE</span>)
 <span class="kw">library</span>(tibble, <span class="dt">warn.conflicts =</span> <span class="ot">FALSE</span>)
 <span class="kw">library</span>(readr, <span class="dt">warn.conflicts =</span> <span class="ot">FALSE</span>)
@@ -532,10 +532,6 @@ tibble<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 ti_comp1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/create_docker_ti_method.html">create_docker_ti_method</a></span>(<span class="st">"dynverse/comp1"</span>)</code></pre></div>
 <p>If the method is on the docker hub, it can also be pulled</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ti_comp1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/create_docker_ti_method.html">pull_docker_ti_method</a></span>(<span class="st">"dynverse/comp1"</span>)</code></pre></div>
-<pre><code>## The option 'stevedore.spec.path' not set - using temporary dir</code></pre>
-<pre><code>## Pulling from dynverse/comp1 latest
-## Digest: sha256:587d4d5588573408144f8f3a41b5df640698db2e45ec45c46fc8f4ff1a1e3129
-## Status: Image is up to date for dynverse/comp1:latest</code></pre>
 <p>Then we’ll use some test data</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ncells &lt;-<span class="st"> </span><span class="dv">1000</span>
 pseudotime &lt;-<span class="st"> </span><span class="kw">runif</span>(ncells)

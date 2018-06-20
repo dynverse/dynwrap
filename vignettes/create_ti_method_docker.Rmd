@@ -29,7 +29,7 @@ A TI docker requires at least three files. The files for this example are also a
 
 ## Method definition file (`definition.yml`)
 
-An example of a `definition.yml` file (as can be found on the [github](https://github.com/dynverse/comp1)):
+An example of a `definition.yml` file (as can be found on the [github](https://github.com/dynverse/comp1/blob/devel/R_feather/definition.yml)):
 
 ```{r, echo=FALSE, results="asis"}
 read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/R_feather/definition.yml") %>%
@@ -217,7 +217,7 @@ outputs %>%
 
 ## The `Dockerfile`
 
-An example of a `Dockerfile` (as can be found on the [github](https://github.com/dynverse/comp1)):
+An example of a `Dockerfile` (as can be found on the [github](https://github.com/dynverse/comp1/blob/devel/R_feather/Dockerfile)):
 
 ```{r, echo=FALSE, results="asis"}
 read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/R_feather/Dockerfile") %>%
@@ -233,7 +233,7 @@ This file should always contain an entrypoint, which will be called when the TI 
 
 ## Doing trajectory inference
 
-All input files requested in the `definition.yml` will be mounted in the `/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/output` directory. An example (as can be found on the [github](https://github.com/dynverse/comp1)):
+All input files requested in the `definition.yml` will be mounted in the `/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/output` directory. An example (as can be found on the [github](https://github.com/dynverse/comp1/blob/devel/R_feather/run.R)):
 
 ```{r, echo=FALSE, results="asis"}
 read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/R_feather/run.R") %>%
