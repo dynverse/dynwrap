@@ -4,7 +4,7 @@
 #' @export
 test_docker_installation <- function(detailed = FALSE) {
   if (!detailed) {
-    version <- suppressWarnings(system("docker version", intern = TRUE))
+    version <- suppressWarnings(system("docker version", intern = TRUE, ignore.stdout = TRUE, ignore.stderr = TRUE))
     if (!is.null(attr(version, "status")) && attr(version, "status") == 1) {
       FALSE
     } else {
