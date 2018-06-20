@@ -53,9 +53,6 @@ allowed_inputs <- tribble(
   "counts", "Raw counts matrix"
 ) %>% bind_rows(
   priors %>% select(input_id = prior_id, description = description)
-) %>%
-  filter(
-    !input_id %in% c("task")
-  )
+)
 
 usethis::use_data(allowed_outputs, allowed_inputs, overwrite = TRUE)

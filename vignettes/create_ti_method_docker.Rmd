@@ -98,6 +98,7 @@ tribble(
 
 ```{r, echo=FALSE}
 data(allowed_inputs, package="dynwrap")
+allowed_inputs <- allowed_inputs %>% filter(input_id != "task")
 
 # find example files
 found_input_example_files <- list.files(devtools:::shim_system.file("example_inputs/text/", package="dynwrap"))
@@ -357,5 +358,18 @@ if ("dynplot" %in% rownames(installed.packages())) {
 ```
 
 
-## Making your method available
+## Making your method available for other users
 
+The easiest way to make your method available to other users is by [pushing the docker to docker hub](https://docs.docker.com/docker-cloud/builds/push-images/):
+
+```bash
+docker push dynverse/comp1
+```
+
+Users will then be able to run the method by simply pulling the container:
+
+```{r, eval=FALSE}
+method <- pull_docker_ti_method("dynverse/comp1")
+```
+
+We also strongly encourage you to include within our collection of TI methods available in the [dynmethods R package](https://github.com/dynverse/dynmethods). Feel free to [create an issue](https://github.com/dynverse/dynmethods/labels/new%20method) or [send us a pull request](https://github.com/dynverse/dynmethods/pulls). Your method will be easy to use within the [dyno pipeline](https://github.com/dynverse/dyno).

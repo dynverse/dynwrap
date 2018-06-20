@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/dynverse/dynwrap.svg)](https://travis-ci.org/dynverse/dynwrap)
-[![codecov](https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynwrap) <img src="man/img/logo.png" align="right" />
+[![codecov](https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynwrap) <img src="man/figures/logo.png" align="right" />
 
 # Tools for inferring and wrapping single-cell trajectories
 
@@ -10,7 +10,7 @@
 * Wrap the output of a TI method, such as the pseudotime, a clustering or a branch network, and convert it into a common trajectory model
 * Further postprocess the output, such as labelling milestones and rooting the trajectory
 
-![](docs/figures/overview_wrapping_v1.svg)
+![](man/figures/overview_wrapping_v1.svg)
 
 
 
