@@ -54,6 +54,7 @@ create_ti_method <- function(
     package_required,
     par_set,
     parameters,
+    type,
     ...
   ) %>% add_class("dynwrap::ti_method")
 
