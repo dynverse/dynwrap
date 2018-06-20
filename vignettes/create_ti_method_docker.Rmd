@@ -29,7 +29,7 @@ A TI docker requires at least three files. The files for this example are also a
 
 ## Method definition file (`definition.yml`)
 
-An example of a `definition.yml` file (as can be found on the [github](https://github.com/dynverse/comp1)):
+An example of a `definition.yml` file (as can be found on the [github](https://github.com/dynverse/comp1/blob/devel/R_feather/definition.yml)):
 
 ```{r, echo=FALSE, results="asis"}
 read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/R_feather/definition.yml") %>%
@@ -217,7 +217,7 @@ outputs %>%
 
 ## The `Dockerfile`
 
-An example of a `Dockerfile` (as can be found on the [github](https://github.com/dynverse/comp1)):
+An example of a `Dockerfile` (as can be found on the [github](https://github.com/dynverse/comp1/blob/devel/R_feather/Dockerfile)):
 
 ```{r, echo=FALSE, results="asis"}
 read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/R_feather/Dockerfile") %>%
@@ -233,7 +233,7 @@ This file should always contain an entrypoint, which will be called when the TI 
 
 ## Doing trajectory inference
 
-All input files requested in the `definition.yml` will be mounted in the `/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/output` directory. An example (as can be found on the [github](https://github.com/dynverse/comp1)):
+All input files requested in the `definition.yml` will be mounted in the `/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/output` directory. An example (as can be found on the [github](https://github.com/dynverse/comp1/blob/devel/R_feather/run.R)):
 
 ```{r, echo=FALSE, results="asis"}
 read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/R_feather/run.R") %>%
@@ -245,13 +245,21 @@ read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/R_feather/run.
 
 Now we're all set to test the TI method on data. 
 
-We first have to build the method (in shell) to an image:
+We first have to build the method to an image. Make sure that docker is installed (https://docs.docker.com/install/). Next, build the container in shell
 
 ```bash
 docker build -t dynverse/comp1 .
 ```
 
-Although this image can be run anywhere as long as the `/input` and `/output` folders are mounted, we'll run it here using the `dynwrap` workflow. First, we have to wrap the docker into a method function.
+or in R
+
+```r
+system("docker build -t dynverse/comp1 .")
+```
+
+The `-t dynverse/comp1` argument gives a tag to this container, so that it can be easily run later.
+
+Although this container can be run anywhere as long as the `/input` and `/output` folders are mounted, we'll run it here using the `dynwrap` workflow. First, we have to wrap the docker into a method function.
 ```r
 library(dynwrap)
 ti_comp1 <- create_docker_ti_method("dynverse/comp1")
@@ -273,8 +281,6 @@ if (Sys.getenv("TRAVIS") == "true") {
   ti_comp1 <- pull_docker_ti_method("dynverse/comp1")
 }
 ```
-
-
 
 Then we'll use some test data
 ```{r}
@@ -307,21 +313,49 @@ Now infer a trajectory
 model <- infer_trajectory(task, ti_comp1())
 ```
 
-```{r}
+[dynplot](https://github.com/dynverse/dynplot) can be used to easily visualise the trajectory model:
+```r
+# devtools::install_github("dynverse/dynplot")
+dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
+```
+
+```{r echo=FALSE}
 if ("dynplot" %in% rownames(installed.packages())) {
   dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
 }
 ```
 
-
-Give some optional prior information
+We can also provide some optional prior information to the method:
 ```{r}
 model <- infer_trajectory(task, ti_comp1(), give_priors = "start_id")
 ```
 
-```{r}
+```r
+dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
+```
+
+```{r echo=FALSE}
 if ("dynplot" %in% rownames(installed.packages())) {
   dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
 }
 ```
+
+Or change some parameters:
+
+```{r}
+model <- infer_trajectory(task, ti_comp1(component = 2))
+```
+
+```r
+dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
+```
+
+```{r echo=FALSE}
+if ("dynplot" %in% rownames(installed.packages())) {
+  dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
+}
+```
+
+
+## Making your method available
 
