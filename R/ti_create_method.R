@@ -21,6 +21,7 @@ create_ti_method <- function(
   package_loaded = c(),
   package_required = c(),
   short_name = NULL,
+  type = "algorithm",
   ...
 ) {
   # create nice short name
