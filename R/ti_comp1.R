@@ -1,7 +1,8 @@
 run_comp1 <- function(
   expression,
   ndim,
-  dimred
+  dimred,
+  component
 ) {
   # TIMING: done with preproc
   tl <- add_timing_checkpoint(NULL, "method_afterpreproc")
@@ -15,7 +16,7 @@ run_comp1 <- function(
   wrap_prediction_model(
     cell_ids = rownames(expression)
   ) %>% add_linear_trajectory(
-    pseudotime = space[,1] %>% set_names(rownames(expression))
+    pseudotime = space[,component] %>% set_names(rownames(expression))
   ) %>% add_dimred(
     dimred = space
   ) %>% add_timings(
@@ -40,6 +41,7 @@ plot_comp1 <- function(prediction) {
 #'
 #' @param dimred A character vector specifying which dimensionality reduction method to use.
 #'   See [dyndimred::dimred] for the list of available dimensionality reduction methods.
+#' @param component The component to use
 #' @inheritParams dyndimred::dimred
 #'
 #' @export
@@ -52,7 +54,8 @@ ti_comp1 <- create_ti_method(
   package_required = c(),
   par_set = ParamHelpers::makeParamSet(
     ParamHelpers::makeDiscreteParam(id = "dimred", default = "pca", values = names(dyndimred::list_dimred_methods())),
-    ParamHelpers::makeIntegerParam(id = "ndim", default = 2, lower = 2, upper = 30)
+    ParamHelpers::makeIntegerParam(id = "ndim", default = 2, lower = 2, upper = 30),
+    ParamHelpers::makeIntegerParam(id = "component", default = 1, lower = 1, upper = 10)
   ),
   run_fun = run_comp1,
   plot_fun = plot_comp1

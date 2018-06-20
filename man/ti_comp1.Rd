@@ -4,13 +4,15 @@
 \alias{ti_comp1}
 \title{Inferring trajectories with Component 1}
 \usage{
-ti_comp1(dimred = "pca", ndim = 2L)
+ti_comp1(dimred = "pca", ndim = 2L, component = 1L)
 }
 \arguments{
 \item{dimred}{A character vector specifying which dimensionality reduction method to use.
 See \link[dyndimred:dimred]{dyndimred::dimred} for the list of available dimensionality reduction methods.}
 
 \item{ndim}{The number of dimensions}
+
+\item{component}{The component to use}
 }
 \description{
 Wrapper around TI method
