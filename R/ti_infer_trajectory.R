@@ -381,11 +381,16 @@ execute_method_on_task <- function(
 #' @importFrom readr write_file
 execute_method_internal <- function(method, arglist, setseed_detection_file) {
   # Load required packages and namespaces
-  for (pack in method$package_loaded) {
-    suppressMessages(do.call(require, list(pack)))
+  if (!is.null(method$package_loaded) && !is.na(method$package_loaded)) {
+    for (pack in method$package_loaded) {
+      suppressMessages(do.call(require, list(pack)))
+    }
   }
-  for (pack in method$package_required) {
-    suppressMessages(do.call(requireNamespace, list(pack)))
+
+  if (!is.null(method$package_required) && !is.na(method$package_loaded)) {
+    for (pack in method$package_required) {
+      suppressMessages(do.call(requireNamespace, list(pack)))
+    }
   }
 
   # measure second time point
