@@ -48,6 +48,7 @@ parse_parameter_definition <- function(parameter_definition) {
         )
       }
     } else if (param$type == "discrete") {
+      if (is.null(param$values)) {param$values <- param$default}
       ParamHelpers::makeDiscreteParam(
         id,
         values = param$values,
