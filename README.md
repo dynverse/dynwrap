@@ -12,9 +12,6 @@
 
 ![](man/figures/overview_wrapping_v1.svg)
 
-
-
-
 The advantage of using a common model is that it allows
 
 * Comparison between a prediction and a gold standard, eg. using [dyneval](https://www.github.com/dynverse/dyneval)
