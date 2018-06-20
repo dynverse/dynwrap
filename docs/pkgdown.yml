@@ -3,6 +3,5 @@ pkgdown: 1.1.0
 pkgdown_sha: ~
 articles:
   create_ti_method_docker: create_ti_method_docker.html
-  create_ti_method_docker_file_transfer: create_ti_method_docker_file_transfer.html
   create_ti_method_r: create_ti_method_r.html
 

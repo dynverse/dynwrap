@@ -56,9 +56,6 @@
       <a href="../articles/create_ti_method_docker.html">Creating a TI method using docker</a>
     </li>
     <li>
-      <a href="../articles/create_ti_method_docker_file_transfer.html">Transferring files from and to the docker</a>
-    </li>
-    <li>
       <a href="../articles/create_ti_method_r.html">Creating a TI method within R</a>
     </li>
   </ul>
@@ -219,7 +216,9 @@ pseudotime &lt;-<span class="st"> </span>(pseudotime <span class="op">-</span><s
 <h2 class="hasAnchor">
 <a href="#output" class="anchor"></a>Output</h2>
 <p>In the end, the output of the method should be transformed into the common trajectory format:</p>
-<p><strong>[Figure of common output model]</strong></p>
+<div class="figure">
+<img src="../man/figures/overview_wrapping_v1.svg">
+</div>
 <p>The topology of the trajectory requires:</p>
 <ul>
 <li>
@@ -276,8 +275,6 @@ divergence_regions &lt;-<span class="st"> </span><span class="kw"><a href="http:
     <span class="dt">cell_ids =</span> <span class="kw">names</span>(pseudotime)
   ) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="../reference/add_linear_trajectory.html">add_linear_trajectory</a></span>(pseudotime)</code></pre></div>
-<p>Other examples include:</p>
-<p><strong>[Figure of common wrapping methods]</strong></p>
 <p>We can plot this output using the plotting functions provided by the <code>dynplot</code> package:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="st">"dynplot"</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">rownames</span>(<span class="kw">installed.packages</span>())) {
   dynplot<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/dynplot/topics/plot_dimred">plot_dimred</a></span>(trajectory, <span class="st">"pseudotime"</span>, <span class="dt">expression_source =</span> expression)
@@ -333,6 +330,12 @@ model &lt;-<span class="st"> </span><span class="kw"><a href="../reference/infer
 }</code></pre></div>
 <p><img src="create_ti_method_r_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
 </div>
+<div id="making-your-method-available-for-other-users" class="section level2">
+<h2 class="hasAnchor">
+<a href="#making-your-method-available-for-other-users" class="anchor"></a>Making your method available for other users</h2>
+<p>The easiest way to make your method available to other users is by creating an <a href="http://r-pkgs.had.co.nz/">R package which exports the <code>ti_*</code> function</a>.</p>
+<p>We also strongly encourage you to include within our collection of TI methods available in the <a href="https://github.com/dynverse/dynmethods">dynmethods R package</a>. Feel free to <a href="https://github.com/dynverse/dynmethods/labels/new%20method">create an issue</a> or <a href="https://github.com/dynverse/dynmethods/pulls">send us a pull request</a>.</p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -344,6 +347,7 @@ model &lt;-<span class="st"> </span><span class="kw"><a href="../reference/infer
       <li><a href="#output">Output</a></li>
       <li><a href="#creating-the-method-object">Creating the method object</a></li>
       <li><a href="#running-the-method">Running the method</a></li>
+      <li><a href="#making-your-method-available-for-other-users">Making your method available for other users</a></li>
       </ul>
 </div>
       </div>

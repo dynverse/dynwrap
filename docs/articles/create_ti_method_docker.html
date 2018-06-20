@@ -56,9 +56,6 @@
       <a href="../articles/create_ti_method_docker.html">Creating a TI method using docker</a>
     </li>
     <li>
-      <a href="../articles/create_ti_method_docker_file_transfer.html">Transferring files from and to the docker</a>
-    </li>
-    <li>
       <a href="../articles/create_ti_method_r.html">Creating a TI method within R</a>
     </li>
   </ul>
@@ -466,6 +463,11 @@
 </tbody>
 </table>
 </div>
+<div id="other-information-about-the-method" class="section level4">
+<h4 class="hasAnchor">
+<a href="#other-information-about-the-method" class="anchor"></a>Other information about the method</h4>
+<p>The <code>definition.yml</code> file can also contain other information about the methods, such as the <code>authors</code>, the detectable <code>trajectory_types</code>, the url of the code, the <code>version</code>, … See the <a href="https://github.com/dynverse/dynmethods/tree/master/containers">dynmethods containers</a> for examples.</p>
+</div>
 </div>
 <div id="the-dockerfile" class="section level2">
 <h2 class="hasAnchor">
@@ -586,7 +588,7 @@ dynplot<span class="op">::</span><span class="kw"><a href="http://www.rdocumenta
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">docker</span> push dynverse/comp1</code></pre></div>
 <p>Users will then be able to run the method by simply pulling the container:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">method &lt;-<span class="st"> </span><span class="kw"><a href="../reference/create_docker_ti_method.html">pull_docker_ti_method</a></span>(<span class="st">"dynverse/comp1"</span>)</code></pre></div>
-<p>We also strongly encourage you to include within our collection of TI methods available in the <a href="https://github.com/dynverse/dynmethods">dynmethods R package</a>. Feel free to <a href="https://github.com/dynverse/dynmethods/labels/new%20method">create an issue</a> or <a href="https://github.com/dynverse/dynmethods/pulls">send us a pull request</a>. Your method will be easy to use within the <a href="https://github.com/dynverse/dyno">dyno pipeline</a>.</p>
+<p>We also strongly encourage you to include within our collection of TI methods available in the <a href="https://github.com/dynverse/dynmethods">dynmethods R package</a>. Feel free to <a href="https://github.com/dynverse/dynmethods/labels/new%20method">create an issue</a> or <a href="https://github.com/dynverse/dynmethods/pulls">send us a pull request</a>.</p>
 </div>
   </div>
 

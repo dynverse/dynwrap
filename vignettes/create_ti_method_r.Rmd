@@ -107,7 +107,7 @@ if (!is.null(start_id)) {
 
 In the end, the output of the method should be transformed into the common trajectory format:
 
-**[Figure of common output model]**
+![](../man/figures/overview_wrapping_v1.svg)
 
 The topology of the trajectory requires:
 
@@ -176,10 +176,6 @@ trajectory <-
   add_linear_trajectory(pseudotime)
 ```
 
-Other examples include:
-
-**[Figure of common wrapping methods]**
-
 We can plot this output using the plotting functions provided by the `dynplot` package:
 
 ```{r}
@@ -245,3 +241,9 @@ if ("dynplot" %in% rownames(installed.packages())) {
   dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
 }
 ```
+
+## Making your method available for other users
+
+The easiest way to make your method available to other users is by creating an [R package which exports the `ti_*` function](http://r-pkgs.had.co.nz/).
+
+We also strongly encourage you to include within our collection of TI methods available in the [dynmethods R package](https://github.com/dynverse/dynmethods). Feel free to [create an issue](https://github.com/dynverse/dynmethods/labels/new%20method) or [send us a pull request](https://github.com/dynverse/dynmethods/pulls).
