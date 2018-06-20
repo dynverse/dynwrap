@@ -6,7 +6,7 @@
 \usage{
 create_ti_method(name, parameters = NULL, par_set = NULL, run_fun,
   plot_fun = NULL, package_loaded = c(), package_required = c(),
-  short_name = NULL, ...)
+  short_name = NULL, type = "algorithm", ...)
 }
 \arguments{
 \item{name}{The name of the TI method}
