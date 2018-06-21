@@ -10,6 +10,7 @@
 #' @param plot_fun A function to plot the results of a TI, needs to have 'prediction' as its first param.
 #'   of `run_fun` with those described in `par_set`.
 #' @param ... Other information about the wrapper, eg. apt_dependencies
+#' @param remotes_package Package from which the remote locations of dependencies have to be extracted, eg. `dynmethods`
 #'
 #' @export
 create_ti_method <- function(
@@ -22,7 +23,8 @@ create_ti_method <- function(
   package_required = c(),
   short_name = NULL,
   type = "algorithm",
-  ...
+  ...,
+  remotes_package = "dynwrap"
 ) {
   # create nice short name
   if(is.null(short_name)) {
@@ -66,6 +68,10 @@ create_ti_method <- function(
     desc$run_fun_name <- run_fun
   }
 
+  # check and install dependencies of method
+  install_packages(c(package_loaded, package_required), package = remotes_package, prompt = TRUE)
+
+  # construct ti function constructor
   ti_fun_constructor_with_params <- function(...) {
     run_fun <- get_function(run_fun)
 
