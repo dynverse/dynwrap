@@ -21,7 +21,7 @@ save_inputs <- function(
   } else if (input_format == "hdf5") {
     # install hdf5r if not available
     if(!require("hdf5r")) {
-      dynutils::install_packages("hdf5r", "dynwrap")
+      dynutils::install_packages("hdf5r", "dynwrap", prompt = TRUE)
     }
     requireNamespace("hdf5r")
 
@@ -38,7 +38,7 @@ save_inputs <- function(
   } else if (input_format == "feather") {
     # install feather if not available
     if(!require("feather")) {
-      dynutils::install_packages("feather", "dynwrap")
+      dynutils::install_packages("feather", "dynwrap", prompt = TRUE)
     }
     requireNamespace("feather")
 
