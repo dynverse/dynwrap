@@ -102,7 +102,7 @@ wrap_text <- function(model, output_ids, dir_output) {
 wrap_feather <- function(model, output_ids, dir_output) {
   # install feather if not available
   if(!require("feather")) {
-    dynutils::install_packages("feather", "dynwrap")
+    dynutils::install_packages("feather", "dynwrap", prompt = TRUE)
   }
   requireNamespace("feather")
 
