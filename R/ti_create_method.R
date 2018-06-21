@@ -24,7 +24,7 @@ create_ti_method <- function(
   short_name = NULL,
   type = "algorithm",
   ...,
-  remotes_package = "dynwrap"
+  remotes_package = ifelse("dynmethods" %in% rownames(installed.packages()), "dynmethods", "dynwrap")
 ) {
   # create nice short name
   if(is.null(short_name)) {
@@ -68,13 +68,13 @@ create_ti_method <- function(
     desc$run_fun_name <- run_fun
   }
 
-  # check and install dependencies of method
-  install_packages(c(package_loaded, package_required), package = remotes_package, prompt = TRUE)
-
   # construct ti function constructor
   ti_fun_constructor_with_params <- function(...) {
-    run_fun <- get_function(run_fun)
+    # check and install dependencies of method
+    install_packages(c(package_loaded, package_required), package = remotes_package, prompt = TRUE)
 
+    # create run and plot functions
+    run_fun <- get_function(run_fun)
     plot_fun <- get_function(plot_fun)
 
     # get the parameters from this function
