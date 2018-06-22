@@ -55,7 +55,8 @@ create_image_ti_method <- function(
   # define run_fun ------------------------------------------------------------------------
   definition$run_fun <- function(input_ids, param_ids, output_ids, run_container) {
     # create input directory
-    dir_input <- file.path(tempdir(), "input")
+    tmp_path <- gsub("^/var/", "/tmp", tempdir()) # fix for mac os x?
+    dir_input <- file.path(tmp_path, "input")
     if(dir.exists(dir_input)) {
       unlink(paste0(dir_input, "/*"))
     } else {
