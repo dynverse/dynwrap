@@ -83,7 +83,7 @@ create_image_ti_method <- function(
 
 
     # create output directory
-    dir_input <- mytempdir("output")
+    dir_output <- mytempdir("output")
 
     # run container
     run_container(
