@@ -2,6 +2,9 @@ language: r
 sudo: required
 dist: trusty
 bioc_required: true
+os:
+  - linux
+  - osx
 cache:
   directories:
     - $HOME/.cache/hdf5
