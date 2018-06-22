@@ -1,6 +1,12 @@
 # attempt fix for mac os x users
-mytempdir <- function(...) {
-  tempdir(...) %>% gsub("^/var/", "/tmp/", .)
+mytempdir <- function(subfolder) {
+  dir_input <- file.path(tempdir(), subfolder) %>% gsub("^/var/", "/tmp/", .)
+  if (dir.exists(dir_input)) {
+    unlink(dir_input)
+  }
+  dir.create(dir_input, recursive = TRUE)
+
+  dir_input
 }
 
 #' @importFrom jsonlite write_json read_json
@@ -60,12 +66,7 @@ create_image_ti_method <- function(
   # define run_fun ------------------------------------------------------------------------
   definition$run_fun <- function(input_ids, param_ids, output_ids, run_container) {
     # create input directory
-    dir_input <- file.path(mytempdir(), "input")
-    if(dir.exists(dir_input)) {
-      unlink(paste0(dir_input, "/*"))
-    } else {
-      dir.create(dir_input)
-    }
+    dir_input <- mytempdir("input")
 
     # save data & params, see save_inputs function
     save_inputs(environment(), dir_input, input_format, input_ids, c(param_ids, "input_format", "output_format"))
@@ -82,12 +83,7 @@ create_image_ti_method <- function(
 
 
     # create output directory
-    dir_output <- file.path(mytempdir(), "output")
-    if(dir.exists(dir_output)) {
-      unlink(paste0(dir_output, "/*"))
-    } else {
-      dir.create(dir_output)
-    }
+    dir_input <- mytempdir("output")
 
     # run container
     run_container(
@@ -251,7 +247,7 @@ extract_definition_from_singularity_image <- function(
 ) {
   requireNamespace("yaml")
 
-  definition_folder_local <- mytempdir()
+  definition_folder_local <- mytempdir("")
   system(glue("singularity exec -B {definition_folder_local}:/tmp_definition {image} cp {definition_location} /tmp_definition"))
 
   definition_location_local <- file.path(definition_folder_local, basename(definition_location))
