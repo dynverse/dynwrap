@@ -11,6 +11,10 @@ cache:
     - $HOME/R/Library
 services:
   - docker
+addons:
+  apt:
+    packages:
+      - libssh-dev  # PRISM > ssh > libssh-dev
 before_install:
   - export HDF5_DIR=$HOME/.cache/hdf5
   - echo $HDF5_DIR
