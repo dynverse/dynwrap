@@ -1,12 +1,12 @@
 # attempt fix for mac os x users
 mytempdir <- function(subfolder) {
-  dir_input <- file.path(tempdir(), subfolder) %>% gsub("^/var/", "/tmp/", .)
-  if (dir.exists(dir_input)) {
-    unlink(dir_input)
+  dir <- file.path(tempdir(), subfolder) %>% gsub("^/var/", "/tmp/", .)
+  if (dir.exists(dir)) {
+    unlink(dir, recursive = TRUE, force = TRUE)
   }
-  dir.create(dir_input, recursive = TRUE)
+  dir.create(dir, recursive = TRUE)
 
-  dir_input
+  dir
 }
 
 #' @importFrom jsonlite write_json read_json
@@ -106,7 +106,12 @@ create_image_ti_method <- function(
     }
 
     # wrap output
-    if("counts" %in% input_ids) {cell_ids <- rownames(counts)} else {cell_ids <- rownames(expression)}
+    if("counts" %in% input_ids) {
+      cell_ids <- rownames(counts)
+    } else {
+      cell_ids <- rownames(expression)
+    }
+
     model <- wrap_data(cell_ids = cell_ids) %>%
       wrap_output(output_ids, dir_output, output_format)
 
