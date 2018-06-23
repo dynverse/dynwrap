@@ -11,6 +11,13 @@ cache:
     - $HOME/R/Library
 services:
   - docker
+matrix:
+  exclude:
+    - os: osx
+  include:
+    - os: osx
+      env: HDF5_VERSION=1.10.1
+  fast_finish: true
 addons:
   apt:
     packages:
