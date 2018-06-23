@@ -3,7 +3,7 @@
 set -e
 
 if [ "$TRAVIS_OS_NAME" == "osx" ]; then # use homebrew version
-	brew link --overwrite gcc
+	echo "installing hdf5"
 	brew update
 	brew install hdf5
 	echo "brew install finished"
