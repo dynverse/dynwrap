@@ -86,7 +86,7 @@ create_image_ti_method <- function(
     dir_output <- mytempdir("output")
 
     # run container
-    run_container(
+    status <- run_container(
       image,
       volumes = c(
         glue("{dir_input}:/input"),
@@ -94,6 +94,11 @@ create_image_ti_method <- function(
       ),
       debug
     )
+
+    # exit if error
+    if (status != 0) {
+      stop(call. = FALSE)
+    }
 
     if (verbose) {
       # print found output files
