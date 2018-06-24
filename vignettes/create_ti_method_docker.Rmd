@@ -369,7 +369,7 @@ The container can be debugged by running the method with `debug = TRUE`:
 infer_trajectory(task, ti_comp1, list(debug = TRUE))
 ```
 
-```{r}
+```{r, error=TRUE}
 if (Sys.getenv("TRAVIS") != "true") {
   infer_trajectory(task, ti_comp1(), list(debug = TRUE))
 }

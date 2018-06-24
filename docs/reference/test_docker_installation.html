@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a TI method wrapper — create_ti_method • dynwrap</title>
+<title>Tests whether docker is correctly installed and available — test_docker_installation • dynwrap</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Create a TI method wrapper — create_ti_method" />
+<meta property="og:title" content="Tests whether docker is correctly installed and available — test_docker_installation" />
 
-<meta property="og:description" content="Create a TI method wrapper" />
+<meta property="og:description" content="Tests whether docker is correctly installed and available" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -114,70 +114,25 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a TI method wrapper</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/ti_create_method.R'><code>R/ti_create_method.R</code></a></small>
-    <div class="hidden name"><code>create_ti_method.Rd</code></div>
+    <h1>Tests whether docker is correctly installed and available</h1>
+    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/container_helpers.R'><code>R/container_helpers.R</code></a></small>
+    <div class="hidden name"><code>test_docker_installation.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Create a TI method wrapper</p>
+    <p>Tests whether docker is correctly installed and available</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>create_ti_method</span>(<span class='no'>name</span>, <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>par_set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>run_fun</span>,
-  <span class='kw'>plot_fun</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>package_loaded</span> <span class='kw'>=</span> <span class='fu'>c</span>(), <span class='kw'>package_required</span> <span class='kw'>=</span> <span class='fu'>c</span>(),
-  <span class='kw'>short_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"algorithm"</span>, <span class='st'>"algorithm_test"</span>, <span class='st'>"control"</span>,
-  <span class='st'>"control_test"</span>), <span class='no'>...</span>, <span class='kw'>remotes_package</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='st'>"dynmethods"</span> <span class='kw'>%in%</span>
-  <span class='fu'>rownames</span>(<span class='fu'>installed.packages</span>()), <span class='st'>"dynmethods"</span>, <span class='st'>"dynwrap"</span>))</pre>
+    <pre class="usage"><span class='fu'>test_docker_installation</span>(<span class='kw'>detailed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>name</th>
-      <td><p>The name of the TI method</p></td>
-    </tr>
-    <tr>
-      <th>parameters</th>
-      <td><p>A list of parameters, which can be parsed using <code><a href='parse_parameter_definition.html'>parse_parameter_definition()</a></code></p></td>
-    </tr>
-    <tr>
-      <th>par_set</th>
-      <td><p>A bunch of parameters created by <code><a href='http://www.rdocumentation.org/packages/ParamHelpers/topics/makeParamSet'>ParamHelpers::makeParamSet()</a></code></p></td>
-    </tr>
-    <tr>
-      <th>run_fun</th>
-      <td><p>A function to run the TI, needs to have 'counts' as its first param.</p></td>
-    </tr>
-    <tr>
-      <th>plot_fun</th>
-      <td><p>A function to plot the results of a TI, needs to have 'prediction' as its first param.
-of <code>run_fun</code> with those described in <code>par_set</code>.</p></td>
-    </tr>
-    <tr>
-      <th>package_loaded</th>
-      <td><p>The packages that need to be loaded before executing the method</p></td>
-    </tr>
-    <tr>
-      <th>package_required</th>
-      <td><p>The packages that need to be installed before executing the method</p></td>
-    </tr>
-    <tr>
-      <th>short_name</th>
-      <td><p>A short name for the method, max 8 characters</p></td>
-    </tr>
-    <tr>
-      <th>type</th>
-      <td><p>The type of TI metod</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Other information about the wrapper, eg. apt_dependencies</p></td>
-    </tr>
-    <tr>
-      <th>remotes_package</th>
-      <td><p>Package from which the remote locations of dependencies have to be extracted, eg. <code>dynmethods</code></p></td>
+      <th>detailed</th>
+      <td><p>Whether top do a detailed check</p></td>
     </tr>
     </table>
     

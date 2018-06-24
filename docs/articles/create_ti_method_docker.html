@@ -82,7 +82,7 @@
     <div class="page-header toc-ignore">
       <h1>Creating a TI method using docker</h1>
             
-            <h4 class="date">2018-06-20</h4>
+            <h4 class="date">2018-06-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dynverse/dynwrap/blob/master/vignettes/create_ti_method_docker.Rmd"><code>vignettes/create_ti_method_docker.Rmd</code></a></small>
       <div class="hidden name"><code>create_ti_method_docker.Rmd</code></div>
@@ -494,11 +494,11 @@
 
 ## Load data -----------------------------------------------
 
-expression &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/feather/topics/read_feather">read_feather</a></span>(<span class="st">"/input/expression.feather"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+expression &lt;-<span class="st"> </span><span class="kw">read_feather</span>(<span class="st">"/input/expression.feather"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tibble/topics/rownames">column_to_rownames</a></span>(<span class="st">"rownames"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">as.matrix</span>()
 <span class="cf">if</span>(<span class="kw">file.exists</span>(<span class="st">"/input/start_id.feather"</span>)) {
-  start_id &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/feather/topics/read_feather">read_feather</a></span>(<span class="st">"/input/start_id.feather"</span>)<span class="op">$</span>start_id
+  start_id &lt;-<span class="st"> </span><span class="kw">read_feather</span>(<span class="st">"/input/start_id.feather"</span>)<span class="op">$</span>start_id
 } <span class="cf">else</span> {
   start_id &lt;-<span class="st"> </span><span class="ot">NULL</span>
 }
@@ -522,7 +522,7 @@ pseudotime &lt;-<span class="st"> </span>pca<span class="op">$</span>x[, params<
 ## Save output ---------------------------------------------
 <span class="co"># output pseudotimes</span>
 tibble<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/tibble/topics/enframe">enframe</a></span>(pseudotime, <span class="st">"cell_id"</span>, <span class="st">"pseudotime"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/feather/topics/read_feather">write_feather</a></span>(<span class="st">"/output/pseudotime.feather"</span>)</code></pre></div>
+<span class="st">  </span><span class="kw">write_feather</span>(<span class="st">"/output/pseudotime.feather"</span>)</code></pre></div>
 </div>
 <div id="testing-the-ti-method" class="section level2">
 <h2 class="hasAnchor">
@@ -581,6 +581,19 @@ dynplot<span class="op">::</span><span class="kw"><a href="http://www.rdocumenta
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dynplot<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/dynplot/topics/plot_dimred">plot_dimred</a></span>(model, <span class="dt">color_cells =</span> <span class="st">"pseudotime"</span> , <span class="dt">expression_source =</span> task<span class="op">$</span>expression)</code></pre></div>
 <p><img src="create_ti_method_docker_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
 </div>
+<div id="debugging-the-container" class="section level2">
+<h2 class="hasAnchor">
+<a href="#debugging-the-container" class="anchor"></a>Debugging the container</h2>
+<p>The container can be debugged by running the method with <code>debug = TRUE</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/infer_trajectories.html">infer_trajectory</a></span>(task, ti_comp1, <span class="kw">list</span>(<span class="dt">debug =</span> <span class="ot">TRUE</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="kw">Sys.getenv</span>(<span class="st">"TRAVIS"</span>) <span class="op">!=</span><span class="st"> "true"</span>) {
+  <span class="kw"><a href="../reference/infer_trajectories.html">infer_trajectory</a></span>(task, <span class="kw"><a href="../reference/ti_comp1.html">ti_comp1</a></span>(), <span class="kw">list</span>(<span class="dt">debug =</span> <span class="ot">TRUE</span>))
+}</code></pre></div>
+<pre><code>## Error: Error during trajectory inference 
+## Use this command for debugging: 
+## docker run --entrypoint 'bash' -it -v /tmp/RtmprngRHe/input:/input -v /tmp/RtmprngRHe/output:/output dynverse/comp1</code></pre>
+<p>This will print a shell command which can be used to enter the container with the /input and /output directories mounted.</p>
+</div>
 <div id="making-your-method-available-for-other-users" class="section level2">
 <h2 class="hasAnchor">
 <a href="#making-your-method-available-for-other-users" class="anchor"></a>Making your method available for other users</h2>
@@ -601,6 +614,7 @@ dynplot<span class="op">::</span><span class="kw"><a href="http://www.rdocumenta
       <li><a href="#the-dockerfile">The <code>Dockerfile</code></a></li>
       <li><a href="#doing-trajectory-inference">Doing trajectory inference</a></li>
       <li><a href="#testing-the-ti-method">Testing the TI method</a></li>
+      <li><a href="#debugging-the-container">Debugging the container</a></li>
       <li><a href="#making-your-method-available-for-other-users">Making your method available for other users</a></li>
       </ul>
 </div>
