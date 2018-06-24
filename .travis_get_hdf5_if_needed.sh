@@ -27,4 +27,8 @@ else
 		popd
 	    fi
 	fi
+	ls -lRa $HDF5_DIR
+	sudo cp $HDF5_DIR/bin/* /usr/bin/
+	sudo cp $HDF5_DIR/lib/* /usr/lib/
+	sudo cp $HDF5_DIR/include/* /usr/include/
 fi
