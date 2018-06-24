@@ -6,7 +6,8 @@
 \usage{
 create_ti_method(name, parameters = NULL, par_set = NULL, run_fun,
   plot_fun = NULL, package_loaded = c(), package_required = c(),
-  short_name = NULL, type = "algorithm", ...)
+  short_name = NULL, ..., type = c("algorithm", "algorithm_test", "control",
+  "control_test"))
 }
 \arguments{
 \item{name}{The name of the TI method}
@@ -27,6 +28,8 @@ of \code{run_fun} with those described in \code{par_set}.}
 \item{short_name}{A short name for the method, max 8 characters}
 
 \item{...}{Other information about the wrapper, eg. apt_dependencies}
+
+\item{type}{The type of TI metod}
 }
 \description{
 Create a TI method wrapper

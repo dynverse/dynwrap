@@ -10,6 +10,7 @@
 #' @param plot_fun A function to plot the results of a TI, needs to have 'prediction' as its first param.
 #'   of `run_fun` with those described in `par_set`.
 #' @param ... Other information about the wrapper, eg. apt_dependencies
+#' @param type The type of TI metod
 #'
 #' @export
 create_ti_method <- function(
@@ -21,8 +22,8 @@ create_ti_method <- function(
   package_loaded = c(),
   package_required = c(),
   short_name = NULL,
-  type = "algorithm",
-  ...
+  ...,
+  type = c("algorithm", "algorithm_test", "control", "control_test")
 ) {
   # create nice short name
   if(is.null(short_name)) {
@@ -45,6 +46,9 @@ create_ti_method <- function(
   default_params <- par_set %>%
     ParamHelpers::generateDesignOfDefaults(trafo = TRUE) %>%
     ParamHelpers::dfRowToList(par_set, 1)
+
+  # process type
+  type <- match.arg(type)
 
   # create description
   desc <- lst(

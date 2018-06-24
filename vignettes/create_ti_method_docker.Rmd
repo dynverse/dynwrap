@@ -361,6 +361,10 @@ if ("dynplot" %in% rownames(installed.packages())) {
 }
 ```
 
+## Debugging the container
+
+The container can be easily debugged by 
+
 
 ## Making your method available for other users
 
