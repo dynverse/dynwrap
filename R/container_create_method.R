@@ -136,17 +136,17 @@ create_image_ti_method <- function(
       if (debug) {
         requireNamespace("crayon")
         cat(glue("Debug: ", crayon::bold("docker run --entrypoint 'bash' -it {paste0(paste0('-v ', volumes), collapse = ' ')} {image}\n")))
+      } else {
+        system(glue::glue("docker run {paste0(paste0('-v ', volumes), collapse = ' ')} {image}"))
       }
-
-      system(glue::glue("docker run {paste0(paste0('-v ', volumes), collapse = ' ')} {image}"))
     }
-  } else {
+  } else if (image_type == "singularity") {
     run_container <- function(image, volumes, debug) {
       if (debug) {
         cat(glue("Debug: ", crayon::bold("singularity exec -B {glue::collapse(volumes, ',')} {image} bash \n")))
+      } else {
+        system(glue("singularity run -B {glue::collapse(volumes, ',')} {image}"))
       }
-
-      system(glue("singularity run -B {glue::collapse(volumes, ',')} {image}"))
     }
   }
 
