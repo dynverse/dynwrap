@@ -536,11 +536,6 @@ tibble<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 <p>Although this container can be run anywhere as long as the <code>/input</code> and <code>/output</code> folders are mounted, we’ll run it here using the <code>dynwrap</code> workflow. First, we have to wrap the docker into a method function.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dynwrap)
 ti_comp1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/create_docker_ti_method.html">create_docker_ti_method</a></span>(<span class="st">"dynverse/comp1"</span>)</code></pre></div>
-<pre><code>## 
-## Attaching package: 'dynwrap'</code></pre>
-<pre><code>## The following object is masked _by_ '.GlobalEnv':
-## 
-##     allowed_inputs</code></pre>
 <p>If the method is on the docker hub, it can also be pulled</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ti_comp1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/create_docker_ti_method.html">pull_docker_ti_method</a></span>(<span class="st">"dynverse/comp1"</span>)</code></pre></div>
 <p>Then we’ll use some test data</p>
@@ -591,7 +586,7 @@ dynplot<span class="op">::</span><span class="kw"><a href="http://www.rdocumenta
 }</code></pre></div>
 <pre><code>## Error: Error during trajectory inference 
 ## Use this command for debugging: 
-## docker run --entrypoint 'bash' -it -v /tmp/RtmprngRHe/input:/input -v /tmp/RtmprngRHe/output:/output dynverse/comp1</code></pre>
+## docker run --entrypoint 'bash' -it -v /tmp/Rtmp2PjAsf/input:/input -v /tmp/Rtmp2PjAsf/output:/output dynverse/comp1</code></pre>
 <p>This will print a shell command which can be used to enter the container with the /input and /output directories mounted.</p>
 </div>
 <div id="making-your-method-available-for-other-users" class="section level2">

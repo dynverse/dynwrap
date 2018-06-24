@@ -126,6 +126,8 @@ allowed_inputs %>%
     description
   ) %>% 
   knitr::kable()
+
+rm(allowed_inputs)
 ```
 
 ```{r, echo=FALSE}
