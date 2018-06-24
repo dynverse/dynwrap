@@ -21,7 +21,6 @@
 #' @importFrom stringr str_length
 #' @importFrom parallel mclapply
 #' @importFrom testthat expect_true
-#' @importFrom PRISM qsub_lapply is_qsub_config
 #'
 #' @export
 infer_trajectories <- function(
