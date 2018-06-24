@@ -40,7 +40,7 @@ test_docker_installation <- function(detailed = FALSE) {
       message(crayon::green("\u2714 Docker can pull images"))
     },
     error = function(e) {
-      stop(crayon::red("\u274C Unable to pull image"))
+      stop(crayon::red("\u274C Unable to pull docker images."))
     })
 
     # test if docker can run images
