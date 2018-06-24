@@ -206,7 +206,7 @@ infer_trajectory <- function(
   )
 
   if(is.null(design$model[[1]])) {
-    stop("Error during trajectory inference \n", design$summary[[1]]$error)
+    stop("Error during trajectory inference \n", design$summary[[1]]$error[[1]]$message, call. = FALSE)
   } else {
     first(design$model)
   }

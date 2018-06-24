@@ -1,3 +1,16 @@
+# get mountable temporary directory
+# on osx, the R temporary directory is placed in the /var folder, but this is not standard accessibale for docker
+# in that case, we put it in /tmp
+mytempdir <- function(subfolder) {
+  dir <- file.path(tempdir(), subfolder) %>% gsub("^/var/", "/tmp/", .)
+  if (dir.exists(dir)) {
+    unlink(dir, recursive = TRUE, force = TRUE)
+  }
+  dir.create(dir, recursive = TRUE)
+
+  dir
+}
+
 #' @importFrom jsonlite write_json read_json
 create_image_ti_method <- function(
   image,
@@ -55,12 +68,7 @@ create_image_ti_method <- function(
   # define run_fun ------------------------------------------------------------------------
   definition$run_fun <- function(input_ids, param_ids, output_ids, run_container) {
     # create input directory
-    dir_input <- file.path(tempdir(), "input")
-    if(dir.exists(dir_input)) {
-      unlink(paste0(dir_input, "/*"))
-    } else {
-      dir.create(dir_input)
-    }
+    dir_input <- mytempdir("input")
 
     # save data & params, see save_inputs function
     save_inputs(environment(), dir_input, input_format, input_ids, c(param_ids, "input_format", "output_format"))
@@ -77,15 +85,10 @@ create_image_ti_method <- function(
 
 
     # create output directory
-    dir_output <- file.path(tempdir(), "output")
-    if(dir.exists(dir_output)) {
-      unlink(paste0(dir_output, "/*"))
-    } else {
-      dir.create(dir_output)
-    }
+    dir_output <- mytempdir("output")
 
     # run container
-    run_container(
+    status <- run_container(
       image,
       volumes = c(
         glue("{dir_input}:/input"),
@@ -93,6 +96,11 @@ create_image_ti_method <- function(
       ),
       debug
     )
+
+    # exit if error
+    if (status != 0) {
+      stop(call. = FALSE)
+    }
 
     if (verbose) {
       # print found output files
@@ -105,7 +113,12 @@ create_image_ti_method <- function(
     }
 
     # wrap output
-    if("counts" %in% input_ids) {cell_ids <- rownames(counts)} else {cell_ids <- rownames(expression)}
+    if("counts" %in% input_ids) {
+      cell_ids <- rownames(counts)
+    } else {
+      cell_ids <- rownames(expression)
+    }
+
     model <- wrap_data(cell_ids = cell_ids) %>%
       wrap_output(output_ids, dir_output, output_format)
 
@@ -122,18 +135,32 @@ create_image_ti_method <- function(
     run_container <- function(image, volumes, debug) {
       if (debug) {
         requireNamespace("crayon")
-        cat(glue("Debug: ", crayon::bold("docker run --entrypoint 'bash' -it {paste0(paste0('-v ', volumes), collapse = ' ')} {image}\n")))
+        stop(
+          "Use this command for debugging: \n",
+          crayon::bold(
+            glue::glue(
+              "docker run --entrypoint 'bash' -it {paste0(paste0('-v ', volumes), collapse = ' ')} {image}"
+            )
+          ),
+        call. = FALSE)
+      } else {
+        system(glue::glue("docker run {paste0(paste0('-v ', volumes), collapse = ' ')} {image}"))
       }
-
-      system(glue::glue("docker run {paste0(paste0('-v ', volumes), collapse = ' ')} {image}"))
     }
-  } else {
+  } else if (image_type == "singularity") {
     run_container <- function(image, volumes, debug) {
       if (debug) {
-        cat(glue("Debug: ", crayon::bold("singularity exec -B {glue::collapse(volumes, ',')} {image} bash \n")))
+        stop(
+          "Use this command for debugging: \n",
+          crayon::bold(
+            glue::glue(
+              "singularity exec -B {glue::collapse(volumes, ',')} {image} bash"
+            )
+          ),
+        call. = FALSE)
+      } else {
+        system(glue("singularity run -B {glue::collapse(volumes, ',')} {image}"))
       }
-
-      system(glue("singularity run -B {glue::collapse(volumes, ',')} {image}"))
     }
   }
 
@@ -246,7 +273,7 @@ extract_definition_from_singularity_image <- function(
 ) {
   requireNamespace("yaml")
 
-  definition_folder_local <- tempdir()
+  definition_folder_local <- mytempdir("")
   system(glue("singularity exec -B {definition_folder_local}:/tmp_definition {image} cp {definition_location} /tmp_definition"))
 
   definition_location_local <- file.path(definition_folder_local, basename(definition_location))

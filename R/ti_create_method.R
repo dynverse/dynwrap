@@ -9,6 +9,7 @@
 #' @param run_fun A function to run the TI, needs to have 'counts' as its first param.
 #' @param plot_fun A function to plot the results of a TI, needs to have 'prediction' as its first param.
 #'   of `run_fun` with those described in `par_set`.
+#' @param type The type of TI metod
 #' @param ... Other information about the wrapper, eg. apt_dependencies
 #' @param remotes_package Package from which the remote locations of dependencies have to be extracted, eg. `dynmethods`
 #'
@@ -22,7 +23,7 @@ create_ti_method <- function(
   package_loaded = c(),
   package_required = c(),
   short_name = NULL,
-  type = "algorithm",
+  type = c("algorithm", "algorithm_test", "control", "control_test"),
   ...,
   remotes_package = ifelse("dynmethods" %in% rownames(installed.packages()), "dynmethods", "dynwrap")
 ) {
@@ -47,6 +48,9 @@ create_ti_method <- function(
   default_params <- par_set %>%
     ParamHelpers::generateDesignOfDefaults(trafo = TRUE) %>%
     ParamHelpers::dfRowToList(par_set, 1)
+
+  # process type
+  type <- match.arg(type)
 
   # create description
   desc <- lst(

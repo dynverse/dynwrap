@@ -32,7 +32,37 @@ test_docker_installation <- function(detailed = FALSE) {
       stop(crayon::red("\u274C Docker API version is", version, ". Requires 1.0 or later"))
     }
 
-    message(crayon::green("\u2714 Docker is at correct version"))
+    message(crayon::green(glue::glue("\u2714 Docker is at correct version: ", version)))
+
+    # test if docker images can be pulled
+    tryCatch({
+      system(glue::glue("docker pull alpine"), intern = TRUE, ignore.stderr = TRUE)
+      message(crayon::green("\u2714 Docker can pull images"))
+    },
+    error = function(e) {
+      stop(crayon::red("\u274C Unable to pull docker images."))
+    })
+
+    # test if docker can run images
+    tryCatch({
+      system(glue::glue("docker run alpine"), intern = TRUE, ignore.stderr = TRUE)
+      message(crayon::green("\u2714 Docker can run image"))
+    },
+    error = function(e) {
+      stop(crayon::red("\u274C Unable to run an image"))
+    })
+
+    # test if docker volume can be mounted
+    volume_dir <- mytempdir("")
+    tryCatch({
+      version <- system(glue::glue("docker run -v {volume_dir}:/mount alpine"), intern = TRUE, ignore.stderr = TRUE)
+      message(crayon::green("\u2714 Docker can mount temporary volumes"))
+    },
+    error = function(e) {
+      stop(crayon::red("\u274C Unable to mount temporary directory: {volume_dir}. \n\t\t\t\t\t\t\t\tOn windows, you need to enable the shared drives (https://rominirani.com/docker-on-windows-mounting-host-directories-d96f3f056a2c)"))
+    })
+
+    message(crayon::green(crayon::bold(stringr::str_pad("\u2714 Docker test succesful ", 90, side = "right", "-"))))
 
     TRUE
   }

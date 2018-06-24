@@ -361,6 +361,21 @@ if ("dynplot" %in% rownames(installed.packages())) {
 }
 ```
 
+## Debugging the container
+
+The container can be debugged by running the method with `debug = TRUE`:
+
+```r
+infer_trajectory(task, ti_comp1, list(debug = TRUE))
+```
+
+```{r}
+if (Sys.getenv("TRAVIS") != "true") {
+  infer_trajectory(task, ti_comp1(), list(debug = TRUE))
+}
+```
+
+This will print a shell command which can be used to enter the container with the /input and /output directories mounted.
 
 ## Making your method available for other users
 
