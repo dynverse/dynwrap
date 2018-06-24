@@ -15,6 +15,13 @@ addons:
   apt:
     packages:
       - libssh-dev  # PRISM > ssh > libssh-dev
+matrix:
+  exclude:
+    - os: osx
+  include:
+    - os: osx
+      env: HDF5_VERSION=1.10.1
+  fast_finish: true
 before_install:
   - export HDF5_DIR=$HOME/.cache/hdf5
   - echo $HDF5_DIR
