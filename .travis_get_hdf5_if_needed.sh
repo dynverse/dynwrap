@@ -5,7 +5,7 @@ set -e
 if [ "$TRAVIS_OS_NAME" == "osx" ]; then # use homebrew version
 	echo "installing hdf5"
 	brew update
-	brew install hdf5
+	brew install hdf5 || true
 	echo "brew install finished"
 else 
 	if [ -z ${HDF5_DIR+x} ]; then
