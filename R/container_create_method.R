@@ -1,4 +1,6 @@
-# attempt fix for mac os x users
+# get mountable temporary directory
+# on osx, the R temporary directory is placed in the /var folder, but this is not standard accessibale for docker
+# in that case, we put it in /tmp
 mytempdir <- function(subfolder) {
   dir <- file.path(tempdir(), subfolder) %>% gsub("^/var/", "/tmp/", .)
   if (dir.exists(dir)) {
