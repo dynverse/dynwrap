@@ -4,7 +4,7 @@ dist: trusty
 bioc_required: true
 os:
   - linux
-  - osx
+#  - osx
 cache:
   directories:
     - $HOME/.cache/hdf5
