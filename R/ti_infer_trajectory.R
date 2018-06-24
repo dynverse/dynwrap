@@ -133,16 +133,7 @@ infer_trajectories <- function(
   )
 
   parfun <-
-    if (PRISM::is_qsub_config(mc_cores)) {
-      function(X, FUN) {
-        PRISM::qsub_lapply(
-          X = X,
-          qsub_config = mc_cores,
-          qsub_packages = c("dynmethods", "dynwrap", "dynutils"),
-          FUN = FUN
-        )
-      }
-    } else if (is.integer(mc_cores) || is.numeric(mc_cores)) {
+    if (is.integer(mc_cores) || is.numeric(mc_cores)) {
       function(X, FUN) {
         parallel::mclapply(
           X = X,
@@ -150,6 +141,15 @@ infer_trajectories <- function(
           FUN = FUN
         )
       }
+    } else if ("PRISM" %in% rownames(installed.packages()) && PRISM::is_qsub_config(mc_cores)) {
+        function(X, FUN) {
+          PRISM::qsub_lapply(
+            X = X,
+            qsub_config = mc_cores,
+            qsub_packages = c("dynmethods", "dynwrap", "dynutils"),
+            FUN = FUN
+          )
+        }
     } else {
       stop("Invalid ", sQuote("mc_cores"), " argument. Must be an integer or a PRISM config.")
     }

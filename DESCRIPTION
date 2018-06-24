@@ -36,7 +36,6 @@ Imports:
   magrittr,
   methods,
   ParamHelpers (>= 1.11),
-  PRISM,
   pdist,
   purrr,
   readr,
@@ -48,6 +47,7 @@ Imports:
 Suggests:
   crayon,
   feather,
+  PRISM,
   hdf5r,
   ggplot2,
   lhs,
