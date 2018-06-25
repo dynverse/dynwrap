@@ -1,4 +1,5 @@
 [![Build Status](https://img.shields.io/travis/dynverse/dynwrap.svg?logo=travis)](https://travis-ci.org/dynverse/dynwrap)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/dynverse/dynwrap?branch=master&svg=true)](https://ci.appveyor.com/project/dynverse/dynwrap)
 [![codecov](https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynwrap) <img src="man/figures/logo.png" align="right" />
 
 # Tools for inferring and wrapping single-cell trajectories

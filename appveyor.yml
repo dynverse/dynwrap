@@ -30,6 +30,7 @@ on_failure:
 
 environment:
   USE_RTOOLS: true
+  NOT_CRAN: true
 
 artifacts:
   - path: '*.Rcheck\**\*.log'
