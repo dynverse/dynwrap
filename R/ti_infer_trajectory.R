@@ -21,7 +21,6 @@
 #' @importFrom stringr str_length
 #' @importFrom parallel mclapply
 #' @importFrom testthat expect_true
-#' @importFrom PRISM qsub_lapply is_qsub_config
 #'
 #' @export
 infer_trajectories <- function(
@@ -133,20 +132,25 @@ infer_trajectories <- function(
   )
 
   parfun <-
-    if (PRISM::is_qsub_config(mc_cores)) {
+    if (is.integer(mc_cores) || is.numeric(mc_cores)) {
+      function(X, FUN) {
+        parallel::mclapply(
+          X = X,
+          mc.cores = mc_cores,
+          FUN = FUN
+        )
+      }
+    } else if ("PRISM::qsub_config" %in% class(object)) {
+      requireNamespace("PRISM")
+
+      # check that these are still the same
+      testthat::expect_equal("PRISM::qsub_config" %in% class(object), PRISM::is_qsub_config(object))
+
       function(X, FUN) {
         PRISM::qsub_lapply(
           X = X,
           qsub_config = mc_cores,
           qsub_packages = c("dynmethods", "dynwrap", "dynutils"),
-          FUN = FUN
-        )
-      }
-    } else if (is.integer(mc_cores) || is.numeric(mc_cores)) {
-      function(X, FUN) {
-        parallel::mclapply(
-          X = X,
-          mc.cores = mc_cores,
           FUN = FUN
         )
       }

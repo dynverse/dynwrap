@@ -36,7 +36,6 @@ Imports:
   magrittr,
   methods,
   ParamHelpers (>= 1.11),
-  PRISM,
   pdist,
   purrr,
   readr,
@@ -50,11 +49,12 @@ Suggests:
   feather,
   hdf5r,
   ggplot2,
-  lhs,
-  viridis,
-  yaml,
   knitr,
-  rmarkdown
+  lhs,
+  PRISM,
+  rmarkdown,
+  viridis,
+  yaml
 Remotes:
   berndbischl/ParamHelpers,
   dynverse/dynutils,
