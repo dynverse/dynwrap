@@ -26,9 +26,9 @@ if (Sys.getenv("TRAVIS_OS_NAME") != "osx") {
     add_prior_information(start_id = cell_ids[[1]])
 
   test_that("Testing create_docker_ti_method with compone", {
-    sink("/dev/null")
-    method0 <- pull_docker_ti_method("dynverse/comp1")
-    sink()
+    capture.output(
+      method0 <- pull_docker_ti_method("dynverse/comp1")
+    )
     expect_equal(method0()$short_name, "componentone")
 
     method1 <- create_docker_ti_method("dynverse/comp1")
@@ -51,8 +51,9 @@ if (Sys.getenv("TRAVIS_OS_NAME") != "osx") {
 
   for (tag in tags) {
     test_that(paste0("Testing create_docker_ti_method and infer_trajectory with ", tag), {
-      sink("/dev/null")
-      method <- pull_docker_ti_method(paste0("dynverse/comp1:", tag))()
+      capture.output(
+        method <- pull_docker_ti_method(paste0("dynverse/comp1:", tag))()
+      )
       model <- infer_trajectory(task, method)
       expect_true(is_wrapper_with_trajectory(model))
       sink()
