@@ -1,12 +1,75 @@
-#' Group cells to their highest milestone
-#'
-#' @param milestone_percentages A data frame of milestone percentages.
-#'  Format: `data_frame(cell_id = character(), milestone_id = character(), percentage = numeric())`.
-#'
-#' @export
-get_cell_grouping <- function(milestone_percentages) {
-  milestone_percentages %>%
-    group_by(cell_id) %>%
-    summarise(group_id = milestone_id[which.max(percentage)])
-}
-
+qsub_qsub_qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub_qsub_qsub
+QSUB!!
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub?
+QSUB!!
+qsub
+qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUB!!
+qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub?
+QSUB!!
+qsub
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub?
+QSUB!!
+QSUB!!
+QSUB!!
+qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub?
+QSUB!!
+QSUB!!
+qsub_qsub_qsub

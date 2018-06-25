@@ -1,112 +1,729 @@
-context("Testing add_linear_trajectory")
-
-id <- "a"
-cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
-extras <- list("man")
-
-pseudotime <- c(0, .1, .4, .5, .8, 1) %>% set_names(cell_ids)
-
-wr_orig <- wrap_data(
-  id = id,
-  cell_ids = cell_ids
-)
-
-test_that("Testing add_linear_trajectory", {
-  wr <-
-    wr_orig %>%
-    add_linear_trajectory(
-      pseudotime = pseudotime,
-      do_scale_minmax = TRUE,
-      directed = FALSE,
-      extras = extras
-    )
-
-  # testing is_ti_data_wrapper
-  expect_true(is_wrapper_with_trajectory(wr))
-
-  expect_equivalent(wr$id, id)
-  expect_equivalent(wr$cell_ids, cell_ids)
-  expect_equivalent(wr$extras, extras)
-  expect_gt(cor(wr$pseudotime[cell_ids], pseudotime[cell_ids]), .9)
-  expect_equivalent(length(wr$milestone_ids), 2)
-  expect_equivalent(nrow(wr$milestone_network), 1)
-  expect_equivalent(set_names(sort(unlist(wr$milestone_network[,c("from", "to")])), NULL), sort(wr$milestone_ids))
-  expect_true(all(cell_ids %in% wr$progressions$cell_id))
-  expect_equivalent(nrow(wr$progressions), length(cell_ids))
-
-  expect_equivalent(wr$trajectory_type, "undirected_linear")
-})
-
-
-test_that("Testing add_linear_trajectory", {
-  wr <-
-    wr_orig %>%
-    add_linear_trajectory(
-      pseudotime = pseudotime,
-      do_scale_minmax = TRUE,
-      directed = TRUE,
-      extras = extras
-    )
-
-  # testing is_ti_data_wrapper
-  expect_true(is_wrapper_with_trajectory(wr))
-
-  expect_equivalent(wr$id, id)
-  expect_equivalent(wr$cell_ids, cell_ids)
-  expect_equivalent(wr$extras, extras)
-  expect_gt(cor(wr$pseudotime[cell_ids], pseudotime[cell_ids]), .9)
-  expect_equivalent(length(wr$milestone_ids), 2)
-  expect_equivalent(nrow(wr$milestone_network), 1)
-  expect_equivalent(set_names(sort(unlist(wr$milestone_network[,c("from", "to")])), NULL), sort(wr$milestone_ids))
-  expect_true(all(cell_ids %in% wr$progressions$cell_id))
-  expect_equivalent(nrow(wr$progressions), length(cell_ids))
-
-  expect_equivalent(wr$trajectory_type, "directed_linear")
-})
-
-
-test_that("Testing add_linear_trajectory", {
-  wr <-
-    wr_orig %>%
-    add_linear_trajectory(
-      pseudotime = pseudotime/10 + .45,
-      do_scale_minmax = FALSE,
-      directed = TRUE,
-      extras = extras
-    )
-
-  expect_gt(min(wr$pseudotime), .4)
-  expect_lt(max(wr$pseudotime), .6)
-
-})
-
-test_that("Testing add_linear_trajectory", {
-  wr <-
-    wr_orig %>%
-    add_linear_trajectory(
-      pseudotime = pseudotime[-1],
-      do_scale_minmax = TRUE,
-      directed = TRUE,
-      extras = extras
-    )
-
-  expect_equivalent(wr$id, id)
-  expect_equivalent(wr$cell_ids, cell_ids)
-  expect_equivalent(wr$extras, extras)
-  expect_equivalent(length(wr$pseudotime), length(cell_ids) - 1)
-  expect_true(all(cell_ids %in% wr$progressions$cell_id))
-  expect_equivalent(nrow(wr$progressions), length(cell_ids))
-})
-
-
-test_that("Testing add_linear_trajectory fails when expected", {
-  expect_error(
-    wr_orig %>%
-    add_linear_trajectory(
-      pseudotime = pseudotime %>% set_names(NULL),
-      do_scale_minmax = TRUE,
-      directed = FALSE,
-      extras = extras
-    )
-  )
-})
+QSUB!!
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub?
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub_qsub_qsub
+QSUB!!
+qsub?
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+QSUB!!
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub
+qsub?
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUB!!
+qsub
+QSUB!!
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUB!!
+qsub_qsub_qsub
+QSUB!!
+qsub_qsub_qsub
+qsub
+QSUB!!
+QSUB!!
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub?
+qsub?
+qsub
+qsub?
+qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub
+QSUB!!
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub
+QSUB!!
+QSUB!!
+qsub_qsub_qsub
+qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub
+qsub_qsub_qsub
+qsub?
+QSUB!!
+qsub
+qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub?
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub?
+QSUB!!
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub?
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUB!!
+QSUB!!
+qsub
+qsub?
+qsub
+QSUB!!
+QSUB!!
+qsub?
+qsub_qsub_qsub
+QSUB!!
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub?
+QSUB!!
+QSUB!!
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUB!!
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUB!!
+qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub?
+qsub
+qsub_qsub_qsub
+qsub?
+QSUB!!
+qsub_qsub_qsub
+QSUB!!
+QSUB!!
+QSUB!!
+QSUB!!
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub?
+qsub?
+qsub?
+qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub_qsub_qsub
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub?
+qsub?
+qsub_qsub_qsub
+qsub?
+qsub?
+QSUB!!
+qsub?
+QSUB!!
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUB!!
+qsub?
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub?
+QSUB!!
+qsub
+qsub_qsub_qsub
+QSUB!!
+qsub_qsub_qsub
+qsub?
+qsub
+qsub?
+QSUB!!
+qsub?
+QSUB!!
+qsub?
+QSUB!!
+qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub?
+qsub_qsub_qsub
+qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub?
+QSUB!!
+QSUB!!
+qsub?
+qsub?
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub?
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub?
+qsub_qsub_qsub
+qsub
+QSUB!!
+qsub
+QSUB!!
+QSUB!!
+qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub
+qsub_qsub_qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub
+qsub
+qsub
+qsub_qsub_qsub
+QSUB!!
+qsub_qsub_qsub
+qsub?
+qsub?
+qsub?
+qsub_qsub_qsub
+qsub?
+QSUB!!
+qsub
+qsub?
+qsub?
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub
+qsub?
+qsub_qsub_qsub
+qsub
+qsub?
+qsub_qsub_qsub
+qsub?
+qsub?
+qsub_qsub_qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub_qsub_qsub
+QSUB!!
+qsub
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub?
+qsub
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub
+qsub
+QSUB!!
+qsub_qsub_qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUB!!
+qsub
+qsub?
+QSUB!!
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub
+qsub?
+QSUB!!
+qsub?
+qsub?
+qsub_qsub_qsub
+QSUB!!
+qsub
+qsub?
+qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+QSUB!!
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub?
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub?
+QSUB!!
+QSUB!!
+qsub?
+qsub?
+QSUB!!
+QSUB!!
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUB!!
+QSUB!!
+QSUB!!
+qsub
+QSUB!!
+QSUB!!
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub_qsub_qsub
+qsub
+qsub_qsub_qsub
+QSUB!!
+qsub_qsub_qsub
+qsub
+qsub_qsub_qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub_qsub_qsub
+QSUB!!
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub
+QSUB!!
+QSUB!!
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUB!!
+qsub
+qsub_qsub_qsub
+qsub
+qsub?
+qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUB!!
+qsub_qsub_qsub
+qsub?
+QSUB!!
+qsub_qsub_qsub
+qsub?
+QSUB!!
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUB!!
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub
+qsub
+QSUB!!
+qsub?
+QSUB!!
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub?
+qsub_qsub_qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub?
+QSUB!!
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub?
+QSUB!!
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUB!!
+qsub
+qsub
+qsub
+QSUB!!
+QSUB!!
+qsub_qsub_qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub?
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub?
+QSUB!!
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub
+qsub_qsub_qsub
+qsub?
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub?
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUB!!
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub?
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUB!!
+qsub
+QSUB!!
+QSUB!!
+QSUB!!
+QSUB!!
+qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub_qsub_qsub
+QSUB!!
+QSUB!!
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub?
+QSUB!!
+QSUB!!
+qsub?
+qsub
+qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub?
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub?
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub
+qsub
+qsub?
+qsub_qsub_qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUB!!
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub
+qsub?
+QSUB!!
+QSUB!!
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUB!!
+qsub_qsub_qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUB!!
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUB!!
+qsub
+qsub_qsub_qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub
+qsub?
+qsub
+qsub_qsub_qsub
+qsub?
+qsub?
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub
+QSUB!!
+qsub?
+qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub?
+QSUB!!
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub
+QSUB!!
+qsub?
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub?
+QSUB!!
+qsub_qsub_qsub
+QSUB!!
+QSUB!!
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUB!!
+qsub_qsub_qsub

@@ -1,67 +1,311 @@
-context("Testing add_root")
-
-cell_ids <- c("a", "b", "c", "d", "e", "f")
-milestone_ids <- c("W", "X", "Y", "Z", "A")
-
-milestone_network <- tribble(
-  ~from, ~to, ~length, ~directed,
-  "W", "X", 2, TRUE,
-  "X", "Z", 4, TRUE,
-  "X", "Y", 3, TRUE,
-  "Z", "A", 5, TRUE
-)
-
-divergence_regions <- tribble(
-  ~divergence_id, ~milestone_id, ~is_start,
-  "XYZ", "X", TRUE,
-  "XYZ", "Y", FALSE,
-  "XYZ", "Z", FALSE
-)
-
-milestone_percentages <- tribble(
-  ~cell_id, ~milestone_id, ~percentage,
-  "a", "W", .9,
-  "a", "X", .1,
-  "b", "W", .2,
-  "b", "X", .8,
-  "c", "X", .8,
-  "c", "Z", .2,
-  "d", "X", .2,
-  "d", "Y", .7,
-  "d", "Z", .1,
-  "e", "X", .3,
-  "e", "Y", .2,
-  "e", "Z", .5,
-  "f", "Z", .8,
-  "f", "A", .2
-)
-
-traj <- wrap_data(
-  id = "test",
-  cell_ids = cell_ids
-) %>% add_trajectory(
-  milestone_ids = milestone_ids,
-  milestone_network = milestone_network,
-  milestone_percentages = milestone_percentages,
-  divergence_regions = divergence_regions
-)
-
-test_that("Testing add_root", {
-  rooted <- add_root(traj, root_cell_id = "a")
-
-  expect_true(rooted$root_milestone_id == "W")
-  expect_true(rooted$milestone_network$from[[1]] == "W")
-  expect_true(all(rooted$milestone_network$from == c("W", "X", "Z", "X")))
-  expect_true(all(rooted$milestone_network$to == c("X", "Z", "A", "Y")))
-
-  rooted <- add_root(traj)
-
-  expect_error(add_root(traj, root_cell_id = "trajectories are cool"))
-  expect_error(add_root(traj, root_milestone_id = "trajectories are cool"))
-})
-
-
-test_that("Testing calculate_pseudotime", {
-  traj <- add_pseudotime(traj)
-  expect_equal(traj$pseudotime, c("a" = 0, "b" = 1.4, "c" = 2.6, "d" = 4.3, "e" = 4.4, "f" = 6.8))
-})
+qsub_qsub_qsub
+QSUB!!
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub
+QSUB!!
+qsub?
+qsub?
+QSUB!!
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUB!!
+QSUB!!
+qsub
+QSUB!!
+qsub
+qsub
+qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub?
+qsub?
+qsub
+qsub?
+QSUB!!
+qsub
+qsub?
+qsub?
+qsub_qsub_qsub
+qsub?
+qsub?
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub_qsub_qsub
+qsub?
+qsub?
+QSUB!!
+qsub
+qsub_qsub_qsub
+QSUB!!
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub
+QSUB!!
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUB!!
+qsub?
+qsub
+qsub_qsub_qsub
+QSUB!!
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+QSUB!!
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUB!!
+qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub?
+qsub_qsub_qsub
+qsub?
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub
+qsub?
+qsub_qsub_qsub
+qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub?
+qsub?
+qsub?
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub?
+qsub?
+qsub_qsub_qsub
+qsub
+qsub?
+QSUB!!
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+QSUB!!
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub?
+qsub?
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub
+QSUB!!
+QSUB!!
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUB!!
+QSUB!!
+qsub
+qsub
+qsub
+qsub?
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub_qsub_qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub?
+QSUB!!
+qsub
+qsub_qsub_qsub
+QSUB!!
+QSUB!!
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub_qsub_qsub
+QSUB!!
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub?
+QSUB!!
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUB!!
+QSUB!!
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUB!!
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub
+qsub?
+QSUB!!
+qsub_qsub_qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub
+QSUB!!
+qsub_qsub_qsub
+QSUB!!
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub_qsub_qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub
+qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub?
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUB!!
+QSUB!!
+qsub?
+qsub_qsub_qsub
+qsub
+qsub_qsub_qsub
+QSUB!!
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub?
+qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUB!!
+qsub
+qsub_qsub_qsub
+qsub?
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub
+QSUB!!
+qsub
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUB!!
+qsub?
+QSUB!!
+qsub?
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub
+QSUB!!
+qsub_qsub_qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub
+qsub?
+qsub?
+qsub_qsub_qsub
+QSUB!!
+qsub
+qsub
+qsub?
+qsub?
+qsub?
+QSUB!!
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub
+qsub
+qsub_qsub_qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
