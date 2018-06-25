@@ -20,9 +20,7 @@ save_inputs <- function(
     write_rds(inputs, file.path(dir_input, "data.rds"))
   } else if (input_format == "hdf5") {
     # install hdf5r if not available
-    if(!require("hdf5r", quietly = TRUE)) {
-      dynutils::install_packages("hdf5r", "dynwrap", prompt = TRUE)
-    }
+    dynutils::install_packages("hdf5r", "dynwrap", prompt = TRUE)
     requireNamespace("hdf5r")
 
     file <- hdf5r::H5File$new(file.path(dir_input, "data.h5"), "w")
@@ -37,9 +35,7 @@ save_inputs <- function(
     file$close_all() # important to do a close_all here, otherwise some parts of the data can still be open, resulting in invalid h5 files
   } else if (input_format == "feather") {
     # install feather if not available
-    if(!require("feather", quietly = TRUE)) {
-      dynutils::install_packages("feather", "dynwrap", prompt = TRUE)
-    }
+    dynutils::install_packages("feather", "dynwrap", prompt = TRUE)
     requireNamespace("feather")
 
     for (input_id in names(inputs)) {
