@@ -47,6 +47,7 @@ Imports:
 Suggests:
   crayon,
   feather,
+  PRISM,
   hdf5r,
   ggplot2,
   knitr,
