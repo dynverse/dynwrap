@@ -17,5 +17,5 @@ test_that("Testing that test_docker_installation works", {
 test_that("Testing that test_docker_installation fails when on windows on appveyor", {
   skip_if_not(Sys.getenv("APPVEYOR") == 'True')
 
-  expect_error(test_docker_installation())
+  expect_error(test_docker_installation(detailed = TRUE))
 })
