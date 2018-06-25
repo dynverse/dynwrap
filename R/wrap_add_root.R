@@ -57,7 +57,7 @@ add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_mi
   # order milestone network
   milestone_order <- trajectory$milestone_network %>%
     igraph::graph_from_data_frame() %>%
-    igraph::dfs(root_milestone_id) %>%
+    igraph::dfs(root_milestone_id, unreachable = TRUE) %>%
     .$order %>%
     names()
 
