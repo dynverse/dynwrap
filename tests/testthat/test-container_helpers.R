@@ -2,7 +2,7 @@
 context("Testing test_docker_installation")
 
 skip_on_travis_mac <- function() {
-  skip_if(Sys.getenv("TRAVIS") == "true" && tolower(Sys.info()[["sysname"]]) == 'mac')
+  skip_if(Sys.getenv("TRAVIS") == "true" && "mac" %in% tolower(Sys.info()[["sysname"]]))
 }
 
 test_that("Testing that test_docker_installation works", {

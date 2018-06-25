@@ -1,5 +1,5 @@
 skip_on_travis_mac <- function() {
-  skip_if(Sys.getenv("TRAVIS") == "true" && tolower(Sys.info()[["sysname"]]) == 'mac')
+  skip_if(Sys.getenv("TRAVIS") == "true" && "mac" %in% tolower(Sys.info()[["sysname"]]))
 }
 
 context("Testing create_docker_ti_method")
