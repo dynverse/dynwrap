@@ -26,7 +26,11 @@ add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_mi
     message(paste0("Using '", root_milestone_id, "' as root"))
   }
 
-  milestone_order <- igraph::graph_from_data_frame(trajectory$milestone_network) %>% igraph::ego(nodes = root_milestone_id, 999) %>% first() %>% names()
+  milestone_order <- igraph::graph_from_data_frame(trajectory$milestone_network) %>%
+    igraph::ego(nodes = root_milestone_id, 999) %>%
+    first() %>%
+    names()
+  milestone_order <- c(milestone_order, setdiff(trajectory$milestone_ids, milestone_order)) # add disconnected milestones
 
   # flip edge if from is later than to
   trajectory$milestone_network <- trajectory$milestone_network %>%
