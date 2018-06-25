@@ -19,7 +19,7 @@ services:
   - docker
 
 build_script:
-  - R -e 'devtools::install_github("wesm/feather/R")'
+  - R -e devtools::install_github("wesm/feather/R")
   - travis-tool.sh install_deps
 
 test_script:
