@@ -140,17 +140,18 @@ infer_trajectories <- function(
           FUN = FUN
         )
       }
-    } else if ("PRISM" %in% rownames(installed.packages()) && PRISM::is_qsub_config(mc_cores)) {
-        function(X, FUN) {
-          PRISM::qsub_lapply(
-            X = X,
-            qsub_config = mc_cores,
-            qsub_packages = c("dynmethods", "dynwrap", "dynutils"),
-            FUN = FUN
-          )
-        }
+    } else if ("qsub::qsub_config" %in% class(mc_cores)) {
+      requireNamespace("qsub")
+      function(X, FUN) {
+        qsub::qsub_lapply(
+          X = X,
+          qsub_config = mc_cores,
+          qsub_packages = c("dynmethods", "dynwrap", "dynutils"),
+          FUN = FUN
+        )
+      }
     } else {
-      stop("Invalid ", sQuote("mc_cores"), " argument. Must be an integer or a PRISM config.")
+      stop("Invalid ", sQuote("mc_cores"), " argument. Must be an integer or a qsub config.")
     }
 
   output <- parfun(

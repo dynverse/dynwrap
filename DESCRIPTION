@@ -47,12 +47,12 @@ Imports:
 Suggests:
   crayon,
   feather,
-  PRISM,
+  qsub,
   hdf5r,
   ggplot2,
   knitr,
   lhs,
-  PRISM,
+  qsub,
   rmarkdown,
   viridis,
   yaml
@@ -60,7 +60,7 @@ Remotes:
   berndbischl/ParamHelpers,
   dynverse/dynutils,
   dynverse/dyndimred,
-  rcannood/PRISM,
+  rcannood/qsub,
   tidyverse/ggplot2
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
