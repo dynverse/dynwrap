@@ -43,7 +43,7 @@ test_docker_installation <- function(detailed = FALSE) {
       stop(crayon::red("\u274C Unable to pull docker images."))
     })
 
-    # test if docker can run images
+    # test if docker can run images, will fail on windows if linux containers are not enabled
     tryCatch({
       system(glue::glue("docker run alpine"), intern = TRUE, ignore.stderr = TRUE)
       message(crayon::green("\u2714 Docker can run image"))

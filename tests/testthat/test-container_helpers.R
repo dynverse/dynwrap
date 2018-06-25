@@ -1,9 +1,21 @@
 # travis docker not supported https://github.com/travis-ci/travis-ci/issues/5738
-if (Sys.getenv("TRAVIS_OS_NAME") != "osx" && Sys.getenv("APPVEYOR") != "True") {
-  context("Testing test_docker_installation")
+context("Testing test_docker_installation")
 
-  test_that("Testing that test_docker_installation works", {
-    testthat::expect_true(test_docker_installation())
-    testthat::expect_message(test_docker_installation(TRUE), "\u2714.*")
-  })
+skip_on_travis_mac <- function() {
+  skip_if(Sys.getenv("TRAVIS") == "true" && tolower(Sys.info()[["sysname"]]) == 'mac')
 }
+
+test_that("Testing that test_docker_installation works", {
+  skip_on_appveyor()
+  skip_on_travis_mac()
+  skip_on_cran()
+
+  expect_true(test_docker_installation())
+  expect_message(test_docker_installation(TRUE), "\u2714.*")
+})
+
+test_that("Testing that test_docker_installation fails when on windows on appveyor", {
+  skip_if_not(Sys.getenv("APPVEYOR") == 'True')
+
+  expect_error(test_docker_installation())
+})
