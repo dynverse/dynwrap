@@ -132,11 +132,5 @@ process_dimred <- function(model, dimred, identifier = "cell_id") {
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   }
 
-  # impute missing
-  if (any(is.na(dimred))) {
-    warnings("Some missing values in the dimensionality reduction were imputed")
-    dimred[is.na(dimred)] <- mean(dimred, na.rm = TRUE)
-  }
-
   dimred
 }
