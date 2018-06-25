@@ -282,7 +282,7 @@ ti_comp1 <- pull_docker_ti_method("dynverse/comp1")
 ```
 
 ```{r, echo=FALSE}
-if (Sys.getenv("TRAVIS") == "true") {
+if (Sys.getenv("TRAVIS") == "true" || Sys.getenv("APPVEYOR") == "True") {
   ti_comp1 <- dynwrap::ti_comp1
 } else {
   ti_comp1 <- pull_docker_ti_method("dynverse/comp1")
@@ -372,7 +372,7 @@ infer_trajectory(task, ti_comp1, debug = TRUE)
 ```
 
 ```{r, error=TRUE, echo=FALSE}
-if (Sys.getenv("TRAVIS") != "true") {
+if (Sys.getenv("TRAVIS") != "true" || Sys.getenv("APPVEYOR") == "True") {
   infer_trajectory(task, ti_comp1(), debug = TRUE)
 }
 ```

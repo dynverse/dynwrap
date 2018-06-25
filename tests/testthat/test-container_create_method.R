@@ -2,7 +2,7 @@
 if (Sys.getenv("TRAVIS_OS_NAME") != "osx") {
   context("Testing create_docker_ti_method")
 
-  if (Sys.getenv("TRAVIS") == "true") {
+  if (Sys.getenv("TRAVIS") == "true" || Sys.getenv("APPVEYOR") == "True") {
     tags <- "python_feather"
   } else {
     tags <- c("R_text", "python_text", "R_hdf5", "python_hdf5", "R_rds", "R_dynwrap", "R_feather", "python_feather")
