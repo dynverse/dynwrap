@@ -47,7 +47,6 @@ Imports:
 Suggests:
   crayon,
   feather,
-  qsub,
   hdf5r,
   ggplot2,
   knitr,
