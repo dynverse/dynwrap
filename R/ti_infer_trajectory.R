@@ -218,6 +218,7 @@ extract_args_from_task <- function(
   inputs,
   give_priors = NULL
 ) {
+  data("priors", package = "dynwrap", envir = environment())
   if(any(!give_priors %in% priors$prior_id)) {
     stop("Invalid priors requested: ", give_priors)
   }
