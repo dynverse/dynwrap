@@ -134,10 +134,9 @@ infer_trajectories <- function(
   parfun <-
     if (is.integer(mc_cores) || is.numeric(mc_cores)) {
       function(X, FUN) {
-        PRISM::qsub_lapply(
+        parallel::mclapply(
           X = X,
-          qsub_config = mc_cores,
-          qsub_packages = c("dynmethods", "dynwrap", "dynutils"),
+          mc.cores = mc_cores,
           FUN = FUN
         )
       }
