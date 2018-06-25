@@ -96,7 +96,6 @@ create_ti_method <- function(
     input_ids_required <- names(as.list(formals(run_fun)) %>% map_chr(class) %>% keep(~. == "name"))
 
     data(priors, package = "dynwrap", envir = environment())
-
     desc$inputs <- tibble(
       input_id = input_ids,
       required = input_id %in% input_ids_required

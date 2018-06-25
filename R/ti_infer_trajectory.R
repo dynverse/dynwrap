@@ -21,7 +21,6 @@
 #' @importFrom stringr str_length
 #' @importFrom parallel mclapply
 #' @importFrom testthat expect_true
-#' @importFrom PRISM qsub_lapply is_qsub_config
 #'
 #' @export
 infer_trajectories <- function(
@@ -133,16 +132,7 @@ infer_trajectories <- function(
   )
 
   parfun <-
-    if (PRISM::is_qsub_config(mc_cores)) {
-      function(X, FUN) {
-        PRISM::qsub_lapply(
-          X = X,
-          qsub_config = mc_cores,
-          qsub_packages = c("dynmethods", "dynwrap", "dynutils"),
-          FUN = FUN
-        )
-      }
-    } else if (is.integer(mc_cores) || is.numeric(mc_cores)) {
+    if (is.integer(mc_cores) || is.numeric(mc_cores)) {
       function(X, FUN) {
         parallel::mclapply(
           X = X,
@@ -150,8 +140,18 @@ infer_trajectories <- function(
           FUN = FUN
         )
       }
+    } else if ("qsub::qsub_config" %in% class(mc_cores)) {
+      requireNamespace("qsub")
+      function(X, FUN) {
+        qsub::qsub_lapply(
+          X = X,
+          qsub_config = mc_cores,
+          qsub_packages = c("dynmethods", "dynwrap", "dynutils"),
+          FUN = FUN
+        )
+      }
     } else {
-      stop("Invalid ", sQuote("mc_cores"), " argument. Must be an integer or a PRISM config.")
+      stop("Invalid ", sQuote("mc_cores"), " argument. Must be an integer or a qsub config.")
     }
 
   output <- parfun(
@@ -218,6 +218,7 @@ extract_args_from_task <- function(
   inputs,
   give_priors = NULL
 ) {
+  data("priors", package = "dynwrap", envir = environment())
   if(any(!give_priors %in% priors$prior_id)) {
     stop("Invalid priors requested: ", give_priors)
   }

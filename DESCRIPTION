@@ -36,7 +36,6 @@ Imports:
   magrittr,
   methods,
   ParamHelpers (>= 1.11),
-  PRISM,
   pdist,
   purrr,
   readr,
@@ -48,18 +47,20 @@ Imports:
 Suggests:
   crayon,
   feather,
+  qsub,
   hdf5r,
   ggplot2,
-  lhs,
-  viridis,
-  yaml,
   knitr,
-  rmarkdown
+  lhs,
+  qsub,
+  rmarkdown,
+  viridis,
+  yaml
 Remotes:
   berndbischl/ParamHelpers,
   dynverse/dynutils,
   dynverse/dyndimred,
-  rcannood/PRISM,
+  rcannood/qsub,
   tidyverse/ggplot2
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
