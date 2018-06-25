@@ -82,7 +82,7 @@
     <div class="page-header toc-ignore">
       <h1>Creating a TI method using docker</h1>
             
-            <h4 class="date">2018-06-24</h4>
+            <h4 class="date">2018-06-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dynverse/dynwrap/blob/master/vignettes/create_ti_method_docker.Rmd"><code>vignettes/create_ti_method_docker.Rmd</code></a></small>
       <div class="hidden name"><code>create_ti_method_docker.Rmd</code></div>
@@ -580,13 +580,10 @@ dynplot<span class="op">::</span><span class="kw"><a href="http://www.rdocumenta
 <h2 class="hasAnchor">
 <a href="#debugging-the-container" class="anchor"></a>Debugging the container</h2>
 <p>The container can be debugged by running the method with <code>debug = TRUE</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/infer_trajectories.html">infer_trajectory</a></span>(task, ti_comp1, <span class="kw">list</span>(<span class="dt">debug =</span> <span class="ot">TRUE</span>))</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="kw">Sys.getenv</span>(<span class="st">"TRAVIS"</span>) <span class="op">!=</span><span class="st"> "true"</span>) {
-  <span class="kw"><a href="../reference/infer_trajectories.html">infer_trajectory</a></span>(task, <span class="kw"><a href="../reference/ti_comp1.html">ti_comp1</a></span>(), <span class="kw">list</span>(<span class="dt">debug =</span> <span class="ot">TRUE</span>))
-}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/infer_trajectories.html">infer_trajectory</a></span>(task, ti_comp1, <span class="dt">debug =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <pre><code>## Error: Error during trajectory inference 
 ## Use this command for debugging: 
-## docker run --entrypoint 'bash' -it -v /tmp/Rtmp2PjAsf/input:/input -v /tmp/Rtmp2PjAsf/output:/output dynverse/comp1</code></pre>
+## docker run --entrypoint 'bash' -it -v /tmp/RtmpGBjXoD/input:/input -v /tmp/RtmpGBjXoD/output:/output dynverse/comp1</code></pre>
 <p>This will print a shell command which can be used to enter the container with the /input and /output directories mounted.</p>
 </div>
 <div id="making-your-method-available-for-other-users" class="section level2">

@@ -368,12 +368,12 @@ if ("dynplot" %in% rownames(installed.packages())) {
 The container can be debugged by running the method with `debug = TRUE`:
 
 ```r
-infer_trajectory(task, ti_comp1, list(debug = TRUE))
+infer_trajectory(task, ti_comp1, debug = TRUE)
 ```
 
-```{r, error=TRUE}
+```{r, error=TRUE, echo=FALSE}
 if (Sys.getenv("TRAVIS") != "true") {
-  infer_trajectory(task, ti_comp1(), list(debug = TRUE))
+  infer_trajectory(task, ti_comp1(), debug = TRUE)
 }
 ```
 
