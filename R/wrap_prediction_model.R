@@ -1,28 +1,185 @@
-#' An abstract data wrapper for TI predictions
-#'
-#' @inheritParams wrap_data
-#'
-#' @export
-wrap_prediction_model <- function(
-  cell_ids,
-  cell_info = NULL,
-  ...
-) {
-  out <- wrap_data(
-    id = random_time_string("TIpred"),
-    cell_ids = cell_ids,
-    cell_info = cell_info,
-    ...
-  )
-  class(out) <- c("dynwrap::prediction", class(out))
-  out
-}
-
-#' Tests whether an object is a trajectory created by a TI method.
-#'
-#' @param object The object to be tested
-#'
-#' @export
-is_prediction <- function(object) {
-  "dynwrap::prediction" %in% class(object)
-}
+qsub
+qsub_qsub_qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub?
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub?
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub
+QSUB!!
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub
+qsub_qsub_qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub?
+qsub?
+qsub_qsub_qsub
+qsub
+qsub?
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub_qsub_qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub
+qsub_qsub_qsub
+QSUB!!
+qsub_qsub_qsub
+qsub?
+qsub
+qsub_qsub_qsub
+QSUB!!
+qsub
+qsub
+qsub?
+qsub
+qsub
+QSUB!!
+qsub
+QSUB!!
+qsub?
+QSUB!!
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub
+qsub?
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub?
+QSUB!!
+qsub
+qsub
+qsub
+qsub_qsub_qsub
+qsub?
+qsub
+qsub
+qsub_qsub_qsub
+QSUB!!
+qsub?
+qsub_qsub_qsub
+qsub
+QSUB!!
+qsub_qsub_qsub
+qsub?
+qsub
+QSUB!!
+qsub?
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUB!!
+QSUB!!
+qsub?
+qsub_qsub_qsub
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUB!!
+qsub?
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUB!!
+qsub?
+qsub_qsub_qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+QSUB!!
+qsub?
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub?
+qsub
+qsub?
+qsub_qsub_qsub
+qsub?
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+qsub?
+qsub
+QSUB!!
+QSUB!!
+qsub?
+QSUB!!
+qsub?
+qsub_qsub_qsub
+qsub?
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub?
+QSUUUUUUUUUUUUUUUUB
+qsub_qsub_qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub_qsub_qsub
+QSUB!!
+qsub_qsub_qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+QSUB!!
+qsub?
+qsub?
+qsub_qsub_qsub
+qsub_qsub_qsub
+QSUB!!
+qsub
+qsub
+QSUUUUUUUUUUUUUUUUB
+qsub
+qsub_qsub_qsub
+qsub
+qsub
+qsub?
+qsub?
+QSUB!!
+qsub_qsub_qsub
