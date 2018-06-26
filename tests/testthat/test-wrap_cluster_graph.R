@@ -55,3 +55,33 @@ test_that("Testing add_cluster_graph", {
 
   expect_true(is_wrapper_with_trajectory(wr))
 })
+
+
+
+test_that("Testing add_explicit_splits", {
+  milestone_network <- tribble(
+    ~from, ~to, ~length, ~directed,
+    "A", "B", 1, TRUE,
+    "A", "C", 1, TRUE,
+    "C", "D", 2, TRUE,
+    "E", "F", 3, TRUE,
+    "B", "G", 1, TRUE,
+    "C", "G", 10, TRUE
+  )
+
+  milestone_network <- add_explicit_splits(milestone_network)
+
+  expect_true(
+    all(
+      c(
+        "split_A -> B",
+        "split_A -> C",
+        "B -> convergence_G",
+        "C -> convergence_G",
+        "A -> split_A",
+        "convergence_G -> G"
+      ) %in%
+        paste0(milestone_network$from, " -> ", milestone_network$to)
+    )
+  )
+})

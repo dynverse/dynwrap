@@ -4,7 +4,8 @@
 \alias{add_cluster_graph}
 \title{Constructs a trajectory using a cell grouping and a network between groups. Will use an existing grouping if it is present in the model.}
 \usage{
-add_cluster_graph(model, milestone_network, grouping = NULL, ...)
+add_cluster_graph(model, milestone_network, grouping = NULL,
+  explicit_splits = FALSE, ...)
 }
 \arguments{
 \item{model}{The model to which a cluster graph will be added. Needs to have a cell grouping created by \code{\link[=add_grouping]{add_grouping()}}.}
@@ -12,6 +13,8 @@ add_cluster_graph(model, milestone_network, grouping = NULL, ...)
 \item{milestone_network}{A network of milestones.}
 
 \item{grouping}{A grouping of the cells, can be a named vector or a dataframe with group_id (character) and cell_id (character)}
+
+\item{explicit_splits}{Whether to make splits specific by adding a starting node. For example: A->B, A->C becomes A->X, X->B, X->C}
 
 \item{...}{extra information to be stored in the wrapper.}
 }
