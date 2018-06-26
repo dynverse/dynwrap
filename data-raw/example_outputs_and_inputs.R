@@ -44,6 +44,26 @@ divergence_regions <- tibble(
   is_start = c(TRUE, FALSE, FALSE)
 )
 
+branches <- milestone_network %>%
+  mutate(branch_id = as.character(row_number())) %>%
+  select(branch_id, length, directed, from, to)
+
+branch_progressions <- progressions %>%
+  left_join(
+    branches %>% mutate(edge_id = as.character(row_number())),
+    c("from", "to")
+  ) %>%
+  select(cell_id, branch_id, percentage)
+
+branch_network <- tribble(
+  ~from, ~to,
+  "1", "2",
+  "2", "3",
+  "2", "4"
+)
+
+branches <- branches %>% select(branch_id, length, directed)
+
 dimred <- dyndimred::dimred_pca(expression)
 dimred_milestones <- dimred[sample(seq_len(nrow(dimred)), length(milestone_ids)), ]
 rownames(dimred_milestones) <- milestone_ids
@@ -133,6 +153,9 @@ objects <- lst(
   progressions,
   milestone_percentages,
   divergence_regions,
+  branch_network,
+  branches,
+  branch_progressions,
   dimred = dimred %>% as.data.frame() %>% rownames_to_column("cell_id"),
   dimred_milestones = dimred_milestones %>% as.data.frame() %>% rownames_to_column("milestone_id"),
   cell_graph,

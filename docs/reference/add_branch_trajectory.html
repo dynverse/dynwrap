@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Simplify an igraph network such that consecutive linear edges are removed — simplify_igraph_network • dynwrap</title>
+<title>Define a trajectory model given its branch network and the pseudotime of the cells on one of the branches — add_branch_trajectory • dynwrap</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Simplify an igraph network such that consecutive linear edges are removed — simplify_igraph_network" />
+<meta property="og:title" content="Define a trajectory model given its branch network and the pseudotime of the cells on one of the branches — add_branch_trajectory" />
 
-<meta property="og:description" content="Simplify an igraph network such that consecutive linear edges are removed" />
+<meta property="og:description" content="Define a trajectory model given its branch network and the pseudotime of the cells on one of the branches" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -114,66 +114,60 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Simplify an igraph network such that consecutive linear edges are removed</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/simplify_igraph_network.R'><code>R/simplify_igraph_network.R</code></a></small>
-    <div class="hidden name"><code>simplify_igraph_network.Rd</code></div>
+    <h1>Define a trajectory model given its branch network and the pseudotime of the cells on one of the branches</h1>
+    <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/wrap_add_branch_trajectory.R'><code>R/wrap_add_branch_trajectory.R</code></a></small>
+    <div class="hidden name"><code>add_branch_trajectory.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Simplify an igraph network such that consecutive linear edges are removed</p>
+    <p>Define a trajectory model given its branch network and the pseudotime of the cells on one of the branches</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>simplify_igraph_network</span>(<span class='no'>gr</span>, <span class='kw'>allow_duplicated_edges</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>add_branch_trajectory</span>(<span class='no'>model</span>, <span class='no'>branch_network</span>, <span class='no'>branches</span>, <span class='no'>branch_progressions</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>gr</th>
-      <td><p>an igraph object</p></td>
+      <th>model</th>
+      <td><p>The model to which the trajectory will be added.</p></td>
     </tr>
     <tr>
-      <th>allow_duplicated_edges</th>
-      <td><p>Whether or not to allow duplicated edges between nodes.</p></td>
+      <th>branch_network</th>
+      <td><p>The network between branches
+Type: Data frame(from = charactor, to = character)</p></td>
+    </tr>
+    <tr>
+      <th>branches</th>
+      <td><p>The length and directedness of the branches
+Type: Data frame(branch_id = character, length = numeric, directed = logical)</p></td>
+    </tr>
+    <tr>
+      <th>branch_progressions</th>
+      <td><p>Specifies the progression of a cell along a transition in the branch network.
+Type: Data frame(cell_id = character, branch_id = character, percentage = numeric).</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>extra information to be stored in the model</p></td>
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>net</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(
-  <span class='kw'>from</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>,
-  <span class='kw'>to</span> <span class='kw'>=</span> <span class='fl'>2</span>:<span class='fl'>3</span>,
-  <span class='kw'>length</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>directed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>F</span>
-)
-<span class='no'>gr</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>igraph</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/igraph/topics/graph_from_data_frame'>graph_from_data_frame</a></span>(<span class='no'>net</span>)
-<span class='fu'>simplify_igraph_network</span>(<span class='no'>gr</span>)</div><div class='output co'>#&gt; IGRAPH 26ab6f0 DNW- 2 1 -- 
-#&gt; + attr: name (v/c), length (e/n), directed (e/l), weight (e/n)
-#&gt; + edge from 26ab6f0 (vertex names):
-#&gt; [1] 1-&gt;3</div><div class='input'>
-<span class='no'>net</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(
-  <span class='kw'>from</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>1</span>),
-   <span class='kw'>to</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>1</span>, <span class='fl'>4</span>),
-    <span class='kw'>length</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-    <span class='kw'>directed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-    <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>F</span>
-)
-<span class='no'>gr</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>igraph</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/igraph/topics/graph_from_data_frame'>graph_from_data_frame</a></span>(<span class='no'>net</span>)
-<span class='fu'>simplify_igraph_network</span>(<span class='no'>gr</span>)</div><div class='output co'>#&gt; IGRAPH 09cf4da DNW- 2 2 -- 
-#&gt; + attr: name (v/c), length (e/n), directed (e/l), weight (e/n)
-#&gt; + edges from 09cf4da (vertex names):
-#&gt; [1] 1-&gt;4 1-&gt;1</div></pre>
+    <p>The trajectory model</p>
+    
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-            
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
 
   </div>
 </div>

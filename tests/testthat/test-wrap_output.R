@@ -17,7 +17,7 @@ test_that("Make sure that every output has a text example", {
 
 
 cell_ids <- jsonlite::read_json(
-  devtools:::shim_system.file("example_outputs/text/cell_ids.json", package="dynwrap"),
+  devtools:::shim_system.file("example_outputs/text/cell_ids.json", package="dynwrap")
 ) %>% as.character()
 
 base_model <- wrap_data(cell_ids = cell_ids)
@@ -81,6 +81,15 @@ for (output_format in c("feather", "rds", "text")) {
     )
     expect_true(is_wrapper_with_trajectory(model))
 
+    # branch trajectory
+    model <- wrap_output(
+      base_model,
+      c("branch_trajectory"),
+      dir_output,
+      output_format
+    )
+    expect_true(is_wrapper_with_trajectory(model))
+
     # dimred
     model <- wrap_output(
       base_model,
@@ -133,3 +142,4 @@ test_that(paste0("Output processors can process output with ", output_format), {
 
   expect_true(is_wrapper_with_trajectory(model))
 })
+

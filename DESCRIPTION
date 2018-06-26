@@ -80,6 +80,7 @@ Collate:
     'ti_comp1.R'
     'ti_infer_trajectory.R'
     'ti_parse_parameter_definition.R'
+    'wrap_add_branch_trajectory.R'
     'wrap_add_cell_graph.R'
     'wrap_add_cell_waypoints.R'
     'wrap_add_cluster_graph.R'
