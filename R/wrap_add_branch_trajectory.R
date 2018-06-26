@@ -1,7 +1,6 @@
 #' Define a trajectory model given its branch network and the pseudotime of the cells on one of the branches
 #'
 #' @param model The model to which the trajectory will be added.
-#' @param branch_ids The names of the branches
 #' @param branch_network The network between branches
 #'   Type: Data frame(from = charactor, to = character)
 #' @param branches The length and directedness of the branches
@@ -17,7 +16,6 @@
 #' @importFrom testthat expect_is expect_equal expect_true expect_false
 add_branch_trajectory <- function(
   model,
-  branch_ids = NULL,
   branch_network,
   branches,
   branch_progressions,
@@ -27,10 +25,7 @@ add_branch_trajectory <- function(
   testthat::expect_true(is_data_wrapper(model))
   cell_ids <- model$cell_ids
 
-  # infer branch_ids if not given
-  if(is.null(branch_ids)) {
-    branch_ids <- unique(c(branch_network$from, branch_network$to))
-  }
+  branch_ids <- branches$branch_id
 
   # check branch ids, branch network network and branches
   testthat::expect_is(branch_ids, "character")

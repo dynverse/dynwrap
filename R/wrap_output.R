@@ -193,6 +193,20 @@ output_object_specifications <- list(
     to = col_character(),
     percentage = col_double()
   ),
+  branch_network = cols(
+    from = col_character(),
+    to = col_character()
+  ),
+  branches = cols(
+    branch_id = col_character(),
+    length = col_double(),
+    directed = col_logical()
+  ),
+  branch_progressions = cols(
+    cell_id = col_character(),
+    branch_id = col_character(),
+    percentage = col_double()
+  ),
   cell_ids = function(x) as.character(unlist(x)),
   cell_graph = cols(
     from = col_character(),

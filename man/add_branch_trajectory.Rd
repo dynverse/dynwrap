@@ -4,13 +4,10 @@
 \alias{add_branch_trajectory}
 \title{Define a trajectory model given its branch network and the pseudotime of the cells on one of the branches}
 \usage{
-add_branch_trajectory(model, branch_ids = NULL, branch_network, branches,
-  branch_progressions, ...)
+add_branch_trajectory(model, branch_network, branches, branch_progressions, ...)
 }
 \arguments{
 \item{model}{The model to which the trajectory will be added.}
-
-\item{branch_ids}{The names of the branches}
 
 \item{branch_network}{The network between branches
 Type: Data frame(from = charactor, to = character)}
