@@ -5,10 +5,10 @@
 test_docker_installation <- function(detailed = FALSE) {
   if (!detailed) {
     version <- suppressWarnings(system("docker version", intern = TRUE, ignore.stdout = TRUE, ignore.stderr = TRUE))
-    if (!is.null(attr(version, "status")) || attr(version, "status") != 0) {
-      FALSE
-    } else {
+    if (is.null(attr(version, "status")) || attr(version, "status") == "0") {
       TRUE
+    } else {
+      FALSE
     }
   } else {
     # test if docker command is found
@@ -30,7 +30,7 @@ test_docker_installation <- function(detailed = FALSE) {
     # test if docker daemon is running
     version <- suppressWarnings(system("docker version --format '{{.Client.APIVersion}}'", intern = TRUE)) %>%
       gsub("'", "", .) # remove trailing ' (in windows)
-    if (!is.null(attr(version, "status")) || attr(version, "status") != 0) {
+    if (!is.null(attr(version, "status")) && attr(version, "status") != "0") {
       stop(crayon::red(glue::glue("\u274C Docker daemon does not seem to be running... \n- Try running {crayon::bold('dockerd')} in the command line \n- See https://docs.docker.com/config/daemon/")))
     }
     message(crayon::green("\u2714 Docker daemon is running"))
@@ -52,7 +52,7 @@ test_docker_installation <- function(detailed = FALSE) {
     # test if docker images can be pulled
     tryCatch({
       output <- system(glue::glue("docker pull alpine"), intern = TRUE, ignore.stderr = TRUE)
-      if (!is.null(attr(version, "status")) || attr(version, "status") != 0) stop()
+      if (!is.null(attr(output, "status")) && attr(output, "status") != "0") stop()
 
       message(crayon::green("\u2714 Docker can pull images"))
     },
