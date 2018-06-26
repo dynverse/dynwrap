@@ -53,7 +53,7 @@ is_wrapper_with_expression <- function(model) {
 #' @export
 get_expression <- function(model, expression_source = "expression") {
   if (is.character(expression_source)) {
-    if(!expression_source %in% names(model)) {stop("Expression source not in traj, did you run add_expression?")}
+    if(!expression_source %in% names(model)) {stop("Expression source not in traj, please provide expression or counts matrix to expression_source.")}
     expression <- model[[expression_source]]
   } else if (is.matrix(expression_source)) {
     expression <- expression_source
