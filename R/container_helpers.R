@@ -52,6 +52,8 @@ test_docker_installation <- function(detailed = FALSE) {
       stop(crayon::red(glue::glue("\u274C Docker is not running in linux mode, but in {ostype} mode. \n Please switch to linux containers: https://docs.docker.com/docker-for-windows/#switch-between-windows-and-linux-containers")))
     }
 
+    message(crayon::green(glue::glue("\u2714 Docker is in linux mode")))
+
     # test if docker images can be pulled
     tryCatch({
       output <- system(glue::glue("docker pull alpine"), intern = TRUE, ignore.stderr = TRUE)
