@@ -41,6 +41,6 @@ test_that("Testing add_trajectory with milestone_percentages", {
 
   expect_equivalent(wr$id, id)
   expect_equivalent(wr$cell_ids, cell_ids)
-  expect_equivalent(wr$milestone_network$from, c("1", "2", "3", "4"))
+  expect_equivalent(wr$milestone_network$from, c("1", "2", "3", "3"))
   expect_equivalent(wr$milestone_network$to, c("2", "3", "4", "5"))
 })
