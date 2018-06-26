@@ -4,12 +4,15 @@
 #' @export
 test_docker_installation <- function(detailed = FALSE) {
   if (!detailed) {
-    version <- suppressWarnings(system("docker version", intern = TRUE, ignore.stdout = TRUE, ignore.stderr = TRUE))
-    if (is.null(attr(version, "status")) || attr(version, "status") == "0") {
-      TRUE
-    } else {
-      FALSE
-    }
+    tryCatch(
+      {
+        version <- suppressWarnings(system("docker version", intern = TRUE, ignore.stdout = TRUE, ignore.stderr = TRUE))
+        if (!is.null(attr(version, "status")) && attr(version, "status") == "0") stop()
+
+        TRUE
+      },
+      error = function(e) FALSE
+    )
   } else {
     # test if docker command is found
     tryCatch({
