@@ -3,21 +3,17 @@ context("Testing add_dimred")
 # cell data
 id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
-cell_info <- data_frame(
-  cell_id = cell_ids,
-  info1 = c("man", "in", "possession", "of", "a", "good"),
-  info2 = c("fortune", "must", "be", "in", "want", "of"),
-  info3 = 1:6
-)
-extras1 <- list("a wife.")
-extras2 <- c("However", "little", "known")
 
-wr_orig <- wrap_data(
-  id = id,
-  cell_ids = cell_ids,
-  cell_info = cell_info,
-  extras1 = extras1
+counts <- matrix(
+  rpois(
+    length(cell_ids) * 10,
+    100
+  ),
+  nrow = length(cell_ids), dimnames = list(cell_ids, paste0("G", seq_len(10)))
 )
+expression <- log2(counts + 1)
+
+wr_orig <- wrap_data(id = id, cell_ids = cell_ids) %>% add_expression(counts=counts, expression=expression)
 
 # trajectory data
 milestone_ids <-  c("man", "in", "possession", "of", "good", "fortune", "must")
@@ -93,7 +89,6 @@ dimred_trajectory_segments <- cbind(
 # clustering data
 grouping <- sample(milestone_ids, length(cell_ids), replace = TRUE) %>% set_names(cell_ids)
 
-
 test_that("Testing add_dimred", {
   wr <- wr_orig %>%
     add_dimred(
@@ -107,10 +102,19 @@ test_that("Testing add_dimred", {
 
   expect_equivalent(wr$id, id)
   expect_equivalent(wr$cell_ids, cell_ids)
-  expect_equivalent(wr$cell_info, cell_info)
-  expect_equivalent(wr$extras1, extras1)
-  expect_equivalent(wr$extras2, extras2)
   expect_equivalent(wr$dimred, dimred)
+})
+
+
+test_that("Testing add_dimred including calculation of dimred", {
+  wr <- wr_orig %>% add_dimred(dimred = dyndimred::dimred_pca)
+
+  # testing is_ti_data_wrapper
+  expect_true(is_wrapper_with_dimred(wr))
+  expect_false(is_wrapper_with_dimred(list(chvehoie = "jihofrewghifu")))
+
+  expect_equivalent(wr$id, id)
+  expect_equivalent(wr$cell_ids, cell_ids)
 })
 
 
@@ -207,4 +211,32 @@ test_that("Expect failure on wrong dimred_trajectory_segments parameter", {
         extras2 = extras2
       )
   )
+})
+
+
+
+
+test_that("Test get_dimred", {
+  wr_withdimred <- wr_withtraj %>% add_dimred(dimred)
+
+  # from model
+  expect_error(get_dimred(wr_orig))
+  dimred2 <- get_dimred(wr_withdimred)
+  expect_equivalent(dimred, dimred2)
+
+  # function
+  dimred2 <- get_dimred(wr_withdimred, dimred = dyndimred::dimred_pca)
+  expect_failure(expect_equivalent(dimred, dimred2))
+
+  # matrix
+  dimred2 <- get_dimred(wr_withdimred, dimred = dimred)
+  expect_equivalent(dimred, dimred2)
+
+  # df
+  dimred_df <- dimred %>% as.data.frame() %>% rownames_to_column("cell_id")
+  dimred2 <- get_dimred(wr_withdimred, dimred = dimred_df)
+  expect_equivalent(dimred, dimred2)
+
+  # other
+  expect_error(get_dimred(wr_orig, dimred = "yabadabadoo"))
 })
