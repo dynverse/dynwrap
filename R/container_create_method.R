@@ -71,7 +71,7 @@ create_image_ti_method <- function(
     dir_input <- mytempdir("input")
 
     # save data & params, see save_inputs function
-    save_inputs(environment(), dir_input, input_format, input_ids, c(param_ids, "input_format", "output_format"))
+    save_inputs(environment(), dir_input, input_format, input_ids, c(param_ids, "input_format", "output_format", "output_ids"))
 
     if (verbose) {
       # print provided input files
