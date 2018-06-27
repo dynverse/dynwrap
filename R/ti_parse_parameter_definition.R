@@ -81,7 +81,7 @@ parse_parameter_definition <- function(parameter_definition) {
         tunable = param$tunable
       )
     } else {
-      stop("invalid type")
+      stop("Invalid paramter type, should be one of logical, logical_vector, integer, integer_vector, numeric, numeric_vector or discrete")
     }
   }) %>%
     invoke(ParamHelpers::makeParamSet, ., forbidden = forbidden)

@@ -15,7 +15,7 @@ extract_definition_from_singularity_image(image,
 pull_singularity_ti_method(image,
   singularity_image_file = paste0(gsub("[^\\\\/]*/([^\\\\:]*).*", "\\\\1",
   image), ".simg"),
-  singularity_images_folder = options("dynwrap_singularity_images_folder"))
+  singularity_images_folder = getOption("dynwrap_singularity_images_folder"))
 }
 \arguments{
 \item{image}{The location of the singularity image file, eg. \code{comp1.simg}.}

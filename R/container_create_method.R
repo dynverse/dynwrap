@@ -71,7 +71,7 @@ create_image_ti_method <- function(
     dir_input <- mytempdir("input")
 
     # save data & params, see save_inputs function
-    save_inputs(environment(), dir_input, input_format, input_ids, c(param_ids, "input_format", "output_format"))
+    save_inputs(environment(), dir_input, input_format, input_ids, c(param_ids, "input_format", "output_format", "output_ids"))
 
     if (verbose) {
       # print provided input files
@@ -299,8 +299,10 @@ pull_docker_ti_method <- function(
 pull_singularity_ti_method <- function(
   image,
   singularity_image_file = paste0(gsub("[^\\/]*/([^\\:]*).*", "\\1", image), ".simg"),
-  singularity_images_folder = options("dynwrap_singularity_images_folder")
+  singularity_images_folder = getOption("dynwrap_singularity_images_folder")
 ) {
+  if (is.null(singularity_images_folder)) {stop("Specifiy singularity_images_folder, can also be set through an option")}
+
   system(glue::glue("singularity build {singularity_images_folder}/{singularity_image_file} docker://{image}"))
 
   create_singularity_ti_method(glue::glue("{singularity_images_folder}/{singularity_image_file}"))
