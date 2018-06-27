@@ -60,7 +60,7 @@ for (tag in tags) {
 
     capture.output({
       method <- pull_docker_ti_method(paste0("dynverse/comp1:", tag))()
-      model <- infer_trajectory(task, method)
+      model <- infer_trajectory(task, method, verbose = TRUE)
     })
     expect_true(is_wrapper_with_trajectory(model))
 
