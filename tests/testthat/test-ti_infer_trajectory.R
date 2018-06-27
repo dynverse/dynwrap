@@ -1,38 +1,37 @@
 context("Testing infer_trajectory")
 
+# create task
+id <- "a"
+cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
+cell_info <- data_frame(
+  cell_id = cell_ids,
+  info1 = c("man", "in", "possession", "of", "a", "good"),
+  info2 = c("fortune", "must", "be", "in", "want", "of"),
+  info3 = 1:6
+)
+extras1 <- list("a wife.")
+extras2 <- c("However", "little", "known")
+
+num_features <- round(runif(1, 100, 120))
+feature_names <- paste0("feature_", seq_len(num_features))
+
+expression <- matrix(runif(num_features * length(cell_ids), 8, 12), nrow = length(cell_ids), dimnames = list(cell_ids, feature_names))
+counts <- 2^expression - 1
+feature_info <- data_frame(feature_id = feature_names, mean = colMeans(expression), var = apply(expression, 2, var))
+
+task <-
+  wrap_expression(
+    id = id,
+    expression,
+    counts,
+    cell_info,
+    feature_info,
+    extras1 = extras1,
+    extras2 = extras2
+  ) %>%
+  add_prior_information(start_id = cell_ids[[1]])
 
 test_that("Testing infer_trajectory with control methods", {
-  # create task
-  id <- "a"
-  cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
-  cell_info <- data_frame(
-    cell_id = cell_ids,
-    info1 = c("man", "in", "possession", "of", "a", "good"),
-    info2 = c("fortune", "must", "be", "in", "want", "of"),
-    info3 = 1:6
-  )
-  extras1 <- list("a wife.")
-  extras2 <- c("However", "little", "known")
-
-  num_features <- round(runif(1, 100, 120))
-  feature_names <- paste0("feature_", seq_len(num_features))
-
-  expression <- matrix(runif(num_features * length(cell_ids), 8, 12), nrow = length(cell_ids), dimnames = list(cell_ids, feature_names))
-  counts <- 2^expression - 1
-  feature_info <- data_frame(feature_id = feature_names, mean = colMeans(expression), var = apply(expression, 2, var))
-
-  task <-
-    wrap_expression(
-      id = id,
-      expression,
-      counts,
-      cell_info,
-      feature_info,
-      extras1 = extras1,
-      extras2 = extras2
-    ) %>%
-    add_prior_information(start_id = cell_ids[[1]])
-
   method <- ti_comp1()
 
   model <- infer_trajectory(task, method)
@@ -93,4 +92,14 @@ test_that("Testing infer_trajectory with control methods", {
 
   expect_true(is_tibble(models))
   expect_equal(nrow(models), 4)
+})
+
+
+
+test_that("Testing ti_comp1", {
+  method <- ti_comp1()
+  model <- method$run_fun(task$expression)
+
+  plot <- method$plot_fun(model)
+  expect_is(plot, "ggplot")
 })
