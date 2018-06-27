@@ -292,10 +292,16 @@ pull_docker_ti_method <- function(
   create_docker_ti_method(image)
 }
 
-
+#' @rdname create_singularity_ti_method
+#' @param singularity_image_file The name of the image file
+#' @param singularity_images_folder The location of the folder containing the singularity images
+#' @export
 pull_singularity_ti_method <- function(
   image,
-  singularity_images_folder = options("dynwrap_singularity_")
+  singularity_image_file = paste0(gsub("[^\\/]*/([^\\:]*).*", "\\1", image), ".simg"),
+  singularity_images_folder = options("dynwrap_singularity_images_folder")
 ) {
+  system(glue::glue("singularity build {singularity_images_folder}/{singularity_image_file} docker://{image}"))
 
+  create_singularity_ti_method(glue::glue("{singularity_images_folder}/{singularity_image_file}"))
 }

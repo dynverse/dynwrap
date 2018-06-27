@@ -15,14 +15,9 @@ cache:
 
 # Adapt as necessary starting from here
 
-image: Visual Studio 2017 # for docker
-
-services:
-  - docker
+image: Visual Studio 2017
 
 build_script:
-  - Rscript -e "install.packages('devtools', repos = 'http://cran.us.r-project.org')"
-  - Rscript -e "devtools::install_github('wesm/feather/R')"
   - travis-tool.sh install_deps
 
 test_script:

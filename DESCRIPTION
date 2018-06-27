@@ -60,7 +60,8 @@ Remotes:
   dynverse/dynutils,
   dynverse/dyndimred,
   rcannood/qsub,
-  tidyverse/ggplot2
+  tidyverse/ggplot2,
+  wesm/feather/R
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Collate: 
