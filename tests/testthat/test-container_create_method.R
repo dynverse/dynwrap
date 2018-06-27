@@ -63,5 +63,9 @@ for (tag in tags) {
       model <- infer_trajectory(task, method)
     })
     expect_true(is_wrapper_with_trajectory(model))
+
+    capture.output({
+      expect_error(infer_trajectory(task, method, debug = TRUE))
+    })
   })
 }
