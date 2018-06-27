@@ -85,7 +85,7 @@ test_docker_installation <- function(detailed = FALSE) {
       stop(crayon::red("\u274C Unable to mount temporary directory: {volume_dir}. \n\tOn windows, you need to enable the shared drives (https://rominirani.com/docker-on-windows-mounting-host-directories-d96f3f056a2c)"))
     })
 
-    message(crayon::green(crayon::bold(stringr::str_pad("\u2714 Docker test succesful ", 90, side = "right", "-"))))
+    message(crayon::green(crayon::bold(stringr::str_pad("\u2714 Docker test successful ", 90, side = "right", "-"))))
 
     TRUE
   }
