@@ -105,6 +105,8 @@ check_branches <- function(branch_ids, branches) {
   testthat::expect_equal(sapply(branches, class), c(branch_id = "character", length = "numeric", directed = "logical"))
   testthat::expect_true(all(branches$branch_id %in% branch_ids))
   testthat::expect_false(any(duplicated(branches %>% select(branch_id))))
+  testthat::expect_false(any(is.na(branches$length)))
+  testthat::expect_false(any(is.na(branches$directed)))
 
   branches
 }
