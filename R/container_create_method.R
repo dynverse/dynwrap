@@ -291,3 +291,11 @@ pull_docker_ti_method <- function(
 
   create_docker_ti_method(image)
 }
+
+
+pull_singularity_ti_method <- function(
+  image,
+  singularity_images_folder = options("dynwrap_singularity_")
+) {
+
+}

@@ -28,7 +28,7 @@ plot_comp1 <- function(prediction) {
   requireNamespace("viridis")
   requireNamespace("ggplot2")
   g <- ggplot2::ggplot() +
-    ggplot2::geom_point(ggplot2::aes(Comp1, Comp2, color = Comp1), data.frame(prediction$dimred)) +
+    ggplot2::geom_point(ggplot2::aes(comp_1, comp_2, color = comp_1), data.frame(prediction$dimred)) +
     viridis::scale_colour_viridis(option = "plasma") +
     ggplot2::labs(colour = "Pseudotime") +
     ggplot2::theme(legend.position = c(.92, .12))
