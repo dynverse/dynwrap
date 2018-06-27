@@ -60,7 +60,8 @@ Remotes:
   dynverse/dynutils,
   dynverse/dyndimred,
   rcannood/qsub,
-  tidyverse/ggplot2
+  tidyverse/ggplot2,
+  wesm/feather/R # temporary fix for R 3.5 windows builds
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Collate: 
