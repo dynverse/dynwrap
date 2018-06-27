@@ -214,8 +214,6 @@ test_that("Expect failure on wrong dimred_trajectory_segments parameter", {
 })
 
 
-
-
 test_that("Test get_dimred", {
   wr_withdimred <- wr_withtraj %>% add_dimred(dimred)
 
