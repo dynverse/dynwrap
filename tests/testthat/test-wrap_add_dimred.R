@@ -92,8 +92,7 @@ grouping <- sample(milestone_ids, length(cell_ids), replace = TRUE) %>% set_name
 test_that("Testing add_dimred", {
   wr <- wr_orig %>%
     add_dimred(
-      dimred = dimred,
-      extras2 = extras2
+      dimred = dimred
     )
 
   # testing is_ti_data_wrapper
@@ -123,8 +122,7 @@ test_that("Testing add_dimred with traj dimred", {
     add_dimred(
       dimred = dimred,
       dimred_milestones = dimred_milestones,
-      dimred_trajectory_segments = dimred_trajectory_segments,
-      extras2 = extras2
+      dimred_trajectory_segments = dimred_trajectory_segments
     )
 
   # testing is_ti_data_wrapper
@@ -143,8 +141,7 @@ test_that("Testing add_dimred with cell group", {
     ) %>%
     add_dimred(
       dimred = dimred,
-      dimred_milestones = dimred_milestones,
-      extras2 = extras2
+      dimred_milestones = dimred_milestones
     )
 
   # testing is_ti_data_wrapper
@@ -159,32 +156,28 @@ test_that("Expect failure on wrong dimred parameter", {
   expect_error(
     wr_withtraj %>%
       add_dimred(
-        dimred = NULL,
-        extras2 = extras2
+        dimred = NULL
       )
   )
 
   expect_error(
     wr_withtraj %>%
       add_dimred(
-        dimred = 1,
-        extras2 = extras2
+        dimred = 1
       )
   )
 
   expect_error(
     wr_withtraj %>%
       add_dimred(
-        dimred = data_frame(1, 2),
-        extras2 = extras2
+        dimred = data_frame(1, 2)
       )
   )
 
   expect_error(
     wr_withtraj %>%
       add_dimred(
-        dimred = as.data.frame(dimred),
-        extras2 = extras2
+        dimred = as.data.frame(dimred)
       )
   )
 })
@@ -195,8 +188,7 @@ test_that("Expect failure on wrong dimred_milestones parameter", {
     wr_withtraj %>%
       add_dimred(
         dimred = dimred,
-        dimred_milestones = "vbwoc",
-        extras2 = extras2
+        dimred_milestones = "vbwoc"
       )
   )
 })
@@ -207,8 +199,7 @@ test_that("Expect failure on wrong dimred_trajectory_segments parameter", {
     wr_withtraj %>%
       add_dimred(
         dimred = dimred,
-        dimred_trajectory_segments = "hdcoew",
-        extras2 = extras2
+        dimred_trajectory_segments = "hdcoew"
       )
   )
 })
