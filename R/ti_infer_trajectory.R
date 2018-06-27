@@ -32,7 +32,7 @@ infer_trajectories <- function(
   verbose = FALSE
 ) {
   if (verbose) {
-    if (nrow(task) == 1) {
+    if (is.data.frame(task) && nrow(task) == 1) {
       task_str <- task$id
     } else {
       task_str <- paste0(nrow(task), " tasks")
