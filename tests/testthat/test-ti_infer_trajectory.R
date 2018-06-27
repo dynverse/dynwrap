@@ -97,8 +97,8 @@ test_that("Testing infer_trajectory with control methods", {
 
 
 test_that("Testing ti_comp1", {
-  model1 <- dynwrap:::run_comp1(task$expression)
-  testthat::expect_true(is_wrapper_with_trajectory(model2))
+  model1 <- dynwrap:::run_comp1(task$expression, dimred = "pca", ndim = 2, component = 1)
+  testthat::expect_true(is_wrapper_with_trajectory(model1))
 
   method <- ti_comp1()
   model2 <- method$run_fun(task$expression)
@@ -106,9 +106,9 @@ test_that("Testing ti_comp1", {
 
   testthat::expect_equivalent(model1$milestone_network, model2$milestone_network)
 
-  plot <- dynwrap:::plot_comp1(task$expression)
+  plot <- dynwrap:::plot_comp1(model1)
   expect_is(plot, "ggplot")
 
-  plot <- method$plot_fun(model)
+  plot <- method$plot_fun(model2)
   expect_is(plot, "ggplot")
 })
