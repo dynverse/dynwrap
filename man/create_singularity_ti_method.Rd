@@ -3,6 +3,7 @@
 \name{create_singularity_ti_method}
 \alias{create_singularity_ti_method}
 \alias{extract_definition_from_singularity_image}
+\alias{pull_singularity_ti_method}
 \title{Create a TI method from a singularity image}
 \usage{
 create_singularity_ti_method(image,
@@ -10,6 +11,11 @@ create_singularity_ti_method(image,
 
 extract_definition_from_singularity_image(image,
   definition_location = "/code/definition.yml")
+
+pull_singularity_ti_method(image,
+  singularity_image_file = paste0(gsub("[^\\\\/]*/([^\\\\:]*).*", "\\\\1",
+  image), ".simg"),
+  singularity_images_folder = options("dynwrap_singularity_images_folder"))
 }
 \arguments{
 \item{image}{The location of the singularity image file, eg. \code{comp1.simg}.}
@@ -20,6 +26,10 @@ Optional, as the definition file will be automatically loaded from the images \c
 \item{...}{Other information about the method}
 
 \item{definition_location}{The location of the definition file within the image}
+
+\item{singularity_image_file}{The name of the image file}
+
+\item{singularity_images_folder}{The location of the folder containing the singularity images}
 }
 \description{
 This function creates a TI method from a singularity image. This image can be build using \code{singularity build} from a docker image (eg. \code{singularity build comp1.simg docker://dynverse/comp1})
