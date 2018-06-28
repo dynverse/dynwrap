@@ -25,9 +25,7 @@ test_that("Testing create_docker_ti_method with compone", {
   skip_on_travis_mac()
   skip_on_appveyor()
 
-  capture.output({
-    method0 <- pull_docker_ti_method("dynverse/comp1")
-  })
+  method0 <- pull_docker_ti_method("dynverse/comp1")
   expect_equal(method0()$short_name, "componentone")
 
   method1 <- create_docker_ti_method("dynverse/comp1")
@@ -58,14 +56,10 @@ for (tag in tags) {
       skip_on_travis() # only download one container on travis
     }
 
-    capture.output({
-      method <- pull_docker_ti_method(paste0("dynverse/comp1:", tag))()
-      model <- infer_trajectory(task, method, parameters = list(verbose = TRUE))
-    })
+    method <- pull_docker_ti_method(paste0("dynverse/comp1:", tag))()
+    model <- infer_trajectory(task, method, parameters = list(verbose = TRUE))
     expect_true(is_wrapper_with_trajectory(model))
 
-    capture.output({
-      expect_error(infer_trajectory(task, method, debug = TRUE))
-    })
+    expect_error(infer_trajectory(task, method, debug = TRUE))
   })
 }

@@ -432,33 +432,6 @@ test_that("Wrong progressions is given", {
 })
 
 
-
-test_that("Testing filtered cells", {
-  wr <-
-    wrap_data(
-      id = id,
-      cell_ids = c("1", "2", "3", "4", cell_ids)
-    ) %>%
-    add_trajectory(
-      milestone_ids = milestone_ids,
-      milestone_network = milestone_network,
-      progressions = progressions,
-      divergence_regions = divergence_regions,
-      extras2 = extras2
-    )
-
-  filnet <- wr$milestone_network %>% filter(to == "FILTERED_CELLS")
-  expect_gt(nrow(filnet), 0)
-  expect_gt(max(filnet$length), max(wr$milestone_network %>% filter(to != "FILTERED_CELLS") %>% .$length))
-
-  filmil <- wr$milestone_percentages %>%
-    filter(cell_id %in% c("1", "2", "3", "4")) %>%
-    .$milestone_id
-
-  expect_true(all(filmil == "FILTERED_CELLS"))
-})
-
-
 test_that("Testing combination with add_grouping", {
   grouping <- sample(milestone_ids, length(cell_ids), replace = TRUE) %>% set_names(cell_ids)
 

@@ -103,37 +103,8 @@ add_trajectory <- function(
     }
   }
 
-  ## Find out trajectory type from milestone network (before adding FILTERED_CELLS)
+  ## Find out trajectory type from milestone network
   trajectory_type <- classify_milestone_network(milestone_network)$network_type
-
-  ## Create a separate state "FILTERED_CELLS" if some cells have been filtered out
-  na_ids <- setdiff(cell_ids, unique(milestone_percentages$cell_id))
-  if (length(na_ids) != 0) {
-    directed <- any(milestone_network$directed)
-    na_mid <- "FILTERED_CELLS"
-
-    milestone_percentages <- milestone_percentages %>%
-      add_row(
-        cell_id = na_ids,
-        milestone_id = na_mid,
-        percentage = 1
-      )
-    progressions <- progressions %>%
-      add_row(
-        cell_id = na_ids,
-        from = na_mid,
-        to = na_mid,
-        percentage = 1
-      )
-    milestone_network <- milestone_network %>%
-      add_row(
-        from = milestone_ids,
-        to = na_mid,
-        length = sum(milestone_network$length) * 2,
-        directed = directed
-      )
-    milestone_ids <- c(milestone_ids, na_mid)
-  }
 
   # create output structure
   model %>% extend_with(
