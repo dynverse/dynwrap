@@ -447,9 +447,9 @@ test_that("Testing filtered cells", {
       extras2 = extras2
     )
 
-  filnet <- wr$milestone_network %>% filter(to == "FILTERED_CELLS")
-  expect_gt(nrow(filnet), 0)
-  expect_gt(max(filnet$length), max(wr$milestone_network %>% filter(to != "FILTERED_CELLS") %>% .$length))
+  # filnet <- wr$milestone_network %>% filter(to == "FILTERED_CELLS")
+  # expect_gt(nrow(filnet), 0)
+  # expect_gt(max(filnet$length), max(wr$milestone_network %>% filter(to != "FILTERED_CELLS") %>% .$length))
 
   filmil <- wr$milestone_percentages %>%
     filter(cell_id %in% c("1", "2", "3", "4")) %>%
