@@ -16,12 +16,13 @@ compute_tented_geodesic_distances <- function(
 ) {
   testthat::expect_true(is_wrapper_with_trajectory(trajectory))
 
+
+
   compute_tented_geodesic_distances_(
     cell_ids = trajectory$cell_ids,
     milestone_ids = trajectory$milestone_ids,
     milestone_network = trajectory$milestone_network,
     milestone_percentages = trajectory$milestone_percentages,
-    progressions = trajectory$progressions,
     divergence_regions = trajectory$divergence_regions,
     waypoint_cells = waypoint_cells,
     waypoint_milestone_percentages = waypoint_milestone_percentages
@@ -39,17 +40,18 @@ compute_tented_geodesic_distances_ <- function(
   milestone_ids,
   milestone_network,
   milestone_percentages,
-  progressions,
   divergence_regions,
   waypoint_cells = NULL,
   waypoint_milestone_percentages = NULL
 ) {
+  cell_ids_trajectory <- unique(milestone_percentages$cell_id)
+
   # get waypoints and milestone percentages
   waypoint_ids <- c()
   if (!is.null(waypoint_cells)) {
     waypoint_ids <- c(waypoint_ids, waypoint_cells)
   } else if (is.null(waypoint_milestone_percentages)){
-    waypoint_ids <- cell_ids
+    waypoint_ids <- cell_ids_trajectory
   }
 
   if (!is.null(waypoint_milestone_percentages)) {
@@ -132,20 +134,34 @@ compute_tented_geodesic_distances_ <- function(
     group_by(from, to) %>%
     summarise(length = min(length)) %>%
     ungroup() %>%
-    igraph::graph_from_data_frame(directed = FALSE, vertices = unique(c(milestone_ids, cell_ids, waypoint_ids)))
+    igraph::graph_from_data_frame(directed = FALSE, vertices = unique(c(milestone_ids, cell_ids_trajectory, waypoint_ids)))
 
   # compute cell-to-cell distances across entire graph
   out <- gr %>%
     igraph::distances(
       v = waypoint_ids,
-      to = cell_ids,
+      to = cell_ids_trajectory,
       weights = igraph::E(gr)$length
     )
 
-  # return distance matrix
+  # make matrix if only one waypoint
   if (length(waypoint_ids) == 1) {
-    matrix(out, nrow = 1, dimnames = list(waypoint_ids, cell_ids))
-  } else {
-    out
+    out <- matrix(out, nrow = 1, dimnames = list(waypoint_ids, cell_ids_trajectory))
   }
+
+  # add distances of cells not within the milestone_percentages
+  cell_ids_filtered <- setdiff(cell_ids, cell_ids_trajectory)
+  if (length(cell_ids_filtered) > 0) {
+    filtered_cell_distance <- sum(milestone_network$length)
+    out <- cbind(
+      out,
+      matrix(
+        rep(filtered_cell_distance, length(cell_ids_filtered) * nrow(out)),
+        ncol = length(cell_ids_filtered),
+        dimnames = list(rownames(out), cell_ids_filtered)
+      )
+    )
+  }
+
+  out
 }

@@ -141,3 +141,49 @@ test_that("Testing compute_tented_geodesic_distances with a gap in the middle", 
 
   expect_true(all(abs(geodist - t(geodist)) < 1e-10))
 })
+
+
+
+
+test_that("Testing compute_tented_geodesic_distances with filtered cells", {
+  cell_ids <- c("a", "b", "f")
+  milestone_ids <- c("W", "X", "Y", "Z", "A")
+
+  milestone_network <- tribble(
+    ~from, ~to, ~length, ~directed,
+    "W", "X", 2, TRUE,
+    "X", "Y", 3, TRUE,
+    "X", "Z", 4, TRUE,
+    "Z", "A", 5, TRUE
+  )
+
+  divergence_regions <- tribble(
+    ~divergence_id, ~milestone_id, ~is_start,
+    "XYZ", "X", TRUE,
+    "XYZ", "Y", FALSE,
+    "XYZ", "Z", FALSE
+  )
+
+  milestone_percentages <- tribble(
+    ~cell_id, ~milestone_id, ~percentage,
+    "a", "W", .9,
+    "a", "X", .1,
+    "b", "W", .2,
+    "b", "X", .8
+  )
+
+  trajectory <- wrap_data(
+    id = "test",
+    cell_ids = cell_ids
+  ) %>% add_trajectory(
+    milestone_ids = milestone_ids,
+    milestone_network = milestone_network,
+    milestone_percentages = milestone_percentages,
+    divergence_regions = divergence_regions
+  )
+
+  geodist <- compute_tented_geodesic_distances(trajectory)
+
+  expected_dists <- c(1.4, 14, 14)
+  expect_true(all(abs(geodist[upper.tri(geodist)] - expected_dists) < 1e-10))
+})
