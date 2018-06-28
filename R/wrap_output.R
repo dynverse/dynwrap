@@ -35,11 +35,11 @@ wrap_rds <- function(model, output_ids, dir_output) {
     # define output from which to extract variables
     output_for_extraction <- output
 
-    # also include output[[outpit_id]] if it is a list and not a dataframe
+    # also include output[[output_id]] if it is a list and not a dataframe
     if (is.list(output[[output_id]]) && !is.data.frame(output[[output_id]])) {
       output_for_extraction <- c(
         output_for_extraction,
-        output[[outpit_id]]
+        output[[output_id]]
       )
     }
 
