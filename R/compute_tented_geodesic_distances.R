@@ -16,12 +16,13 @@ compute_tented_geodesic_distances <- function(
 ) {
   testthat::expect_true(is_wrapper_with_trajectory(trajectory))
 
+
+
   compute_tented_geodesic_distances_(
     cell_ids = trajectory$cell_ids,
     milestone_ids = trajectory$milestone_ids,
     milestone_network = trajectory$milestone_network,
     milestone_percentages = trajectory$milestone_percentages,
-    progressions = trajectory$progressions,
     divergence_regions = trajectory$divergence_regions,
     waypoint_cells = waypoint_cells,
     waypoint_milestone_percentages = waypoint_milestone_percentages
@@ -39,7 +40,6 @@ compute_tented_geodesic_distances_ <- function(
   milestone_ids,
   milestone_network,
   milestone_percentages,
-  progressions,
   divergence_regions,
   waypoint_cells = NULL,
   waypoint_milestone_percentages = NULL
@@ -142,7 +142,7 @@ compute_tented_geodesic_distances_ <- function(
       weights = igraph::E(gr)$length
     )
 
-  # return distance matrix
+  # return distance matrix or distance vector
   if (length(waypoint_ids) == 1) {
     matrix(out, nrow = 1, dimnames = list(waypoint_ids, cell_ids))
   } else {
