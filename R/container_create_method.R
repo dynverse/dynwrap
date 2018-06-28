@@ -299,7 +299,7 @@ pull_docker_ti_method <- function(
 pull_singularity_ti_method <- function(
   image,
   singularity_image_file = paste0(gsub("[^\\/]*/([^\\:]*).*", "\\1", image), ".simg"),
-  singularity_images_folder = getOption("dynwrap_singularity_images_folder")
+  singularity_images_folder = normalizePath(getOption("dynwrap_singularity_images_folder"))
 ) {
   if (is.null(singularity_images_folder)) {stop("Specifiy singularity_images_folder, can also be set through an option")}
 
