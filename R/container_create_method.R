@@ -154,12 +154,12 @@ create_image_ti_method <- function(
           "Use this command for debugging: \n",
           crayon::bold(
             glue::glue(
-              "singularity exec -B {glue::collapse(volumes, ',')} {image} bash"
+              "singularity exec --cleanenv -B {glue::collapse(volumes, ',')} {image} bash"
             )
           ),
         call. = FALSE)
       } else {
-        system(glue("singularity run -B {glue::collapse(volumes, ',')} {image}"))
+        system(glue("singularity run --cleanenv -B {glue::collapse(volumes, ',')} {image}"))
       }
     }
   }
