@@ -80,7 +80,7 @@ test_that("Testing add_linear_trajectory", {
 
 })
 
-test_that("Testing add_linear_trajectory", {
+test_that("Testing add_linear_trajectory with some cells filtered", {
   wr <-
     wr_orig %>%
     add_linear_trajectory(
@@ -94,8 +94,8 @@ test_that("Testing add_linear_trajectory", {
   expect_equivalent(wr$cell_ids, cell_ids)
   expect_equivalent(wr$extras, extras)
   expect_equivalent(length(wr$pseudotime), length(cell_ids) - 1)
-  expect_true(all(cell_ids %in% wr$progressions$cell_id))
-  expect_equivalent(nrow(wr$progressions), length(cell_ids))
+  expect_true(all(wr$progressions$cell_id %in% cell_ids))
+  expect_equivalent(nrow(wr$progressions)+1, length(cell_ids))
 })
 
 

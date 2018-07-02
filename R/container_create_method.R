@@ -154,12 +154,12 @@ create_image_ti_method <- function(
           "Use this command for debugging: \n",
           crayon::bold(
             glue::glue(
-              "singularity exec -B {glue::collapse(volumes, ',')} {image} bash"
+              "singularity exec --cleanenv -B {glue::collapse(volumes, ',')} {image} bash"
             )
           ),
         call. = FALSE)
       } else {
-        system(glue("singularity run -B {glue::collapse(volumes, ',')} {image}"))
+        system(glue("singularity run --cleanenv -B {glue::collapse(volumes, ',')} {image}"))
       }
     }
   }
@@ -299,7 +299,7 @@ pull_docker_ti_method <- function(
 pull_singularity_ti_method <- function(
   image,
   singularity_image_file = paste0(gsub("[^\\/]*/([^\\:]*).*", "\\1", image), ".simg"),
-  singularity_images_folder = getOption("dynwrap_singularity_images_folder")
+  singularity_images_folder = normalizePath(getOption("dynwrap_singularity_images_folder"))
 ) {
   if (is.null(singularity_images_folder)) {stop("Specifiy singularity_images_folder, can also be set through an option")}
 

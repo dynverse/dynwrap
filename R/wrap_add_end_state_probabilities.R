@@ -1,8 +1,11 @@
-#' Constructs a multifurcating trajectory using the pseudotime values of each cell and their end state probabilities. If pseudotime values are not given, will use pseudotime already present in the model.
+#' Multifurcating trajectory with end state probabilities
+#'
+#' Constructs a multifurcating trajectory using the pseudotime values of each cell and their end state probabilities.
+#' If pseudotime values are not given, will use pseudotime already present in the model.
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @param model The model to which a linear trajectory will be added.
+#' @param model The model to which a multifurcating trajectory will be added.
 #' @param pseudotime A named vector of pseudo times.
 #' @param end_state_probabilities A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone. If the data_frame contains only a cell_id column, the data will be processed using `add_linear_trajectory`
 #' @param do_scale_minmax Whether or not to scale the pseudotime between 0 and 1.
@@ -75,7 +78,7 @@ add_end_state_probabilities <- function(
       gather("to", "percentage", -cell_id) %>%
       mutate(from = start_milestone_id) %>%
       group_by(cell_id) %>%
-      mutate(percentage = percentage / sum(percentage)) %>%  # scale percentage so that sum = 1
+      mutate(percentage = percentage / sum(percentage) * pseudotime[cell_id]) %>%  # scale percentage so that sum = 1
       ungroup()
 
     # return output

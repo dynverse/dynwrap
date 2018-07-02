@@ -67,24 +67,6 @@ test_that("Testing add_cyclic_trajectory", {
 
 })
 
-test_that("Testing add_cyclic_trajectory when some cells were filtered by the ti method", {
-  wr <-
-    wr_orig %>%
-    add_cyclic_trajectory(
-      pseudotime = pseudotime[-1],
-      do_scale_minmax = TRUE,
-      directed = TRUE,
-      extras = extras
-    )
-
-  expect_equivalent(wr$id, id)
-  expect_equivalent(wr$cell_ids, cell_ids)
-  expect_equivalent(wr$extras, extras)
-  expect_equivalent(length(wr$pseudotime), length(cell_ids) - 1)
-  expect_true(all(cell_ids %in% wr$progressions$cell_id))
-  expect_equivalent(nrow(wr$progressions), length(cell_ids))
-})
-
 
 test_that("Testing add_cyclic_trajectory fails when expected", {
   expect_error(
