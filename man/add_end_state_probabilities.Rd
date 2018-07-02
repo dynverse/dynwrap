@@ -2,13 +2,13 @@
 % Please edit documentation in R/wrap_add_end_state_probabilities.R
 \name{add_end_state_probabilities}
 \alias{add_end_state_probabilities}
-\title{Constructs a multifurcating trajectory using the pseudotime values of each cell and their end state probabilities. If pseudotime values are not given, will use pseudotime already present in the model.}
+\title{Multifurcating trajectory with end state probabilities}
 \usage{
 add_end_state_probabilities(model, end_state_probabilities, pseudotime = NULL,
   do_scale_minmax = TRUE, ...)
 }
 \arguments{
-\item{model}{The model to which a linear trajectory will be added.}
+\item{model}{The model to which a multifurcating trajectory will be added.}
 
 \item{end_state_probabilities}{A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone. If the data_frame contains only a cell_id column, the data will be processed using \code{add_linear_trajectory}}
 
@@ -23,5 +23,9 @@ Otherwise, will assume the values are already within that range.}
 The trajectory model
 }
 \description{
+Constructs a multifurcating trajectory using the pseudotime values of each cell and their end state probabilities.
+If pseudotime values are not given, will use pseudotime already present in the model.
+}
+\details{
 This function will generate the milestone_network and progressions.
 }

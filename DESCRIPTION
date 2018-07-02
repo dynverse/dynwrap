@@ -56,7 +56,6 @@ Suggests:
   viridis,
   yaml
 Remotes:
-  berndbischl/ParamHelpers,
   dynverse/dynutils,
   dynverse/dyndimred,
   rcannood/qsub,
