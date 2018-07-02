@@ -62,6 +62,11 @@ get_expression <- function(model, expression_source = "expression") {
   } else {
     stop("Invalid expression_source")
   }
+
+  if (is.function(expression)) {
+    expression <- expression()
+  }
+
   expression
 }
 
