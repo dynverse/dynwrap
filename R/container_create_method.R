@@ -221,15 +221,12 @@ create_docker_ti_method <- function(
 #' @export
 extract_definition_from_docker_image <- function(
   image,
-  definition_location = "/code/definition.yml",
-  singularity_images_folder = normalizePath(getOption("dynwrap_singularity_images_folder"))
+  definition_location = "/code/definition.yml"
 ) {
   requireNamespace("yaml")
 
-  if (singularity_images_folder == "") {singularity_images_folder <- "."}
-
   # start container
-  output <- system(glue::glue("docker create --entrypoint='bash' {singularity_images_folder}/{image}"), intern = TRUE)
+  output <- system(glue::glue("docker create --entrypoint='bash' {image}"), intern = TRUE)
   id <- output[length(output)]
   if (!stringr::str_detect(id, "[A-Za-z0-9]*")) {stop("Docker errored ", output)}
 
