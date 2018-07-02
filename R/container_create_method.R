@@ -248,9 +248,9 @@ extract_definition_from_docker_image <- function(
 #' @rdname create_docker_ti_method
 #' @export
 pull_docker_ti_method <- function(
-  dockerhub_image_name
+  image
 ) {
-  system(glue::glue("docker pull {dockerhub_image_name}"))
+  system(glue::glue("docker pull {image}"))
 
   create_docker_ti_method(image)
 }
