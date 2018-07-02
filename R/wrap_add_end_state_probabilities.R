@@ -78,7 +78,7 @@ add_end_state_probabilities <- function(
       gather("to", "percentage", -cell_id) %>%
       mutate(from = start_milestone_id) %>%
       group_by(cell_id) %>%
-      mutate(percentage = percentage / sum(percentage)) %>%  # scale percentage so that sum = 1
+      mutate(percentage = percentage / sum(percentage) * pseudotime[cell_id]) %>%  # scale percentage so that sum = 1
       ungroup()
 
     # return output
