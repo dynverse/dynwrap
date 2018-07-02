@@ -44,7 +44,10 @@ test_that("Testing add_expression and get_expression", {
       extras2 = extras2
     )
 
-  wrappers <- list(wrapper1, wrapper2)
+  wrapper3 <- wrapper2
+  wrapper3$expression <- function() {wrapper1$expression}
+
+  wrappers <- list(wrapper1, wrapper2, wrapper3)
 
   for (wr in wrappers) {
     # testing is_wrapper_with_expression
@@ -56,8 +59,6 @@ test_that("Testing add_expression and get_expression", {
     expect_equivalent(wr$cell_info, cell_info)
     expect_equivalent(wr$extras1, extras1)
     expect_equivalent(wr$extras2, extras2)
-    expect_equivalent(wr$counts, counts)
-    expect_equivalent(wr$expression, expression)
 
     expect_equivalent(get_expression(wr, "counts"), counts)
     expect_equivalent(get_expression(wr), expression)

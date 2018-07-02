@@ -7,18 +7,22 @@
 \title{Create a TI method from a singularity image}
 \usage{
 create_singularity_ti_method(image,
-  definition = extract_definition_from_singularity_image(image), ...)
+  singularity_images_folder = getOption("dynwrap_singularity_images_folder"),
+  definition = extract_definition_from_singularity_image(image,
+  singularity_images_folder), ...)
 
 extract_definition_from_singularity_image(image,
+  singularity_images_folder = getOption("dynwrap_singularity_images_folder"),
   definition_location = "/code/definition.yml")
 
-pull_singularity_ti_method(image,
-  singularity_image_file = paste0(gsub("[^\\\\/]*/([^\\\\:]*).*", "\\\\1",
-  image), ".simg"),
-  singularity_images_folder = normalizePath(getOption("dynwrap_singularity_images_folder")))
+pull_singularity_ti_method(image = image,
+  singularity_images_folder = getOption("dynwrap_singularity_images_folder"),
+  return_method = TRUE)
 }
 \arguments{
 \item{image}{The location of the singularity image file, eg. \code{comp1.simg}.}
+
+\item{singularity_images_folder}{The location of the folder containing the singularity images}
 
 \item{definition}{The method definition, a list containing the name, input, output and parameters of a method.
 Optional, as the definition file will be automatically loaded from the images \code{/code/definition.yml} using \link{extract_definition_from_singularity_image}.}
@@ -27,9 +31,7 @@ Optional, as the definition file will be automatically loaded from the images \c
 
 \item{definition_location}{The location of the definition file within the image}
 
-\item{singularity_image_file}{The name of the image file}
-
-\item{singularity_images_folder}{The location of the folder containing the singularity images}
+\item{return_method}{Whether to return the method (TRUE) or only pull the image (FALSE)}
 }
 \description{
 This function creates a TI method from a singularity image. This image can be build using \code{singularity build} from a docker image (eg. \code{singularity build comp1.simg docker://dynverse/comp1})

@@ -99,7 +99,7 @@ add_prior_information <- function(
 #'
 #' @export
 is_wrapper_with_prior_information <- function(object) {
-  is_wrapper_with_trajectory(object) && "dynwrap::with_prior" %in% class(object)
+  is_data_wrapper(object) && "dynwrap::with_prior" %in% class(object)
 }
 
 #' Extract the prior information from the milestone network
