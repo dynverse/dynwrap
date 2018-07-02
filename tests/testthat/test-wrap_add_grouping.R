@@ -12,7 +12,8 @@ cell_info <- data_frame(
 wrapper1 <- wrap_data(id, cell_ids) %>% add_grouping(cell_info$info1)
 wrapper2 <- wrap_data(id, cell_ids) %>% add_grouping(unique(cell_info$info1), cell_info$info1)
 wrapper3 <- wrap_data(id, cell_ids) %>% add_grouping(tibble(cell_id = cell_ids, group_id = cell_info$info1))
-wrapper4 <- wrap_data(id, cell_ids, cell_info)
+wrapper4 <- wrap_data(id, cell_ids) %>% add_prior_information(groups_id = tibble(cell_id = cell_ids, group_id = cell_info$info1))
+wrapper5 <- wrap_data(id, cell_ids, cell_info)
 
 test_that("Testing add_grouping", {
   for (wrapper in list(wrapper1, wrapper2, wrapper3)) {
@@ -25,13 +26,13 @@ test_that("Testing add_grouping", {
 })
 
 test_that("Testing get_grouping", {
-  for (wrapper in list(wrapper1, wrapper2, wrapper3)) {
-    expect_equal(get_grouping(wrapper), wrapper$grouping)
+  for (wrapper in list(wrapper1, wrapper2, wrapper3, wrapper4)) {
+    expect_equal(get_grouping(wrapper), wrapper1$grouping)
     expect_equal(names(get_grouping(wrapper)), wrapper$cell_ids)
   }
 
-  expect_error(get_grouping(wrapper4))
+  expect_error(get_grouping(wrapper5))
 
-  expect_equal(get_grouping(wrapper4, "info1"), wrapper3$grouping)
-  expect_equal(names(get_grouping(wrapper4, "info1")), wrapper4$cell_ids)
+  expect_equal(get_grouping(wrapper5, "info1"), wrapper3$grouping)
+  expect_equal(names(get_grouping(wrapper5, "info1")), wrapper5$cell_ids)
 })
