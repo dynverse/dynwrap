@@ -10,9 +10,10 @@ create_docker_ti_method(image,
   definition = extract_definition_from_docker_image(image), ...)
 
 extract_definition_from_docker_image(image,
-  definition_location = "/code/definition.yml")
+  definition_location = "/code/definition.yml",
+  singularity_images_folder = normalizePath(getOption("dynwrap_singularity_images_folder")))
 
-pull_docker_ti_method(image)
+pull_docker_ti_method(dockerhub_image_name)
 }
 \arguments{
 \item{image}{The name of the docker image, eg. \code{dynverse/comp1}. Can contain tags such as \code{dynverse/comp1:R_feather}}

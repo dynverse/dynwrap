@@ -9,8 +9,8 @@ compute_tented_geodesic_distances(trajectory, waypoint_cells = NULL,
   waypoint_milestone_percentages = NULL)
 
 compute_tented_geodesic_distances_(cell_ids, milestone_ids, milestone_network,
-  milestone_percentages, progressions, divergence_regions,
-  waypoint_cells = NULL, waypoint_milestone_percentages = NULL)
+  milestone_percentages, divergence_regions, waypoint_cells = NULL,
+  waypoint_milestone_percentages = NULL)
 }
 \arguments{
 \item{trajectory}{The trajectory}
@@ -29,9 +29,6 @@ Type: Data frame(from = character, to = character, length = numeric, directed = 
 \item{milestone_percentages}{A data frame specifying what percentage milestone each cell
 consists of.
 Type: Data frame(cell_id = character, milestone_id = character, percentage = numeric).}
-
-\item{progressions}{Specifies the progression of a cell along a transition in the milestone_network.
-Type: Data frame(cell_id = character, from = character, to = character, percentage = numeric).}
 
 \item{divergence_regions}{A data frame specifying the divergence
 regions between milestones (e.g. a bifurcation).

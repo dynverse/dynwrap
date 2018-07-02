@@ -214,27 +214,6 @@ create_docker_ti_method <- function(
   create_image_ti_method(image, definition, "docker", ...)
 }
 
-#' Create a TI method from a singularity image
-#'
-#' This function creates a TI method from a singularity image. This image can be build using `singularity build` from a docker image (eg. `singularity build comp1.simg docker://dynverse/comp1`)
-#'
-#' @param image The location of the singularity image file, eg. `comp1.simg`.
-#' @param definition The method definition, a list containing the name, input, output and parameters of a method.
-#'  Optional, as the definition file will be automatically loaded from the images `/code/definition.yml` using [extract_definition_from_singularity_image].
-#' @param ... Other information about the method
-#'
-#' @export
-create_singularity_ti_method <- function(
-  image,
-  definition = extract_definition_from_singularity_image(image),
-  ...
-) {
-  # get absolutate path to image
-  image <- normalizePath(image)
-
-  create_image_ti_method(image, definition, "singularity", ...)
-}
-
 #' @rdname create_docker_ti_method
 #'
 #' @param definition_location The location of the definition file within the image
@@ -242,12 +221,15 @@ create_singularity_ti_method <- function(
 #' @export
 extract_definition_from_docker_image <- function(
   image,
-  definition_location = "/code/definition.yml"
+  definition_location = "/code/definition.yml",
+  singularity_images_folder = normalizePath(getOption("dynwrap_singularity_images_folder"))
 ) {
   requireNamespace("yaml")
 
+  if (singularity_images_folder == "") {singularity_images_folder <- "."}
+
   # start container
-  output <- system(glue::glue("docker create --entrypoint='bash' {image}"), intern = TRUE)
+  output <- system(glue::glue("docker create --entrypoint='bash' {singularity_images_folder}/{image}"), intern = TRUE)
   id <- output[length(output)]
   if (!stringr::str_detect(id, "[A-Za-z0-9]*")) {stop("Docker errored ", output)}
 
@@ -263,18 +245,55 @@ extract_definition_from_docker_image <- function(
   definition
 }
 
+#' @rdname create_docker_ti_method
+#' @export
+pull_docker_ti_method <- function(
+  dockerhub_image_name
+) {
+  system(glue::glue("docker pull {dockerhub_image_name}"))
+
+  create_docker_ti_method(image)
+}
+
+
+
+
+#' Create a TI method from a singularity image
+#'
+#' This function creates a TI method from a singularity image. This image can be build using `singularity build` from a docker image (eg. `singularity build comp1.simg docker://dynverse/comp1`)
+#'
+#' @param image The location of the singularity image file, eg. `comp1.simg`.
+#' @param definition The method definition, a list containing the name, input, output and parameters of a method.
+#'  Optional, as the definition file will be automatically loaded from the images `/code/definition.yml` using [extract_definition_from_singularity_image].
+#' @param ... Other information about the method
+#'
+#' @export
+create_singularity_ti_method <- function(
+  image,
+  singularity_images_folder = getOption("dynwrap_singularity_images_folder"),
+  definition = extract_definition_from_singularity_image(image, singularity_images_folder),
+  ...
+) {
+  singularity_image_location <- get_singularity_image_location(image, singularity_images_folder)
+  create_image_ti_method(singularity_image_location, definition, "singularity", ...)
+}
+
+
 #' @rdname create_singularity_ti_method
 #' @param definition_location The location of the definition file within the image
 #'
 #' @export
 extract_definition_from_singularity_image <- function(
   image,
+  singularity_images_folder = getOption("dynwrap_singularity_images_folder"),
   definition_location = "/code/definition.yml"
 ) {
   requireNamespace("yaml")
 
+  singularity_image_location <- get_singularity_image_location(image, singularity_images_folder)
+
   definition_folder_local <- mytempdir("")
-  system(glue("singularity exec -B {definition_folder_local}:/tmp_definition {image} cp {definition_location} /tmp_definition"))
+  system(glue("singularity exec -B {definition_folder_local}:/tmp_definition {singularity_image_location} cp {definition_location} /tmp_definition"))
 
   definition_location_local <- file.path(definition_folder_local, basename(definition_location))
 
@@ -282,28 +301,41 @@ extract_definition_from_singularity_image <- function(
   definition
 }
 
-#' @rdname create_docker_ti_method
-#' @export
-pull_docker_ti_method <- function(
-  image
-) {
-  system(glue::glue("docker pull {image}"))
-
-  create_docker_ti_method(image)
-}
-
 #' @rdname create_singularity_ti_method
-#' @param singularity_image_file The name of the image file
 #' @param singularity_images_folder The location of the folder containing the singularity images
+#' @param return_method Whether to return the method (TRUE) or only pull the image (FALSE)
 #' @export
 pull_singularity_ti_method <- function(
-  image,
-  singularity_image_file = paste0(gsub("[^\\/]*/([^\\:]*).*", "\\1", image), ".simg"),
-  singularity_images_folder = normalizePath(getOption("dynwrap_singularity_images_folder"))
+  image = image,
+  singularity_images_folder = getOption("dynwrap_singularity_images_folder"),
+  return_method = TRUE
 ) {
-  if (is.null(singularity_images_folder)) {stop("Specifiy singularity_images_folder, can also be set through an option")}
+  singularity_image_location <- get_singularity_image_location(image, singularity_images_folder)
+  dir.create(dirname(singularity_image_location), showWarnings = FALSE)
+  system(glue::glue("singularity build {singularity_image_location} docker://{image}"))
 
-  system(glue::glue("singularity build {singularity_images_folder}/{singularity_image_file} docker://{image}"))
+  if (return_method) {
+    create_singularity_ti_method(image, singularity_images_folder)
+  } else {
+    NULL
+  }
+}
 
-  create_singularity_ti_method(glue::glue("{singularity_images_folder}/{singularity_image_file}"))
+
+get_singularity_image_location <- function(
+  image,
+  singularity_images_folder = getOption("dynwrap_singularity_images_folder")
+) {
+  if (is.null(singularity_images_folder)) {
+    warnings("No singularity_image_folder specified and 'dynwrap_singularity_images_folder' option not set. Putting images in working directory.")
+
+    singularity_images_folder <- "."
+  }
+
+  # add simg if missing
+  if (tools::file_ext(image) == "") {
+    image <- paste0(image, ".simg")
+  }
+
+  normalizePath(paste0(singularity_images_folder, "/", image), mustWork = F)
 }
