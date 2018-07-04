@@ -31,15 +31,6 @@ infer_trajectories <- function(
   mc_cores = 1,
   verbose = FALSE
 ) {
-  if (verbose) {
-    if (is.data.frame(dataset) && nrow(dataset) == 1) {
-      dataset_str <- dataset$id
-    } else {
-      dataset_str <- paste0(nrow(dataset), " datasets")
-    }
-    cat("Executing ", method$name, " on ", dataset_str, "\n", sep = "")
-  }
-
   # process method ----------------------
   if (is.character(method)) {
     # names of method
