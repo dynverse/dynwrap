@@ -176,3 +176,11 @@ for (network_type in names(all_networks)) {
     })
   }
 }
+
+
+
+
+test_that(pritt("Test simplfy trajectory type"), {
+  expect_equal(simplify_trajectory_type("directed_linear"), "linear")
+  expect_true(is.na(simplify_trajectory_type("whatver")))
+})
