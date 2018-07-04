@@ -37,8 +37,8 @@ create_ti_method <- function(
   }
 
   # process parameters
-  if (is.null(parameters) == is.null(par_set)) {
-    stop("Either parameters or par_set should be specified")
+  if (is.null(parameters) && is.null(par_set)) {
+    parameters <- list(dummy = list(type = "discrete", default = "dummy"))
   }
 
   if (is.null(par_set)) {
