@@ -94,19 +94,19 @@
 
     
     
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># # generate tasks</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># # generate datasets</span>
 <span class="co"># n_genes &lt;- 10</span>
-<span class="co"># tasks &lt;- map(round(seq(10, 10, length.out = 1)), function(n_cells) {</span>
+<span class="co"># datasets &lt;- map(round(seq(10, 10, length.out = 1)), function(n_cells) {</span>
 <span class="co">#   expression &lt;- matrix(runif(n_cells * n_genes), nrow=n_cells, ncol = n_genes)</span>
 <span class="co">#   rownames(expression) &lt;- paste0("C", seq_len(n_cells))</span>
 <span class="co">#   colnames(expression) &lt;- paste0("G", seq_len(n_genes))</span>
 <span class="co">#   wrap_expression(expression, expression)</span>
 <span class="co"># })</span>
-<span class="co"># task_design &lt;- tibble(</span>
-<span class="co">#   task = tasks,</span>
-<span class="co">#   n_cells = map_int(tasks, ~nrow(.$expression))</span>
+<span class="co"># dataset_design &lt;- tibble(</span>
+<span class="co">#   dataset = datasets,</span>
+<span class="co">#   n_cells = map_int(datasets, ~nrow(.$expression))</span>
 <span class="co"># ) %&gt;% </span>
-<span class="co">#   mutate(task_ix = row_number())</span>
+<span class="co">#   mutate(dataset_ix = row_number())</span>
 <span class="co"># </span>
 <span class="co"># # methods</span>
 <span class="co"># input_formats &lt;- formals(dynwrap:::save_inputs)$input_format %&gt;% eval</span>
@@ -126,9 +126,9 @@
 <span class="co"># )</span>
 <span class="co"># </span>
 <span class="co"># # do TI</span>
-<span class="co"># output &lt;- infer_trajectories(tasks, method_design$method)</span>
+<span class="co"># output &lt;- infer_trajectories(datasets, method_design$method)</span>
 <span class="co"># models &lt;- output %&gt;%</span>
-<span class="co">#   left_join(task_design %&gt;% select(task_ix, n_cells), "task_ix") %&gt;%</span>
+<span class="co">#   left_join(dataset_design %&gt;% select(dataset_ix, n_cells), "dataset_ix") %&gt;%</span>
 <span class="co">#   left_join(method_design, "method_ix") %&gt;%</span>
 <span class="co">#   mutate(time = map_dbl(summary, "time_method"))</span>
 <span class="co"># </span>

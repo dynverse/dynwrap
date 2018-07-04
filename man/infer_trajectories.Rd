@@ -5,14 +5,14 @@
 \alias{infer_trajectory}
 \title{Infer trajectories}
 \usage{
-infer_trajectories(task, method, parameters = NULL, give_priors = NULL,
+infer_trajectories(dataset, method, parameters = NULL, give_priors = NULL,
   mc_cores = 1, verbose = FALSE)
 
-infer_trajectory(task, method, parameters = list(), give_priors = NULL,
+infer_trajectory(dataset, method, parameters = list(), give_priors = NULL,
   mc_cores = 1, verbose = FALSE, ...)
 }
 \arguments{
-\item{task}{One or more datasets, as created using dynwrap}
+\item{dataset}{One or more datasets, as created using dynwrap}
 
 \item{method}{One or more methods. Must be one of:
 \itemize{
@@ -29,7 +29,7 @@ If multiple methods were provided in the \code{method} parameter,
 \item{give_priors}{All the priors a method is allowed to receive. Must be a subset of: \code{"start_milestones"},
 \code{"start_id"}, \code{"end_milestones"}, \code{"end_id"}, \code{"groups_id"} and \code{"groups_network"}}
 
-\item{mc_cores}{The number of cores to use, allowing to parallellise the different tasks}
+\item{mc_cores}{The number of cores to use, allowing to parallellise the different datasets}
 
 \item{verbose}{Whether or not to print information output}
 

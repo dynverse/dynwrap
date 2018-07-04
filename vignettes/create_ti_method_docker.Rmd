@@ -98,7 +98,7 @@ tribble(
 
 ```{r, echo=FALSE}
 data(allowed_inputs, package="dynwrap")
-allowed_inputs <- allowed_inputs %>% filter(input_id != "task")
+allowed_inputs <- allowed_inputs %>% filter(input_id != "dataset")
 
 # find example files
 found_input_example_files <- list.files(devtools:::shim_system.file("example_inputs/text/", package="dynwrap"))
@@ -309,7 +309,7 @@ start_id = rownames(expression)[which.min(pseudotime)]
 
 counts <- round(expression)
 
-task <- wrap_expression(
+dataset <- wrap_expression(
   expression,
   counts
 ) %>% add_prior_information(start_id=start_id)
@@ -317,49 +317,49 @@ task <- wrap_expression(
 
 Now infer a trajectory
 ```{r}
-model <- infer_trajectory(task, ti_comp1())
+model <- infer_trajectory(dataset, ti_comp1())
 ```
 
 [dynplot](https://github.com/dynverse/dynplot) can be used to easily visualise the trajectory model:
 ```r
 # devtools::install_github("dynverse/dynplot")
-dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
+dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = dataset$expression)
 ```
 
 ```{r echo=FALSE}
 if ("dynplot" %in% rownames(installed.packages())) {
-  dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
+  dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = dataset$expression)
 }
 ```
 
 We can also provide some optional prior information to the method:
 ```{r}
-model <- infer_trajectory(task, ti_comp1(), give_priors = "start_id")
+model <- infer_trajectory(dataset, ti_comp1(), give_priors = "start_id")
 ```
 
 ```r
-dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
+dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = dataset$expression)
 ```
 
 ```{r echo=FALSE}
 if ("dynplot" %in% rownames(installed.packages())) {
-  dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
+  dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = dataset$expression)
 }
 ```
 
 Or change some parameters:
 
 ```{r}
-model <- infer_trajectory(task, ti_comp1(component = 2))
+model <- infer_trajectory(dataset, ti_comp1(component = 2))
 ```
 
 ```r
-dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
+dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = dataset$expression)
 ```
 
 ```{r echo=FALSE}
 if ("dynplot" %in% rownames(installed.packages())) {
-  dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
+  dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = dataset$expression)
 }
 ```
 
@@ -368,12 +368,12 @@ if ("dynplot" %in% rownames(installed.packages())) {
 The container can be debugged by running the method with `debug = TRUE`:
 
 ```r
-infer_trajectory(task, ti_comp1, debug = TRUE)
+infer_trajectory(dataset, ti_comp1, debug = TRUE)
 ```
 
 ```{r, error=TRUE, echo=FALSE}
 if (Sys.getenv("TRAVIS") != "true" || Sys.getenv("APPVEYOR") == "True") {
-  infer_trajectory(task, ti_comp1(), debug = TRUE)
+  infer_trajectory(dataset, ti_comp1(), debug = TRUE)
 }
 ```
 

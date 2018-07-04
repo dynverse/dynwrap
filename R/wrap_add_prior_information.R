@@ -3,7 +3,7 @@
 #' Note that the given data wrapper requires a trajectory and expression values
 #' to have been added already.
 #'
-#' @param task A data wrapper to extend upon.
+#' @param dataset A data wrapper to extend upon.
 #' @param start_id The start cells
 #' @param end_id The end cells
 #' @param groups_id The grouping of cells, a dataframe with cell_id and group_id
@@ -20,7 +20,7 @@
 #' @importFrom testthat expect_true
 #' @importFrom purrr discard list_modify
 add_prior_information <- function(
-  task,
+  dataset,
   start_id = NULL,
   end_id = NULL,
   groups_id = NULL,
@@ -45,15 +45,15 @@ add_prior_information <- function(
   ) %>% discard(is.null)
 
   if (!is.null(start_id)) {
-    testthat::expect_true(all(start_id %in% task$cell_ids))
+    testthat::expect_true(all(start_id %in% dataset$cell_ids))
   }
   if (!is.null(end_id)) {
-    testthat::expect_true(all(start_id %in% task$cell_ids))
+    testthat::expect_true(all(start_id %in% dataset$cell_ids))
   }
   if (!is.null(groups_id)) {
     testthat::expect_true(is.data.frame(groups_id))
     testthat::expect_setequal(colnames(groups_id), c("cell_id", "group_id"))
-    testthat::expect_setequal(groups_id$cell_id, task$cell_id)
+    testthat::expect_setequal(groups_id$cell_id, dataset$cell_id)
   }
   if (!is.null(groups_network)) {
     testthat::expect_true(!is.null(groups_id))
@@ -61,16 +61,16 @@ add_prior_information <- function(
     testthat::expect_true(all(groups_id$group_id %in% c(groups_network$to, groups_network$from)))
   }
   if (!is.null(features_id)) {
-    testthat::expect_true(is_wrapper_with_expression(task))
-    testthat::expect_true(all(features_id %in% colnames(task$counts)))
+    testthat::expect_true(is_wrapper_with_expression(dataset))
+    testthat::expect_true(all(features_id %in% colnames(dataset$counts)))
   }
 
-  if (is_wrapper_with_trajectory(task) && is_wrapper_with_expression(task)) {
+  if (is_wrapper_with_trajectory(dataset) && is_wrapper_with_expression(dataset)) {
     if (verbose) message("Calculating prior information using trajectory")
 
     # compute prior information and add it to the wrapper
     calculated_prior_information <-
-      with(task, generate_prior_information(
+      with(dataset, generate_prior_information(
         cell_ids = cell_ids,
         milestone_ids = milestone_ids,
         milestone_network = milestone_network,
@@ -86,14 +86,14 @@ add_prior_information <- function(
     prior_information <- list_modify(calculated_prior_information, !!!prior_information)
   }
 
-  task %>% extend_with(
+  dataset %>% extend_with(
     "dynwrap::with_prior",
     prior_information = prior_information
   )
 }
 
 
-#' Test whether an object is a task and contains prior information
+#' Test whether an object is a dataset and contains prior information
 #'
 #' @param object The object to be tested.
 #'

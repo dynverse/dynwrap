@@ -44,7 +44,7 @@ allowed_outputs <- map_df(add_ids, function(add_id) {
 })
 
 # allowed inputs --------------------------------
-# will use expression/counts and all priors EXCEPT task
+# will use expression/counts and all priors EXCEPT dataset
 data(priors, package = "dynwrap", envir = environment())
 
 allowed_inputs <- tribble(

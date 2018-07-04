@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Run a method on a task with a set of parameters — execute_method_on_task • dynwrap</title>
+<title>Run a method on a dataset with a set of parameters — execute_method_on_dataset • dynwrap</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Run a method on a task with a set of parameters — execute_method_on_task" />
+<meta property="og:title" content="Run a method on a dataset with a set of parameters — execute_method_on_dataset" />
 
-<meta property="og:description" content="Run a method on a task with a set of parameters" />
+<meta property="og:description" content="Run a method on a dataset with a set of parameters" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -114,26 +114,26 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Run a method on a task with a set of parameters</h1>
+    <h1>Run a method on a dataset with a set of parameters</h1>
     <small class="dont-index">Source: <a href='https://github.com/dynverse/dynwrap/blob/master/R/ti_infer_trajectory.R'><code>R/ti_infer_trajectory.R</code></a></small>
-    <div class="hidden name"><code>execute_method_on_task.Rd</code></div>
+    <div class="hidden name"><code>execute_method_on_dataset.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Run a method on a task with a set of parameters</p>
+    <p>Run a method on a dataset with a set of parameters</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>execute_method_on_task</span>(<span class='no'>task</span>, <span class='no'>method</span>, <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
+    <pre class="usage"><span class='fu'>execute_method_on_dataset</span>(<span class='no'>dataset</span>, <span class='no'>method</span>, <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
   <span class='kw'>give_priors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>mc_cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>task</th>
-      <td><p>The task</p></td>
+      <th>dataset</th>
+      <td><p>The dataset</p></td>
     </tr>
     <tr>
       <th>method</th>
@@ -157,7 +157,7 @@ If multiple methods were provided in the <code>method</code> parameter,
     </tr>
     <tr>
       <th>mc_cores</th>
-      <td><p>The number of cores to use, allowing to parallellise the different tasks</p></td>
+      <td><p>The number of cores to use, allowing to parallellise the different datasets</p></td>
     </tr>
     <tr>
       <th>verbose</th>

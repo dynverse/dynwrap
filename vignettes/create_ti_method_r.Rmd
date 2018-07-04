@@ -228,17 +228,17 @@ This function also has several optional parameters, among which:
 
 ## Running the method
 
-Running the method is easy given a task.
+Running the method is easy given a dataset.
 
 ```{r}
-task <- wrap_data("", rownames(expression)) %>% add_expression(expression, expression)
+dataset <- wrap_data("", rownames(expression)) %>% add_expression(expression, expression)
 
-model <- infer_trajectory(task, ti_dummy())
+model <- infer_trajectory(dataset, ti_dummy())
 ```
 
 ```{r}
 if ("dynplot" %in% rownames(installed.packages())) {
-  dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = task$expression)
+  dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = dataset$expression)
 }
 ```
 

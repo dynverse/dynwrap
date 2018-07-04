@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrap_add_prior_information.R
 \name{is_wrapper_with_prior_information}
 \alias{is_wrapper_with_prior_information}
-\title{Test whether an object is a task and contains prior information}
+\title{Test whether an object is a dataset and contains prior information}
 \usage{
 is_wrapper_with_prior_information(object)
 }
@@ -10,5 +10,5 @@ is_wrapper_with_prior_information(object)
 \item{object}{The object to be tested.}
 }
 \description{
-Test whether an object is a task and contains prior information
+Test whether an object is a dataset and contains prior information
 }
