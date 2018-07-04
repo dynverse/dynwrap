@@ -204,5 +204,6 @@ has_cycle_function <- function(gr) {
 #' @param trajectory_types_oi trajectory types to simplify
 #' @export
 simplify_trajectory_type <- function(trajectory_types_oi) {
+  data("trajectory_types", package = "dynwrap", envir = environment())
   set_names(trajectory_types$simplified, trajectory_types$id)[trajectory_types_oi] %>% unname()
 }
