@@ -4,10 +4,10 @@
 \alias{simplify_trajectory_type}
 \title{Convert directed trajectory type to simplified versions}
 \usage{
-simplify_trajectory_type(trajectory_types)
+simplify_trajectory_type(trajectory_types_oi)
 }
 \arguments{
-\item{trajectory_types}{trajectory types to simplify}
+\item{trajectory_types_oi}{trajectory types to simplify}
 }
 \description{
 Convert directed trajectory type to simplified versions
