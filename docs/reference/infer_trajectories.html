@@ -125,17 +125,17 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>infer_trajectories</span>(<span class='no'>task</span>, <span class='no'>method</span>, <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>give_priors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>infer_trajectories</span>(<span class='no'>dataset</span>, <span class='no'>method</span>, <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>give_priors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>mc_cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='fu'>infer_trajectory</span>(<span class='no'>task</span>, <span class='no'>method</span>, <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>give_priors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+<span class='fu'>infer_trajectory</span>(<span class='no'>dataset</span>, <span class='no'>method</span>, <span class='kw'>parameters</span> <span class='kw'>=</span> <span class='fu'>list</span>(), <span class='kw'>give_priors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>mc_cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>task</th>
+      <th>dataset</th>
       <td><p>One or more datasets, as created using dynwrap</p></td>
     </tr>
     <tr>
@@ -160,7 +160,7 @@ If multiple methods were provided in the <code>method</code> parameter,
     </tr>
     <tr>
       <th>mc_cores</th>
-      <td><p>The number of cores to use, allowing to parallellise the different tasks</p></td>
+      <td><p>The number of cores to use, allowing to parallellise the different datasets</p></td>
     </tr>
     <tr>
       <th>verbose</th>

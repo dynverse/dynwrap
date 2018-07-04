@@ -4,13 +4,13 @@
 \alias{add_prior_information}
 \title{Add prior information to a data wrapper}
 \usage{
-add_prior_information(task, start_id = NULL, end_id = NULL,
+add_prior_information(dataset, start_id = NULL, end_id = NULL,
   groups_id = NULL, groups_network = NULL, features_id = NULL,
   groups_n = NULL, start_n = NULL, end_n = NULL, time = NULL,
   verbose = TRUE)
 }
 \arguments{
-\item{task}{A data wrapper to extend upon.}
+\item{dataset}{A data wrapper to extend upon.}
 
 \item{start_id}{The start cells}
 
