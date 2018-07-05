@@ -58,7 +58,7 @@ test_that("Testing add_cluster_graph", {
 
 
 
-test_that("Testing add_explicit_splits", {
+test_that("Testing cluster_graph_add_explicit_splits", {
   milestone_network <- tribble(
     ~from, ~to, ~length, ~directed,
     "A", "B", 1, TRUE,
@@ -69,7 +69,7 @@ test_that("Testing add_explicit_splits", {
     "C", "G", 10, TRUE
   )
 
-  milestone_network <- add_explicit_splits(milestone_network)
+  milestone_network <- cluster_graph_add_explicit_splits(milestone_network)
 
   expect_true(
     all(
