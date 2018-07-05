@@ -83,8 +83,8 @@ end_state_probabilities <- end_state_probabilities %>% as.data.frame() %>% mutat
 
 timings <- list("method_afterpreproc" = as.numeric(Sys.time()), "method_aftermethod" = as.numeric(Sys.time()) + 10)
 
-# task with prior information
-task <- wrap_data(
+# dataset with prior information
+dataset <- wrap_data(
   cell_id = cell_ids
 ) %>%
   add_expression(
@@ -113,31 +113,31 @@ model <- wrap_data(
 
 # save the input
 save_inputs(
-  list2env(c(task, task$prior_information)),
+  list2env(c(dataset, dataset$prior_information)),
   dir_input = "inst/example_inputs/text/",
   input_format = "text",
   input_ids = allowed_inputs$input_id
 )
 
 save_inputs(
-  list2env(c(task, task$prior_information)),
+  list2env(c(dataset, dataset$prior_information)),
   dir_input = "inst/example_inputs/hdf5/",
   input_format = "hdf5",
-  input_ids = allowed_inputs$input_id[allowed_inputs$input_id != "task"]
+  input_ids = allowed_inputs$input_id[allowed_inputs$input_id != "dataset"]
 )
 
 save_inputs(
-  list2env(c(task, task$prior_information)),
+  list2env(c(dataset, dataset$prior_information)),
   dir_input = "inst/example_inputs/feather/",
   input_format = "feather",
-  input_ids = allowed_inputs$input_id[allowed_inputs$input_id != "task"]
+  input_ids = allowed_inputs$input_id[allowed_inputs$input_id != "dataset"]
 )
 
 save_inputs(
-  list2env(c(task, task$prior_information)),
+  list2env(c(dataset, dataset$prior_information)),
   dir_input = "inst/example_inputs/rds/",
   input_format = "rds",
-  input_ids = allowed_inputs$input_id[allowed_inputs$input_id != "task"]
+  input_ids = allowed_inputs$input_id[allowed_inputs$input_id != "dataset"]
 )
 
 # save the output
