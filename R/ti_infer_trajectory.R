@@ -287,6 +287,11 @@ execute_method_on_dataset <- function(
     parameters
   )
 
+  # add verbose if in inputs
+  if ("verbose" %in% method$inputs$input_id) {
+    args["verbose"] <- verbose
+  }
+
   tryCatch({
     # create a temporary directory to set as working directory,
     # to avoid polluting the working directory if a method starts
