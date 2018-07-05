@@ -20,7 +20,7 @@ priors <- tribble(
 
   "features_id", "Marker genes", "Genes/features known to be important in the dynamic process",
 
-  "dataset", "The full dataset", "The full dataset, including gold standard"
+  "dataset", "The full dataset", "The full dataset, including (if available) the gold standard"
 )
 
 prior_usages <- tribble(

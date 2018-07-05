@@ -10,10 +10,12 @@ output_ids_builds_upon_trajectory <- c("root", "pseudotime", "waypoints", "dimre
 
 requireNamespace("dynwrap")
 add_ids <- as.character(lsf.str(asNamespace("dynwrap"))) %>%
-  stringr::str_subset("add_.*")
+  stringr::str_subset("^add_.*")
 
 requireNamespace("Rd2roxygen")
 allowed_outputs <- map_df(add_ids, function(add_id) {
+  print(add_id)
+
   output_id <- gsub("add_(.*)", "\\1", add_id)
 
   file <- paste0("man/", add_id, ".Rd")
@@ -45,7 +47,7 @@ allowed_outputs <- map_df(add_ids, function(add_id) {
 
 # allowed inputs --------------------------------
 # will use expression/counts and all priors EXCEPT dataset
-data(priors, package = "dynwrap", envir = environment())
+load("data/priors.rda")
 
 allowed_inputs <- tribble(
   ~input_id, ~description,

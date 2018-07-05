@@ -40,7 +40,7 @@ add_cluster_graph <- function(
 
   # add explicit splits if requested
   if (explicit_splits) {
-    milestone_network <- add_explicit_splits(milestone_network)
+    milestone_network <- cluster_graph_add_explicit_splits(milestone_network)
     milestone_ids <- unique(c(milestone_network$to, milestone_network$from))
   }
 
@@ -76,7 +76,7 @@ add_cluster_graph <- function(
 
 
 
-add_explicit_splits <- function(milestone_network) {
+cluster_graph_add_explicit_splits <- function(milestone_network) {
   # add extra splits
   milestone_ids_implicit_split <- table(milestone_network$from) %>% keep(~.>=2) %>% names() %>% discard(~. %in% milestone_network$to)
 
