@@ -55,7 +55,7 @@ test_docker_installation <- function(detailed = FALSE) {
     message(crayon::green("\u2714 Docker can pull images"))
 
     # test if docker can run images, will fail on windows if linux containers are not enabled
-    output <- processx::run("docker", c("run", "alpine"), error_on_status = FALSE, stderr_callback = print_processx)
+    output <- processx::run("docker", c("run", "alpine:3.7"), error_on_status = FALSE, stderr_callback = print_processx)
     if (output$status != 0) {
       stop(crayon::red("\u274C Unable to run an image"))
     }
