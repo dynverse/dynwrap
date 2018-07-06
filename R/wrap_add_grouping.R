@@ -111,5 +111,8 @@ process_grouping <- function(model, grouping) {
   # cells which are not grouped are given group NA
   grouping[setdiff(model$cell_ids, names(grouping))] <- NA
 
+  # make sure the order of the grouping is the same as cell_ids
+  grouping <- grouping[model$cell_ids]
+
   grouping
 }

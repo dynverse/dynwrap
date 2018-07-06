@@ -1,6 +1,6 @@
 context("Testing infer_trajectory")
 
-# create task
+# create dataset
 id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
 cell_info <- data_frame(
@@ -19,7 +19,7 @@ expression <- matrix(runif(num_features * length(cell_ids), 8, 12), nrow = lengt
 counts <- 2^expression - 1
 feature_info <- data_frame(feature_id = feature_names, mean = colMeans(expression), var = apply(expression, 2, var))
 
-task <-
+dataset <-
   wrap_expression(
     id = id,
     expression,
@@ -34,58 +34,58 @@ task <-
 test_that("Testing infer_trajectory with control methods", {
   method <- ti_comp1()
 
-  model <- infer_trajectory(task, method)
+  model <- infer_trajectory(dataset, method)
   expect_s3_class(model, "dynwrap::with_trajectory")
 
   # test plotting
   expect_true("ggplot" %in% class(method$plot_fun(model)))
 
   # test priors
-  model <- infer_trajectory(task, method, give_priors = c("start_id"))
+  model <- infer_trajectory(dataset, method, give_priors = c("start_id"))
   expect_s3_class(model, "dynwrap::with_trajectory")
 
-  expect_error(infer_trajectory(task, method, give_priors = c("to be or not to be")))
+  expect_error(infer_trajectory(dataset, method, give_priors = c("to be or not to be")))
 
-  # run with multiple tasks and one method
-  models <- infer_trajectories(list(task, task), method)
+  # run with multiple datasets and one method
+  models <- infer_trajectories(list(dataset, dataset), method)
   expect_true(is_tibble(models))
   expect_equal(nrow(models), 2)
-  expect_setequal(c("task_ix", "method_ix", "model", "method_name", "task_id", "summary"), names(models))
+  expect_setequal(c("dataset_ix", "method_ix", "model", "method_name", "dataset_id", "summary"), names(models))
 
-  models <- infer_trajectories(list_as_tibble(list(task, task)), ti_comp1())
+  models <- infer_trajectories(list_as_tibble(list(dataset, dataset)), ti_comp1())
   expect_true(is_tibble(models))
   expect_equal(nrow(models), 2)
 
   # run with multiple methods
-  models <- infer_trajectories(task, list(ti_comp1(), ti_comp1()))
+  models <- infer_trajectories(dataset, list(ti_comp1(), ti_comp1()))
   expect_true(is_tibble(models))
   expect_equal(nrow(models), 2)
 
-  models <- infer_trajectories(task, list_as_tibble(list(ti_comp1(), ti_comp1())))
+  models <- infer_trajectories(dataset, list_as_tibble(list(ti_comp1(), ti_comp1())))
   expect_true(is_tibble(models))
   expect_equal(nrow(models), 2)
 
-  models <- infer_trajectories(task, c("comp1", "comp1"))
+  models <- infer_trajectories(dataset, c("comp1", "comp1"))
   expect_true(is_tibble(models))
   expect_equal(nrow(models), 2)
 
-  expect_message(infer_trajectories(task, c("camp1")))
+  expect_message(infer_trajectories(dataset, c("camp1")))
 
-  expect_error(infer_trajectories(task, c(1,2,3)))
+  expect_error(infer_trajectories(dataset, c(1,2,3)))
   expect_error(infer_trajectories(c(1,2,3), c(1,2,3)))
 
-  # run with multiple tasks and multiple methods
+  # run with multiple datasets and multiple methods
   models <- infer_trajectories(
-    task = list(task, task, task),
+    dataset = list(dataset, dataset, dataset),
     method = list(ti_comp1(), ti_comp1())
   )
 
   expect_true(is_tibble(models))
   expect_equal(nrow(models), 6)
 
-  # run with multiple tasks and multiple methods with specified parameters
+  # run with multiple datasets and multiple methods with specified parameters
   models <- infer_trajectories(
-    task = list(task, task),
+    dataset = list(dataset, dataset),
     method = list_as_tibble(list(ti_comp1(), ti_comp1())),
     parameters = list(list(method = "mds"), list(method = "pca"))
   )
@@ -97,11 +97,11 @@ test_that("Testing infer_trajectory with control methods", {
 
 
 test_that("Testing ti_comp1", {
-  model1 <- dynwrap:::run_comp1(task$expression, dimred = "pca", ndim = 2, component = 1)
+  model1 <- dynwrap:::run_comp1(dataset$expression, dimred = "pca", ndim = 2, component = 1)
   testthat::expect_true(is_wrapper_with_trajectory(model1))
 
   method <- ti_comp1()
-  model2 <- method$run_fun(task$expression)
+  model2 <- method$run_fun(dataset$expression)
   testthat::expect_true(is_wrapper_with_trajectory(model2))
 
   testthat::expect_equivalent(model1$milestone_network, model2$milestone_network)

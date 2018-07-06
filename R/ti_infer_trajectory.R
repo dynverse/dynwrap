@@ -1,6 +1,6 @@
 #' Infer trajectories
 #'
-#' @param task One or more datasets, as created using dynwrap
+#' @param dataset One or more datasets, as created using dynwrap
 #' @param method One or more methods. Must be one of:
 #' \itemize{
 #'   \item{an object or list of ti_... objects (eg. [ti_comp1()])}
@@ -13,7 +13,7 @@
 #'    `parameters` must be an unnamed list of the same length.
 #' @param give_priors All the priors a method is allowed to receive. Must be a subset of: `"start_milestones"`,
 #'  `"start_id"`, `"end_milestones"`, `"end_id"`, `"groups_id"` and `"groups_network"`
-#' @param mc_cores The number of cores to use, allowing to parallellise the different tasks
+#' @param mc_cores The number of cores to use, allowing to parallellise the different datasets
 #' @param verbose Whether or not to print information output
 #'
 #' @importFrom utils capture.output adist installed.packages
@@ -24,22 +24,13 @@
 #'
 #' @export
 infer_trajectories <- function(
-  task,
+  dataset,
   method,
   parameters = NULL,
   give_priors = NULL,
   mc_cores = 1,
   verbose = FALSE
 ) {
-  if (verbose) {
-    if (is.data.frame(task) && nrow(task) == 1) {
-      task_str <- task$id
-    } else {
-      task_str <- paste0(nrow(task), " tasks")
-    }
-    cat("Executing ", method$name, " on ", task_str, "\n", sep = "")
-  }
-
   # process method ----------------------
   if (is.character(method)) {
     # names of method
@@ -110,24 +101,24 @@ infer_trajectories <- function(
   # check whether parameters is of the correct length
   testthat::expect_equal(length(method), length(parameters))
 
-  # process task ----------------------
-  if(dynwrap::is_data_wrapper(task)) {
-    # allow single task
-    task <- list_as_tibble(list(task))
-  } else if (is.data.frame(task)) {
-    # dataframe of tasks
-  } else if (is.list(task)) {
-    # list of tasks
-    task <- list_as_tibble(task)
+  # process dataset ----------------------
+  if(dynwrap::is_data_wrapper(dataset)) {
+    # allow single dataset
+    dataset <- list_as_tibble(list(dataset))
+  } else if (is.data.frame(dataset)) {
+    # dataframe of datasets
+  } else if (is.list(dataset)) {
+    # list of datasets
+    dataset <- list_as_tibble(dataset)
   } else {
-    stop("Invalid task argument, it is of class ", paste0(class(task), collapse = ", "))
+    stop("Invalid dataset argument, it is of class ", paste0(class(dataset), collapse = ", "))
   }
-  task <- map(seq_len(nrow(task)), extract_row_to_list, tib = task)
+  dataset <- map(seq_len(nrow(dataset)), extract_row_to_list, tib = dataset)
 
-  # Run methods on each tasks ---------
+  # Run methods on each datasets ---------
   # construct overall design
   design <- crossing(
-    taski = seq_along(task),
+    dataseti = seq_along(dataset),
     methodi = seq_along(method)
   )
 
@@ -157,12 +148,12 @@ infer_trajectories <- function(
   output <- parfun(
     X = seq_len(nrow(design)),
     FUN = function(ri) {
-      tari <- task[[design$taski[[ri]]]]
+      tari <- dataset[[design$dataseti[[ri]]]]
       meri <- method[[design$methodi[[ri]]]]
       pari <- parameters[[design$methodi[[ri]]]]
 
-      execute_method_on_task(
-        task = tari,
+      execute_method_on_dataset(
+        dataset = tari,
         method = meri,
         parameters = pari,
         give_priors = give_priors,
@@ -172,9 +163,9 @@ infer_trajectories <- function(
   )
 
   tibble(
-    task_ix = design$taski,
+    dataset_ix = design$dataseti,
     method_ix = design$methodi,
-    task_id = map_chr(task, "id")[design$taski],
+    dataset_id = map_chr(dataset, "id")[design$dataseti],
     method_name = map_chr(method, "name")[design$methodi],
     model = map(output, "model"),
     summary = map(output, "summary")
@@ -186,7 +177,7 @@ infer_trajectories <- function(
 #' @param ... Any additional parameters given to the method, will be concatednated to the parameters argument
 #' @export
 infer_trajectory <- function(
-  task,
+  dataset,
   method,
   parameters = list(),
   give_priors = NULL,
@@ -197,7 +188,7 @@ infer_trajectory <- function(
   parameters <- c(parameters, list(...))
 
   design <- infer_trajectories(
-    task = task,
+    dataset = dataset,
     method = method,
     parameters = list(parameters),
     give_priors = give_priors,
@@ -213,8 +204,8 @@ infer_trajectory <- function(
 }
 
 
-extract_args_from_task <- function(
-  task,
+extract_args_from_dataset <- function(
+  dataset,
   inputs,
   give_priors = NULL
 ) {
@@ -223,11 +214,11 @@ extract_args_from_task <- function(
     stop("Invalid priors requested: ", give_priors)
   }
 
-  args_task <- task[inputs %>% filter(required, type == "expression") %>% pull(input_id)]
+  args_dataset <- dataset[inputs %>% filter(required, type == "expression") %>% pull(input_id)]
 
   # extract prior information
-  priors <- task$prior_information
-  priors$task <- task
+  priors <- dataset$prior_information
+  priors$dataset <- dataset
 
   # required, check if the prior infirm
   required_prior_ids <- inputs %>%
@@ -238,8 +229,8 @@ extract_args_from_task <- function(
     stop(
       "Prior information ",
       paste(setdiff(required_prior_ids, names(priors)), collapse = ";"),
-      " is required, but missing from task ",
-      task$id)
+      " is required, but missing from dataset ",
+      dataset$id)
   }
 
   args_required_priors <- priors[required_prior_ids]
@@ -253,8 +244,8 @@ extract_args_from_task <- function(
     warning(
       "Prior information ",
       paste(setdiff(optional_prior_ids, names(priors)), collapse = ";"),
-      " is optional, but missing from task ",
-      task$id,
+      " is optional, but missing from dataset ",
+      dataset$id,
       ". Will not give this prior to method.",
       "\n")
   }
@@ -263,20 +254,20 @@ extract_args_from_task <- function(
 
   # output
   c(
-    args_task,
+    args_dataset,
     args_required_priors,
     args_optional_priors
   )
 }
 
 
-#' Run a method on a task with a set of parameters
+#' Run a method on a dataset with a set of parameters
 #'
 #' @inheritParams infer_trajectory
-#' @param task The task
+#' @param dataset The dataset
 #' @export
-execute_method_on_task <- function(
-  task,
+execute_method_on_dataset <- function(
+  dataset,
   method,
   parameters = list(),
   give_priors = NULL,
@@ -286,15 +277,20 @@ execute_method_on_task <- function(
   # start the timer
   time0 <- as.numeric(Sys.time())
 
-  # test whether the task contains expression
-  testthat::expect_true(is_data_wrapper(task))
-  testthat::expect_true(is_wrapper_with_expression(task))
+  # test whether the dataset contains expression
+  testthat::expect_true(is_data_wrapper(dataset))
+  testthat::expect_true(is_wrapper_with_expression(dataset))
 
-  # extract args from task and combine with parameters
+  # extract args from dataset and combine with parameters
   args <- c(
-    extract_args_from_task(task, method$inputs, give_priors),
+    extract_args_from_dataset(dataset, method$inputs, give_priors),
     parameters
   )
+
+  # add verbose if in inputs
+  if ("verbose" %in% method$inputs$input_id) {
+    args["verbose"] <- verbose
+  }
 
   tryCatch({
     # create a temporary directory to set as working directory,
@@ -311,8 +307,8 @@ execute_method_on_task <- function(
         # run method
         model <- execute_method_internal(method, args, setseed_detection_file)
 
-        # add task id and method names to the model
-        model$task_id <- task$id
+        # add dataset id and method names to the model
+        model$dataset_id <- dataset$id
         model$method_name <- method$name
         model$method_short_name <- method$short_name
 
@@ -353,7 +349,7 @@ execute_method_on_task <- function(
   summary <- tibble(
     method_name = method$name,
     method_short_name = method$short_name,
-    task_id = task$id,
+    dataset_id = dataset$id,
     time_sessionsetup = timings_list$method_start - time0,
     time_preprocessing = timings_list$method_afterpreproc - timings_list$method_start,
     time_method = timings_list$method_aftermethod - timings_list$method_afterpreproc,
@@ -372,7 +368,7 @@ execute_method_on_task <- function(
 #'
 #' If you're reading this, you're supposed to be using `infer_trajectory` instead.
 #'
-#' @inheritParams execute_method_on_task
+#' @inheritParams execute_method_on_dataset
 #'
 #' @param arglist The arguments to apply to the method
 #' @param setseed_detection_file A file to which will be written if a method

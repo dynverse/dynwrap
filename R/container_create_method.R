@@ -88,17 +88,18 @@ create_image_ti_method <- function(
     dir_output <- mytempdir("output")
 
     # run container
-    status <- run_container(
+    output <- run_container(
       image,
       volumes = c(
         glue("{dir_input}:/input"),
         glue("{dir_output}:/output")
       ),
-      debug
+      debug,
+      verbose
     )
 
     # exit if error
-    if (status != 0) {
+    if (output$status != 0) {
       stop(call. = FALSE)
     }
 
@@ -132,7 +133,7 @@ create_image_ti_method <- function(
 
   # define run_container function
   if (image_type == "docker") {
-    run_container <- function(image, volumes, debug) {
+    run_container <- function(image, volumes, debug, verbose) {
       if (debug) {
         requireNamespace("crayon")
         stop(
@@ -144,11 +145,17 @@ create_image_ti_method <- function(
           ),
         call. = FALSE)
       } else {
-        system(glue::glue("docker run {paste0(paste0('-v ', volumes), collapse = ' ')} {image}"))
+        processx::run(
+          "docker",
+          c("run", as.character(rbind("-v", volumes)), image),
+          echo = verbose,
+          echo_cmd = verbose,
+          spinner = TRUE
+        )
       }
     }
   } else if (image_type == "singularity") {
-    run_container <- function(image, volumes, debug) {
+    run_container <- function(image, volumes, debug, verbose) {
       if (debug) {
         stop(
           "Use this command for debugging: \n",
@@ -159,7 +166,13 @@ create_image_ti_method <- function(
           ),
         call. = FALSE)
       } else {
-        system(glue("singularity run --cleanenv -B {glue::collapse(volumes, ',')} {image}"))
+        processx::run(
+          "singularity",
+          c("run", "--cleanenv", "-B", glue::collapse(volumes, ','), image),
+          echo_cmd = verbose,
+          echo = verbose,
+          spinner = TRUE
+        )
       }
     }
   }
@@ -203,13 +216,11 @@ create_docker_ti_method <- function(
   docker_installed <- test_docker_installation()
   if (!docker_installed) test_docker_installation(detailed = TRUE)
 
-  tryCatch(
-    system(glue::glue("docker inspect --type=image {image}"), intern = TRUE),
-    warning = function(x) {
-      message("Image not found locally, pulling image... Stay tuned!")
-      system(glue::glue("docker pull {image}"))
-      }
-  )
+  result <- processx::run("docker", c("inspect", "--type=image", image), error_on_status = FALSE)
+  if (result$status > 0) {
+    message("Image not found locally, pulling image... Stay tuned!")
+    processx::run("docker", c("pull", image), echo = TRUE)
+  }
 
   create_image_ti_method(image, definition, "docker", ...)
 }
@@ -226,16 +237,23 @@ extract_definition_from_docker_image <- function(
   requireNamespace("yaml")
 
   # start container
-  output <- system(glue::glue("docker create --entrypoint='bash' {image}"), intern = TRUE)
-  id <- output[length(output)]
-  if (!stringr::str_detect(id, "[A-Za-z0-9]*")) {stop("Docker errored ", output)}
+  output <- processx::run(
+    "docker",
+    c("create", "--entrypoint", "bash", image),
+    stderr_callback = print_processx
+  )
+  id <- trimws(tail(output$stdout, 1))
 
   # copy file from container
   definition_location_local <- tempfile()
-  system(glue::glue("docker cp {id}:{definition_location} {definition_location_local}"))
+  processx::run(
+    "docker",
+    c("cp", glue::glue("{id}:{definition_location}"), definition_location_local),
+    stderr_callback = print_processx
+  )
 
   # remove container
-  system(glue::glue("docker rm {id}"))
+  processx::run("docker", c("rm", id), stderr_callback = print_processx)
 
   # read definition file
   definition <- yaml::read_yaml(definition_location_local)
@@ -247,7 +265,7 @@ extract_definition_from_docker_image <- function(
 pull_docker_ti_method <- function(
   image
 ) {
-  system(glue::glue("docker pull {image}"))
+  processx::run("docker", c("pull", image), stderr_callback = print_processx)
 
   create_docker_ti_method(image)
 }
@@ -290,7 +308,19 @@ extract_definition_from_singularity_image <- function(
   singularity_image_location <- get_singularity_image_location(image, singularity_images_folder)
 
   definition_folder_local <- mytempdir("")
-  system(glue("singularity exec -B {definition_folder_local}:/tmp_definition {singularity_image_location} cp {definition_location} /tmp_definition"))
+  processx::run(
+    "singularity",
+    c(
+      "exec",
+      "-B",
+      glue("{definition_folder_local}:/tmp_definition"),
+      singularity_image_location,
+      "cp",
+      definition_location,
+      "/tmp_definition"
+    ),
+    stderr_callback = print_processx
+  )
 
   definition_location_local <- file.path(definition_folder_local, basename(definition_location))
 
@@ -309,7 +339,15 @@ pull_singularity_ti_method <- function(
 ) {
   singularity_image_location <- get_singularity_image_location(image, singularity_images_folder)
   dir.create(dirname(singularity_image_location), showWarnings = FALSE)
-  system(glue::glue("singularity build {singularity_image_location} docker://{image}"))
+  processx::run(
+    "singularity",
+    c(
+      "build",
+      singularity_image_location,
+      glue("docker://{image}")
+    ),
+    echo = TRUE
+  )
 
   if (return_method) {
     create_singularity_ti_method(image, singularity_images_folder)
