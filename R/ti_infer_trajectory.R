@@ -15,6 +15,7 @@
 #'  `"start_id"`, `"end_milestones"`, `"end_id"`, `"groups_id"` and `"groups_network"`
 #' @param mc_cores The number of cores to use, allowing to parallellise the different datasets
 #' @param verbose Whether or not to print information output
+#' @param capture_output Whether to capture the stdout and stderr produced by a method
 #'
 #' @importFrom utils capture.output adist installed.packages
 #' @importFrom readr read_file
@@ -29,7 +30,8 @@ infer_trajectories <- function(
   parameters = NULL,
   give_priors = NULL,
   mc_cores = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  capture_output = FALSE
 ) {
   # process method ----------------------
   if (is.character(method)) {
@@ -152,7 +154,8 @@ infer_trajectories <- function(
         method = meri,
         parameters = pari,
         give_priors = give_priors,
-        verbose = verbose
+        verbose = verbose,
+        capture_output = capture_output
       )
     }
   )
@@ -161,6 +164,7 @@ infer_trajectories <- function(
     dataset_ix = design$dataseti,
     method_ix = design$methodi,
     dataset_id = map_chr(dataset, "id")[design$dataseti],
+    method_id = map_chr(method, "method_id")[design$methodi],
     method_name = map_chr(method, "name")[design$methodi],
     model = map(output, "model"),
     summary = map(output, "summary")
@@ -188,7 +192,8 @@ infer_trajectory <- function(
     parameters = list(parameters),
     give_priors = give_priors,
     mc_cores = mc_cores,
-    verbose = verbose
+    verbose = verbose,
+    capture_output = FALSE
   )
 
   if(is.null(design$model[[1]])) {
@@ -270,7 +275,8 @@ execute_method_on_dataset <- function(
   parameters = list(),
   give_priors = NULL,
   mc_cores = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  capture_output = FALSE
 ) {
   # start the timer
   time0 <- as.numeric(Sys.time())
@@ -290,44 +296,46 @@ execute_method_on_dataset <- function(
     args["verbose"] <- verbose
   }
 
+  # initialise stdout/stderr files
+  if (capture_output) {
+    stdout_file <- tempfile()
+    sink(stdout_file, type = "output")
+
+    stderr_file <- tempfile()
+    stderr_con <- file(stderr_file, open = "wt")
+    sink(stderr_con, type = "message")
+  }
+
   tryCatch({
     # create a temporary directory to set as working directory,
     # to avoid polluting the working directory if a method starts
     # producing files :angry_face:
-    tmp_dir <- tempfile(pattern = method$short_name)
+    tmp_dir <- tempfile(pattern = method$method_id)
     dir.create(tmp_dir)
     old_wd <- getwd()
     setwd(tmp_dir)
 
     # run the method and catch the error, if necessary
-    out <-
-      tryCatch({
-        # run method
-        model <- execute_method_internal(method, args, setseed_detection_file)
-
-        # add dataset id and method names to the model
-        model$dataset_id <- dataset$id
-        model$method_name <- method$name
-        model$method_short_name <- method$short_name
-
-        c(model, list(error = NULL))
-      }, error = function(e) {
-        time_new <- as.numeric(Sys.time())
-        timings_list <- list(
-          method_start = time0,
-          method_afterpreproc = time0,
-          method_aftermethod = time_new,
-          method_afterpostproc = time_new,
-          method_stop = time_new
-        )
-        list(model = NULL, timings_list = timings_list, error = e)
-      })
+    out <- execute_method_internal(method, args, setseed_detection_file, time0)
 
     # retrieve the model, error message, and timings
     model <- out$model
     error <- out$error
     timings_list <- out$timings_list
+
   }, finally = {
+    # read in stdout/stderr
+    if (capture_output) {
+      sink(type = "output")
+      stdout <- read_file(stdout_file)
+
+      sink(type = "message")
+      close(stderr_con)
+      stderr <- read_file(stderr_file)
+    } else {
+      stdout <- ""
+      stderr <- ""
+    }
 
     # check whether the method produced output files and
     # wd to previous state
@@ -346,7 +354,7 @@ execute_method_on_dataset <- function(
   # create a summary tibble
   summary <- tibble(
     method_name = method$name,
-    method_short_name = method$short_name,
+    method_id = method$method_id,
     dataset_id = dataset$id,
     time_sessionsetup = timings_list$method_start - time0,
     time_preprocessing = timings_list$method_afterpreproc - timings_list$method_start,
@@ -355,6 +363,8 @@ execute_method_on_dataset <- function(
     time_wrapping = timings_list$method_stop - timings_list$method_afterpostproc,
     time_sessioncleanup = time3 - timings_list$method_stop,
     error = list(error),
+    stdout = stdout,
+    stderr = stderr,
     num_files_created = num_files_created,
     prior_df = list(method$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(args)))
   )
@@ -371,53 +381,66 @@ execute_method_on_dataset <- function(
 #' @param arglist The arguments to apply to the method
 #' @param setseed_detection_file A file to which will be written if a method
 #'   uses the set.seed function.
+#' @param time0 The start of the timer.
 #'
 #' @export
 #' @importFrom readr write_file
-execute_method_internal <- function(method, arglist, setseed_detection_file) {
-  # Load required packages and namespaces
-  if (!is.null(method$package_loaded) && !is.na(method$package_loaded)) {
-    for (pack in method$package_loaded) {
-      suppressMessages(do.call(require, list(pack)))
+execute_method_internal <- function(method, arglist, setseed_detection_file, time0) {
+  tryCatch({
+    # Load required packages and namespaces
+    if (!is.null(method$package_loaded) && !is.na(method$package_loaded)) {
+      for (pack in method$package_loaded) {
+        suppressMessages(do.call(require, list(pack)))
+      }
     }
-  }
 
-  if (!is.null(method$package_required) && !is.na(method$package_loaded)) {
-    for (pack in method$package_required) {
-      suppressMessages(do.call(requireNamespace, list(pack)))
+    if (!is.null(method$package_required) && !is.na(method$package_loaded)) {
+      for (pack in method$package_required) {
+        suppressMessages(do.call(requireNamespace, list(pack)))
+      }
     }
-  }
 
-  # measure second time point
-  time_start <- as.numeric(Sys.time())
+    # measure second time point
+    time_start <- as.numeric(Sys.time())
 
-  # execute method and return model
-  model <- do.call(method$run_fun, arglist)
+    # execute method and return model
+    model <- do.call(method$run_fun, arglist)
 
-  # measure third time point
-  time_stop <- as.numeric(Sys.time())
+    # measure third time point
+    time_stop <- as.numeric(Sys.time())
 
-  # add missing timings
-  if (is.null(model$timings)) {
-    model$timings <- list(
-      method_afterpreproc = time_start,
-      method_aftermethod = time_stop,
-      method_afterpostproc = time_stop
+    # add missing timings
+    if (is.null(model$timings)) {
+      model$timings <- list(
+        method_afterpreproc = time_start,
+        method_aftermethod = time_stop,
+        method_afterpostproc = time_stop
+      )
+    }
+
+    # fetch timings from within method (and place them in order of execution, just to make sure)
+    timings_list <- c(
+      list(method_start = as.numeric(time_start)),
+      model$timings,
+      list(method_stop = as.numeric(time_stop))
     )
-  }
 
-  # fetch timings from within method (and place them in order of execution, just to make sure)
-  timings_list <- c(
-    list(method_start = as.numeric(time_start)),
-    model$timings,
-    list(method_stop = as.numeric(time_stop))
-  )
+    model$timings <- NULL
+    class(model) <- setdiff(class(model), "dynwrap::with_timings")
 
-  model$timings <- NULL
-  class(model) <- class(model) %>% discard(~. %in% c("dynutils::with_timings", "dynwrap::with_timings"))
-
-  # return output
-  lst(timings_list, model)
+    # return output
+    lst(timings_list, model, error = NULL)
+  }, error = function(e) {
+    time_new <- as.numeric(Sys.time())
+    timings_list <- list(
+      method_start = time0,
+      method_afterpreproc = time0,
+      method_aftermethod = time_new,
+      method_afterpostproc = time_new,
+      method_stop = time_new
+    )
+    list(model = NULL, timings_list = timings_list, error = e)
+  })
 }
 
 

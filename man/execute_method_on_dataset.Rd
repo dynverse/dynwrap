@@ -5,7 +5,8 @@
 \title{Run a method on a dataset with a set of parameters}
 \usage{
 execute_method_on_dataset(dataset, method, parameters = list(),
-  give_priors = NULL, mc_cores = 1, verbose = FALSE)
+  give_priors = NULL, mc_cores = 1, verbose = FALSE,
+  capture_output = FALSE)
 }
 \arguments{
 \item{dataset}{The dataset}
@@ -28,6 +29,8 @@ If multiple methods were provided in the \code{method} parameter,
 \item{mc_cores}{The number of cores to use, allowing to parallellise the different datasets}
 
 \item{verbose}{Whether or not to print information output}
+
+\item{capture_output}{Whether to capture the stdout and stderr produced by a method}
 }
 \description{
 Run a method on a dataset with a set of parameters

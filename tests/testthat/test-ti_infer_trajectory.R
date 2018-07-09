@@ -92,6 +92,16 @@ test_that("Testing infer_trajectory with control methods", {
 
   expect_true(is_tibble(models))
   expect_equal(nrow(models), 4)
+
+  # capture the output
+  models <- infer_trajectories(
+    dataset = dataset,
+    method = ti_comp1(),
+    parameters = list(),
+    capture_output = TRUE
+  )
+  expect_equal(models$summary[[1]]$stdout, "")
+  expect_equal(models$summary[[1]]$stderr, "")
 })
 
 
