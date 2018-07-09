@@ -5,14 +5,14 @@
 \title{Return all TI ti_methods}
 \usage{
 get_ti_methods(method_ids = NULL, as_tibble = TRUE,
-  packages = c("dynwrap"))
+  ti_packages = c("dynwrap"))
 }
 \arguments{
 \item{method_ids}{The method identifiers. NULL if listing all methods.}
 
 \item{as_tibble}{Whether or not to return the ti_methods as a tibble}
 
-\item{packages}{In which packages to look for ti methods}
+\item{ti_packages}{In which packages to look for ti methods}
 }
 \description{
 Return all TI ti_methods

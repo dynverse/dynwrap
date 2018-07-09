@@ -112,3 +112,14 @@ test_that("Testing ti_comp1", {
   plot <- method$plot_fun(model2)
   expect_is(plot, "ggplot")
 })
+
+
+
+
+test_that("Testing get_ti_methods", {
+  methods <- get_ti_methods(c("comp1"))
+  expect_equal(nrow(methods), 1)
+  expect_error(get_ti_methods("I_AM_A_ROBOT"))
+  expect_error(get_ti_methods(ti_packages = "I_AM_A_ROBOT"))
+  expect_is(get_ti_methods(as_tibble = FALSE), "list")
+})

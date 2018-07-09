@@ -36,12 +36,7 @@ infer_trajectories <- function(
     # names of method
 
     # get a list of all methods
-    packages <- if("dynmethods" %in% rownames(utils::installed.packages())) {
-      c("dynmethods", "dynwrap")
-    } else {
-      "dynwrap"
-    }
-    all_desc <- get_ti_methods(packages = packages)
+    all_desc <- get_ti_methods()
 
     # do some fuzzy matching
     method <- all_desc %>% slice(
@@ -431,12 +426,20 @@ execute_method_internal <- function(method, arglist, setseed_detection_file) {
 #'
 #' @param method_ids The method identifiers. NULL if listing all methods.
 #' @param as_tibble Whether or not to return the ti_methods as a tibble
-#' @param packages In which packages to look for ti methods
+#' @param ti_packages In which packages to look for ti methods
 #'
 #' @importFrom utils lsf.str
 #' @export
-get_ti_methods <- function(method_ids = NULL, as_tibble = TRUE, packages = c("dynwrap")) {
-  ti_methods <- map_df(packages, function(package) {
+get_ti_methods <- function(
+  method_ids = NULL,
+  as_tibble = TRUE,
+  ti_packages = if("dynmethods" %in% rownames(utils::installed.packages())) {
+    c("dynmethods", "dynwrap")
+  } else {
+    "dynwrap"
+  }
+) {
+  ti_methods <- map_df(ti_packages, function(package) {
     requireNamespace(package)
 
     function_names <- lsf.str(asNamespace(package), pattern = "^ti_")
@@ -447,6 +450,7 @@ get_ti_methods <- function(method_ids = NULL, as_tibble = TRUE, packages = c("dy
   })
 
   if (!is.null(method_ids)) {
+    testthat::expect_true(all(method_ids %in% ti_methods$method_id))
     ti_methods <- ti_methods %>% slice(match(method_ids, method_id))
   }
 
