@@ -166,13 +166,29 @@ create_image_ti_method <- function(
           ),
         call. = FALSE)
       } else {
-        processx::run(
+        stdout <- stderr <- if(verbose) {""} else {FALSE}
+
+        # use system2 here instead of processx
+        # processx has a strange bug that it doesn't show any output of the method
+        # probably some problem with buffering and singularity
+        output <- system2(
           "singularity",
-          c("run", "--cleanenv", "-B", glue::collapse(volumes, ','), image),
-          echo_cmd = verbose,
-          echo = verbose,
-          spinner = TRUE
+          c("-s", "run", "--cleanenv", "-B", glue::collapse(volumes, ','), image),
+          stdout = stdout,
+          stderr = stderr
         )
+
+        if (output > 0) {
+          stop(call. = FALSE)
+        }
+
+        # output <- processx::run(
+        #   "singularity",
+        #   c("-s", "run", "--cleanenv", "-B", glue::collapse(volumes, ','), image),
+        #   echo = verbose,
+        #   echo_cmd = verbose,
+        #   spinner = TRUE
+        # )
       }
     }
   }

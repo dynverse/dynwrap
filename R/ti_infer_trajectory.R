@@ -250,7 +250,8 @@ extract_args_from_dataset <- function(
       " is optional, but missing from dataset ",
       dataset$id,
       ". Will not give this prior to method.",
-      "\n")
+      "\n"
+    )
   }
 
   args_optional_priors <- priors[intersect(optional_prior_ids, names(priors))]
