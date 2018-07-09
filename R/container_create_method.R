@@ -354,7 +354,7 @@ pull_singularity_ti_method <- function(
   return_method = TRUE
 ) {
   singularity_image_location <- get_singularity_image_location(image, singularity_images_folder)
-  dir.create(dirname(singularity_image_location), showWarnings = FALSE)
+  dir.create(dirname(singularity_image_location), showWarnings = FALSE, recursive = TRUE)
   processx::run(
     "singularity",
     c(
