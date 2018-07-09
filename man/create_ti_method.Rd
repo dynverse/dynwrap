@@ -19,8 +19,7 @@ create_ti_method(name, parameters = NULL, par_set = NULL, run_fun,
 
 \item{run_fun}{A function to run the TI, needs to have 'counts' as its first param.}
 
-\item{plot_fun}{A function to plot the results of a TI, needs to have 'prediction' as its first param.
-of \code{run_fun} with those described in \code{par_set}.}
+\item{plot_fun}{A function to plot the results of a TI, needs to have 'prediction' as its first param.}
 
 \item{package_loaded}{The packages that need to be loaded before executing the method}
 
