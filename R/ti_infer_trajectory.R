@@ -429,12 +429,13 @@ execute_method_internal <- function(method, arglist, setseed_detection_file) {
 
 #' Return all TI ti_methods
 #'
+#' @param method_ids The method identifiers. NULL if listing all methods.
 #' @param as_tibble Whether or not to return the ti_methods as a tibble
 #' @param packages In which packages to look for ti methods
 #'
 #' @importFrom utils lsf.str
 #' @export
-get_ti_methods <- function(as_tibble = TRUE, packages = c("dynwrap")) {
+get_ti_methods <- function(method_ids = NULL, as_tibble = TRUE, packages = c("dynwrap")) {
   ti_methods <- map_df(packages, function(package) {
     requireNamespace(package)
 
@@ -444,6 +445,10 @@ get_ti_methods <- function(as_tibble = TRUE, packages = c("dynwrap")) {
 
     tibble(method_id = method_ids, method_func = functions)
   })
+
+  if (!is.null(method_ids)) {
+    ti_methods <- ti_methods %>% slice(match(method_ids, method_id))
+  }
 
   if (as_tibble) {
     ti_methods
