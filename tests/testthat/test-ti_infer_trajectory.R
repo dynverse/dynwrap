@@ -50,7 +50,7 @@ test_that("Testing infer_trajectory with control methods", {
   models <- infer_trajectories(list(dataset, dataset), method)
   expect_true(is_tibble(models))
   expect_equal(nrow(models), 2)
-  expect_setequal(c("dataset_ix", "method_ix", "model", "method_name", "dataset_id", "summary"), names(models))
+  expect_setequal(c("dataset_ix", "method_ix", "model", "method_name", "method_id", "dataset_id", "summary"), names(models))
 
   models <- infer_trajectories(list_as_tibble(list(dataset, dataset)), ti_comp1())
   expect_true(is_tibble(models))
