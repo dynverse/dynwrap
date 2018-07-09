@@ -79,7 +79,7 @@ create_image_ti_method <- function(
       list.files(dir_input) %>%
         crayon::bold() %>%
         glue::collapse("\n\t") %>%
-        paste0("input saved to ", dir_input, ": \n\t", ., "\n") %>%
+        paste0("Input saved to ", dir_input, ": \n\t", ., "\n") %>%
         cat
     }
 
