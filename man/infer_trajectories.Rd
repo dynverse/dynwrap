@@ -6,7 +6,7 @@
 \title{Infer trajectories}
 \usage{
 infer_trajectories(dataset, method, parameters = NULL, give_priors = NULL,
-  mc_cores = 1, verbose = FALSE)
+  mc_cores = 1, verbose = FALSE, capture_output = FALSE)
 
 infer_trajectory(dataset, method, parameters = list(), give_priors = NULL,
   mc_cores = 1, verbose = FALSE, ...)
@@ -32,6 +32,8 @@ If multiple methods were provided in the \code{method} parameter,
 \item{mc_cores}{The number of cores to use, allowing to parallellise the different datasets}
 
 \item{verbose}{Whether or not to print information output}
+
+\item{capture_output}{Whether to capture the stdout and stderr produced by a method}
 
 \item{...}{Any additional parameters given to the method, will be concatednated to the parameters argument}
 }

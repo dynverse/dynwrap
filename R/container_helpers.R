@@ -4,11 +4,18 @@
 #' @export
 test_docker_installation <- function(detailed = FALSE) {
   if (!detailed) {
-    output <- processx::run("docker", "version", error_on_status = FALSE, stderr_callback = print_processx)
+    output <- tryCatch(
+      processx::run("docker", "version", error_on_status = FALSE, stderr_callback = print_processx),
+      error = function(e) {list(status = 1)}
+    )
+
     output$status == 0
   } else {
     # test if docker command is found
-    output <- processx::run("docker", error_on_status = FALSE)
+    output <- tryCatch(
+      processx::run("docker", "version", error_on_status = FALSE, stderr_callback = print_processx),
+      error = function(e) {list(status = 1)}
+    )
     if (output$status == 0) {
       message(crayon::green("\u2714 Docker is installed"))
     } else {

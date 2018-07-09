@@ -50,7 +50,7 @@ test_that("Testing infer_trajectory with control methods", {
   models <- infer_trajectories(list(dataset, dataset), method)
   expect_true(is_tibble(models))
   expect_equal(nrow(models), 2)
-  expect_setequal(c("dataset_ix", "method_ix", "model", "method_name", "dataset_id", "summary"), names(models))
+  expect_setequal(c("dataset_ix", "method_ix", "model", "method_name", "method_id", "dataset_id", "summary"), names(models))
 
   models <- infer_trajectories(list_as_tibble(list(dataset, dataset)), ti_comp1())
   expect_true(is_tibble(models))
@@ -92,6 +92,16 @@ test_that("Testing infer_trajectory with control methods", {
 
   expect_true(is_tibble(models))
   expect_equal(nrow(models), 4)
+
+  # capture the output
+  models <- infer_trajectories(
+    dataset = dataset,
+    method = ti_comp1(),
+    parameters = list(),
+    capture_output = TRUE
+  )
+  expect_equal(models$summary[[1]]$stdout, "")
+  expect_equal(models$summary[[1]]$stderr, "")
 })
 
 
@@ -111,4 +121,15 @@ test_that("Testing ti_comp1", {
 
   plot <- method$plot_fun(model2)
   expect_is(plot, "ggplot")
+})
+
+
+
+
+test_that("Testing get_ti_methods", {
+  methods <- get_ti_methods(c("comp1"))
+  expect_equal(nrow(methods), 1)
+  expect_error(get_ti_methods("I_AM_A_ROBOT"))
+  expect_error(get_ti_methods(ti_packages = "I_AM_A_ROBOT"))
+  expect_is(get_ti_methods(as_tibble = FALSE), "list")
 })
