@@ -214,7 +214,10 @@ extract_args_from_dataset <- function(
     stop("Invalid priors requested: ", give_priors)
   }
 
-  args_dataset <- dataset[inputs %>% filter(required, type == "expression") %>% pull(input_id)]
+  args_dataset <- inputs %>%
+    filter(required, type == "expression") %>%
+    pull(input_id) %>%
+    map(get_expression, model = dataset)
 
   # extract prior information
   priors <- dataset$prior_information
