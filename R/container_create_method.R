@@ -171,12 +171,14 @@ create_image_ti_method <- function(
         # use system2 here instead of processx
         # processx has a strange bug that it doesn't show any output of the method
         # probably some problem with buffering and singularity
+        stdout_file <- tempfile()
         output <- system2(
           "singularity",
           c("-s", "run", "--cleanenv", "-B", glue::collapse(volumes, ','), image),
-          stdout = stdout,
-          stderr = stderr
+          stdout = stdout_file,
+          stderr = stdout_file
         )
+        cat(paste0(readLines(stdout_file), collapse = "\n"))
 
         if (output > 0) {
           stop(call. = FALSE)
