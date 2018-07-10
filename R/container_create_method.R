@@ -347,7 +347,7 @@ extract_definition_from_singularity_image <- function(
 }
 
 #' @rdname create_singularity_ti_method
-#' @param singularity_images_folder The location of the folder containing the singularity images
+#' @param singularity_images_folder The location of the folder containing the singularity images. By default, this will use either the DYNWRAP_SINGULARITY_IMAGES_FOLDER environment variable, the dynwrap_singularity_images_folder option, or the working directory.
 #' @param return_method Whether to return the method (TRUE) or only pull the image (FALSE)
 #' @export
 pull_singularity_ti_method <- function(
