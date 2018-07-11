@@ -184,6 +184,10 @@ create_image_ti_method <- function(
           stop(call. = FALSE)
         }
 
+        list(
+          status = output
+        )
+
         # output <- processx::run(
         #   "singularity",
         #   c("-s", "run", "--cleanenv", "-B", glue::collapse(volumes, ','), image),
