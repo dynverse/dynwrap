@@ -4,8 +4,6 @@
 #' gold standard, but will shuffle the cell positions randomly.
 #'
 #' @param dummy_param This parameter does not do anything.
-#'
-#' @export
 ti_shuffle <- create_ti_method(
   name = "Control: shuffle",
   short_name = "shuffle",

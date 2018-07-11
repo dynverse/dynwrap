@@ -44,19 +44,31 @@ plot_comp1 <- function(prediction) {
 #' @param component The component to use
 #' @inheritParams dyndimred::dimred
 #'
-#' @export
-#'
 #' @include ti_create_method.R
 ti_comp1 <- create_ti_method(
   name = "Component 1",
   short_name = "comp1",
   package_loaded = c(),
   package_required = c(),
-  par_set = ParamHelpers::makeParamSet(
-    ParamHelpers::makeDiscreteParam(id = "dimred", default = "pca", values = names(dyndimred::list_dimred_methods())),
-    ParamHelpers::makeIntegerParam(id = "ndim", default = 2, lower = 2, upper = 30),
-    ParamHelpers::makeIntegerParam(id = "component", default = 1, lower = 1, upper = 10)
+  parameters = list(
+    dimred = list(
+      type = "discrete",
+      default = "pca",
+      values = names(dyndimred::list_dimred_methods())
+    ),
+    ndim = list(
+      type = "integer",
+      default = 2,
+      lower = 2,
+      upper = 30
+    ),
+    component = list(
+      type = "integer",
+      default = 1,
+      lower = 1,
+      upper = 10
+    )
   ),
-  run_fun = run_comp1,
+  run_fun = "dynwrap::run_comp1",
   plot_fun = plot_comp1
 )

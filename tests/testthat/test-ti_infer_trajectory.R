@@ -32,7 +32,7 @@ dataset <-
   add_prior_information(start_id = cell_ids[[1]])
 
 test_that("Testing infer_trajectory with control methods", {
-  method <- ti_comp1()
+  method <- dynwrap:::ti_comp1()
 
   model <- infer_trajectory(dataset, method)
   expect_s3_class(model, "dynwrap::with_trajectory")
@@ -52,16 +52,16 @@ test_that("Testing infer_trajectory with control methods", {
   expect_equal(nrow(models), 2)
   expect_setequal(c("dataset_ix", "method_ix", "model", "method_name", "method_id", "dataset_id", "summary"), names(models))
 
-  models <- infer_trajectories(list_as_tibble(list(dataset, dataset)), ti_comp1())
+  models <- infer_trajectories(list_as_tibble(list(dataset, dataset)), dynwrap:::ti_comp1())
   expect_true(is_tibble(models))
   expect_equal(nrow(models), 2)
 
   # run with multiple methods
-  models <- infer_trajectories(dataset, list(ti_comp1(), ti_comp1()))
+  models <- infer_trajectories(dataset, list(dynwrap:::ti_comp1(), dynwrap:::ti_comp1()))
   expect_true(is_tibble(models))
   expect_equal(nrow(models), 2)
 
-  models <- infer_trajectories(dataset, list_as_tibble(list(ti_comp1(), ti_comp1())))
+  models <- infer_trajectories(dataset, list_as_tibble(list(dynwrap:::ti_comp1(), dynwrap:::ti_comp1())))
   expect_true(is_tibble(models))
   expect_equal(nrow(models), 2)
 
@@ -77,7 +77,7 @@ test_that("Testing infer_trajectory with control methods", {
   # run with multiple datasets and multiple methods
   models <- infer_trajectories(
     dataset = list(dataset, dataset, dataset),
-    method = list(ti_comp1(), ti_comp1())
+    method = list(dynwrap:::ti_comp1(), dynwrap:::ti_comp1())
   )
 
   expect_true(is_tibble(models))
@@ -96,7 +96,7 @@ test_that("Testing infer_trajectory with control methods", {
   # capture the output
   models <- infer_trajectories(
     dataset = dataset,
-    method = ti_comp1(),
+    method = dynwrap:::ti_comp1(),
     parameters = list(),
     capture_output = TRUE
   )
@@ -110,7 +110,7 @@ test_that("Testing ti_comp1", {
   model1 <- dynwrap:::run_comp1(dataset$expression, dimred = "pca", ndim = 2, component = 1)
   testthat::expect_true(is_wrapper_with_trajectory(model1))
 
-  method <- ti_comp1()
+  method <- dynwrap:::ti_comp1()
   model2 <- method$run_fun(dataset$expression)
   testthat::expect_true(is_wrapper_with_trajectory(model2))
 
@@ -130,6 +130,5 @@ test_that("Testing get_ti_methods", {
   methods <- get_ti_methods(c("comp1"))
   expect_equal(nrow(methods), 1)
   expect_error(get_ti_methods("I_AM_A_ROBOT"))
-  expect_error(get_ti_methods(ti_packages = "I_AM_A_ROBOT"))
   expect_is(get_ti_methods(as_tibble = FALSE), "list")
 })

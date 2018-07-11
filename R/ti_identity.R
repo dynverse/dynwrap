@@ -3,8 +3,6 @@
 #' This control method will return the gold standard.
 #'
 #' @param dummy_param This parameter does not do anything.
-#'
-#' @export
 ti_identity <- create_ti_method(
   name = "Control: identity",
   short_name = "identity",

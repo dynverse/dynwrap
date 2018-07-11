@@ -3,8 +3,6 @@
 #' This control method will always produce a random trajectory.
 #'
 #' @param dummy_param This parameter does not do anything.
-#'
-#' @export
 ti_random <- create_ti_method(
   name = "Control: random",
   short_name = "random",
