@@ -156,6 +156,10 @@ create_image_ti_method <- function(
     }
   } else if (image_type == "singularity") {
     run_container <- function(image, volumes, debug, verbose) {
+      if (!file.exists(image)) {
+        stop(image, " not found!")
+      }
+
       if (debug) {
         stop(
           "Use this command for debugging: \n",
