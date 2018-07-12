@@ -283,7 +283,7 @@ ti_comp1 <- pull_docker_ti_method("dynverse/comp1")
 
 ```{r, echo=FALSE}
 if (Sys.getenv("TRAVIS") == "true" || Sys.getenv("APPVEYOR") == "True") {
-  ti_comp1 <- dynwrap::ti_comp1
+  ti_comp1 <- dynwrap:::ti_comp1
 } else {
   ti_comp1 <- pull_docker_ti_method("dynverse/comp1")
 }

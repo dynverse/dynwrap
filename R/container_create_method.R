@@ -156,6 +156,10 @@ create_image_ti_method <- function(
     }
   } else if (image_type == "singularity") {
     run_container <- function(image, volumes, debug, verbose) {
+      if (!file.exists(image)) {
+        stop(image, " not found!")
+      }
+
       if (debug) {
         stop(
           "Use this command for debugging: \n",
@@ -166,13 +170,35 @@ create_image_ti_method <- function(
           ),
         call. = FALSE)
       } else {
-        processx::run(
+        stdout <- stderr <- if(verbose) {""} else {FALSE}
+
+        # use system2 here instead of processx
+        # processx has a strange bug that it doesn't show any output of the method
+        # probably some problem with buffering and singularity
+        stdout_file <- tempfile()
+        output <- system2(
           "singularity",
-          c("run", "--cleanenv", "-B", glue::collapse(volumes, ','), image),
-          echo_cmd = verbose,
-          echo = verbose,
-          spinner = TRUE
+          c("-s", "run", "--cleanenv", "-B", glue::collapse(volumes, ','), image),
+          stdout = stdout_file,
+          stderr = stdout_file
         )
+        cat(paste0(readLines(stdout_file), collapse = "\n"))
+
+        if (output > 0) {
+          stop(call. = FALSE)
+        }
+
+        list(
+          status = output
+        )
+
+        # output <- processx::run(
+        #   "singularity",
+        #   c("-s", "run", "--cleanenv", "-B", glue::collapse(volumes, ','), image),
+        #   echo = verbose,
+        #   echo_cmd = verbose,
+        #   spinner = TRUE
+        # )
       }
     }
   }
@@ -329,16 +355,16 @@ extract_definition_from_singularity_image <- function(
 }
 
 #' @rdname create_singularity_ti_method
-#' @param singularity_images_folder The location of the folder containing the singularity images
+#' @param singularity_images_folder The location of the folder containing the singularity images. By default, this will use either the DYNWRAP_SINGULARITY_IMAGES_FOLDER environment variable, the dynwrap_singularity_images_folder option, or the working directory.
 #' @param return_method Whether to return the method (TRUE) or only pull the image (FALSE)
 #' @export
 pull_singularity_ti_method <- function(
   image = image,
-  singularity_images_folder = getOption("dynwrap_singularity_images_folder"),
+  singularity_images_folder = get_default_singularity_images_folder(),
   return_method = TRUE
 ) {
   singularity_image_location <- get_singularity_image_location(image, singularity_images_folder)
-  dir.create(dirname(singularity_image_location), showWarnings = FALSE)
+  dir.create(dirname(singularity_image_location), showWarnings = FALSE, recursive = TRUE)
   processx::run(
     "singularity",
     c(
@@ -359,10 +385,10 @@ pull_singularity_ti_method <- function(
 
 get_singularity_image_location <- function(
   image,
-  singularity_images_folder = getOption("dynwrap_singularity_images_folder")
+  singularity_images_folder = get_default_singularity_images_folder()
 ) {
   if (is.null(singularity_images_folder)) {
-    warnings("No singularity_image_folder specified and 'dynwrap_singularity_images_folder' option not set. Putting images in working directory.")
+
 
     singularity_images_folder <- "."
   }
@@ -373,4 +399,15 @@ get_singularity_image_location <- function(
   }
 
   normalizePath(paste0(singularity_images_folder, "/", image), mustWork = F)
+}
+
+get_default_singularity_images_folder <- function() {
+  if (Sys.getenv("DYNWRAP_SINGULARITY_IMAGES_FOLDER") != "") {
+    Sys.getenv("DYNWRAP_SINGULARITY_IMAGES_FOLDER")
+  } else if (!is.null(getOption("dynwrap_singularity_images_folder"))) {
+    getOption("dynwrap_singularity_images_folder")
+  } else {
+    warning("No 'singularity_image_folder' specified, 'dynwrap_singularity_images_folder' option not set and 'DYNWRAP_SINGULARITY_IMAGES_FOLDER' environment variable not set. Putting images in working directory.")
+    "./"
+  }
 }

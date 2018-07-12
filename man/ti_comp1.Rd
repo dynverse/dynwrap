@@ -4,7 +4,7 @@
 \alias{ti_comp1}
 \title{Inferring trajectories with Component 1}
 \usage{
-ti_comp1(dimred = "pca", ndim = 2L, component = 1L)
+ti_comp1(dimred = "pca", ndim = 2, component = 1)
 }
 \arguments{
 \item{dimred}{A character vector specifying which dimensionality reduction method to use.

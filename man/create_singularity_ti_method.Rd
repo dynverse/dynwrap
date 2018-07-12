@@ -16,13 +16,13 @@ extract_definition_from_singularity_image(image,
   definition_location = "/code/definition.yml")
 
 pull_singularity_ti_method(image = image,
-  singularity_images_folder = getOption("dynwrap_singularity_images_folder"),
+  singularity_images_folder = get_default_singularity_images_folder(),
   return_method = TRUE)
 }
 \arguments{
 \item{image}{The location of the singularity image file, eg. \code{comp1.simg}.}
 
-\item{singularity_images_folder}{The location of the folder containing the singularity images}
+\item{singularity_images_folder}{The location of the folder containing the singularity images. By default, this will use either the DYNWRAP_SINGULARITY_IMAGES_FOLDER environment variable, the dynwrap_singularity_images_folder option, or the working directory.}
 
 \item{definition}{The method definition, a list containing the name, input, output and parameters of a method.
 Optional, as the definition file will be automatically loaded from the images \code{/code/definition.yml} using \link{extract_definition_from_singularity_image}.}
