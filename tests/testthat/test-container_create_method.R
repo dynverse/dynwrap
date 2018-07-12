@@ -26,10 +26,10 @@ test_that("Testing create_docker_ti_method with compone", {
   skip_on_appveyor()
 
   method0 <- pull_docker_ti_method("dynverse/comp1")
-  expect_equal(method0()$short_name, "componentone")
+  expect_true(method0()$short_name %in% c("componentone", "comp1"))
 
   method1 <- create_docker_ti_method("dynverse/comp1")
-  expect_equal(method1()$short_name, "componentone")
+  expect_true(method0()$short_name %in% c("componentone", "comp1"))
 
   # test with custom definition
   definition <- extract_definition_from_docker_image("dynverse/comp1")
