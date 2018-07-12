@@ -244,6 +244,7 @@ read_infer <- function(file, arg) {
 
 
 get_output_processor <- function(output_id) {
+  requireNamespace("dynwrap")
   processor <- get(paste0("add_", output_id), "package:dynwrap")
 
   required_args <- names(as.list(formals(processor)) %>% map_chr(class) %>% keep(~. == "name"))
