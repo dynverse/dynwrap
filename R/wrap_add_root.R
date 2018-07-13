@@ -20,7 +20,7 @@ add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_mi
 
     if(is.na(root_milestone_id)) {
       message("Could not find outgoing milestone_id, using first milestone_id as root")
-      root_milestone_id <- trajectory$milestone_ids[[1]]
+      root_milestone_id <- trajectory$milestone_network$from[[1]]
     }
 
     message(paste0("Using '", root_milestone_id, "' as root"))
