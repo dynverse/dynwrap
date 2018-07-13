@@ -352,6 +352,14 @@ execute_method_on_dataset <- function(
 
   timings_list <- map(timings_list, as.numeric)
 
+  # add missing timings
+  timings_list[
+    setdiff(
+      c("method_start", "method_afterpreproc", "method_aftermethod", "method_afterpostproc", "method_stop"),
+      names(timings_list)
+    )
+  ] <- time3
+
   # create a summary tibble
   summary <- tibble(
     method_name = method$name,

@@ -244,7 +244,8 @@ read_infer <- function(file, arg) {
 
 
 get_output_processor <- function(output_id) {
-  processor <- get(paste0("add_", output_id), "package:dynwrap")
+  requireNamespace("dynwrap")
+  processor <- get(paste0("add_", output_id))
 
   required_args <- names(as.list(formals(processor)) %>% map_chr(class) %>% keep(~. == "name"))
   required_args <- setdiff(required_args, c("data_wrapper", "traj", "model", "pred", "object", "trajectory", "..."))

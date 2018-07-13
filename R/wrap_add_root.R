@@ -16,11 +16,11 @@ add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_mi
     root_milestone_id <- trajectory$milestone_percentages %>% filter(cell_id == root_cell_id) %>% filter(percentage == max(percentage)) %>% pull(milestone_id)
   } else if (is.null(root_milestone_id)) {
     message("root cell or milestone not provided, trying first outgoing milestone_id")
-    root_milestone_id <- setdiff(trajectory$milestone_ids, trajectory$milestone_network$to) %>% first()
+    root_milestone_id <- setdiff(trajectory$milestone_network$from, trajectory$milestone_network$to) %>% first()
 
     if(is.na(root_milestone_id)) {
       message("Could not find outgoing milestone_id, using first milestone_id as root")
-      root_milestone_id <- trajectory$milestone_ids[[1]]
+      root_milestone_id <- trajectory$milestone_network$from[[1]]
     }
 
     message(paste0("Using '", root_milestone_id, "' as root"))
