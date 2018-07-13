@@ -351,10 +351,14 @@ execute_method_on_dataset <- function(
   time3 <- as.numeric(Sys.time())
 
   timings_list <- map(timings_list, as.numeric)
-  testthat::expect_true(
-    c("method_start", "method_afterpreproc", "method_aftermethod", "method_afterpostproc", "method_stop") %in% names(timings_list),
-    "not all timings are set!"
-  )
+
+  # add missing timings
+  timings_list[
+    setdiff(
+      c("method_start", "method_afterpreproc", "method_aftermethod", "method_afterpostproc", "method_stop"),
+      names(timings_list)
+    )
+  ] <- time3
 
   # create a summary tibble
   summary <- tibble(
