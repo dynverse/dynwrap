@@ -6,10 +6,12 @@
 
 **dynwrap** contains the code for a common model of single-cell trajectories. The package can
 
-* Wrap the input data of a TI method, such as expression and prior information
-* Run a TI method locally or in a docker
-* Wrap the output of a TI method, such as the pseudotime, a clustering or a branch network, and convert it into a common trajectory model
-* Further postprocess the output, such as labelling milestones and rooting the trajectory
+* Wrap the input data of a trajectory inference method, such as expression and prior information
+* Run a trajectory inference method in R, in a docker container or a singularity container
+* Wrap the output of a trajectory inference method, such as the pseudotime, a clustering or a branch network, and convert it into a common trajectory model
+* Further postprocess the trajectory model, such as labelling the milestones and rooting the trajectory
+
+dynwrap was used to wrap over 45 trajectory inference method within docker containers in [dynmethods](https://github.com/dynverse/dynmethods).
 
 ![](man/figures/overview_wrapping_v1.svg)
 
