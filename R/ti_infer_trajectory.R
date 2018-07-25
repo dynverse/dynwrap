@@ -465,7 +465,7 @@ execute_method_internal <- function(method, arglist, setseed_detection_file, tim
 get_ti_methods <- function(
   method_ids = NULL,
   as_tibble = TRUE,
-  ti_packages = if("dynmethods" %in% rownames(utils::installed.packages())) { c("dynmethods", "dynwrap") } else { "dynwrap" }
+  ti_packages = ifelse("dynmethods" %in% rownames(utils::installed.packages()), "dynmethods", "dynwrap")
 ) {
   ti_methods <- map(ti_packages, function(package) {
     requireNamespace(package)

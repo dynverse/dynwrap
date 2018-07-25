@@ -27,5 +27,5 @@ get_dimred(model, dimred = NULL, expression_source = "expression")
 \item{...}{extra information to be stored in the wrapper}
 }
 \description{
-TODO: add possibility to also dimred the milestones and segments. This should be migrated from dynplot!
+Add or create a dimensionality reduction
 }
