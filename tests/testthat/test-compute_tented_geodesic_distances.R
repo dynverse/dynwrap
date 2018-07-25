@@ -68,7 +68,6 @@ test_that("Testing compute_tented_geodesic_distances", {
   expect_equivalent(geodist[upper.tri(geodist)], expected_dists)
   expect_equivalent(geodist, t(geodist))
 
-  # dynplot::plot_default(trajectory)
   # pheatmap::pheatmap(
   #   geodist,
   #   color = colorRampPalette(c("white", "#333333"))(100),
