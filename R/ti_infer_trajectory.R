@@ -460,26 +460,27 @@ execute_method_internal <- function(method, arglist, setseed_detection_file, tim
 #' @param as_tibble Whether or not to return the ti_methods as a tibble
 #' @param ti_packages In which packages to look for ti methods
 #'
-#' @importFrom utils lsf.str
+#' @importFrom utils lsf.str installed.packages
 #' @export
 get_ti_methods <- function(
   method_ids = NULL,
   as_tibble = TRUE,
-  ti_packages = if("dynmethods" %in% rownames(utils::installed.packages())) {
-    c("dynmethods", "dynwrap")
-  } else {
-    "dynwrap"
-  }
+  ti_packages = if("dynmethods" %in% rownames(utils::installed.packages())) { c("dynmethods", "dynwrap") } else { "dynwrap" }
 ) {
-  ti_methods <- map_df(ti_packages, function(package) {
+  ti_methods <- map(ti_packages, function(package) {
     requireNamespace(package)
 
     function_names <- lsf.str(asNamespace(package), pattern = "^ti_")
-    functions <- map(function_names, get, asNamespace(package))
-    method_ids <- stringr::str_sub(function_names, 4)
 
-    tibble(method_id = method_ids, method_func = functions)
-  })
+    map(function_names, function(function_name) {
+      meth_func <- get(function_name, asNamespace(package))
+      meth_metadata <- meth_func() %>% discard(is.function)
+      meth_metadata$method_func <- meth_func
+      meth_metadata
+    })
+  }) %>%
+    unlist(recursive = FALSE) %>%
+    list_as_tibble()
 
   if (!is.null(method_ids)) {
     testthat::expect_true(all(method_ids %in% ti_methods$id))
@@ -489,6 +490,6 @@ get_ti_methods <- function(
   if (as_tibble) {
     ti_methods
   } else {
-    map(seq_len(nrow(ti_methods)), dynutils::extract_row_to_list, tib = ti_methods)
+    mapdf(ti_methods, identity)
   }
 }

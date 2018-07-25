@@ -4,6 +4,10 @@ skip_on_travis_mac <- function() {
 
 context("Testing create_docker_ti_method")
 
+skip_on_appveyor()
+skip_on_travis_mac()
+skip_on_cran()
+
 id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
 
@@ -22,9 +26,6 @@ dataset <-
   add_prior_information(start_id = cell_ids[[1]])
 
 test_that("Testing create_docker_ti_method with compone", {
-  skip_on_travis_mac()
-  skip_on_appveyor()
-
   method0 <- pull_docker_ti_method("dynverse/comp1")
   expect_true(method0()$id %in% c("componentone", "comp1"))
 
@@ -48,10 +49,6 @@ test_that("Testing create_docker_ti_method with compone", {
 tags <- c("R_text", "python_text", "R_hdf5", "python_hdf5", "R_rds", "R_dynwrap", "R_feather", "python_feather")
 for (tag in tags) {
   test_that(paste0("Testing create_docker_ti_method and infer_trajectory with ", tag), {
-    skip_on_appveyor()
-    skip_on_travis_mac()
-    skip_on_cran()
-
     if (!tag %in% c("python_feather")) {
       skip_on_travis() # only download one container on travis
     }
