@@ -60,10 +60,6 @@ create_ti_method <- function(
     ...
   ) %>% add_class("dynwrap::ti_method")
 
-  if (is.null(desc$method_id)) {
-    desc$method_id <- desc$id
-  }
-
   if (is.character(run_fun)) {
     desc$run_fun_name <- run_fun
   }

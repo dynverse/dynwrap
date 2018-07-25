@@ -45,10 +45,10 @@ infer_trajectories <- function(
       map_int(
         method,
         function(x) {
-          distances <- utils::adist(x, all_desc$method_id)
+          distances <- utils::adist(x, all_desc$id)
           id <- as.integer(which.min(distances))
           if(min(distances) > 0) {
-            message(stringr::str_glue("Fuzzy matching {x} -> {all_desc$method_id[[id]]}"))
+            message(stringr::str_glue("Fuzzy matching {x} -> {all_desc$id[[id]]}"))
           }
 
           id
@@ -164,7 +164,7 @@ infer_trajectories <- function(
     dataset_ix = design$dataseti,
     method_ix = design$methodi,
     dataset_id = map_chr(dataset, "id")[design$dataseti],
-    method_id = map_chr(method, "method_id")[design$methodi],
+    method_id = map_chr(method, "id")[design$methodi],
     method_name = map_chr(method, "name")[design$methodi],
     model = map(output, "model"),
     summary = map(output, "summary")
@@ -311,7 +311,7 @@ execute_method_on_dataset <- function(
     # create a temporary directory to set as working directory,
     # to avoid polluting the working directory if a method starts
     # producing files :angry_face:
-    tmp_dir <- tempfile(pattern = method$method_id)
+    tmp_dir <- tempfile(pattern = method$id)
     dir.create(tmp_dir)
     old_wd <- getwd()
     setwd(tmp_dir)
@@ -363,7 +363,7 @@ execute_method_on_dataset <- function(
   # create a summary tibble
   summary <- tibble(
     method_name = method$name,
-    method_id = method$method_id,
+    method_id = method$id,
     dataset_id = dataset$id,
     time_sessionsetup = timings_list$method_start - time0,
     time_preprocessing = timings_list$method_afterpreproc - timings_list$method_start,
@@ -482,8 +482,8 @@ get_ti_methods <- function(
   })
 
   if (!is.null(method_ids)) {
-    testthat::expect_true(all(method_ids %in% ti_methods$method_id))
-    ti_methods <- ti_methods %>% slice(match(method_ids, method_id))
+    testthat::expect_true(all(method_ids %in% ti_methods$id))
+    ti_methods <- ti_methods %>% slice(match(method_ids, id))
   }
 
   if (as_tibble) {
