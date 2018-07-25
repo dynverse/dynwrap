@@ -5,7 +5,7 @@
 #' @param dummy_param This parameter does not do anything.
 ti_error <- create_ti_method(
   name = "Control: error",
-  short_name = "error",
+  id = "error",
   package_loaded = c(),
   package_required = c(),
   trajectory_types = c("linear", "bifurcation", "convergence"),

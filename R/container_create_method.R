@@ -24,7 +24,7 @@ create_image_ti_method <- function(
   # name
   testthat::expect_true(is.character(definition$name))
 
-  testthat::expect_true(is.character(definition$short_name) || is.null(definition$short_name))
+  testthat::expect_true(is.character(definition$id) || is.null(definition$id))
 
   # parameters
   param_ids <- names(definition$parameters) %>% setdiff(c("forbidden"))

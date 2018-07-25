@@ -5,7 +5,7 @@
 #' @param dummy_param This parameter does not do anything.
 ti_identity <- create_ti_method(
   name = "Control: identity",
-  short_name = "identity",
+  id = "identity",
   package_loaded = c(),
   package_required = c(),
   trajectory_types = c("linear", "bifurcation", "convergence", "multifurcation", "binary_tree", "tree", "acyclic_graph"),
