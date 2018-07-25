@@ -46,13 +46,14 @@ test_that("Testing create_docker_ti_method with compone", {
   expect_error(create_docker_ti_method("dynverse/comp1", definition))
 })
 
-tags <- c("R_text", "python_text", "R_hdf5", "python_hdf5", "R_rds", "R_dynwrap", "R_feather", "python_feather")
+if (Sys.getenv("TRAVIS") == "true") {
+  tags <- "python_feather"
+} else {
+  tags <- c("R_text", "python_text", "R_hdf5", "python_hdf5", "R_rds", "R_dynwrap", "R_feather", "python_feather")
+}
+
 for (tag in tags) {
   test_that(paste0("Testing create_docker_ti_method and infer_trajectory with ", tag), {
-    if (!tag %in% c("python_feather")) {
-      skip_on_travis() # only download one container on travis
-    }
-
     method <- pull_docker_ti_method(paste0("dynverse/comp1:", tag))()
     model <- infer_trajectory(dataset, method, parameters = list(verbose = TRUE))
     expect_true(is_wrapper_with_trajectory(model))
