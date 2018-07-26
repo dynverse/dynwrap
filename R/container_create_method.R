@@ -293,6 +293,7 @@ extract_definition_from_docker_image <- function(
 #' @param docker_repository The id of the docker repository.
 #' @param run_environment In which environment to run the method, can be `"docker"` or `"singularity"`.
 #' @param ... Default parameters for the method.
+#' @export
 create_container_ti_method <- function(docker_repository, run_environment = NULL, ...) {
   if (is.null(run_environment)) {
     run_environment <- getOption("dynwrap_run_environment")
