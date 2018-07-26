@@ -456,16 +456,19 @@ execute_method_internal <- function(method, arglist, setseed_detection_file, tim
 
 #' Return all TI ti_methods
 #'
-#' @param method_ids The method identifiers. NULL if listing all methods.
+#' @param method_ids The method identifiers. NULL if listing all methods
 #' @param as_tibble Whether or not to return the ti_methods as a tibble
 #' @param ti_packages In which packages to look for ti methods
+#' @param evaluate Automatically evaluate the functions
 #'
 #' @importFrom utils lsf.str installed.packages
+#' @importFrom stringr str_replace
 #' @export
 get_ti_methods <- function(
   method_ids = NULL,
   as_tibble = TRUE,
-  ti_packages = ifelse("dynmethods" %in% rownames(utils::installed.packages()), "dynmethods", "dynwrap")
+  ti_packages = ifelse("dynmethods" %in% rownames(utils::installed.packages()), "dynmethods", "dynwrap"),
+  evaluate = FALSE
 ) {
   ti_methods <- map(ti_packages, function(package) {
     requireNamespace(package)
@@ -474,7 +477,12 @@ get_ti_methods <- function(
 
     map(function_names, function(function_name) {
       meth_func <- get(function_name, asNamespace(package))
-      meth_metadata <- meth_func() %>% discard(is.function)
+
+      if (evaluate) {
+        meth_metadata <- meth_func() %>% discard(is.function)
+      } else {
+        meth_metadata <- list(id = function_name %>% stringr::str_replace("^ti_", ""))
+      }
       meth_metadata$method_func <- meth_func
       meth_metadata
     })
