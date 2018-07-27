@@ -74,6 +74,7 @@ Collate:
     'convert_milestone_percentages_to_progressions.R'
     'convert_progressions_to_milestone_percentages.R'
     'data.R'
+    'dimred_trajectory.R'
     'get_cell_grouping.R'
     'package.R'
     'simplify_igraph_network.R'
