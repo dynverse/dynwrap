@@ -138,9 +138,23 @@ generate_prior_information <- function(
   # determine starting and ending milestones
   start_milestones <-
     if (is_directed) {
-      names(which(igraph::degree(gr, mode = "in") == 0))
+      deg_in <- igraph::degree(gr, mode = "in")
+      deg_out <- igraph::degree(gr, mode = "out")
+
+      if (all(deg_in == 1 & deg_out == 1)) {
+        # trajectory is cyclic, so just take one milestone
+        sample(milestone_ids, 1)
+      } else {
+        names(which(deg_in == 0))
+      }
     } else {
-      names(which(igraph::degree(gr) <= 1))
+      deg <- igraph::degree(gr)
+      if (all(deg == 2)) {
+        # trajectory is cyclic
+        sample(milestone_ids, 1)
+      } else {
+        names(which(deg <= 1))
+      }
     }
 
   # determine starting and ending milestones
