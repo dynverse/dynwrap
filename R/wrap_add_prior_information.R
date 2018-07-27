@@ -182,9 +182,7 @@ generate_prior_information <- function(
           data_frame(cell_id = pseudocell, milestone_id = mids, percentage = 1)
         )
       )
-
     geo <- compute_tented_geodesic_distances(tmp, waypoint_cells = pseudocell)[,cell_ids,drop = FALSE]
-
     unique(unlist(apply(geo, 1, function(x) {
       sample(names(which(x == min(x))), 1)
     })))
@@ -243,18 +241,32 @@ generate_prior_information <- function(
   end_n <- length(end_milestones)
 
   ## TIME AND TIME COURSE ##
+  compute_timepointfun <- function() {
+    geo <- compute_tented_geodesic_distances_(
+      cell_ids = cell_ids,
+      milestone_ids = milestone_ids,
+      milestone_network = milestone_network,
+      milestone_percentages = milestone_percentages,
+      divergence_regions = divergence_regions,
+      waypoint_cells = start_id
+    )
+    apply(geo, 2, function(x) {
+      min(x)
+    })
+  }
+
   time <-
     if (!is.null(cell_info) && "simulationtime" %in% colnames(cell_info)) {
       set_names(cell_info$simulationtime, cell_info$cell_id)
     } else {
-      NULL
+      compute_timepointfun()
     }
 
   timecourse <-
     if (!is.null(cell_info) && "timepoint" %in% colnames(cell_info)) {
       set_names(cell_info$timepoint, cell_info$cell_id)
     } else {
-      NULL
+      cut(time, breaks = min(10, length(unique(time))))
     }
 
   # return output
