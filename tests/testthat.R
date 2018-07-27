@@ -1,5 +1,4 @@
 library(testthat)
-library(dynwrap)
 library(dynutils)
 library(dplyr)
 library(purrr)
