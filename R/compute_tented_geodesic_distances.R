@@ -62,6 +62,10 @@ compute_tented_geodesic_distances_ <- function(
     )
   }
 
+  if (is.null(divergence_regions)) {
+    divergence_regions <- data_frame(divergence_id = character(0), milestone_id = character(0), is_start = logical(0))
+  }
+
   # rename milestones to avoid name conflicts between cells and milestones
   milestone_trafo_fun <- function(x) paste0("MILESTONE_", x)
   milestone_network <- milestone_network %>% mutate(from = milestone_trafo_fun(from), to = milestone_trafo_fun(to))
