@@ -135,29 +135,28 @@ generate_prior_information <- function(
     vertices = milestone_ids
   )
 
-  # determine starting and ending milestones
+  # determine starting milestones
   start_milestones <-
     if (is_directed) {
       deg_in <- igraph::degree(gr, mode = "in")
       deg_out <- igraph::degree(gr, mode = "out")
-
-      if (all(deg_in == 1 & deg_out == 1)) {
-        # trajectory is cyclic, so just take one milestone
-        sample(milestone_ids, 1)
-      } else {
-        names(which(deg_in == 0))
-      }
+      names(which(deg_in == 0))
     } else {
       deg <- igraph::degree(gr)
-      if (all(deg == 2)) {
-        # trajectory is cyclic
-        sample(milestone_ids, 1)
-      } else {
-        names(which(deg <= 1))
-      }
+      names(which(deg <= 1))
     }
 
-  # determine starting and ending milestones
+  # if no milestones can be determined as start, pick a random one
+  if (length(start_milestones) == 0) {
+    start_milestones <- sample(milestone_ids, 1)
+  }
+
+  # if all milestones are start (ie. cyclic), pick a randoom one
+  if (setequal(start_milestones, milestone_ids)) {
+    start_milestones <- sample(start_milestones, 1)
+  }
+
+  # determine ending milestones
   end_milestones <-
     if (is_directed) {
       names(which(igraph::degree(gr, mode = "out") == 0))
