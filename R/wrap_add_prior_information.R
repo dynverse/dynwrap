@@ -241,25 +241,21 @@ generate_prior_information <- function(
   end_n <- length(end_milestones)
 
   ## TIME AND TIME COURSE ##
-  compute_timepointfun <- function() {
-    geo <- compute_tented_geodesic_distances_(
-      cell_ids = cell_ids,
-      milestone_ids = milestone_ids,
-      milestone_network = milestone_network,
-      milestone_percentages = milestone_percentages,
-      divergence_regions = divergence_regions,
-      waypoint_cells = start_id
-    )
-    apply(geo, 2, function(x) {
-      min(x)
-    })
-  }
-
   time <-
     if (!is.null(cell_info) && "simulationtime" %in% colnames(cell_info)) {
       set_names(cell_info$simulationtime, cell_info$cell_id)
     } else {
-      compute_timepointfun()
+      geo <- compute_tented_geodesic_distances_(
+        cell_ids = cell_ids,
+        milestone_ids = milestone_ids,
+        milestone_network = milestone_network,
+        milestone_percentages = milestone_percentages,
+        divergence_regions = divergence_regions,
+        waypoint_cells = start_id
+      )
+      apply(geo, 2, function(x) {
+        min(x)
+      })
     }
 
   timecourse <-
