@@ -274,14 +274,6 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_true(all(expected_prior %in% names(prior_info)))
 
-  testthat::expect_equal(prior_info$start_milestones, character(0))
-
-  testthat::expect_equal(prior_info$start_id, cell_ids)
-
-  testthat::expect_equal(prior_info$end_milestones, character(0))
-
-  testthat::expect_equal(prior_info$end_id, NULL)
-
   join_check <-
     milestone_percentages %>%
     group_by(cell_id) %>%
@@ -297,12 +289,6 @@ test_that("Testing generate_prior_information", {
   testthat::expect_true(all(prior_info$features_id %in% gene_ids))
 
   testthat::expect_equal(prior_info$groups_n, 3)
-
-  testthat::expect_equal(prior_info$time, NULL)
-
-  testthat::expect_equal(prior_info$timecourse, NULL)
-
-  testthat::expect_equal(prior_info$end_n, 0)
 })
 
 
@@ -345,14 +331,6 @@ test_that("Testing add_prior_information", {
 
   testthat::expect_true(all(expected_prior %in% names(prior_info)))
 
-  testthat::expect_equal(prior_info$start_milestones, character(0))
-
-  testthat::expect_equal(prior_info$start_id, cell_ids)
-
-  testthat::expect_equal(prior_info$end_milestones, character(0))
-
-  testthat::expect_equal(prior_info$end_id, NULL)
-
   join_check <-
     milestone_percentages %>%
     group_by(cell_id) %>%
@@ -369,9 +347,4 @@ test_that("Testing add_prior_information", {
 
   testthat::expect_equal(prior_info$groups_n, 3)
 
-  testthat::expect_equal(prior_info$time, NULL)
-
-  testthat::expect_equal(prior_info$timecourse, NULL)
-
-  testthat::expect_equal(prior_info$end_n, 0)
 })
