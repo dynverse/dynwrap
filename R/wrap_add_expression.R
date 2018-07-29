@@ -31,6 +31,8 @@ add_expression <- function(
     testthat::expect_is(feature_info, "data.frame")
     testthat::expect_equal(colnames(counts), feature_info$feature_id)
     testthat::expect_equal(colnames(expression), feature_info$feature_id)
+  } else {
+    feature_info <- tibble(feature_id = colnames(counts))
   }
 
   # create output structure

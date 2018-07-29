@@ -47,7 +47,7 @@ plot_comp1 <- function(prediction) {
 #' @include ti_create_method.R
 ti_comp1 <- create_ti_method(
   name = "Component 1",
-  short_name = "comp1",
+  id = "comp1",
   package_loaded = c(),
   package_required = c(),
   parameters = list(

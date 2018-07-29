@@ -5,7 +5,7 @@
 #' @param dummy_param This parameter does not do anything.
 ti_random <- create_ti_method(
   name = "Control: random",
-  short_name = "random",
+  id = "random",
   package_loaded = c(),
   package_required = c(),
   trajectory_types = "cycle",

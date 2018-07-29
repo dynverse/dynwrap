@@ -4,7 +4,7 @@ context("Testing create_ti_method")
 test_that("Testing create_ti_method and get_default_parameters with dummy method", {
   dummy <- create_ti_method(
     name = "dummy 1",
-    short_name = "dum1",
+    id = "dum1",
     package_loaded = c("dynwrap"),
     package_required = c("dplyr"),
     par_set = ParamHelpers::makeParamSet(
@@ -17,7 +17,7 @@ test_that("Testing create_ti_method and get_default_parameters with dummy method
   dummy_instance <- dummy()
 
   expect_equal( dummy_instance$name, "dummy 1" )
-  expect_equal( dummy_instance$short_name, "dum1" )
+  expect_equal( dummy_instance$id, "dum1" )
   expect_equal( dummy_instance$package_loaded, "dynwrap" )
   expect_equal( dummy_instance$package_required, "dplyr" )
   expect_is( dummy_instance$par_set, "ParamSet" )

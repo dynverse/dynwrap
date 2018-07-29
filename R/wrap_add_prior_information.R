@@ -135,15 +135,28 @@ generate_prior_information <- function(
     vertices = milestone_ids
   )
 
-  # determine starting and ending milestones
+  # determine starting milestones
   start_milestones <-
     if (is_directed) {
-      names(which(igraph::degree(gr, mode = "in") == 0))
+      deg_in <- igraph::degree(gr, mode = "in")
+      deg_out <- igraph::degree(gr, mode = "out")
+      names(which(deg_in == 0))
     } else {
-      names(which(igraph::degree(gr) <= 1))
+      deg <- igraph::degree(gr)
+      names(which(deg <= 1))
     }
 
-  # determine starting and ending milestones
+  # if no milestones can be determined as start, pick a random one
+  if (length(start_milestones) == 0) {
+    start_milestones <- sample(milestone_ids, 1)
+  }
+
+  # if all milestones are start (ie. cyclic), pick a randoom one
+  if (setequal(start_milestones, milestone_ids)) {
+    start_milestones <- sample(start_milestones, 1)
+  }
+
+  # determine ending milestones
   end_milestones <-
     if (is_directed) {
       names(which(igraph::degree(gr, mode = "out") == 0))
@@ -168,9 +181,7 @@ generate_prior_information <- function(
           data_frame(cell_id = pseudocell, milestone_id = mids, percentage = 1)
         )
       )
-
     geo <- compute_tented_geodesic_distances(tmp, waypoint_cells = pseudocell)[,cell_ids,drop = FALSE]
-
     unique(unlist(apply(geo, 1, function(x) {
       sample(names(which(x == min(x))), 1)
     })))
@@ -233,14 +244,24 @@ generate_prior_information <- function(
     if (!is.null(cell_info) && "simulationtime" %in% colnames(cell_info)) {
       set_names(cell_info$simulationtime, cell_info$cell_id)
     } else {
-      NULL
+      geo <- compute_tented_geodesic_distances_(
+        cell_ids = cell_ids,
+        milestone_ids = milestone_ids,
+        milestone_network = milestone_network,
+        milestone_percentages = milestone_percentages,
+        divergence_regions = divergence_regions,
+        waypoint_cells = start_id
+      )
+      apply(geo, 2, function(x) {
+        min(x)
+      })
     }
 
   timecourse <-
     if (!is.null(cell_info) && "timepoint" %in% colnames(cell_info)) {
       set_names(cell_info$timepoint, cell_info$cell_id)
     } else {
-      NULL
+      cut(time, breaks = min(10, length(unique(time))))
     }
 
   # return output

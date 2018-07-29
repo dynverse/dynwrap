@@ -1,7 +1,5 @@
 #' Add or create a dimensionality reduction
 #'
-#' TODO: add possibility to also dimred the milestones and segments. This should be migrated from dynplot!
-#'
 #' @param model The model to which a dimensionality reduction will be added.
 #' @param dimred The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction
 #' @param dimred_milestones An optional dimensionality reduction of the milestones.

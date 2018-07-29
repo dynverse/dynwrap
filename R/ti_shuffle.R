@@ -6,7 +6,7 @@
 #' @param dummy_param This parameter does not do anything.
 ti_shuffle <- create_ti_method(
   name = "Control: shuffle",
-  short_name = "shuffle",
+  id = "shuffle",
   package_loaded = c(),
   package_required = c(),
   trajectory_types = c("linear", "bifurcation", "convergence"),

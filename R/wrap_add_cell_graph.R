@@ -91,7 +91,7 @@ add_cell_graph <- function(
     group_by(node) %>%
     slice(1) %>%
     mutate(
-      percentage = igraph::distances(gr, from, node) / weight
+      percentage = ifelse(weight == 0, 0, igraph::distances(gr, from, node) / weight)
     ) %>%
     ungroup() %>%
     right_join(

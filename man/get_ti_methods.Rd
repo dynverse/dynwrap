@@ -4,16 +4,19 @@
 \alias{get_ti_methods}
 \title{Return all TI ti_methods}
 \usage{
-get_ti_methods(method_ids = NULL, as_tibble = TRUE, ti_packages = if
-  ("dynmethods" \%in\% rownames(utils::installed.packages())) {    
-  c("dynmethods", "dynwrap") } else {     "dynwrap" })
+get_ti_methods(method_ids = NULL, as_tibble = TRUE,
+  ti_packages = ifelse("dynmethods" \%in\%
+  rownames(utils::installed.packages()), "dynmethods", "dynwrap"),
+  evaluate = FALSE)
 }
 \arguments{
-\item{method_ids}{The method identifiers. NULL if listing all methods.}
+\item{method_ids}{The method identifiers. NULL if listing all methods}
 
 \item{as_tibble}{Whether or not to return the ti_methods as a tibble}
 
 \item{ti_packages}{In which packages to look for ti methods}
+
+\item{evaluate}{Automatically evaluate the functions}
 }
 \description{
 Return all TI ti_methods

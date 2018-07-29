@@ -1,7 +1,7 @@
 #' Create a TI method wrapper
 #'
+#' @param id A short name for the method, only lowercase characters allowed
 #' @param name The name of the TI method
-#' @param short_name A short name for the method, max 8 characters
 #' @param package_loaded The packages that need to be loaded before executing the method
 #' @param package_required The packages that need to be installed before executing the method
 #' @param parameters A list of parameters, which can be parsed using [parse_parameter_definition()]
@@ -16,6 +16,7 @@
 #'
 #' @include ti_parse_parameter_definition.R
 create_ti_method <- function(
+  id,
   name,
   parameters = NULL,
   par_set = NULL,
@@ -23,16 +24,10 @@ create_ti_method <- function(
   plot_fun = NULL,
   package_loaded = c(),
   package_required = c(),
-  short_name = NULL,
   type = c("algorithm", "algorithm_test", "control", "control_test"),
   ...,
   remotes_package = ifelse("dynmethods" %in% rownames(installed.packages()), "dynmethods", "dynwrap")
 ) {
-  # create nice short name
-  if(is.null(short_name)) {
-    short_name <- name %>% gsub("[^A-Za-z1-9 ]", "", .) %>% gsub("[ ]", "_", .)
-  }
-
   if (is.null(plot_fun)) {
     plot_fun <- function(prediction) ggplot()
   }
@@ -55,8 +50,8 @@ create_ti_method <- function(
 
   # create description
   desc <- lst(
+    id,
     name,
-    short_name,
     package_loaded,
     package_required,
     par_set,
@@ -64,10 +59,6 @@ create_ti_method <- function(
     type,
     ...
   ) %>% add_class("dynwrap::ti_method")
-
-  if (is.null(desc$method_id)) {
-    desc$method_id <- desc$short_name
-  }
 
   if (is.character(run_fun)) {
     desc$run_fun_name <- run_fun
