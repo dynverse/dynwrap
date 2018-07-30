@@ -240,7 +240,7 @@ generate_prior_information <- function(
   end_n <- length(end_milestones)
 
   ## TIME AND TIME COURSE ##
-  time <-
+  timecourse_continuous <-
     if (!is.null(cell_info) && "simulationtime" %in% colnames(cell_info)) {
       set_names(cell_info$simulationtime, cell_info$cell_id)
     } else {
@@ -257,11 +257,11 @@ generate_prior_information <- function(
       })
     }
 
-  timecourse <-
+  timecourse_discrete <-
     if (!is.null(cell_info) && "timepoint" %in% colnames(cell_info)) {
       set_names(cell_info$timepoint, cell_info$cell_id)
     } else {
-      cut(time, breaks = min(10, length(unique(time))))
+      cut(timecourse_continuous, breaks = min(10, length(unique(timecourse_continuous))))
     }
 
   # return output
@@ -274,8 +274,8 @@ generate_prior_information <- function(
     groups_network,
     features_id,
     groups_n,
-    time,
-    timecourse,
+    timecourse_continuous,
+    timecourse_discrete,
     start_n,
     end_n
   )
