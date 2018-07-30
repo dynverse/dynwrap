@@ -69,10 +69,10 @@ wrap_rds <- function(cell_ids, output_ids, dir_output) {
 wrap_text <- function(cell_ids, output_ids, dir_output) {
   outer_files <- list.files(dir_output, full.names = TRUE)
 
-  ix <- grep("cell_ids", outer_files)
+  ix <- grep("cell_ids[^/]*", outer_files)
   if (length(ix) > 0) {
     file <- outer_files[[ix]]
-    cell_ids <- read_infer(file, "cell_ids") %>% pull(cell_id)
+    cell_ids <- read_infer(file, "cell_ids") %>% pull(cell_ids)
     outer_files <- outer_files[-ix]
   }
 
@@ -122,10 +122,10 @@ wrap_feather <- function(cell_ids, output_ids, dir_output) {
 
   outer_files <- list.files(dir_output, full.names = TRUE)
 
-  ix <- grep("cell_ids", outer_files)
+  ix <- grep("cell_ids[^/]*", outer_files)
   if (length(ix) > 0) {
     file <- outer_files[[ix]]
-    cell_ids <- feather::read_feather(file) %>% pull(cell_id)
+    cell_ids <- feather::read_feather(file) %>% pull(cell_ids)
     outer_files <- outer_files[-ix]
   }
 
