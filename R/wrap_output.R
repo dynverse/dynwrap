@@ -12,22 +12,29 @@
 #' @param output_format The output format, can be rds, text or dynwrap
 #'
 #' @export
-wrap_output <- function(model, output_ids, dir_output, output_format = c("text", "rds", "feather", "dynwrap")) {
+wrap_output <- function(cell_ids, output_ids, dir_output, output_format = c("text", "rds", "feather", "dynwrap")) {
   output_format <- match.arg(output_format)
   if(output_format == "rds") {
-    wrap_rds(model, output_ids, dir_output)
+    wrap_rds(cell_ids, output_ids, dir_output)
   } else if (output_format == "text") {
-    wrap_text(model, output_ids, dir_output)
+    wrap_text(cell_ids, output_ids, dir_output)
   } else if (output_format == "feather") {
-    wrap_feather(model, output_ids, dir_output)
+    wrap_feather(cell_ids, output_ids, dir_output)
   } else if (output_format == "dynwrap") {
     read_rds(file.path(dir_output, "output.rds"))
   }
 }
 
 #' @rdname wrap_output
-wrap_rds <- function(model, output_ids, dir_output) {
+wrap_rds <- function(cell_ids, output_ids, dir_output) {
   output <- read_rds(file.path(dir_output, "output.rds"))
+
+  if ("cell_ids" %in% names(output)) {
+    cell_ids <- output$cell_ids
+    output$cell_ids <- NULL
+  }
+
+  model <- wrap_data(cell_ids = cell_ids)
 
   for (output_id in output_ids) {
     processor <- get_output_processor(output_id)
@@ -59,8 +66,17 @@ wrap_rds <- function(model, output_ids, dir_output) {
 }
 
 #' @rdname wrap_output
-wrap_text <- function(model, output_ids, dir_output) {
+wrap_text <- function(cell_ids, output_ids, dir_output) {
   outer_files <- list.files(dir_output, full.names = TRUE)
+
+  ix <- grep("cell_ids", outer_files)
+  if (length(ix) > 0) {
+    file <- outer_files[[ix]]
+    cell_ids <- read_infer(file, "cell_ids") %>% pull(cell_id)
+    outer_files <- outer_files[-ix]
+  }
+
+  model <- wrap_data(cell_ids = cell_ids)
 
   for (output_id in output_ids) {
     output_oi <- list()
@@ -99,12 +115,21 @@ wrap_text <- function(model, output_ids, dir_output) {
 }
 
 #' @rdname wrap_output
-wrap_feather <- function(model, output_ids, dir_output) {
+wrap_feather <- function(cell_ids, output_ids, dir_output) {
   # install feather if not available
   dynutils::install_packages("feather", "dynwrap", prompt = TRUE)
   requireNamespace("feather")
 
   outer_files <- list.files(dir_output, full.names = TRUE)
+
+  ix <- grep("cell_ids", outer_files)
+  if (length(ix) > 0) {
+    file <- outer_files[[ix]]
+    cell_ids <- feather::read_feather(file) %>% pull(cell_id)
+    outer_files <- outer_files[-ix]
+  }
+
+  model <- wrap_data(cell_ids = cell_ids)
 
   for (output_id in output_ids) {
     output_oi <- list()
@@ -159,6 +184,9 @@ wrap_feather <- function(model, output_ids, dir_output) {
 # read text output -----------------------------
 # specify how to read a text output
 output_object_specifications <- list(
+  cell_ids = cols(
+    cell_id = col_character()
+  ),
   pseudotime = cols(
     cell_id = col_character(),
     pseudotime = col_double()

@@ -120,8 +120,8 @@ create_image_ti_method <- function(
       cell_ids <- rownames(expression)
     }
 
-    model <- wrap_data(cell_ids = cell_ids) %>%
-      wrap_output(output_ids, dir_output, output_format)
+    model <-
+      wrap_output(output_ids, dir_output, cell_ids = cell_ids, output_format)
 
     # add timing
     if(!is.null(model$timings)) {
