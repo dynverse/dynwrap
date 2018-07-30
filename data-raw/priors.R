@@ -18,7 +18,7 @@ priors <- tribble(
 
   "timecourse_continuous", "Time course (continuous)", "Named numeric vector linking the cell ids to time points",
 
-  "timecourse_discrete", "Time course (discrete)", "Named factor or numeric vector linking the cell ids to time course points",
+  "timecourse_discrete", "Time course (discrete)", "Named numeric vector linking the cell ids to time course points",
 
   "features_id", "Marker genes", "Genes/features known to be important in the dynamic process",
 

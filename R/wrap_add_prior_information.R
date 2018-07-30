@@ -261,7 +261,7 @@ generate_prior_information <- function(
     if (!is.null(cell_info) && "timepoint" %in% colnames(cell_info)) {
       set_names(cell_info$timepoint, cell_info$cell_id)
     } else {
-      cut(timecourse_continuous, breaks = min(10, length(unique(timecourse_continuous))))
+      cut(timecourse_continuous, breaks = min(10, length(unique(timecourse_continuous))), labels = FALSE)
     }
 
   # return output
