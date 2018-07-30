@@ -80,8 +80,8 @@ test_that("Testing generate_prior_information", {
     "groups_network",
     "features_id",
     "groups_n",
-    "time",
-    "timecourse",
+    "timecourse_continuous",
+    "timecourse_discrete",
     "end_n"
   )
 
@@ -111,9 +111,9 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_equal(prior_info$groups_n, 4)
 
-  testthat::expect_equal(prior_info$time, set_names(cell_info$simulationtime, cell_info$cell_id))
+  testthat::expect_equal(prior_info$timecourse_continuous, set_names(cell_info$simulationtime, cell_info$cell_id))
 
-  testthat::expect_equal(prior_info$timecourse, set_names(cell_info$timepoint, cell_info$cell_id))
+  testthat::expect_equal(prior_info$timecourse_discrete, set_names(cell_info$timepoint, cell_info$cell_id))
 
   testthat::expect_equal(prior_info$end_n, 2)
 })
@@ -153,8 +153,8 @@ test_that("Testing add_prior_information", {
     "groups_network",
     "features_id",
     "groups_n",
-    "time",
-    "timecourse",
+    "timecourse_continuous",
+    "timecourse_discrete",
     "start_n",
     "end_n"
   )
@@ -185,9 +185,9 @@ test_that("Testing add_prior_information", {
 
   testthat::expect_equal(prior_info$groups_n, 4)
 
-  testthat::expect_equal(prior_info$time, set_names(cell_info$simulationtime, cell_info$cell_id))
+  testthat::expect_equal(prior_info$timecourse_continuous, set_names(cell_info$simulationtime, cell_info$cell_id))
 
-  testthat::expect_equal(prior_info$timecourse, set_names(cell_info$timepoint, cell_info$cell_id))
+  testthat::expect_equal(prior_info$timecourse_discrete, set_names(cell_info$timepoint, cell_info$cell_id))
 
   testthat::expect_equal(prior_info$end_n, 2)
 
@@ -267,8 +267,8 @@ test_that("Testing generate_prior_information", {
     "groups_network",
     "features_id",
     "groups_n",
-    "time",
-    "timecourse",
+    "timecourse_continuous",
+    "timecourse_discrete",
     "end_n"
   )
 
@@ -324,8 +324,8 @@ test_that("Testing add_prior_information", {
     "groups_network",
     "features_id",
     "groups_n",
-    "time",
-    "timecourse",
+    "timecourse_continuous",
+    "timecourse_discrete",
     "end_n"
   )
 
