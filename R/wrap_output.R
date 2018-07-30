@@ -185,7 +185,7 @@ wrap_feather <- function(cell_ids, output_ids, dir_output) {
 # specify how to read a text output
 output_object_specifications <- list(
   cell_ids = cols(
-    cell_id = col_character()
+    cell_ids = col_character()
   ),
   pseudotime = cols(
     cell_id = col_character(),
