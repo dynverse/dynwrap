@@ -25,7 +25,7 @@ dimred_trajectory <- function(
 
   # add phantom links, ifneedbe
   if (is_directed) {
-    structure <- add_phantom_edges(milestone_ids, milestone_network)
+    structure <- phantom_edges_add(milestone_ids, milestone_network)
   } else {
     structure <- milestone_network
   }
@@ -120,7 +120,7 @@ is_ti_dimred_wrapper <- function(object) {
 
 #' @importFrom reshape2 melt
 #' @importFrom igraph graph_from_data_frame neighbors
-add_phantom_edges <- function(milestone_ids, milestone_network) {
+phantom_edges_add <- function(milestone_ids, milestone_network) {
   is_directed <- any(milestone_network$directed)
 
   if (is_directed) {
