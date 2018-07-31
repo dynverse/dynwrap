@@ -16,9 +16,7 @@ test_that("Make sure that every output has a text example", {
 
 
 
-cell_ids <- jsonlite::read_json(
-  devtools:::shim_system.file("example_outputs/text/cell_ids.json", package="dynwrap")
-) %>% as.character()
+cell_ids <- readr::read_csv(devtools:::shim_system.file("example_outputs/text/cell_ids.csv", package="dynwrap"), col_types = readr::cols(readr::col_character()))$cell_ids
 
 base_model <- cell_ids
 
