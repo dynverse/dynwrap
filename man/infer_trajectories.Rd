@@ -5,11 +5,12 @@
 \alias{infer_trajectory}
 \title{Infer trajectories}
 \usage{
-infer_trajectories(dataset, method, parameters = NULL, give_priors = NULL,
-  mc_cores = 1, verbose = FALSE, capture_output = FALSE)
+infer_trajectories(dataset, method, parameters = NULL,
+  give_priors = NULL, mc_cores = 1, verbose = FALSE,
+  capture_output = FALSE)
 
-infer_trajectory(dataset, method, parameters = list(), give_priors = NULL,
-  mc_cores = 1, verbose = FALSE, ...)
+infer_trajectory(dataset, method, parameters = list(),
+  give_priors = NULL, mc_cores = 1, verbose = FALSE, ...)
 }
 \arguments{
 \item{dataset}{One or more datasets, as created using dynwrap}

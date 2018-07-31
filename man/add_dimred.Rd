@@ -7,7 +7,8 @@
 \title{Add or create a dimensionality reduction}
 \usage{
 add_dimred(model, dimred, dimred_milestones = NULL,
-  dimred_trajectory_segments = NULL, expression_source = "expression", ...)
+  dimred_trajectory_segments = NULL, expression_source = "expression",
+  ...)
 
 is_wrapper_with_dimred(model)
 

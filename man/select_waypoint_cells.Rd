@@ -4,8 +4,9 @@
 \alias{select_waypoint_cells}
 \title{Select the waypoint cells}
 \usage{
-select_waypoint_cells(milestone_ids, milestone_network, milestone_percentages,
-  progressions, divergence_regions, num_cells_selected = 100)
+select_waypoint_cells(milestone_ids, milestone_network,
+  milestone_percentages, progressions, divergence_regions,
+  num_cells_selected = 100)
 }
 \arguments{
 \item{milestone_ids}{The ids of the milestones in the trajectory. Type: Character vector.}

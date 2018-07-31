@@ -17,6 +17,7 @@ wrap_data <- function(
   testthat::expect_is(id, "character")
   testthat::expect_length(id, 1)
 
+  if (is_tibble(cell_ids) && ncol(cell_ids) == 1 && "cell_ids" %in% names(cell_ids)) {cell_ids <- cell_ids$cell_ids}
   testthat::expect_is(cell_ids, "character")
 
   testthat::expect_false(any(duplicated(cell_ids)))

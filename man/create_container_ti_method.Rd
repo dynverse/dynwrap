@@ -4,7 +4,8 @@
 \alias{create_container_ti_method}
 \title{Creating a TI method from a docker repository}
 \usage{
-create_container_ti_method(docker_repository, run_environment = NULL, ...)
+create_container_ti_method(docker_repository, run_environment = NULL,
+  ...)
 }
 \arguments{
 \item{docker_repository}{The id of the docker repository.}

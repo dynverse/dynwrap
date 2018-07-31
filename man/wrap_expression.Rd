@@ -4,8 +4,8 @@
 \alias{wrap_expression}
 \title{Create a wrapper object with expression and counts}
 \usage{
-wrap_expression(expression, counts, cell_info = NULL, feature_info = NULL,
-  ..., id = "")
+wrap_expression(expression, counts, cell_info = NULL,
+  feature_info = NULL, ..., id = "")
 }
 \arguments{
 \item{expression}{The normalised expression values with genes in columns and cells in rows}

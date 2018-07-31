@@ -6,9 +6,9 @@
 \usage{
 create_ti_method(id, name, parameters = NULL, par_set = NULL, run_fun,
   plot_fun = NULL, package_loaded = c(), package_required = c(),
-  type = c("algorithm", "algorithm_test", "control", "control_test"), ...,
-  remotes_package = ifelse("dynmethods" \%in\% rownames(installed.packages()),
-  "dynmethods", "dynwrap"))
+  type = c("algorithm", "algorithm_test", "control", "control_test"),
+  ..., remotes_package = ifelse("dynmethods" \%in\%
+  rownames(installed.packages()), "dynmethods", "dynwrap"))
 }
 \arguments{
 \item{id}{A short name for the method, only lowercase characters allowed}
