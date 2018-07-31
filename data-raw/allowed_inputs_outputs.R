@@ -47,7 +47,7 @@ allowed_outputs <- map_df(add_ids, function(add_id) {
 
 # allowed inputs --------------------------------
 # will use expression/counts and all priors EXCEPT dataset
-load("data/priors.rda")
+data("priors", package = "dynwrap")
 
 allowed_inputs <- tribble(
   ~input_id, ~description,
@@ -58,3 +58,4 @@ allowed_inputs <- tribble(
 )
 
 usethis::use_data(allowed_outputs, allowed_inputs, overwrite = TRUE)
+

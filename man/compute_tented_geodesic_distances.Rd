@@ -8,9 +8,9 @@
 compute_tented_geodesic_distances(trajectory, waypoint_cells = NULL,
   waypoint_milestone_percentages = NULL)
 
-compute_tented_geodesic_distances_(cell_ids, milestone_ids, milestone_network,
-  milestone_percentages, divergence_regions, waypoint_cells = NULL,
-  waypoint_milestone_percentages = NULL)
+compute_tented_geodesic_distances_(cell_ids, milestone_ids,
+  milestone_network, milestone_percentages, divergence_regions,
+  waypoint_cells = NULL, waypoint_milestone_percentages = NULL)
 }
 \arguments{
 \item{trajectory}{The trajectory}

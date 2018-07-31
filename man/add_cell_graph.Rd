@@ -4,8 +4,8 @@
 \alias{add_cell_graph}
 \title{Constructs a trajectory using a graph between cells, by mapping cells onto a set of backbone cells.}
 \usage{
-add_cell_graph(model, cell_graph, to_keep, milestone_prefix = "milestone_",
-  ...)
+add_cell_graph(model, cell_graph, to_keep,
+  milestone_prefix = "milestone_", ...)
 }
 \arguments{
 \item{model}{The model to extend}

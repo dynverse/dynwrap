@@ -16,11 +16,9 @@ test_that("Make sure that every output has a text example", {
 
 
 
-cell_ids <- jsonlite::read_json(
-  devtools:::shim_system.file("example_outputs/text/cell_ids.json", package="dynwrap")
-) %>% as.character()
+cell_ids <- readr::read_csv(devtools:::shim_system.file("example_outputs/text/cell_ids.csv", package="dynwrap"), col_types = readr::cols(readr::col_character()))$cell_ids
 
-base_model <- wrap_data(cell_ids = cell_ids)
+base_model <- cell_ids
 
 for (output_format in c("feather", "rds", "text")) {
   test_that(paste0("Output processors can process output with ", output_format), {

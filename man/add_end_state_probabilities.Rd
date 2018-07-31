@@ -4,8 +4,8 @@
 \alias{add_end_state_probabilities}
 \title{Multifurcating trajectory with end state probabilities}
 \usage{
-add_end_state_probabilities(model, end_state_probabilities, pseudotime = NULL,
-  do_scale_minmax = TRUE, ...)
+add_end_state_probabilities(model, end_state_probabilities,
+  pseudotime = NULL, do_scale_minmax = TRUE, ...)
 }
 \arguments{
 \item{model}{The model to which a multifurcating trajectory will be added.}

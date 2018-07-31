@@ -6,7 +6,8 @@
 \usage{
 add_prior_information(dataset, start_id = NULL, end_id = NULL,
   groups_id = NULL, groups_network = NULL, features_id = NULL,
-  groups_n = NULL, start_n = NULL, end_n = NULL, time = NULL,
+  groups_n = NULL, start_n = NULL, end_n = NULL,
+  timecourse_continuous = NULL, timecourse_discrete = NULL,
   verbose = TRUE)
 }
 \arguments{
@@ -28,7 +29,9 @@ add_prior_information(dataset, start_id = NULL, end_id = NULL,
 
 \item{end_n}{Number of end states}
 
-\item{time}{The time for every cell}
+\item{timecourse_continuous}{The time for every cell}
+
+\item{timecourse_discrete}{The time for every cell in groups}
 
 \item{verbose}{Whether or not to print informative messages or not}
 }

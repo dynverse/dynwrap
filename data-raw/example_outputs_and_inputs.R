@@ -99,7 +99,8 @@ dataset <- wrap_data(
     groups_id = enframe(grouping, "cell_id", "group_id"),
     groups_n = length(group_ids),
     groups_network = milestone_network %>% select(from, to),
-    time = pseudotime + runif(length(pseudotime)) * 10 - 5,
+    timecourse_continuous = (pseudotime + runif(length(pseudotime)) * 10 - 5) %>% set_names(cell_ids),
+    timecourse_discrete = cut(pseudotime, breaks = 5, labels = FALSE) %>% set_names(cell_ids),
     features_id = colnames(expression)[1:2]
   )
 
@@ -144,7 +145,7 @@ save_inputs(
 unlink("inst/example_outputs/*", recursive=TRUE, force=TRUE)
 
 objects <- lst(
-  cell_ids,
+  cell_ids = tibble(cell_ids = cell_ids),
   pseudotime = pseudotime %>% enframe("cell_id", "pseudotime"),
   group_ids,
   grouping = grouping %>% enframe("cell_id", "group_id"),
