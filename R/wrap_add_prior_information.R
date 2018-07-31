@@ -12,7 +12,8 @@
 #' @param groups_n Number of branches
 #' @param start_n Number of start states
 #' @param end_n Number of end states
-#' @param time The time for every cell
+#' @param timecourse_continuous The time for every cell
+#' @param timecourse_discrete The time for every cell in groups
 #' @param verbose Whether or not to print informative messages or not
 #'
 #' @export
@@ -29,7 +30,8 @@ add_prior_information <- function(
   groups_n = NULL,
   start_n = NULL,
   end_n = NULL,
-  time = NULL,
+  timecourse_continuous = NULL,
+  timecourse_discrete = NULL,
   verbose = TRUE
 ) {
   prior_information <- lst(
@@ -39,7 +41,8 @@ add_prior_information <- function(
     groups_network,
     features_id,
     groups_n,
-    time,
+    timecourse_continuous,
+    timecourse_discrete,
     start_n,
     end_n
   ) %>% discard(is.null)
@@ -53,7 +56,7 @@ add_prior_information <- function(
   if (!is.null(groups_id)) {
     testthat::expect_true(is.data.frame(groups_id))
     testthat::expect_setequal(colnames(groups_id), c("cell_id", "group_id"))
-    testthat::expect_setequal(groups_id$cell_id, dataset$cell_id)
+    testthat::expect_setequal(groups_id$cell_id, dataset$cell_ids)
   }
   if (!is.null(groups_network)) {
     testthat::expect_true(!is.null(groups_id))
@@ -63,6 +66,18 @@ add_prior_information <- function(
   if (!is.null(features_id)) {
     testthat::expect_true(is_wrapper_with_expression(dataset))
     testthat::expect_true(all(features_id %in% colnames(dataset$counts)))
+  }
+  if (!is.null(timecourse_continuous)) {
+    testthat::expect_true(all(is.numeric(timecourse_continuous)))
+    testthat::expect_setequal(dataset$cell_ids, names(timecourse_continuous))
+
+    timecourse_continuous <- timecourse_continuous[dataset$cell_ids]
+  }
+  if (!is.null(timecourse_discrete)) {
+    testthat::expect_true(is.numeric(timecourse_discrete))
+    testthat::expect_setequal(dataset$cell_ids, names(timecourse_discrete))
+
+    timecourse_discrete <- timecourse_discrete[dataset$cell_ids]
   }
 
   if (is_wrapper_with_trajectory(dataset) && is_wrapper_with_expression(dataset)) {
