@@ -7,12 +7,12 @@
 \title{Create a TI method from a singularity image}
 \usage{
 create_singularity_ti_method(image,
-  singularity_images_folder = getOption("dynwrap_singularity_images_folder"),
+  singularity_images_folder = get_default_singularity_images_folder(),
   definition = extract_definition_from_singularity_image(image,
   singularity_images_folder), ...)
 
 extract_definition_from_singularity_image(image,
-  singularity_images_folder = getOption("dynwrap_singularity_images_folder"),
+  singularity_images_folder = get_default_singularity_images_folder(),
   definition_location = "/code/definition.yml")
 
 pull_singularity_ti_method(image = image,
