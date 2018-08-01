@@ -23,8 +23,7 @@ create_image_ti_method <- function(
   # some checking of definition file -----------------------------------------------------
   # name
   testthat::expect_true(is.character(definition$name))
-
-  testthat::expect_true(is.character(definition$id) || is.null(definition$id))
+  testthat::expect_true(is.character(definition$id))
 
   # parameters
   param_ids <- names(definition$parameters) %>% setdiff(c("forbidden"))
@@ -306,7 +305,7 @@ create_container_ti_method <- function(docker_repository, run_environment = NULL
   if (run_environment == "docker") {
     method <- create_docker_ti_method(docker_repository)
   } else if (run_environment == 'singularity') {
-    method <- create_singularity_ti_method(docker_repository, ".simg")
+    method <- create_singularity_ti_method(docker_repository)
   }
 
   method(...)
@@ -338,7 +337,7 @@ pull_docker_ti_method <- function(
 #' @export
 create_singularity_ti_method <- function(
   image,
-  singularity_images_folder = getOption("dynwrap_singularity_images_folder"),
+  singularity_images_folder = get_default_singularity_images_folder(),
   definition = extract_definition_from_singularity_image(image, singularity_images_folder),
   ...
 ) {
@@ -353,7 +352,7 @@ create_singularity_ti_method <- function(
 #' @export
 extract_definition_from_singularity_image <- function(
   image,
-  singularity_images_folder = getOption("dynwrap_singularity_images_folder"),
+  singularity_images_folder = get_default_singularity_images_folder(),
   definition_location = "/code/definition.yml"
 ) {
   requireNamespace("yaml")
