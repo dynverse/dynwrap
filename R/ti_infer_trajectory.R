@@ -11,8 +11,8 @@
 #'   A parameter set must be a named list of parameters.
 #'   If multiple methods were provided in the `method` parameter,
 #'    `parameters` must be an unnamed list of the same length.
-#' @param give_priors All the priors a method is allowed to receive. Must be a subset of: `"start_milestones"`,
-#'  `"start_id"`, `"end_milestones"`, `"end_id"`, `"groups_id"` and `"groups_network"`
+#' @param give_priors All the priors a method is allowed to receive.
+#'   Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).
 #' @param mc_cores The number of cores to use, allowing to parallellise the different datasets
 #' @param verbose Whether or not to print information output
 #' @param capture_output Whether to capture the stdout and stderr produced by a method
@@ -279,6 +279,9 @@ execute_method_on_dataset <- function(
   verbose = FALSE,
   capture_output = FALSE
 ) {
+  if (verbose) {
+    cat("Executing '", method$id, "' on '", dataset$id, "' with parameters ", deparse(parameters), "\n", sep = "")
+  }
   # start the timer
   time0 <- as.numeric(Sys.time())
 
