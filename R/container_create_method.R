@@ -44,7 +44,7 @@ create_image_ti_method <- function(
   }
 
   if (length(definition$input$format) > 1) {
-    message("Available input_formats are: ", glue::collapse(definition$input$format, ", "), ", using first")
+    message("Available input_formats are: ", glue::glue_collapse(definition$input$format, ", "), ", using first")
   }
   input_format <- definition$input$format[[1]]
   testthat::expect_true(is.character(input_format))
@@ -59,7 +59,7 @@ create_image_ti_method <- function(
   }
 
   if (length(definition$output$format) > 1) {
-    message("Available output_formats are: ", glue::collapse(definition$output$format, ", "), ", using first")
+    message("Available output_formats are: ", glue::glue_collapse(definition$output$format, ", "), ", using first")
   }
   output_format <- definition$output$format[[1]]
   testthat::expect_true(is.character(output_format))
@@ -77,7 +77,7 @@ create_image_ti_method <- function(
       requireNamespace("crayon")
       list.files(dir_input) %>%
         crayon::bold() %>%
-        glue::collapse("\n\t") %>%
+        glue::glue_collapse("\n\t") %>%
         paste0("Input saved to ", dir_input, ": \n\t", ., "\n") %>%
         cat
     }
@@ -107,7 +107,7 @@ create_image_ti_method <- function(
       requireNamespace("crayon")
       list.files(dir_output) %>%
         crayon::bold() %>%
-        glue::collapse("\n\t") %>%
+        glue::glue_collapse("\n\t") %>%
         paste0("output saved in ", dir_output, ": \n\t", ., "\n") %>%
         cat
     }
@@ -164,7 +164,7 @@ create_image_ti_method <- function(
           "Use this command for debugging: \n",
           crayon::bold(
             glue::glue(
-              "singularity exec --cleanenv -B {glue::collapse(volumes, ',')} {image} bash"
+              "singularity exec --cleanenv -B {glue::glue_collapse(volumes, ',')} {image} bash"
             )
           ),
         call. = FALSE)
@@ -177,7 +177,7 @@ create_image_ti_method <- function(
         stdout_file <- tempfile()
         output <- system2(
           "singularity",
-          c("-s", "run", "--cleanenv", "-B", glue::collapse(volumes, ','), image),
+          c("-s", "run", "--cleanenv", "-B", glue::glue_collapse(volumes, ','), image),
           stdout = stdout_file,
           stderr = stdout_file
         )
@@ -193,7 +193,7 @@ create_image_ti_method <- function(
 
         # output <- processx::run(
         #   "singularity",
-        #   c("-s", "run", "--cleanenv", "-B", glue::collapse(volumes, ','), image),
+        #   c("-s", "run", "--cleanenv", "-B", glue::glue_collapse(volumes, ','), image),
         #   echo = verbose,
         #   echo_cmd = verbose,
         #   spinner = TRUE
