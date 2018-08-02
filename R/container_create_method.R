@@ -280,8 +280,13 @@ extract_definition_from_docker_image <- function(
   # remove container
   processx::run("docker", c("rm", id), stderr_callback = print_processx)
 
+
   # read definition file
   definition <- yaml::read_yaml(definition_location_local)
+
+  # add docker version id
+  definition$docker_hash <- processx::run("docker", c("inspect", image, "--format", "{{.ID}}"))$stdout %>% trimws()
+
   definition
 }
 
