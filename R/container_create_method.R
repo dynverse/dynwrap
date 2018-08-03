@@ -164,7 +164,7 @@ create_image_ti_method <- function(
           "Use this command for debugging: \n",
           crayon::bold(
             glue::glue(
-              "singularity exec --cleanenv -B {glue::glue_collapse(volumes, ',')} {image} bash"
+              "singularity exec --cleanenv --pwd / -B {glue::glue_collapse(volumes, ',')} {image} bash"
             )
           ),
         call. = FALSE)
@@ -177,7 +177,7 @@ create_image_ti_method <- function(
         stdout_file <- tempfile()
         output <- system2(
           "singularity",
-          c("-s", "run", "--cleanenv", "-B", glue::glue_collapse(volumes, ','), image),
+          c("-s", "run", "--cleanenv", "--pwd", "/", "-B", glue::glue_collapse(volumes, ','), image),
           stdout = stdout_file,
           stderr = stdout_file
         )
