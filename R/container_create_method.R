@@ -23,8 +23,7 @@ create_image_ti_method <- function(
   # some checking of definition file -----------------------------------------------------
   # name
   testthat::expect_true(is.character(definition$name))
-
-  testthat::expect_true(is.character(definition$id) || is.null(definition$id))
+  testthat::expect_true(is.character(definition$id))
 
   # parameters
   param_ids <- names(definition$parameters) %>% setdiff(c("forbidden"))
@@ -45,7 +44,7 @@ create_image_ti_method <- function(
   }
 
   if (length(definition$input$format) > 1) {
-    message("Available input_formats are: ", glue::collapse(definition$input$format, ", "), ", using first")
+    message("Available input_formats are: ", glue::glue_collapse(definition$input$format, ", "), ", using first")
   }
   input_format <- definition$input$format[[1]]
   testthat::expect_true(is.character(input_format))
@@ -60,7 +59,7 @@ create_image_ti_method <- function(
   }
 
   if (length(definition$output$format) > 1) {
-    message("Available output_formats are: ", glue::collapse(definition$output$format, ", "), ", using first")
+    message("Available output_formats are: ", glue::glue_collapse(definition$output$format, ", "), ", using first")
   }
   output_format <- definition$output$format[[1]]
   testthat::expect_true(is.character(output_format))
@@ -78,7 +77,7 @@ create_image_ti_method <- function(
       requireNamespace("crayon")
       list.files(dir_input) %>%
         crayon::bold() %>%
-        glue::collapse("\n\t") %>%
+        glue::glue_collapse("\n\t") %>%
         paste0("Input saved to ", dir_input, ": \n\t", ., "\n") %>%
         cat
     }
@@ -108,7 +107,7 @@ create_image_ti_method <- function(
       requireNamespace("crayon")
       list.files(dir_output) %>%
         crayon::bold() %>%
-        glue::collapse("\n\t") %>%
+        glue::glue_collapse("\n\t") %>%
         paste0("output saved in ", dir_output, ": \n\t", ., "\n") %>%
         cat
     }
@@ -165,7 +164,7 @@ create_image_ti_method <- function(
           "Use this command for debugging: \n",
           crayon::bold(
             glue::glue(
-              "singularity exec --cleanenv -B {glue::collapse(volumes, ',')} {image} bash"
+              "singularity exec --cleanenv -B {glue::glue_collapse(volumes, ',')} {image} bash"
             )
           ),
         call. = FALSE)
@@ -178,7 +177,7 @@ create_image_ti_method <- function(
         stdout_file <- tempfile()
         output <- system2(
           "singularity",
-          c("-s", "run", "--cleanenv", "-B", glue::collapse(volumes, ','), image),
+          c("-s", "run", "--cleanenv", "-B", glue::glue_collapse(volumes, ','), image),
           stdout = stdout_file,
           stderr = stdout_file
         )
@@ -194,7 +193,7 @@ create_image_ti_method <- function(
 
         # output <- processx::run(
         #   "singularity",
-        #   c("-s", "run", "--cleanenv", "-B", glue::collapse(volumes, ','), image),
+        #   c("-s", "run", "--cleanenv", "-B", glue::glue_collapse(volumes, ','), image),
         #   echo = verbose,
         #   echo_cmd = verbose,
         #   spinner = TRUE
@@ -281,8 +280,13 @@ extract_definition_from_docker_image <- function(
   # remove container
   processx::run("docker", c("rm", id), stderr_callback = print_processx)
 
+
   # read definition file
   definition <- yaml::read_yaml(definition_location_local)
+
+  # add docker version id
+  definition$docker_hash <- processx::run("docker", c("inspect", image, "--format", "{{.ID}}"))$stdout %>% trimws()
+
   definition
 }
 
@@ -306,7 +310,7 @@ create_container_ti_method <- function(docker_repository, run_environment = NULL
   if (run_environment == "docker") {
     method <- create_docker_ti_method(docker_repository)
   } else if (run_environment == 'singularity') {
-    method <- create_singularity_ti_method(docker_repository, ".simg")
+    method <- create_singularity_ti_method(docker_repository)
   }
 
   method(...)
@@ -338,7 +342,7 @@ pull_docker_ti_method <- function(
 #' @export
 create_singularity_ti_method <- function(
   image,
-  singularity_images_folder = getOption("dynwrap_singularity_images_folder"),
+  singularity_images_folder = get_default_singularity_images_folder(),
   definition = extract_definition_from_singularity_image(image, singularity_images_folder),
   ...
 ) {
@@ -353,7 +357,7 @@ create_singularity_ti_method <- function(
 #' @export
 extract_definition_from_singularity_image <- function(
   image,
-  singularity_images_folder = getOption("dynwrap_singularity_images_folder"),
+  singularity_images_folder = get_default_singularity_images_folder(),
   definition_location = "/code/definition.yml"
 ) {
   requireNamespace("yaml")

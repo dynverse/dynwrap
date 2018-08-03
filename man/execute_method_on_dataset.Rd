@@ -23,8 +23,8 @@ A parameter set must be a named list of parameters.
 If multiple methods were provided in the \code{method} parameter,
 \code{parameters} must be an unnamed list of the same length.}
 
-\item{give_priors}{All the priors a method is allowed to receive. Must be a subset of: \code{"start_milestones"},
-\code{"start_id"}, \code{"end_milestones"}, \code{"end_id"}, \code{"groups_id"} and \code{"groups_network"}}
+\item{give_priors}{All the priors a method is allowed to receive.
+Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).}
 
 \item{mc_cores}{The number of cores to use, allowing to parallellise the different datasets}
 

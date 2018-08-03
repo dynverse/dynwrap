@@ -17,7 +17,7 @@
 #' @include ti_parse_parameter_definition.R
 create_ti_method <- function(
   id,
-  name,
+  name = id,
   parameters = NULL,
   par_set = NULL,
   run_fun,

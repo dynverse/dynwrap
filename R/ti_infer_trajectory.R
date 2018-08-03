@@ -11,8 +11,8 @@
 #'   A parameter set must be a named list of parameters.
 #'   If multiple methods were provided in the `method` parameter,
 #'    `parameters` must be an unnamed list of the same length.
-#' @param give_priors All the priors a method is allowed to receive. Must be a subset of: `"start_milestones"`,
-#'  `"start_id"`, `"end_milestones"`, `"end_id"`, `"groups_id"` and `"groups_network"`
+#' @param give_priors All the priors a method is allowed to receive.
+#'   Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).
 #' @param mc_cores The number of cores to use, allowing to parallellise the different datasets
 #' @param verbose Whether or not to print information output
 #' @param capture_output Whether to capture the stdout and stderr produced by a method
@@ -74,25 +74,27 @@ infer_trajectories <- function(
   method <- map(seq_len(nrow(method)), extract_row_to_list, tib = method)
 
   # process parameters ----------------
+  # if not parameters given, make an empty param
   if (is.null(parameters) || length(parameters) == 0) {
-    parameters <- lapply(seq_along(method), function(i) list())
+    parameters <- map(seq_along(method), ~list())
   }
   testthat::expect_is(parameters, "list")
 
-  is_paramset <- nrow(method) == 1 && !is.null(names(parameters))
+  # if a single set of parameters was given, make it a list
+  if (length(method) == 1 && !is.null(names(parameters))) {
+    parameters <- list(parameters)
+  }
+
+  # at this stage, parameters should be an unnamed list (with length = # methods) containing named lists
   is_list_of_paramsets <- is.null(names(parameters)) && all(map_lgl(parameters, function(x) length(x) == 0 || !is.null(names(x))))
 
-  if (!is_paramset && !is_list_of_paramsets) {
+  if (!is_list_of_paramsets) {
     stop(
       sQuote("parameters"), " must be an unnamed list of named lists, ",
       "where the named lists correspond to the parameters of methods to be executed. ",
       "If only one method is to be executed, ", sQuote("parameters"), " can also be a single ",
       "named list of parameters."
     )
-  }
-
-  if (is_paramset) {
-    parameters <- list(parameters)
   }
 
   # check whether parameters is of the correct length
@@ -115,8 +117,8 @@ infer_trajectories <- function(
   # Run methods on each datasets ---------
   # construct overall design
   design <- crossing(
-    dataseti = seq_along(dataset),
-    methodi = seq_along(method)
+    dataset_ix = seq_along(dataset),
+    method_ix = seq_along(method)
   )
 
   parfun <-
@@ -145,9 +147,9 @@ infer_trajectories <- function(
   output <- parfun(
     X = seq_len(nrow(design)),
     FUN = function(ri) {
-      tari <- dataset[[design$dataseti[[ri]]]]
-      meri <- method[[design$methodi[[ri]]]]
-      pari <- parameters[[design$methodi[[ri]]]]
+      tari <- dataset[[design$dataset_ix[[ri]]]]
+      meri <- method[[design$method_ix[[ri]]]]
+      pari <- parameters[[design$method_ix[[ri]]]]
 
       execute_method_on_dataset(
         dataset = tari,
@@ -161,11 +163,11 @@ infer_trajectories <- function(
   )
 
   tibble(
-    dataset_ix = design$dataseti,
-    method_ix = design$methodi,
-    dataset_id = map_chr(dataset, "id")[design$dataseti],
-    method_id = map_chr(method, "id")[design$methodi],
-    method_name = map_chr(method, "name")[design$methodi],
+    dataset_ix = design$dataset_ix,
+    method_ix = design$method_ix,
+    dataset_id = map_chr(dataset, "id")[design$dataset_ix],
+    method_id = map_chr(method, "id")[design$method_ix],
+    method_name = map_chr(method, "name")[design$method_ix],
     model = map(output, "model"),
     summary = map(output, "summary")
   )
@@ -279,6 +281,9 @@ execute_method_on_dataset <- function(
   verbose = FALSE,
   capture_output = FALSE
 ) {
+  if (verbose) {
+    cat("Executing '", method$id, "' on '", dataset$id, "' with parameters ", deparse(parameters), "\n", sep = "")
+  }
   # start the timer
   time0 <- as.numeric(Sys.time())
 
