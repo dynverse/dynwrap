@@ -61,6 +61,8 @@ get_expression <- function(model, expression_source = "expression") {
     expression <- expression_source
   } else if (is_wrapper_with_expression(expression_source)) {
     expression <- get_expression(expression_source)
+  } else if (is.function(expression_source)) {
+    expression <- expression_source
   } else {
     stop("Invalid expression_source")
   }
