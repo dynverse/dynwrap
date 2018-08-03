@@ -272,6 +272,8 @@ generate_prior_information <- function(
       })
     }
 
+  timecourse_continuous[is.infinite(timecourse_continuous)] <- max(timecourse_continuous[!is.infinite(timecourse_continuous)])
+
   timecourse_discrete <-
     if (!is.null(cell_info) && "timepoint" %in% colnames(cell_info)) {
       set_names(cell_info$timepoint, cell_info$cell_id)
