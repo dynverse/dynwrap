@@ -27,6 +27,16 @@
 #' )
 #' gr <- igraph::graph_from_data_frame(net)
 #' simplify_igraph_network(gr)
+#'
+#' net <- data.frame(
+#'   from = c(1, 2, 3, 4),
+#'    to = c(2, 3, 1, 5),
+#'     length = 1,
+#'     directed = TRUE,
+#'     stringsAsFactors = F
+#' )
+#' gr <- igraph::graph_from_data_frame(net)
+#' simplify_igraph_network(gr)
 simplify_igraph_network <- function(gr, allow_duplicated_edges = TRUE) {
   # add weight attribute if not already present
   if (!"weight" %in% names(igraph::edge.attributes(gr))) {
@@ -212,5 +222,9 @@ simplify_igraph_network <- function(gr, allow_duplicated_edges = TRUE) {
     }
   })
 
-  do.call(igraph::union, simplified_graphs)
+  # combine the graphs
+  # we don't use igraph::union here as it renames the edge attributes
+  map_df(simplified_graphs, igraph::as_data_frame) %>%
+    bind_rows() %>%
+    igraph::graph_from_data_frame()
 }
