@@ -44,7 +44,7 @@ simplify_igraph_network <- function(gr, allow_duplicated_edges = TRUE) {
   }
   # add directed attribute if not already present
   if (!"directed" %in% names(igraph::edge.attributes(gr))) {
-    igraph::E(gr)$directed <- is_directed
+    igraph::E(gr)$directed <- igraph::is_directed(gr)
   }
 
   # process each component of the graph separatly
@@ -226,5 +226,5 @@ simplify_igraph_network <- function(gr, allow_duplicated_edges = TRUE) {
   # we don't use igraph::union here as it renames the edge attributes
   map_df(simplified_graphs, igraph::as_data_frame) %>%
     bind_rows() %>%
-    igraph::graph_from_data_frame()
+    igraph::graph_from_data_frame(directed = igraph::is_directed(gr))
 }
