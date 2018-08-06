@@ -185,5 +185,5 @@ test_that("Testing compute_tented_geodesic_distances with filtered cells", {
 
   expected_dists <- c(1.4, 14, 14)
   expect_true(all(abs(geodist[upper.tri(geodist)] - expected_dists) < 1e-10))
-  expect_equal(trajectory$cell_ids, rownames(geodist))
+  expect_equal(trajectory$cell_ids, colnames(geodist))
 })
