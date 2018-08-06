@@ -34,4 +34,14 @@ net <- data.frame(
 )
 gr <- igraph::graph_from_data_frame(net)
 simplify_igraph_network(gr)
+
+net <- data.frame(
+  from = c(1, 2, 3, 4),
+   to = c(2, 3, 1, 5),
+    length = 1,
+    directed = TRUE,
+    stringsAsFactors = F
+)
+gr <- igraph::graph_from_data_frame(net)
+simplify_igraph_network(gr)
 }

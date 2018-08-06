@@ -103,7 +103,8 @@ test_that("Testing add_dimred_projection with grouping", {
   expect_equivalent(wr$milestone_network, milestone_network)
   expect_equivalent(wr$grouping, grouping)
 
-  expect_true(all(wr$progressions$from == grouping | wr$progressions$to == grouping))
+  grs <- grouping[wr$progressions$cell_id]
+  expect_true(all(wr$progressions$from == grs | wr$progressions$to == grs))
 })
 
 
