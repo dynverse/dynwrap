@@ -144,8 +144,8 @@ tests <- list(
     ),
     expected_net = tribble(
       ~from, ~to, ~weight, ~directed,
-      1, 3, 3, FALSE,
-      3, 3, 12, FALSE
+      3, 3, 12, FALSE,
+      3, 1, 3, FALSE
     )
   )
 )
