@@ -16,8 +16,6 @@ compute_tented_geodesic_distances <- function(
 ) {
   testthat::expect_true(is_wrapper_with_trajectory(trajectory))
 
-
-
   compute_tented_geodesic_distances_(
     cell_ids = trajectory$cell_ids,
     milestone_ids = trajectory$milestone_ids,
@@ -167,5 +165,6 @@ compute_tented_geodesic_distances_ <- function(
     )
   }
 
-  out
+  # put the cells in the right order
+  out[cell_ids, waypoint_ids]
 }
