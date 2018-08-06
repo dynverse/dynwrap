@@ -166,5 +166,5 @@ compute_tented_geodesic_distances_ <- function(
   }
 
   # put the cells in the right order
-  out[cell_ids, waypoint_ids]
+  out[waypoint_ids, cell_ids]
 }
