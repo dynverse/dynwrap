@@ -2,7 +2,7 @@
 # on osx, the R temporary directory is placed in the /var folder, but this is not standard accessibale for docker
 # in that case, we put it in /tmp
 mytempdir <- function(subfolder) {
-  dir <- file.path(tempdir(), subfolder) %>% gsub("^/var/", "/tmp/", .)
+  dir <- file.path(tempfile(), subfolder) %>% gsub("^/var/", "/tmp/", .)
   if (dir.exists(dir)) {
     unlink(dir, recursive = TRUE, force = TRUE)
   }
@@ -86,11 +86,15 @@ create_image_ti_method <- function(
     # create output directory
     dir_output <- mytempdir("output")
 
+    # create workspace
+    dir_workspace <- mytempdir("workspace")
+
     # run container
     output <- run_container(
       image,
       volumes = c(
         glue("{dir_input}:/input"),
+        glue("{dir_workspace}:/workspace"),
         glue("{dir_output}:/output")
       ),
       debug,
@@ -139,14 +143,14 @@ create_image_ti_method <- function(
           "Use this command for debugging: \n",
           crayon::bold(
             glue::glue(
-              "docker run --entrypoint 'bash' -it {paste0(paste0('-v ', volumes), collapse = ' ')} {image}"
+              "docker run --entrypoint 'bash' --workdir /workspace -it {paste0(paste0('-v ', volumes), collapse = ' ')} {image}"
             )
           ),
         call. = FALSE)
       } else {
         processx::run(
           "docker",
-          c("run", as.character(rbind("-v", volumes)), image),
+          c("run", "--workdir", "/workspace", as.character(rbind("-v", volumes)), image),
           echo = verbose,
           echo_cmd = verbose,
           spinner = TRUE
@@ -164,7 +168,7 @@ create_image_ti_method <- function(
           "Use this command for debugging: \n",
           crayon::bold(
             glue::glue(
-              "singularity exec --cleanenv --pwd / -B {glue::glue_collapse(volumes, ',')} {image} bash"
+              "singularity exec --cleanenv --pwd /workspace -B {glue::glue_collapse(volumes, ',')} {image} bash"
             )
           ),
         call. = FALSE)
@@ -177,7 +181,7 @@ create_image_ti_method <- function(
         stdout_file <- tempfile()
         output <- system2(
           "singularity",
-          c("-s", "run", "--cleanenv", "--pwd", "/", "-B", glue::glue_collapse(volumes, ','), image),
+          c("-s", "run", "--cleanenv", "--pwd", "/workspace", "-B", glue::glue_collapse(volumes, ','), image),
           stdout = stdout_file,
           stderr = stdout_file
         )
