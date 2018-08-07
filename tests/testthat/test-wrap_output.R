@@ -26,7 +26,6 @@ for (output_format in c("feather", "rds", "text")) {
 
     # linear trajectory
     model <- wrap_output(
-      base_model,
       "linear_trajectory",
       dir_output,
       output_format
@@ -35,7 +34,6 @@ for (output_format in c("feather", "rds", "text")) {
 
     # cyclic trajectory
     model <- wrap_output(
-      base_model,
       "cyclic_trajectory",
       dir_output,
       output_format
@@ -44,7 +42,6 @@ for (output_format in c("feather", "rds", "text")) {
 
     # pseudotime
     model <- wrap_output(
-      base_model,
       "pseudotime",
       dir_output,
       output_format
@@ -53,7 +50,6 @@ for (output_format in c("feather", "rds", "text")) {
 
     # grouping
     model <- wrap_output(
-      base_model,
       "grouping",
       dir_output,
       output_format
@@ -62,7 +58,6 @@ for (output_format in c("feather", "rds", "text")) {
 
     # cluster graph
     model <- wrap_output(
-      base_model,
       c("grouping", "cluster_graph"),
       dir_output,
       output_format
@@ -72,7 +67,6 @@ for (output_format in c("feather", "rds", "text")) {
 
     # trajectory
     model <- wrap_output(
-      base_model,
       c("trajectory"),
       dir_output,
       output_format
@@ -81,7 +75,6 @@ for (output_format in c("feather", "rds", "text")) {
 
     # branch trajectory
     model <- wrap_output(
-      base_model,
       c("branch_trajectory"),
       dir_output,
       output_format
@@ -90,7 +83,6 @@ for (output_format in c("feather", "rds", "text")) {
 
     # dimred
     model <- wrap_output(
-      base_model,
       c("dimred"),
       dir_output,
       output_format
@@ -99,7 +91,6 @@ for (output_format in c("feather", "rds", "text")) {
 
     # dimred_projection
     model <- wrap_output(
-      base_model,
       c("dimred_projection"),
       dir_output,
       output_format
@@ -108,7 +99,6 @@ for (output_format in c("feather", "rds", "text")) {
 
     # cell_graph
     model <- wrap_output(
-      base_model,
       c("cell_graph"),
       dir_output,
       output_format
@@ -117,7 +107,6 @@ for (output_format in c("feather", "rds", "text")) {
 
     # cluster_graph
     model <- wrap_output(
-      base_model,
       c("cluster_graph"),
       dir_output,
       output_format
@@ -132,7 +121,6 @@ test_that(paste0("Output processors can process output with ", output_format), {
   dir_output <- devtools:::shim_system.file(paste0("example_outputs/", output_format, "/"), package="dynwrap")
 
   model <- wrap_output(
-    base_model,
     NULL,
     dir_output,
     output_format
