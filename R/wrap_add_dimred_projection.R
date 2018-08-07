@@ -57,36 +57,52 @@ add_dimred_projection <- function(
       segment_start = dimred_milestones[milestone_network$from, , drop = FALSE],
       segment_end = dimred_milestones[milestone_network$to, , drop = FALSE]
     )
+    progressions <-
+      milestone_network %>%
+      slice(proj$segment) %>%
+      mutate(
+        cell_id = names(proj$segment),
+        percentage = proj$progression
+      ) %>%
+      select(cell_id, from, to, percentage)
   } else {
     # if grouping / clusterings are given, project cells only to segments
     # of which either the from or the to is equal to their grouping
     group_ids <- unique(grouping)
-    projs <- lapply(group_ids, function(group_id) {
+    progressions <- map_df(group_ids, function(group_id) {
       cids <- names(which(grouping == group_id))
-      mns <- milestone_network %>% mutate(orig = seq_len(n())) %>% filter(from == group_id | to == group_id)
 
-      proj <- dynutils::project_to_segments(
-        x = dimred[cids, , drop = FALSE],
-        segment_start = dimred_milestones[mns$from, , drop = FALSE],
-        segment_end = dimred_milestones[mns$to, , drop = FALSE]
-      )
-      proj$segment <- mns$orig[proj$segment] %>% set_names(names(proj$segment))
-      proj
+      # select all cells in this group
+      if (length(cids) > 0) {
+        mns <- milestone_network %>% filter(from == group_id | to == group_id)
+
+        if (nrow(mns) > 0) {
+          # project to segments
+          proj <- dynutils::project_to_segments(
+            x = dimred[cids, , drop = FALSE],
+            segment_start = dimred_milestones[mns$from, , drop = FALSE],
+            segment_end = dimred_milestones[mns$to, , drop = FALSE]
+          )
+          data_frame(
+            cell_id = cids,
+            from = mns$from,
+            to = mns$to,
+            percentage = proj$progression
+          )
+        } else {
+          # this group is a separate cluster
+          data_frame(
+            cell_id = cids,
+            from = group_id,
+            to = group_id,
+            percentage = 1
+          )
+        }
+      } else {
+        NULL
+      }
     })
-    proj <- list(
-      segment = projs %>% map(~.$segment) %>% unlist(),
-      progression = projs %>% map(~.$progression) %>% unlist()
-    )
   }
-
-  progressions <-
-    milestone_network %>%
-    slice(proj$segment) %>%
-    mutate(
-      cell_id = names(proj$segment),
-      percentage = proj$progression
-    ) %>%
-    select(cell_id, from, to, percentage)
 
   # collect information on clusters
   dimred_milestones_df <-
