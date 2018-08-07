@@ -69,6 +69,7 @@ add_dimred_projection <- function(
     # if grouping / clusterings are given, project cells only to segments
     # of which either the from or the to is equal to their grouping
     group_ids <- unique(grouping)
+
     progressions <- map_df(group_ids, function(group_id) {
       cids <- names(which(grouping == group_id))
 
@@ -85,8 +86,8 @@ add_dimred_projection <- function(
           )
           data_frame(
             cell_id = cids,
-            from = mns$from,
-            to = mns$to,
+            from = mns$from[proj$segment],
+            to = mns$to[proj$segment],
             percentage = proj$progression
           )
         } else {
@@ -102,6 +103,11 @@ add_dimred_projection <- function(
         NULL
       }
     })
+
+    # add missing group ids as clusters to the milestone network
+    missing_gids <- group_ids %>% setdiff(c(milestone_network$from, milestone_network$to))
+    milestone_network <- milestone_network %>%
+      bind_rows(data_frame(from = missing_gids, to = missing_gids, length = 0, directed = FALSE))
   }
 
   # collect information on clusters

@@ -103,7 +103,7 @@ process_grouping <- function(model, grouping) {
       names(grouping) <- model$cell_ids
     }
   } else if (length(grouping) == length(names(grouping))) {
-    # named vector not containing all cells
+    # named vector, possibly not containing all cells
   } else {
     stop("Could not find grouping")
   }
@@ -114,7 +114,7 @@ process_grouping <- function(model, grouping) {
   # make sure the order of the grouping is the same as cell_ids
   grouping <- grouping[model$cell_ids]
 
-  grouping
+  set_names(as.character(grouping), model$cell_ids)
 }
 
 
