@@ -116,3 +116,29 @@ process_grouping <- function(model, grouping) {
 
   grouping
 }
+
+
+#' Grouping the cells onto their edges
+#'
+#' @param trajectory The trajectory object
+#' @param group_template Processed by glue::glue to name the group
+#'
+#' @export
+group_onto_trajectory_edges <- function(trajectory, group_template = "{from}->{to}") {
+  # first map cells to largest percentage (in case of divergence regions)
+  progressions <- trajectory$progressions %>%
+    group_by(cell_id) %>%
+    arrange(-percentage) %>%
+    slice(1) %>%
+    ungroup()
+
+  # do the actual grouping
+  grouping <- progressions %>%
+    group_by(from, to) %>%
+    mutate(group_id = as.character(glue::glue(group_template))) %>%
+    ungroup() %>%
+    select(cell_id, group_id) %>%
+    deframe()
+
+  grouping[trajectory$cell_ids]
+}

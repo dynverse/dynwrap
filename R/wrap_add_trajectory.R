@@ -141,6 +141,8 @@ check_milestone_network <- function(milestone_ids, milestone_network) {
   testthat::expect_true(all(milestone_network$to %in% milestone_ids))
   testthat::expect_false(any(duplicated(milestone_network %>% select(from, to))))
 
+  ## TODO: check if edges such as A->A or A->B B->A are presnet
+
   milestone_network
 }
 
