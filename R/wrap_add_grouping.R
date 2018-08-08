@@ -156,7 +156,7 @@ group_onto_nearest_milestones <- function(trajectory) {
     slice(1) %>%
     mutate(percentage = 1) %>%
     ungroup() %>%
-    select(milestone_id, cell_id) %>%
+    select(cell_id, milestone_id) %>%
     deframe()
 
   grouping[trajectory$cell_ids]
