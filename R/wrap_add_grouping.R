@@ -142,3 +142,23 @@ group_onto_trajectory_edges <- function(trajectory, group_template = "{from}->{t
 
   grouping[trajectory$cell_ids]
 }
+
+
+#' Grouping the cells onto the closest milestones
+#'
+#' @param trajectory The trajectory object
+#'
+#' @export
+group_onto_nearest_milestones <- function(trajectory) {
+  grouping <- trajectory$milestone_percentages %>%
+    group_by(cell_id) %>%
+    arrange(-percentage) %>%
+    slice(1) %>%
+    mutate(percentage = 1) %>%
+    ungroup() %>%
+    select(milestone_id, cell_id) %>%
+    deframe()
+
+  grouping[trajectory$cell_ids]
+}
+

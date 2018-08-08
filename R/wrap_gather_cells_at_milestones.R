@@ -16,7 +16,8 @@ gather_cells_at_milestones <- function(trajectory) {
     add_trajectory(
       milestone_network = trajectory$milestone_network,
       divergence_regions = trajectory$divergence_regions,
-      milestone_percentages = milestone_percentages
+      milestone_percentages = milestone_percentages,
+      trajectory_cell_positioning = "milestones"
     )
 }
 
