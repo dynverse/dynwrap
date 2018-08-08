@@ -117,14 +117,8 @@ create_image_ti_method <- function(
     }
 
     # wrap output
-    if("counts" %in% input_ids) {
-      cell_ids <- rownames(counts)
-    } else {
-      cell_ids <- rownames(expression)
-    }
-
     model <-
-      wrap_output(output_ids, dir_output, cell_ids = cell_ids, output_format)
+      wrap_output(output_ids, dir_output, output_format)
 
     # add timing
     if(!is.null(model$timings)) {
