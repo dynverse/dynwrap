@@ -45,7 +45,16 @@ infer_trajectories <- function(
       map_int(
         method,
         function(x) {
-          distances <- utils::adist(x, all_desc$id)
+          distances <- utils::adist(
+            x,
+            all_desc$id,
+            costs = list(
+              insertions = 0.1,
+              deletions = 0.5,
+              substitutions = 1
+            )
+          )
+
           id <- as.integer(which.min(distances))
           if(min(distances) > 0) {
             message(stringr::str_glue("Fuzzy matching {x} -> {all_desc$id[[id]]}"))
