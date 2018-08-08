@@ -4,12 +4,17 @@
 \alias{simplify_igraph_network}
 \title{Simplify an igraph network such that consecutive linear edges are removed}
 \usage{
-simplify_igraph_network(gr, allow_duplicated_edges = TRUE)
+simplify_igraph_network(gr, allow_duplicated_edges = TRUE,
+  force_keep = NULL, edge_points = NULL)
 }
 \arguments{
 \item{gr}{an igraph object}
 
 \item{allow_duplicated_edges}{Whether or not to allow duplicated edges between nodes.}
+
+\item{force_keep}{Nodes that will not be removed under any condition}
+
+\item{edge_points}{Points that are on edges}
 }
 \description{
 Simplify an igraph network such that consecutive linear edges are removed
