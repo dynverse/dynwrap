@@ -74,6 +74,7 @@ compute_tented_geodesic_distances_ <- function(
   # add 'extra' divergences for transitions not in a divergence
   extra_divergences <-
     milestone_network %>%
+    filter(from != to) %>% # filter self edges
     rowwise() %>%
     mutate(in_divergence = divergence_regions %>% group_by(divergence_id) %>% summarise(match = all(c(from, to) %in% milestone_id)) %>% {any(.$match)}) %>%
     filter(!in_divergence) %>%
