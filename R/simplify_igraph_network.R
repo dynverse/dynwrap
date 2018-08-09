@@ -208,7 +208,7 @@ simplify_igraph_network <- function(
   outgr <- igraph::graph_from_data_frame(edge_df, is_directed, node_df)
   igraph::V(outgr)$name <- gsub("^#M#", "", igraph::V(outgr)$name)
 
-  if (nrow(seps) == 0) {
+  if (is.null(edge_points)) {
     outgr
   } else {
     seps <- seps %>% mutate_at(c("from", "to"), ~ gsub("^#M#", "", .))
