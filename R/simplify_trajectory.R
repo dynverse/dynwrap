@@ -23,7 +23,7 @@ simplify_trajectory <- function(traj) {
       progressions = progressions,
       divergence_regions = traj$divergence_regions
     )
-  # if newtraj contains grouping, dimred, ..., remove them as necessary
+  # TODO: if newtraj contains grouping, dimred, ..., remove them as necessary
 
   newtraj
 }
