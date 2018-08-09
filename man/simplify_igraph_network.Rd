@@ -5,7 +5,7 @@
 \title{Simplify an igraph network such that consecutive linear edges are removed}
 \usage{
 simplify_igraph_network(gr, allow_duplicated_edges = TRUE,
-  force_keep = NULL, edge_points = NULL)
+  force_keep = NULL, edge_points = NULL, split_selfloops = FALSE)
 }
 \arguments{
 \item{gr}{an igraph object}

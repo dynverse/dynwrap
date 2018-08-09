@@ -79,6 +79,7 @@ Collate:
     'get_cell_grouping.R'
     'package.R'
     'simplify_igraph_network.R'
+    'simplify_trajectory.R'
     'ti_parse_parameter_definition.R'
     'ti_create_method.R'
     'ti_comp1.R'
