@@ -220,7 +220,8 @@ extract_args_from_dataset <- function(
   inputs,
   give_priors = NULL
 ) {
-  data("priors", package = "dynwrap", envir = environment())
+  data("priors", package = "dynwrap", envir = environment()) # TODO: move to sysdata, avoiding loading of priors
+
   if(any(!give_priors %in% priors$prior_id)) {
     stop("Invalid priors requested: ", give_priors)
   }
@@ -240,11 +241,21 @@ extract_args_from_dataset <- function(
     pull(input_id)
 
   if (!all(required_prior_ids %in% names(priors))) {
+    # construct informative error message for missing priors
+    missing_priors <- setdiff(required_prior_ids, names(priors))
+    missing_priors_text <- glue::glue_collapse(crayon::bold(missing_priors), sep = ", ", last = " and ")
+
+    add_prior_information_params_text <- glue::glue("{missing_priors} = <prior>") %>% glue::glue_collapse(", ")
+    add_prior_information_text <- crayon::italic(glue::glue("add_prior_information(dataset, {add_prior_information_params_text})"))
+
     stop(
-      "Prior information ",
-      paste(setdiff(required_prior_ids, names(priors)), collapse = ";"),
-      " is required, but missing from dataset ",
-      dataset$id)
+      glue::glue(
+        "Prior information {missing_priors_text} is missing from dataset {dataset$id} but is required by the method. \n",
+        "   -> If known, you can add this prior information using {add_prior_information_text}. \n",
+        "   -> Otherwise, this method cannot be used.",
+        .trim = FALSE
+      )
+    )
   }
 
   args_required_priors <- priors[required_prior_ids]

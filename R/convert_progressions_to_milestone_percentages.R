@@ -34,5 +34,9 @@ convert_progressions_to_milestone_percentages <- function(
   tos <- progressions %>%
     select(cell_id, milestone_id = to, percentage)
 
-  bind_rows(froms, tos)
+  # just in case from and two are the same, group_by and summarise again.
+  bind_rows(froms, tos) %>%
+    group_by(cell_id, milestone_id) %>%
+    summarise(percentage = sum(percentage)) %>%
+    ungroup()
 }
