@@ -50,9 +50,6 @@ simplify_igraph_network <- function(
   if (allow_duplicated_edges && !is.null(edge_points)) {
     stop("allow_duplicated_edges cannot be TRUE when edge_points is not NULL")
   }
-  if (allow_self_loops && !is.null(edge_points)) {
-    stop("allow_self_loops cannot be TRUE when edge_points is not NULL")
-  }
 
   # to make sure indexing is not confused with names
   igraph::V(gr)$name <- paste0("#M#", igraph::V(gr)$name)
