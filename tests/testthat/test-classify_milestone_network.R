@@ -168,9 +168,9 @@ for (network_type in names(all_networks)) {
 
   for (network_name in names(networks)) {
     test_that(pritt("test whether {network_name} is detected as {network_type}"), {
-      network <- networks[[network_name]]
+      milestone_network <- networks[[network_name]]
 
-      detected_network_type <- classify_milestone_network(network)$network_type
+      detected_network_type <- classify_milestone_network(milestone_network)$network_type
 
       expect_equal(detected_network_type, network_type)
     })
