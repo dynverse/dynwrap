@@ -103,7 +103,7 @@ process_grouping <- function(model, grouping) {
       names(grouping) <- model$cell_ids
     }
   } else if (length(grouping) == length(names(grouping))) {
-    # named vector not containing all cells
+    # named vector, possibly not containing all cells
   } else {
     stop("Could not find grouping")
   }
@@ -114,5 +114,51 @@ process_grouping <- function(model, grouping) {
   # make sure the order of the grouping is the same as cell_ids
   grouping <- grouping[model$cell_ids]
 
-  grouping
+  set_names(as.character(grouping), model$cell_ids)
 }
+
+
+#' Grouping the cells onto their edges
+#'
+#' @param trajectory The trajectory object
+#' @param group_template Processed by glue::glue to name the group
+#'
+#' @export
+group_onto_trajectory_edges <- function(trajectory, group_template = "{from}->{to}") {
+  # first map cells to largest percentage (in case of divergence regions)
+  progressions <- trajectory$progressions %>%
+    group_by(cell_id) %>%
+    arrange(-percentage) %>%
+    slice(1) %>%
+    ungroup()
+
+  # do the actual grouping
+  grouping <- progressions %>%
+    group_by(from, to) %>%
+    mutate(group_id = as.character(glue::glue(group_template))) %>%
+    ungroup() %>%
+    select(cell_id, group_id) %>%
+    deframe()
+
+  grouping[trajectory$cell_ids]
+}
+
+
+#' Grouping the cells onto the closest milestones
+#'
+#' @param trajectory The trajectory object
+#'
+#' @export
+group_onto_nearest_milestones <- function(trajectory) {
+  grouping <- trajectory$milestone_percentages %>%
+    group_by(cell_id) %>%
+    arrange(-percentage) %>%
+    slice(1) %>%
+    mutate(percentage = 1) %>%
+    ungroup() %>%
+    select(cell_id, milestone_id) %>%
+    deframe()
+
+  grouping[trajectory$cell_ids]
+}
+

@@ -36,3 +36,17 @@ test_that("Testing get_grouping", {
   expect_equal(get_grouping(wrapper5, "info1"), wrapper3$grouping)
   expect_equal(names(get_grouping(wrapper5, "info1")), wrapper5$cell_ids)
 })
+
+
+milestone_network <- tibble(from = c("A", "B"), to = c("B", "C"), directed = TRUE, length = 1)
+progressions <- tibble(cell_id = cell_ids, from = c(rep("A", 3), rep("B", 3)), to = c(rep("B", 3), rep("C", 3)), percentage = c(0, 0.5, 1, 0, 0.5, 1))
+
+trajectory <- wrap_data(id, cell_ids) %>% add_trajectory(milestone_network = milestone_network, progressions = progressions)
+
+test_that("Testing group_onto_trajectory_edges", {
+  grouping <- group_onto_trajectory_edges(trajectory)
+
+  expect_equal(length(grouping), length(cell_ids))
+  expect_equal(names(grouping), cell_ids)
+  expect_equal(grouping %>% unname(), c("A->B", "A->B", "A->B", "B->C", "B->C", "B->C"))
+})

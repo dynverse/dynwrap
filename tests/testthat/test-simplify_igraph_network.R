@@ -154,13 +154,14 @@ for (test in tests) {
   test_that(glue::glue("Testing simplify_igraph_network on {test$name}"), {
     gr <- igraph::graph_from_data_frame(test$net, directed = test$directed)
 
-    newgr <- simplify_igraph_network(gr)
+    newgr <- simplify_igraph_network(gr, allow_duplicated_edges = TRUE)
     newnet <- igraph::as_data_frame(newgr)
+    expected <- test$expected_net %>%
+      mutate(from = as.character(from), to = as.character(to))
 
-    control <-
-      test$expected_net %>%
-      mutate(from = as.character(from), to = as.character(to), left = TRUE) %>%
-      full_join(newnet %>% mutate(right = TRUE), by = c("from", "to", "weight", "directed"))
+    exp2 <- bind_rows(expected, expected %>% rename(from = to, to = from)) %>% mutate(left = TRUE)
+    new2 <- bind_rows(newnet, newnet %>% rename(from = to, to = from)) %>% mutate(right = TRUE)
+    control <- full_join(exp2, new2, by = c("from", "to", "weight", "directed"))
 
     pass_check <- all(!is.na(control$left) & !is.na(control$right))
 
