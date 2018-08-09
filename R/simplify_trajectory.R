@@ -1,4 +1,3 @@
-
 #' Simplify a trajectory
 #'
 #' @param traj A trajectory to simplify
@@ -8,6 +7,7 @@ simplify_trajectory <- function(traj) {
   out <- simplify_igraph_network(
     gr = igraph::graph_from_data_frame(traj$milestone_network %>% rename(weight = length), directed = TRUE, traj$milestone_ids),
     allow_duplicated_edges = FALSE,
+    allow_self_loops = FALSE,
     force_keep = unique(traj$divergence_regions$milestone_id),
     edge_points = traj$progressions %>% rename(id = cell_id)
   )

@@ -5,12 +5,14 @@
 \title{Simplify an igraph network such that consecutive linear edges are removed}
 \usage{
 simplify_igraph_network(gr, allow_duplicated_edges = TRUE,
-  force_keep = NULL, edge_points = NULL, split_selfloops = FALSE)
+  allow_self_loops = TRUE, force_keep = NULL, edge_points = NULL)
 }
 \arguments{
 \item{gr}{an igraph object}
 
 \item{allow_duplicated_edges}{Whether or not to allow duplicated edges between nodes.}
+
+\item{allow_self_loops}{Whether or not to allow self loops.}
 
 \item{force_keep}{Nodes that will not be removed under any condition}
 

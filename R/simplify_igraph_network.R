@@ -2,6 +2,7 @@
 #'
 #' @param gr an igraph object
 #' @param allow_duplicated_edges Whether or not to allow duplicated edges between nodes.
+#' @param allow_self_loops Whether or not to allow self loops.
 #' @param force_keep Nodes that will not be removed under any condition
 #' @param edge_points Points that are on edges
 #'
@@ -42,11 +43,15 @@
 simplify_igraph_network <- function(
   gr,
   allow_duplicated_edges = TRUE,
+  allow_self_loops = TRUE,
   force_keep = NULL,
   edge_points = NULL
 ) {
   if (allow_duplicated_edges && !is.null(edge_points)) {
-    stop("allow_duplicated_edges is cannot be TRUE when edge_points is not NULL")
+    stop("allow_duplicated_edges cannot be TRUE when edge_points is not NULL")
+  }
+  if (allow_self_loops && !is.null(edge_points)) {
+    stop("allow_self_loops cannot be TRUE when edge_points is not NULL")
   }
 
   # to make sure indexing is not confused with names
@@ -78,7 +83,7 @@ simplify_igraph_network <- function(
     sub_edge_points <-
       if (!is.null(edge_points)) {
         edge <- igraph::as_data_frame(subgr) %>% select(from, to)
-        edges_bothdir <- bind_rows(edge, edge %>% select(from = to, to = from))
+        edges_bothdir <- bind_rows(edge, edge %>% select(from = to, to = from)) %>% unique()
         inner_join(edges_bothdir, edge_points, by = c("from", "to"))
       } else {
         NULL
@@ -102,7 +107,7 @@ simplify_igraph_network <- function(
         i_prev <- v_rem
 
         left_path <- list(
-          data_frame(from = i, to = i_prev, weight = igraph::E(subgr)[i %--% i_prev]$weight)
+          data_frame(from = i, to = i_prev, weight = simplify_get_edge(subgr, i, i_prev)$weight)
         )
 
         while (to_process[[i]]) {
@@ -110,7 +115,7 @@ simplify_igraph_network <- function(
           tmp <- i
           i <- simplify_get_next(neighs, i, is_directed, left = TRUE, prev = i_prev)
           i_prev <- tmp
-          left_path[[length(left_path) + 1]] <- data_frame(from = i, to = i_prev, weight = igraph::E(subgr)[i %--% i_prev]$weight)
+          left_path[[length(left_path) + 1]] <- data_frame(from = i, to = i_prev, weight = simplify_get_edge(subgr, i, i_prev)$weight)
         }
 
         # search for out end
@@ -118,7 +123,7 @@ simplify_igraph_network <- function(
         j_prev <- v_rem
 
         right_path <- list(
-          data_frame(from = j_prev, to = j, weight = igraph::E(subgr)[j %--% j_prev]$weight)
+          data_frame(from = j_prev, to = j, weight = simplify_get_edge(subgr, j_prev, j)$weight)
         )
 
         while (to_process[[j]]) {
@@ -126,7 +131,7 @@ simplify_igraph_network <- function(
           tmp <- j
           j <- simplify_get_next(neighs, j, is_directed, left = FALSE, prev = j_prev)
           j_prev <- tmp
-          right_path[[length(right_path) + 1]] <- data_frame(from = j_prev, to = j, weight = igraph::E(subgr)[j %--% j_prev]$weight)
+          right_path[[length(right_path) + 1]] <- data_frame(from = j_prev, to = j, weight = simplify_get_edge(subgr, j_prev, j)$weight)
         }
 
         left_path <- bind_rows(left_path) %>%
@@ -134,8 +139,45 @@ simplify_igraph_network <- function(
         right_path <- bind_rows(right_path) %>%
           mutate_at(c("from", "to"), ~ igraph::V(subgr)$name[.])
 
-        # if adding an edge between i and j would cause duplicates and this is not allowed
-        if (length(igraph::E(subgr)[i %--% j]) != 0 && !allow_duplicated_edges) {
+        if (i == j && !allow_self_loops) {
+          path <- bind_rows(left_path, right_path)
+
+          if (nrow(path) == 3 || (nrow(path) == 2 && allow_duplicated_edges)) {
+            # don't remove any edges
+            keep_v[path$from] <- TRUE
+          } else if (nrow(path) == 2) {
+            # add an empty edge between the two paths
+
+            # rename v_rem
+            nam <- igraph::V(subgr)[[v_rem]]$name
+            naml <- paste0(nam, "_L")
+            namr <- paste0(nam, "_R")
+            igraph::V(subgr)[[v_rem]]$name <- naml
+
+            # add new milestone
+            sub_edge_points <- sub_edge_points %>% mutate_at(c("from", "to"), ~ ifelse(. == nam, namr, .))
+            subgr <- subgr %>% igraph::add_vertices(1, attr = list(name = namr))
+            v_add <- igraph::V(subgr)[[namr]]
+
+            # remove edge between v_rem and j
+            subgr <- subgr %>%
+              igraph::add.edges(
+                c(v_rem, v_add, v_add, j), attr = list(weight = c(0, simplify_get_edge(subgr, v_rem, j)$weight), directed = is_directed)
+              ) %>%
+              {igraph::delete.edges(., simplify_get_edge(., v_rem, j))}
+            keep_v[nam] <- TRUE
+          } else if (nrow(path) > 3) {
+            # remove nodes, except for i_prev and j_prev
+            nami <- igraph::V(subgr)[[i]]$name
+            rem_path <- path %>% filter(from != nami & to != nami)
+
+            rplcd <- simplify_replace_edges(subgr, sub_edge_points, i_prev, j_prev, rem_path, is_directed)
+            subgr <- rplcd$subgr
+            sub_edge_points <- rplcd$sub_edge_points
+            keep_v[c(i_prev, j_prev)] <- TRUE
+          }
+        } else if (length(igraph::E(subgr)[i %--% j]) != 0 && !allow_duplicated_edges) {
+          # if adding an edge between i and j would cause duplicates and this is not allowed
           if (i_prev != v_rem) {
             rplcd <- simplify_replace_edges(subgr, sub_edge_points, i, v_rem, left_path, is_directed)
             subgr <- rplcd$subgr
@@ -258,6 +300,13 @@ simplify_replace_edges <- function(subgr, sub_edge_points, i, j, path, is_direct
   lst(subgr, sub_edge_points)
 }
 
+simplify_get_edge <- function(subgr, i, j) {
+  if (igraph::is_directed(subgr)) {
+    igraph::E(subgr)[i %->% j]
+  } else {
+    igraph::E(subgr)[i %--% j]
+  }
+}
 
 #' @examples
 #' set.seed(1)
