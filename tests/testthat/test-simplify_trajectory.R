@@ -34,9 +34,22 @@ test_that("Simple test", {
     )
   simp <- simplify_trajectory(traj)
 
+  # TODO: Add more tests! for more trajectory types! and more parameters!
+
+
   #' @examples
-  #' dynplot::plot_graph(traj)
-  #' dynplot::plot_graph(simp)
-
-
+  #' traj <- dyntoy::generate_dataset(model = dyntoy::model_disconnected())
+  #' traj <- dyntoy::generate_dataset(model = dyntoy::model_cyclic())
+  #' set.seed(1)
+  #' traj <- dyntoy::generate_dataset(model = dyntoy::model_connected(5, 3))
+  #' simp <- simplify_trajectory(traj, allow_self_loops = TRUE)
+  #' cowplot::plot_grid(
+  #'   dynplot::plot_graph(traj, label_milestones = T),
+  #'   dynplot::plot_graph(simp, label_milestones = T, milestone_percentages = traj$milestone_percentages),
+  #'   nrow = 1
+  #' )
+  #' traj$milestone_network
+  #' simp$milestone_network
+  #' sum(traj$milestone_network$length)
+  #' sum(simp$milestone_network$length)
 })

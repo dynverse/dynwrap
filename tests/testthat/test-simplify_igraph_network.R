@@ -193,3 +193,62 @@ test_that("simplify_igraph_network's allow_duplicated_edges parameter", {
 
   # TODO: expand test to make sure the right weights are being calculated
 })
+
+test_that("error is produced when needed", {
+  expect_error(simplify_igraph_network(NULL, allow_duplicated_edges = TRUE, edge_points = 1), "allow_dup.*TRUE when edge_p.*NULL")
+})
+
+
+test_that("simplifications with a small cycle works as expected", {
+  origdf <- data.frame(from = c("A", "B"), to = c("B", "A"), weight = c(1, 2), directed = T, stringsAsFactors = FALSE)
+  gr <- igraph::graph_from_data_frame(origdf)
+  edge_points <- data_frame(id = c("x", "y"), from = c("A", "B"), to = c("B", "A"), percentage = c(.5, .6))
+  totlen <- sum(origdf$weight)
+
+  s1 <- simplify_igraph_network(gr, allow_duplicated_edges = FALSE, allow_self_loops = TRUE, edge_points = edge_points)
+  df <- igraph::as_data_frame(s1$gr)
+  expect_lt(abs(sum(df$weight) - totlen), .001)
+  expect_equal(df, data.frame(from = "A", to = "A", weight = totlen, directed = TRUE, stringsAsFactors = FALSE))
+  expect_equal(s1$edge_points[, -4], data.frame(from = c("A", "A"), to = c("A", "A"), id = c("x", "y"), stringsAsFactors = FALSE))
+  expect_lt(sum(abs(s1$edge_points$percentage - c(1 / 6, 1 / 3 + .6 * 2 / 3))), .001)
+
+  s2 <- simplify_igraph_network(gr, allow_duplicated_edges = FALSE, allow_self_loops = TRUE)
+  df <- igraph::as_data_frame(s2)
+  expect_lt(abs(sum(df$weight) - totlen), .001)
+  expect_equal(df, data.frame(from = "A", to = "A", weight = totlen, directed = TRUE, stringsAsFactors = FALSE))
+
+  s3 <- simplify_igraph_network(gr, allow_duplicated_edges = TRUE, allow_self_loops = FALSE)
+  df <- igraph::as_data_frame(s3)
+  expect_lt(abs(sum(df$weight) - totlen), .001)
+  expect_equal(df, origdf)
+})
+
+
+
+test_that("simplifications with a large cycle works as expected", {
+  origdf <- data.frame(from = c("A", "B", "C", "D"), to = c("B", "C", "D", "A"), weight = c(1, 2, 3, 4), directed = F, stringsAsFactors = FALSE)
+  gr <- igraph::graph_from_data_frame(origdf, directed = any(origdf$directed))
+  edge_points <- data_frame(id = c("x", "y", "z"), from = c("A", "B", "D"), to = c("B", "C", "A"), percentage = c(.5, .6, 1))
+  totlen <- sum(origdf$weight)
+
+  s1 <- simplify_igraph_network(gr, allow_duplicated_edges = FALSE, allow_self_loops = TRUE, edge_points = edge_points)
+  df <- igraph::as_data_frame(s1$gr)
+  expect_lt(abs(sum(df$weight) - totlen), .001)
+  expect_equal(df, data.frame(from = "A", to = "A", weight = totlen, directed = FALSE, stringsAsFactors = FALSE))
+  expect_equal(s1$edge_points[, -4], data.frame(from = c("A", "A", "A"), to = c("A", "A", "A"), id = c("x", "y", "z"), stringsAsFactors = FALSE))
+  expect_lt(sum(abs(s1$edge_points$percentage - c(1 * .5 / totlen, (1 + .6 * 2) / totlen, 1))), .001)
+
+  s2 <- simplify_igraph_network(gr, allow_duplicated_edges = FALSE, allow_self_loops = TRUE)
+  df <- igraph::as_data_frame(s2)
+  expect_lt(abs(sum(df$weight) - totlen), .001)
+  expect_equal(df, data.frame(from = "A", to = "A", weight = sum(origdf$weight), directed = FALSE, stringsAsFactors = FALSE))
+
+  s3 <- simplify_igraph_network(gr, allow_duplicated_edges = TRUE, allow_self_loops = FALSE)
+  df <- igraph::as_data_frame(s3)
+  expect_lt(abs(sum(df$weight) - totlen), .001)
+  expect_equal(df, data.frame(from = c("A", "A", "B"), to = c("B", "D", "D"), weight = c(1, 4, 5), directed = FALSE, stringsAsFactors = FALSE))
+})
+
+
+
+# TODO: add more tests that check whether combinations of trajectory types, edge_points, allow_self_loops and allow_duplicated edges work correctly
