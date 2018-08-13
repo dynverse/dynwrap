@@ -1,0 +1,8 @@
+FROM library/python:3.6
+
+ENV OPENBLAS_NUM_THREADS=1
+ENV NUMEXPR_NUM_THREADS=1
+ENV MKL_NUM_THREADS=1
+ENV OMP_NUM_THREADS=1
+
+RUN pip install scipy numpy pandas matplotlib

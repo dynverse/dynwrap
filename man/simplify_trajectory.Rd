@@ -4,10 +4,12 @@
 \alias{simplify_trajectory}
 \title{Simplify a trajectory}
 \usage{
-simplify_trajectory(traj)
+simplify_trajectory(traj, allow_self_loops = FALSE)
 }
 \arguments{
 \item{traj}{A trajectory to simplify}
+
+\item{allow_self_loops}{Whether or not to allow self loops.}
 }
 \description{
 Simplify a trajectory

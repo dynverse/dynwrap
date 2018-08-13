@@ -240,7 +240,7 @@ This file should always contain an entrypoint, which will be called when the TI 
 
 ## Doing trajectory inference
 
-All input files requested in the `definition.yml` will be mounted in the `/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/output` directory. An example (as can be found on the [github](https://github.com/dynverse/comp1/blob/devel/R_feather/run.R)):
+All input files requested in the `definition.yml` will be mounted in the `/ti/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/ti/output` directory. An example (as can be found on the [github](https://github.com/dynverse/comp1/blob/devel/R_feather/run.R)):
 
 ```{r, echo=FALSE, results="asis"}
 read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/R_feather/run.R") %>%
@@ -266,7 +266,7 @@ system("docker build -t dynverse/comp1 .")
 
 The `-t dynverse/comp1` argument gives a tag to this container, so that it can be easily run later.
 
-Although this container can be run anywhere as long as the `/input` and `/output` folders are mounted, we'll run it here using the `dynwrap` workflow. First, we have to wrap the docker into a method function.
+Although this container can be run anywhere as long as the `/ti/input` and `/ti/output` folders are mounted, we'll run it here using the `dynwrap` workflow. First, we have to wrap the docker into a method function.
 ```r
 library(dynwrap)
 ti_comp1 <- create_docker_ti_method("dynverse/comp1")
@@ -377,7 +377,7 @@ if (Sys.getenv("TRAVIS") != "true" || Sys.getenv("APPVEYOR") == "True") {
 }
 ```
 
-This will print a shell command which can be used to enter the container with the /input and /output directories mounted.
+This will print a shell command which can be used to enter the container with the /ti/input and /ti/output directories mounted.
 
 ## Making your method available for other users
 

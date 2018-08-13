@@ -494,7 +494,7 @@
 <div id="doing-trajectory-inference" class="section level2">
 <h2 class="hasAnchor">
 <a href="#doing-trajectory-inference" class="anchor"></a>Doing trajectory inference</h2>
-<p>All input files requested in the <code>definition.yml</code> will be mounted in the <code>/input</code> directory of the docker. After inferring a trajectory, the method should write output files into the <code>/output</code> directory. An example (as can be found on the <a href="https://github.com/dynverse/comp1/blob/devel/R_feather/run.R">github</a>):</p>
+<p>All input files requested in the <code>definition.yml</code> will be mounted in the <code>/ti/input</code> directory of the docker. After inferring a trajectory, the method should write output files into the <code>/ti/ti/output</code> directory. An example (as can be found on the <a href="https://github.com/dynverse/comp1/blob/devel/R_feather/run.R">github</a>):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr, <span class="dt">warn.conflicts =</span> <span class="ot">FALSE</span>)
 <span class="kw">library</span>(tibble, <span class="dt">warn.conflicts =</span> <span class="ot">FALSE</span>)
 <span class="kw">library</span>(readr, <span class="dt">warn.conflicts =</span> <span class="ot">FALSE</span>)
@@ -502,16 +502,16 @@
 
 ## Load data -----------------------------------------------
 
-expression &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/feather/topics/read_feather">read_feather</a></span>(<span class="st">"/input/expression.feather"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+expression &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/feather/topics/read_feather">read_feather</a></span>(<span class="st">"/ti/input/expression.feather"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tibble/topics/rownames">column_to_rownames</a></span>(<span class="st">"rownames"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">as.matrix</span>()
-<span class="cf">if</span>(<span class="kw">file.exists</span>(<span class="st">"/input/start_id.feather"</span>)) {
-  start_id &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/feather/topics/read_feather">read_feather</a></span>(<span class="st">"/input/start_id.feather"</span>)<span class="op">$</span>start_id
+<span class="cf">if</span>(<span class="kw">file.exists</span>(<span class="st">"/ti/input/start_id.feather"</span>)) {
+  start_id &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/feather/topics/read_feather">read_feather</a></span>(<span class="st">"/ti/input/start_id.feather"</span>)<span class="op">$</span>start_id
 } <span class="cf">else</span> {
   start_id &lt;-<span class="st"> </span><span class="ot">NULL</span>
 }
 
-params &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/jsonlite/topics/read_json">read_json</a></span>(<span class="st">"/input/params.json"</span>, <span class="dt">simplifyVector =</span> <span class="ot">TRUE</span>)
+params &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/jsonlite/topics/read_json">read_json</a></span>(<span class="st">"/ti/input/params.json"</span>, <span class="dt">simplifyVector =</span> <span class="ot">TRUE</span>)
 
 ## Trajectory inference -----------------------------------
 <span class="co"># do PCA</span>
@@ -530,7 +530,7 @@ pseudotime &lt;-<span class="st"> </span>pca<span class="op">$</span>x[, params<
 ## Save output ---------------------------------------------
 <span class="co"># output pseudotimes</span>
 tibble<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/tibble/topics/enframe">enframe</a></span>(pseudotime, <span class="st">"cell_id"</span>, <span class="st">"pseudotime"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/feather/topics/read_feather">write_feather</a></span>(<span class="st">"/output/pseudotime.feather"</span>)</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/feather/topics/read_feather">write_feather</a></span>(<span class="st">"/ti/ti/output/pseudotime.feather"</span>)</code></pre></div>
 </div>
 <div id="testing-the-ti-method" class="section level2">
 <h2 class="hasAnchor">
@@ -541,7 +541,7 @@ tibble<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 <p>or in R</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system</span>(<span class="st">"docker build -t dynverse/comp1 ."</span>)</code></pre></div>
 <p>The <code>-t dynverse/comp1</code> argument gives a tag to this container, so that it can be easily run later.</p>
-<p>Although this container can be run anywhere as long as the <code>/input</code> and <code>/output</code> folders are mounted, we’ll run it here using the <code>dynwrap</code> workflow. First, we have to wrap the docker into a method function.</p>
+<p>Although this container can be run anywhere as long as the <code>/ti/input</code> and <code>/ti/ti/output</code> folders are mounted, we’ll run it here using the <code>dynwrap</code> workflow. First, we have to wrap the docker into a method function.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dynwrap)
 ti_comp1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/create_docker_ti_method.html">create_docker_ti_method</a></span>(<span class="st">"dynverse/comp1"</span>)</code></pre></div>
 <p>If the method is on the docker hub, it can also be pulled</p>
@@ -595,8 +595,8 @@ dynplot<span class="op">::</span><span class="kw"><a href="http://www.rdocumenta
 <pre><code>## NULL</code></pre>
 <pre><code>## Error: Error during trajectory inference 
 ## Use this command for debugging: 
-## docker run --entrypoint 'bash' -it -v /tmp/RtmpqibM5Q/input:/input -v /tmp/RtmpqibM5Q/output:/output dynverse/comp1</code></pre>
-<p>This will print a shell command which can be used to enter the container with the /input and /output directories mounted.</p>
+## docker run --entrypoint 'bash' -it -v /tmp/RtmpqibM5Q/ti/input:/ti/input -v /tmp/RtmpqibM5Q/ti/ti/output:/ti/ti/output dynverse/comp1</code></pre>
+<p>This will print a shell command which can be used to enter the container with the /ti/input and /ti/ti/output directories mounted.</p>
 </div>
 <div id="making-your-method-available-for-other-users" class="section level2">
 <h2 class="hasAnchor">

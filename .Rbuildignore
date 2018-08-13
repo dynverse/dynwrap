@@ -7,3 +7,4 @@
 ^docs$
 ^.travis_get_hdf5_if_needed.sh$
 ^appveyor\.yml$
+^containers$
