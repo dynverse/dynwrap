@@ -171,8 +171,8 @@ check_milestone_percentages <- function(cell_ids, milestone_ids, milestone_perce
   testthat::expect_true(all(milestone_percentages$cell_id %in% cell_ids))
   testthat::expect_true(all(milestone_percentages$milestone_id %in% milestone_ids))
 
-  mp_check <- milestone_percentages %>% group_by(cell_id) %>% summarise(sum = sum(percentage))
-  testthat::expect_true(all(abs(mp_check$sum - 1) < 1e-8), info = "Sum of milestone percentages per cell_id should be exactly one")
+  mp_check <- tapply(milestone_percentages$percentage, milestone_percentages$cell_id, sum)
+  testthat::expect_true(all(abs(mp_check - 1) < 1e-8), info = "Sum of milestone percentages per cell_id should be exactly one")
 
   milestone_percentages
 }
@@ -188,8 +188,8 @@ check_progressions <- function(cell_ids, milestone_ids, milestone_network, progr
   testthat::expect_true(all(progressions$from %in% milestone_ids))
   testthat::expect_true(all(progressions$to %in% milestone_ids))
 
-  pg_check <- progressions %>% group_by(cell_id) %>% summarise(sum = sum(percentage))
-  testthat::expect_true(all(pg_check$sum >= 0 & pg_check$sum < (1 + 1e-8)), info = "Sum of progressions per cell_id should be exactly one")
+  pg_check <- tapply(progressions$percentage, progressions$cell_id, sum)
+  testthat::expect_true(all(pg_check >= 0 & pg_check < (1 + 1e-8)), info = "Sum of progressions per cell_id should be exactly one")
 
   pg_check <- progressions %>% left_join(milestone_network, by = c("from", "to"))
   testthat::expect_true(all(!is.na(pg_check$directed)), info = "All progressions (from, to) edges need to be part of the milestone network")
