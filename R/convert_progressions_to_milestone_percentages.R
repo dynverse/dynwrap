@@ -10,33 +10,42 @@ convert_progressions_to_milestone_percentages <- function(
   milestone_network,
   progressions
 ) {
-  check_froms <- progressions %>%
-    group_by(cell_id) %>%
-    summarise(n = length(unique(from)))
-  if (any(check_froms$n > 1)) {
+
+  check_froms <- tapply(progressions$from, progressions$cell_id, function(x) any(duplicated(x)))
+  if (any(check_froms)) {
     stop("In ", sQuote("progressions"), ", cells should only have 1 unique from milestone.")
   }
 
   check_edges <- progressions %>%
     left_join(milestone_network, by = c("from", "to")) %>%
     left_join(milestone_network %>% select(to = from, from = to, length2 = length), by = c("from", "to"))
+
   if (any(is.na(check_edges$length) & is.na(check_edges$length2))) {
     stop("All from-to combinations in ", sQuote("progressions"), " should be in ", sQuote("milestone_network"), " as well.")
   }
 
-  froms <- progressions %>%
-    group_by(cell_id) %>%
-    summarise(
-      milestone_id = from[[1]],
-      percentage = 1 - sum(percentage)
-    )
+  # determine milestone percentages for self edges
+  selfs <- progressions %>%
+    filter(from == to) %>%
+    select(cell_id, milestone_id = from) %>%
+    mutate(percentage = 1)
 
+  progressions <- progressions %>%
+    filter(from != to)
+
+  # determine milestone percentages for 'from' milestones
+  from_mls <- tapply(progressions$from, progressions$cell_id, first)
+  from_pct <- 1 - tapply(progressions$percentage, progressions$cell_id, sum)
+  froms <- data_frame(
+    cell_id = names(from_mls),
+    milestone_id = from_mls[cell_id],
+    percentage = from_pct[cell_id]
+  )
+
+  # determine milestone percentages for 'to' milestones
   tos <- progressions %>%
     select(cell_id, milestone_id = to, percentage)
 
-  # just in case from and two are the same, group_by and summarise again.
-  bind_rows(froms, tos) %>%
-    group_by(cell_id, milestone_id) %>%
-    summarise(percentage = sum(percentage)) %>%
-    ungroup()
+  # return all percentages
+  bind_rows(selfs, froms, tos)
 }
