@@ -76,7 +76,7 @@ determine_cell_trajectory_positions <- function(
 
   cells_on_edge <- progressions %>%
     filter(percentage < 1-1e-8, percentage > 1e-8) %>%
-    filter(cell_id %in% cell_id[!duplicated(cell_id)]) %>%
+    filter(!cell_id %in% cell_id[duplicated(cell_id)]) %>%
     left_join(milestone_network %>% mutate(index = seq_len(n())) %>% select(from, to, index), by = c("from", "to"))
 
   places <- bind_rows(
