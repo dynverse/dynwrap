@@ -49,33 +49,34 @@ determine_cell_trajectory_positions <- function(
   divergence_ids <- divergence_regions$divergence_id %>% unique
 
   cells_in_milestone <- milestone_percentages %>%
-    group_by(cell_id) %>%
     filter(percentage > 1-1e-8) %>%
-    filter(n() == 1) %>%
-    ungroup() %>%
     mutate(index = match(milestone_id, milestone_ids))
 
   cells_in_divergence <-
     map_df(seq_along(divergence_ids), function(dii) {
       mid <- divergence_regions %>%
         filter(divergence_id == divergence_ids[[dii]]) %>%
-        .$milestone_id
+        filter(!is_start) %>%
+        pull(milestone_id)
+
+      mid_start <- divergence_regions %>%
+        filter(divergence_id == divergence_ids[[dii]]) %>%
+        filter(is_start) %>%
+        pull(milestone_id)
 
       cells <- progressions %>%
-        group_by(cell_id) %>%
-        filter(n() > 1) %>%
-        filter(all(unique(c(from, to)) %in% mid)) %>%
-        summarise() %>%
-        .$cell_id %>%
-        unique
+        filter(percentage < 1-1e-8, percentage > 1e-8) %>%
+        filter(from == mid_start, to %in% mid) %>%
+        filter(cell_id %in% cell_id[duplicated(cell_id)]) %>%
+        pull(cell_id) %>%
+        unique()
 
       data_frame(index = dii, cell_id = cells, divergence_id = divergence_ids[dii])
     })
 
   cells_on_edge <- progressions %>%
-    group_by(cell_id) %>%
-    filter(n() == 1, percentage < 1-1e-8, percentage > 1e-8) %>%
-    ungroup() %>%
+    filter(percentage < 1-1e-8, percentage > 1e-8) %>%
+    filter(cell_id %in% cell_id[!duplicated(cell_id)]) %>%
     left_join(milestone_network %>% mutate(index = seq_len(n())) %>% select(from, to, index), by = c("from", "to"))
 
   places <- bind_rows(
