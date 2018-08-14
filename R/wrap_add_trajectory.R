@@ -85,11 +85,9 @@ add_trajectory <- function(
 
   # check whether cells in tents are explicitly mentioned in divergence_regions
   tents <- progressions %>%
-    group_by(cell_id) %>%
-    filter(n() > 1) %>%
-    ungroup() %>%
+    filter(cell_id %in% cell_id[duplicated(cell_id)]) %>% # cell_id must occur multiple times
     group_by(from, to) %>%
-    summarise() %>%
+    summarise(n = n()) %>%
     ungroup()
 
   for (fr in unique(tents$from)) {
