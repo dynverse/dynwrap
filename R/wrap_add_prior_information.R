@@ -94,11 +94,9 @@ add_prior_information <- function(
         divergence_regions = divergence_regions,
         expression = expression,
         feature_info = feature_info,
-        cell_info = cell_info
+        cell_info = cell_info,
+        given = prior_information
       ))
-
-    # update calculated prior information with given prior information (giving precendence to the latter)
-    prior_information <- list_modify(calculated_prior_information, !!!prior_information)
   }
 
   dataset %>% extend_with(
@@ -125,6 +123,7 @@ is_wrapper_with_prior_information <- function(object) {
 #' @inheritParams add_trajectory
 #' @inheritParams add_expression
 #' @param marker_fdr Maximal FDR value for a gene to be considered a marker
+#' @param given Prior information already calculated
 #'
 #' @importFrom utils installed.packages head
 #'
@@ -139,8 +138,13 @@ generate_prior_information <- function(
   expression,
   feature_info = NULL,
   cell_info = NULL,
-  marker_fdr = 0.005
+  marker_fdr = 0.005,
+  given = NULL
 ) {
+  if (is.null(given)) {
+    given <- list()
+  }
+
   ## START AND END CELLS ##
   # convert milestone network to an igraph object
   is_directed <- any(milestone_network$directed)
@@ -203,83 +207,124 @@ generate_prior_information <- function(
   }
 
   # determine start cells
-  if (length(start_milestones) > 0) {
-    start_id <- determine_closest_cells(start_milestones)
+  if ("start_id" %in% names(given)) {
+    start_id <- given$start_id
   } else {
-    start_id <- unique(progressions$cell_id)
+    if (length(start_milestones) > 0) {
+      start_id <- determine_closest_cells(start_milestones)
+    } else {
+      start_id <- unique(progressions$cell_id)
+    }
   }
 
   # determine end cells
-  if (length(end_milestones) > 0) {
-    end_id <- determine_closest_cells(end_milestones)
+  if ("end_id" %in% names(given)) {
+    end_id <- given$end_id
   } else {
-    end_id <- c()
+    if (length(end_milestones) > 0) {
+      end_id <- determine_closest_cells(end_milestones)
+    } else {
+      end_id <- c()
+    }
   }
 
   ## CELL GROUPING ##
-  groups_id <-
-    milestone_percentages %>%
-    group_by(cell_id) %>%
-    summarise(group_id = milestone_id[which.max(percentage)])
-  groups_network <- milestone_network %>% select(from, to)
+  if ("groups_id" %in% names(given)) {
+    groups_id <- given$groups_id
+  } else {
+    groups_id <-
+      milestone_percentages %>%
+      group_by(cell_id) %>%
+      summarise(group_id = milestone_id[which.max(percentage)])
+  }
+
+  if ("groups_network" %in% names(given)) {
+    groups_network <- given$groups_network
+  } else {
+    groups_network <- milestone_network %>% select(from, to)
+  }
 
   ## MARKER GENES ##
-  if (!is.null(feature_info) && "housekeeping" %in% colnames(feature_info)) {
-    features_id <- feature_info %>%
-      filter(!housekeeping) %>%
-      pull(feature_id)
+  if ("features_id" %in% names(given)) {
+    features_id <- given$features_id
   } else {
-    if ("scran" %in% rownames(utils::installed.packages())) {
-      findMarkers <- get("findMarkers", asNamespace("scran"))
-      markers <- findMarkers(t(expression), groups_id %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
-
-      features_id <- map(markers, as, "data.frame") %>%
-        map(rownames_to_column, "gene") %>%
-        bind_rows() %>%
-        filter(FDR < marker_fdr) %>%
-        pull("gene")
+    if (!is.null(feature_info) && "housekeeping" %in% colnames(feature_info)) {
+      features_id <- feature_info %>%
+        filter(!housekeeping) %>%
+        pull(feature_id)
     } else {
-      warning("scran should be installed to determine marker features, will simply order by standard deviation")
+      if ("scran" %in% rownames(utils::installed.packages())) {
+        findMarkers <- get("findMarkers", asNamespace("scran"))
+        markers <- findMarkers(t(expression), groups_id %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
 
-      features_id <- apply(expression, 2, sd) %>% sort() %>% rownames() %>% {utils::head(., round(length(.)*0.1))}
+        features_id <- map(markers, as, "data.frame") %>%
+          map(rownames_to_column, "gene") %>%
+          bind_rows() %>%
+          filter(FDR < marker_fdr) %>%
+          pull("gene")
+      } else {
+        warning("scran should be installed to determine marker features, will simply order by standard deviation")
+
+        features_id <- apply(expression, 2, sd) %>% sort() %>% rownames() %>% {utils::head(., round(length(.)*0.1))}
+      }
     }
   }
 
   ## NUMBER OF BRANCHES ##
-  groups_n <- nrow(milestone_network)
+  if ("groups_n" %in% names(given)) {
+    groups_n <- given$groups_n
+  } else {
+    groups_n <- nrow(milestone_network)
+  }
 
   ## NUMBER OF START STATES ##
-  start_n <- length(start_milestones)
+  if ("start_n" %in% names(given)) {
+    start_n <- given$start_n
+  } else {
+    start_n <- length(start_milestones)
+  }
 
   ## NUMBER OF END STATES ##
-  end_n <- length(end_milestones)
+  if ("end_n" %in% names(given)) {
+    end_n <- given$end_n
+  } else {
+    end_n <- length(end_milestones)
+  }
 
   ## TIME AND TIME COURSE ##
-  timecourse_continuous <-
-    if (!is.null(cell_info) && "simulationtime" %in% colnames(cell_info)) {
-      set_names(cell_info$simulationtime, cell_info$cell_id)
-    } else {
-      geo <- compute_tented_geodesic_distances_(
-        cell_ids = cell_ids,
-        milestone_ids = milestone_ids,
-        milestone_network = milestone_network,
-        milestone_percentages = milestone_percentages,
-        divergence_regions = divergence_regions,
-        waypoint_cells = start_id
-      )
-      apply(geo, 2, function(x) {
-        min(x)
-      })
-    }
+  if ("timecourse_continuous" %in% names(given)) {
+    timecourse_continuous <- given$timecourse_continuous
+  } else {
+    timecourse_continuous <-
+      if (!is.null(cell_info) && "simulationtime" %in% colnames(cell_info)) {
+        set_names(cell_info$simulationtime, cell_info$cell_id)
+      } else {
+        geo <- compute_tented_geodesic_distances_(
+          cell_ids = cell_ids,
+          milestone_ids = milestone_ids,
+          milestone_network = milestone_network,
+          milestone_percentages = milestone_percentages,
+          divergence_regions = divergence_regions,
+          waypoint_cells = start_id
+        )
+        apply(geo, 2, function(x) {
+          min(x)
+        })
+      }
 
-  timecourse_continuous[is.infinite(timecourse_continuous)] <- max(timecourse_continuous[!is.infinite(timecourse_continuous)])
+    timecourse_continuous[is.infinite(timecourse_continuous)] <- max(timecourse_continuous[!is.infinite(timecourse_continuous)])
+  }
 
-  timecourse_discrete <-
-    if (!is.null(cell_info) && "timepoint" %in% colnames(cell_info)) {
-      set_names(cell_info$timepoint, cell_info$cell_id)
-    } else {
-      cut(timecourse_continuous, breaks = min(10, length(unique(timecourse_continuous))), labels = FALSE)
-    }
+  if ("timecourse_discrete" %in% names(given)) {
+    timecourse_discrete <- given$timecourse_discrete
+  } else {
+    timecourse_discrete <-
+      if (!is.null(cell_info) && "timepoint" %in% colnames(cell_info)) {
+        set_names(cell_info$timepoint, cell_info$cell_id)
+      } else {
+        cut(timecourse_continuous, breaks = min(10, length(unique(timecourse_continuous))), labels = FALSE)
+      }
+  }
 
   # return output
   lst(
