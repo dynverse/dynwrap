@@ -71,13 +71,13 @@ add_prior_information <- function(
     testthat::expect_true(all(is.numeric(timecourse_continuous)))
     testthat::expect_setequal(dataset$cell_ids, names(timecourse_continuous))
 
-    timecourse_continuous <- timecourse_continuous[dataset$cell_ids]
+    prior_information$timecourse_continuous <- timecourse_continuous[dataset$cell_ids]
   }
   if (!is.null(timecourse_discrete)) {
     testthat::expect_true(is.numeric(timecourse_discrete))
     testthat::expect_setequal(dataset$cell_ids, names(timecourse_discrete))
 
-    timecourse_discrete <- timecourse_discrete[dataset$cell_ids]
+    prior_information$timecourse_discrete <- timecourse_discrete[dataset$cell_ids]
   }
 
   if (is_wrapper_with_trajectory(dataset) && is_wrapper_with_expression(dataset)) {
