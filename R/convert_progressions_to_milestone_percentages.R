@@ -11,8 +11,8 @@ convert_progressions_to_milestone_percentages <- function(
   progressions
 ) {
 
-  check_froms <- tapply(progressions$from, progressions$cell_id, function(x) any(duplicated(x)))
-  if (any(check_froms)) {
+  check_froms <- tapply(progressions$from, progressions$cell_id, function(x) length(unique(x)) == 1)
+  if (any(!check_froms)) {
     stop("In ", sQuote("progressions"), ", cells should only have 1 unique from milestone.")
   }
 

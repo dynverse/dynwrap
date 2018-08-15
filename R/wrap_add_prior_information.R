@@ -84,7 +84,7 @@ add_prior_information <- function(
     if (verbose) message("Calculating prior information using trajectory")
 
     # compute prior information and add it to the wrapper
-    calculated_prior_information <-
+    prior_information <-
       with(dataset, generate_prior_information(
         cell_ids = cell_ids,
         milestone_ids = milestone_ids,
