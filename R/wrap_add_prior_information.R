@@ -14,7 +14,7 @@
 #' @param end_n Number of end states
 #' @param timecourse_continuous The time for every cell
 #' @param timecourse_discrete The time for every cell in groups
-#' @param verbose Whether or not to print informative messages or not
+#' @param verbose Whether or not to print informative messages
 #'
 #' @export
 #'
@@ -81,7 +81,7 @@ add_prior_information <- function(
   }
 
   if (is_wrapper_with_trajectory(dataset) && is_wrapper_with_expression(dataset)) {
-    if (verbose) message("Calculating prior information using trajectory")
+    if (verbose) cat("Calculating prior information using trajectory\n")
 
     # compute prior information and add it to the wrapper
     prior_information <-
@@ -95,7 +95,8 @@ add_prior_information <- function(
         expression = expression,
         feature_info = feature_info,
         cell_info = cell_info,
-        given = prior_information
+        given = prior_information,
+        verbose = verbose
       ))
   }
 
@@ -124,6 +125,7 @@ is_wrapper_with_prior_information <- function(object) {
 #' @inheritParams add_expression
 #' @param marker_fdr Maximal FDR value for a gene to be considered a marker
 #' @param given Prior information already calculated
+#' @param verbose Whether or not to print informative messages
 #'
 #' @importFrom utils installed.packages head
 #'
@@ -139,7 +141,8 @@ generate_prior_information <- function(
   feature_info = NULL,
   cell_info = NULL,
   marker_fdr = 0.005,
-  given = NULL
+  given = NULL,
+  verbose = FALSE
 ) {
   if (is.null(given)) {
     given <- list()
@@ -155,6 +158,7 @@ generate_prior_information <- function(
   )
 
   # determine starting milestones
+  if (verbose) cat("Computing start milestones\n")
   start_milestones <-
     if (is_directed) {
       deg_in <- igraph::degree(gr, mode = "in")
@@ -176,6 +180,7 @@ generate_prior_information <- function(
   }
 
   # determine ending milestones
+  if (verbose) cat("Computing end milestones\n")
   end_milestones <-
     if (is_directed) {
       names(which(igraph::degree(gr, mode = "out") == 0))
@@ -210,6 +215,7 @@ generate_prior_information <- function(
   if ("start_id" %in% names(given)) {
     start_id <- given$start_id
   } else {
+    if (verbose) cat("Computing start cells\n")
     if (length(start_milestones) > 0) {
       start_id <- determine_closest_cells(start_milestones)
     } else {
@@ -221,6 +227,7 @@ generate_prior_information <- function(
   if ("end_id" %in% names(given)) {
     end_id <- given$end_id
   } else {
+    if (verbose) cat("Computing end cells\n")
     if (length(end_milestones) > 0) {
       end_id <- determine_closest_cells(end_milestones)
     } else {
@@ -232,6 +239,7 @@ generate_prior_information <- function(
   if ("groups_id" %in% names(given)) {
     groups_id <- given$groups_id
   } else {
+    if (verbose) cat("Computing groups id\n")
     groups_id <-
       milestone_percentages %>%
       group_by(cell_id) %>%
@@ -241,6 +249,7 @@ generate_prior_information <- function(
   if ("groups_network" %in% names(given)) {
     groups_network <- given$groups_network
   } else {
+    if (verbose) cat("Computing groups network\n")
     groups_network <- milestone_network %>% select(from, to)
   }
 
@@ -248,6 +257,7 @@ generate_prior_information <- function(
   if ("features_id" %in% names(given)) {
     features_id <- given$features_id
   } else {
+    if (verbose) cat("Computing features id\n")
     if (!is.null(feature_info) && "housekeeping" %in% colnames(feature_info)) {
       features_id <- feature_info %>%
         filter(!housekeeping) %>%
@@ -274,6 +284,7 @@ generate_prior_information <- function(
   if ("groups_n" %in% names(given)) {
     groups_n <- given$groups_n
   } else {
+    if (verbose) cat("Computing groups n\n")
     groups_n <- nrow(milestone_network)
   }
 
@@ -281,6 +292,7 @@ generate_prior_information <- function(
   if ("start_n" %in% names(given)) {
     start_n <- given$start_n
   } else {
+    if (verbose) cat("Computing start n\n")
     start_n <- length(start_milestones)
   }
 
@@ -288,6 +300,7 @@ generate_prior_information <- function(
   if ("end_n" %in% names(given)) {
     end_n <- given$end_n
   } else {
+    if (verbose) cat("Computing end n\n")
     end_n <- length(end_milestones)
   }
 
@@ -295,6 +308,7 @@ generate_prior_information <- function(
   if ("timecourse_continuous" %in% names(given)) {
     timecourse_continuous <- given$timecourse_continuous
   } else {
+    if (verbose) cat("Computing timecourse continuous\n")
     timecourse_continuous <-
       if (!is.null(cell_info) && "simulationtime" %in% colnames(cell_info)) {
         set_names(cell_info$simulationtime, cell_info$cell_id)
@@ -318,6 +332,7 @@ generate_prior_information <- function(
   if ("timecourse_discrete" %in% names(given)) {
     timecourse_discrete <- given$timecourse_discrete
   } else {
+    if (verbose) cat("Computing timecourse discrete\n")
     timecourse_discrete <-
       if (!is.null(cell_info) && "timepoint" %in% colnames(cell_info)) {
         set_names(cell_info$timepoint, cell_info$cell_id)
