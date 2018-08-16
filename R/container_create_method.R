@@ -141,14 +141,14 @@ create_image_ti_method <- function(
           "Use this command for debugging: \n",
           crayon::bold(
             glue::glue(
-              "docker run --entrypoint 'bash' --workdir /ti/workspace -it {paste0(paste0('-v ', volumes), collapse = ' ')} {image}"
+              "docker run --entrypoint 'bash' -e TMPDIR=/ti/tmp --workdir /ti/workspace -it {paste0(paste0('-v ', volumes), collapse = ' ')} {image}"
             )
           ),
         call. = FALSE)
       } else {
         processx::run(
           "docker",
-          c("run", "--workdir", "/ti/workspace", as.character(rbind("-v", volumes)), image),
+          c("run", "-e", "TMPDIR=/ti/tmp", "--workdir", "/ti/workspace", as.character(rbind("-v", volumes)), image),
           echo = verbose,
           echo_cmd = verbose,
           spinner = TRUE
@@ -166,7 +166,7 @@ create_image_ti_method <- function(
           "Use this command for debugging: \n",
           crayon::bold(
             glue::glue(
-              "singularity exec --cleanenv --pwd /ti/workspace -B {glue::glue_collapse(volumes, ',')} {image} bash"
+              "SINGULARITYENV_TMPDIR=/ti/tmp singularity exec --cleanenv --pwd /ti/workspace -B {glue::glue_collapse(volumes, ',')} {image} bash"
             )
           ),
         call. = FALSE)
@@ -181,7 +181,8 @@ create_image_ti_method <- function(
           "singularity",
           c("-s", "run", "--cleanenv", "--pwd", "/ti/workspace", "-B", glue::glue_collapse(volumes, ','), image),
           stdout = stdout_file,
-          stderr = stdout_file
+          stderr = stdout_file,
+          env = "SINGULARITYENV_TMPDIR=/ti/tmp"
         )
         cat(paste0(readLines(stdout_file), collapse = "\n"))
 
