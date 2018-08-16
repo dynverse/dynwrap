@@ -144,7 +144,8 @@ compute_tented_geodesic_distances_ <- function(
     igraph::distances(
       v = waypoint_ids,
       to = cell_ids_trajectory,
-      weights = igraph::E(gr)$length
+      weights = igraph::E(gr)$length,
+      algorithm = "dijkstra"
     )
 
   # make matrix if only one waypoint

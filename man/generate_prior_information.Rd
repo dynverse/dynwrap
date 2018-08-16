@@ -6,7 +6,8 @@
 \usage{
 generate_prior_information(cell_ids, milestone_ids, milestone_network,
   milestone_percentages, progressions, divergence_regions, expression,
-  feature_info = NULL, cell_info = NULL, marker_fdr = 0.005)
+  feature_info = NULL, cell_info = NULL, marker_fdr = 0.005,
+  given = NULL, verbose = FALSE)
 }
 \arguments{
 \item{cell_ids}{The ids of the cells.}
@@ -34,6 +35,10 @@ Type: Data frame(divergence_id = character, milestone_id = character, is_start =
 \item{cell_info}{Optional meta-information pertaining the cells.}
 
 \item{marker_fdr}{Maximal FDR value for a gene to be considered a marker}
+
+\item{given}{Prior information already calculated}
+
+\item{verbose}{Whether or not to print informative messages}
 }
 \description{
 For example, what are the start cells, the end cells, to which milestone does each cell belong to.

@@ -33,7 +33,7 @@ add_prior_information(dataset, start_id = NULL, end_id = NULL,
 
 \item{timecourse_discrete}{The time for every cell in groups}
 
-\item{verbose}{Whether or not to print informative messages or not}
+\item{verbose}{Whether or not to print informative messages}
 }
 \description{
 Note that the given data wrapper requires a trajectory and expression values

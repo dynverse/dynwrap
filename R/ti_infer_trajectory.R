@@ -226,10 +226,14 @@ extract_args_from_dataset <- function(
     stop("Invalid priors requested: ", give_priors)
   }
 
-  args_dataset <- inputs %>%
+  input_ids_dataset <-
+    inputs %>%
     filter(required, type == "expression") %>%
-    pull(input_id) %>%
-    map(get_expression, model = dataset)
+    pull(input_id)
+
+  args_dataset <-
+    map(input_ids_dataset, get_expression, model = dataset) %>%
+    set_names(input_ids_dataset)
 
   # extract prior information
   priors <- dataset$prior_information
@@ -301,9 +305,6 @@ execute_method_on_dataset <- function(
   verbose = FALSE,
   capture_output = FALSE
 ) {
-  if (verbose) {
-    cat("Executing '", method$id, "' on '", dataset$id, "' with parameters ", deparse(parameters), "\n", sep = "")
-  }
   # start the timer
   time0 <- as.numeric(Sys.time())
 
@@ -312,10 +313,20 @@ execute_method_on_dataset <- function(
   testthat::expect_true(is_wrapper_with_expression(dataset))
 
   # extract args from dataset and combine with parameters
+  inputs <- extract_args_from_dataset(dataset, method$inputs, give_priors)
   args <- c(
-    extract_args_from_dataset(dataset, method$inputs, give_priors),
+    inputs,
     parameters
   )
+
+  if (verbose) {
+    cat(
+      "Executing '", method$id, "' on '", dataset$id, "'\n",
+      "With parameters: ", deparse(parameters), "\n",
+      "And inputs: ", paste0(names(inputs), collapse = ", "), "\n",
+      sep = ""
+    )
+  }
 
   # add verbose if in inputs
   if ("verbose" %in% method$inputs$input_id) {
@@ -342,7 +353,11 @@ execute_method_on_dataset <- function(
     setwd(tmp_dir)
 
     # run the method and catch the error, if necessary
-    out <- execute_method_internal(method, args, setseed_detection_file, time0)
+    out <- execute_method_internal(
+      method = method,
+      arglist = args,
+      time0 = time0
+    )
 
     # retrieve the model, error message, and timings
     model <- out$model
@@ -413,13 +428,11 @@ execute_method_on_dataset <- function(
 #' @inheritParams execute_method_on_dataset
 #'
 #' @param arglist The arguments to apply to the method
-#' @param setseed_detection_file A file to which will be written if a method
-#'   uses the set.seed function.
 #' @param time0 The start of the timer.
 #'
 #' @export
 #' @importFrom readr write_file
-execute_method_internal <- function(method, arglist, setseed_detection_file, time0) {
+execute_method_internal <- function(method, arglist, time0) {
   tryCatch({
     # Load required packages and namespaces
     if (!is.null(method$package_loaded) && !is.na(method$package_loaded)) {
