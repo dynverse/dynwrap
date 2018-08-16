@@ -16,6 +16,10 @@ compute_tented_geodesic_distances <- function(
 ) {
   testthat::expect_true(is_wrapper_with_trajectory(trajectory))
 
+  if (is.null(waypoint_cells) && is_wrapper_with_waypoint_cells(traj)) {
+    waypoint_cells <- traj$waypoint_cells
+  }
+
   compute_tented_geodesic_distances_(
     cell_ids = trajectory$cell_ids,
     milestone_ids = trajectory$milestone_ids,
