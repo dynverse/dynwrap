@@ -226,10 +226,14 @@ extract_args_from_dataset <- function(
     stop("Invalid priors requested: ", give_priors)
   }
 
-  args_dataset <- inputs %>%
+  input_ids_dataset <-
+    inputs %>%
     filter(required, type == "expression") %>%
-    pull(input_id) %>%
-    map(get_expression, model = dataset)
+    pull(input_id)
+
+  args_dataset <-
+    map(input_ids_dataset, get_expression, model = dataset) %>%
+    set_names(input_ids_dataset)
 
   # extract prior information
   priors <- dataset$prior_information
@@ -318,8 +322,8 @@ execute_method_on_dataset <- function(
   if (verbose) {
     cat(
       "Executing '", method$id, "' on '", dataset$id, "'\n",
-      "With parameters ", deparse(parameters), "\n",
-      "And inputs ", paste0(names(inputs), collapse = ", "), "\n",
+      "With parameters: ", deparse(parameters), "\n",
+      "And inputs: ", paste0(names(inputs), collapse = ", "), "\n",
       sep = ""
     )
   }
