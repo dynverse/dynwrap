@@ -349,7 +349,11 @@ execute_method_on_dataset <- function(
     setwd(tmp_dir)
 
     # run the method and catch the error, if necessary
-    out <- execute_method_internal(method, args, setseed_detection_file, time0)
+    out <- execute_method_internal(
+      method = method,
+      arglist = args,
+      time0 = time0
+    )
 
     # retrieve the model, error message, and timings
     model <- out$model
@@ -420,13 +424,11 @@ execute_method_on_dataset <- function(
 #' @inheritParams execute_method_on_dataset
 #'
 #' @param arglist The arguments to apply to the method
-#' @param setseed_detection_file A file to which will be written if a method
-#'   uses the set.seed function.
 #' @param time0 The start of the timer.
 #'
 #' @export
 #' @importFrom readr write_file
-execute_method_internal <- function(method, arglist, setseed_detection_file, time0) {
+execute_method_internal <- function(method, arglist, time0) {
   tryCatch({
     # Load required packages and namespaces
     if (!is.null(method$package_loaded) && !is.na(method$package_loaded)) {
