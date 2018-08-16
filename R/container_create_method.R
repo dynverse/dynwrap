@@ -68,6 +68,10 @@ create_image_ti_method <- function(
   definition$run_fun <- function(input_ids, param_ids, output_ids, run_container) {
     dir_dynwrap <- mytempdir("ti")
 
+    if (remove_files && !debug) {
+      on.exit(unlink(dir_dynwrap, recursive = TRUE))
+    }
+
     # create input directory
     dir_input <- file.path(dir_dynwrap, "input")
     dir.create(dir_input)
@@ -217,7 +221,8 @@ create_image_ti_method <- function(
     rep(list(NULL), length(input_ids_optional)) %>% set_names(input_ids_optional),
     alist(
       debug = FALSE,
-      verbose = FALSE
+      verbose = FALSE,
+      remove_files = TRUE
     ) # default arguments (evaluated when running run_fun)
   )
   formals(definition$run_fun) <- arguments
