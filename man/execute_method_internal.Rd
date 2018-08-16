@@ -4,7 +4,7 @@
 \alias{execute_method_internal}
 \title{Internal method for executing a method}
 \usage{
-execute_method_internal(method, arglist, setseed_detection_file, time0)
+execute_method_internal(method, arglist, time0)
 }
 \arguments{
 \item{method}{One or more methods. Must be one of:
@@ -15,9 +15,6 @@ execute_method_internal(method, arglist, setseed_detection_file, time0)
 }}
 
 \item{arglist}{The arguments to apply to the method}
-
-\item{setseed_detection_file}{A file to which will be written if a method
-uses the set.seed function.}
 
 \item{time0}{The start of the timer.}
 }
