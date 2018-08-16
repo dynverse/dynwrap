@@ -301,9 +301,6 @@ execute_method_on_dataset <- function(
   verbose = FALSE,
   capture_output = FALSE
 ) {
-  if (verbose) {
-    cat("Executing '", method$id, "' on '", dataset$id, "' with parameters ", deparse(parameters), "\n", sep = "")
-  }
   # start the timer
   time0 <- as.numeric(Sys.time())
 
@@ -312,10 +309,20 @@ execute_method_on_dataset <- function(
   testthat::expect_true(is_wrapper_with_expression(dataset))
 
   # extract args from dataset and combine with parameters
+  inputs <- extract_args_from_dataset(dataset, method$inputs, give_priors)
   args <- c(
-    extract_args_from_dataset(dataset, method$inputs, give_priors),
+    inputs,
     parameters
   )
+
+  if (verbose) {
+    cat(
+      "Executing '", method$id, "' on '", dataset$id, "'\n",
+      "With parameters ", deparse(parameters), "\n",
+      "And inputs ", paste0(names(inputs), collapse = ", "), "\n",
+      sep = ""
+    )
+  }
 
   # add verbose if in inputs
   if ("verbose" %in% method$inputs$input_id) {
