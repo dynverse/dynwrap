@@ -1,6 +1,7 @@
 #' Calculate a dimensionality reduction on a trajectory and its cells
 #'
 #' @param trajectory A dynwrap trajectory
+#' @param adjust_weights Whether or not to rescale the milestone network weights
 #'
 #' @importFrom igraph graph_from_data_frame layout_with_fr
 #' @importFrom testthat expect_true

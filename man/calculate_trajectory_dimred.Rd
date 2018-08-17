@@ -8,6 +8,8 @@ calculate_trajectory_dimred(trajectory, adjust_weights = TRUE)
 }
 \arguments{
 \item{trajectory}{A dynwrap trajectory}
+
+\item{adjust_weights}{Whether or not to rescale the milestone network weights}
 }
 \description{
 Calculate a dimensionality reduction on a trajectory and its cells
