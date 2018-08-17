@@ -67,6 +67,7 @@ Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Collate: 
     'calculate_average_by.R'
+    'calculate_trajectory_dimred.R'
     'classify_milestone_network.R'
     'compute_tented_geodesic_distances.R'
     'container_create_method.R'
@@ -75,7 +76,6 @@ Collate:
     'convert_milestone_percentages_to_progressions.R'
     'convert_progressions_to_milestone_percentages.R'
     'data.R'
-    'dimred_trajectory.R'
     'get_cell_grouping.R'
     'get_divergence_triangles.R'
     'helper_processx.R'
