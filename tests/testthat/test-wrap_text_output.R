@@ -15,9 +15,19 @@ test_trajectory_type <- function(output_ids, files, model_test_fun) {
   })
 }
 
+# test with csvs
 test_trajectory_type(
   "linear_trajectory",
   c("cell_ids.csv", "pseudotime.csv"),
+  function(model) {
+    expect_true(is_wrapper_with_trajectory(model))
+  }
+)
+
+# test with jsons
+test_trajectory_type(
+  "linear_trajectory",
+  c("cell_ids.json", "pseudotime.json"),
   function(model) {
     expect_true(is_wrapper_with_trajectory(model))
   }
@@ -41,11 +51,21 @@ test_trajectory_type(
 
 test_trajectory_type(
   "grouping",
-  c("cell_ids.csv", "group_ids.json", "grouping.csv"),
+  c("cell_ids.csv", "group_ids.csv", "grouping.csv"),
   function(model) {
     expect_true(is_wrapper_with_grouping(model))
   }
 )
+
+
+test_trajectory_type(
+  "grouping",
+  c("cell_ids.json", "group_ids.json", "grouping.json"),
+  function(model) {
+    expect_true(is_wrapper_with_grouping(model))
+  }
+)
+
 
 # without group ids
 test_trajectory_type(
@@ -105,6 +125,21 @@ test_trajectory_type(
   function(model) {
     expect_true(is_wrapper_with_dimred(model))
     expect_true(is_wrapper_with_trajectory(model))
+  }
+)
+
+test_trajectory_type(
+  c("timings"),
+  c("cell_ids.csv", "timings.csv"),
+  function(model) {
+    expect_true(is_wrapper_with_timings(model))
+  }
+)
+test_trajectory_type(
+  c("timings"),
+  c("cell_ids.csv", "timings.json"),
+  function(model) {
+    expect_true(is_wrapper_with_timings(model))
   }
 )
 
