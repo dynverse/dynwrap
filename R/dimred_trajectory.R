@@ -70,7 +70,7 @@ calculate_trajectory_dimred <- function(
   }
 
   # create output for samples
-  space_samples <- milestone_percentages %>%
+  dimred_cells <- milestone_percentages %>%
     group_by(cell_id) %>%
     do(mix_dimred(.$milestone_id, .$percentage)) %>%
     ungroup %>%
@@ -78,23 +78,23 @@ calculate_trajectory_dimred <- function(
     mutate(name)
 
   # create output for milestones
-  space_milestones <- space_milest_df %>%
+  dimred_milestones <- space_milest_df %>%
     rename(milestone_id = rowname) %>%
     mutate(
       name
     )
 
   # create output for edges between milestones
-  space_lines <- milestone_network %>%
+  dimred_segments <- milestone_network %>%
     mutate(name) %>%
     left_join(space_milest_df %>% select(from = rowname, from.comp_1 = comp_1, from.comp_2 = comp_2), by = "from") %>%
     left_join(space_milest_df %>% select(to = rowname, to.comp_1 = comp_1, to.comp_2 = comp_2), by = "to")
 
   # return all output
   lst(
-    space_milestones = space_milestones,
-    space_lines = space_lines,
-    space_samples = space_samples
+    dimred_milestones = dimred_milestones,
+    dimred_segments = dimred_segments,
+    dimred_cells = dimred_cells
   )
 }
 
