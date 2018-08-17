@@ -62,12 +62,15 @@ create_image_ti_method <- function(
       on.exit(unlink(dir_dynwrap, recursive = TRUE))
     }
 
-    # get names for directories
+    # get paths for directories
     dir_input <- file.path(dir_dynwrap, "input")
     dir_output <- file.path(dir_dynwrap, "output")
 
     # create directories
-    dir.create(c(dir_input, dir_output, file.path(dir_dynwrap, c("workspace", "tmp"))))
+    dir.create(dir_input)
+    dir.create(dir_output)
+    dir.create(file.path(dir_dynwrap, "workspace"))
+    dir.create(file.path(dir_dynwrap, "tmp"))
 
     # save data & params, see save_inputs function
     save_inputs(environment(), dir_input, input_format, input_ids, c(param_ids, "input_format", "output_format", "output_ids"))
