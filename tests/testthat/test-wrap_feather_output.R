@@ -109,6 +109,14 @@ test_trajectory_type(
 )
 
 test_trajectory_type(
+  c("timings"),
+  c("cell_ids.feather", "timings.feather"),
+  function(model) {
+    expect_true(is_wrapper_with_timings(model))
+  }
+)
+
+test_trajectory_type(
   output_ids = c("cell_graph"),
   files = c("cell_ids.feather", "cell_graph.feather", "to_keep.feather"),
   model_test_fun = function(model) {

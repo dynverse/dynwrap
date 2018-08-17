@@ -126,6 +126,22 @@ test_trajectory_type(
   }
 )
 
+
+test_trajectory_type(
+  c("timings"),
+  c("cell_ids.csv", "timings.csv"),
+  function(model) {
+    expect_true(is_wrapper_with_timings(model))
+  }
+)
+test_trajectory_type(
+  c("timings"),
+  c("cell_ids.csv", "timings.json"),
+  function(model) {
+    expect_true(is_wrapper_with_timings(model))
+  }
+)
+
 test_trajectory_type(
   output_ids = c("cell_graph"),
   files = c("cell_ids.csv", "cell_graph.csv", "to_keep.json"),
