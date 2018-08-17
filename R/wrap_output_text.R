@@ -17,18 +17,18 @@ wrap_text <- function(output_ids, dir_output) {
     output_list <- list()
 
     processor <- get_output_processor(output_id)
-    inner_files <- list.files(file.path(dir_output, output_id), all.files = TRUE)
+    inner_files <- c(files, list.files(file.path(dir_output, output_id), all.files = TRUE))
 
     # read argument data
     for (argument_name in processor$args) {
-      matching_file <- stringr::str_subset(c(files, inner_files), glue::glue(".*\\/{argument_name}\\.[^/]*$"))
+      matching_file <- stringr::str_subset(inner_files, glue::glue(".*\\/{argument_name}\\.[^/]*$"))
       if (length(matching_file) > 0) {
         output_list[[argument_name]] <- .wrap_text_reader(matching_file)
       }
     }
 
     # also add extra params for this output
-    matching <- stringr::str_subset(files, glue::glue(".*{output_id}[_/]params.json"))
+    matching <- stringr::str_subset(inner_files, glue::glue(".*{output_id}[_/]params.json"))
     if (length(matching) > 0) {
       output_list <- c(
         output_list,

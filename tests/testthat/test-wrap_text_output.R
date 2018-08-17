@@ -42,6 +42,14 @@ test_trajectory_type(
 )
 
 test_trajectory_type(
+  output_ids = "cyclic_trajectory",
+  files = c("cell_ids.csv", "pseudotime.csv", "cyclic_trajectory_params.json"),
+  model_test_fun = function(model) {
+    expect_true(is_wrapper_with_trajectory(model))
+  }
+)
+
+test_trajectory_type(
   "pseudotime",
   c("cell_ids.csv", "pseudotime.csv"),
   function(model) {

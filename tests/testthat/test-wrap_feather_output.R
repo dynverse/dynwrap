@@ -32,6 +32,14 @@ test_trajectory_type(
 )
 
 test_trajectory_type(
+  "cyclic_trajectory",
+  c("cell_ids.feather", "pseudotime.feather", "cyclic_trajectory_params.json"),
+  function(model) {
+    expect_true(is_wrapper_with_trajectory(model))
+  }
+)
+
+test_trajectory_type(
   "pseudotime",
   c("cell_ids.feather", "pseudotime.feather"),
   function(model) {

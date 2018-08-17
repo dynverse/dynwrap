@@ -29,11 +29,12 @@ wrap_feather <- function(output_ids, dir_output) {
       }
     }
 
-    # also add extra params, both from the output_id folder as well as from the main folder
-    if(file.exists(file.path(dir_output, output_id, "params.json"))) {
+    # also add extra params for this output
+    matching <- stringr::str_subset(files, glue::glue(".*{output_id}[_/]params.json"))
+    if (length(matching) > 0) {
       output_list <- c(
         output_list,
-        jsonlite::read_json(file.path(dir_output, output_id, "params.json"))
+        jsonlite::read_json(first(matching))
       )
     }
 
