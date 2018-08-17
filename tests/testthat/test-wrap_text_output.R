@@ -103,6 +103,15 @@ test_trajectory_type(
   }
 )
 
+# trajectory with milestone percentages
+test_trajectory_type(
+  c("trajectory"),
+  c("cell_ids.csv", "milestone_ids.csv", "milestone_network.csv", "milestone_percentages.csv"),
+  function(model) {
+    expect_true(is_wrapper_with_trajectory(model))
+  }
+)
+
 test_trajectory_type(
   c("branch_trajectory"),
   c("cell_ids.csv", "branch_network.csv", "branches.csv", "branch_progressions.csv"),
