@@ -89,7 +89,7 @@ calculate_trajectory_dimred <- function(
     # determine the divergence triangles
     triags <- get_divergence_triangles(trajectory$divergence_regions)
 
-    dimred_divergence_lines <-
+    dimred_divergence_segments <-
       triags %>%
       select(from = node1, to = node2) %>%
       left_join(space_milest_df %>% select(from = rowname, from.comp_1 = comp_1, from.comp_2 = comp_2), by = "from") %>%
@@ -103,7 +103,7 @@ calculate_trajectory_dimred <- function(
       gather(triangle_part, milestone_id, -triangle_id) %>%
       left_join(dimred_milestones, "milestone_id")
   } else {
-    dimred_divergence_lines <- tibble(from = character(0), to = character(0), from.comp_1 = numeric(0), from.comp_2 = numeric(0), to.comp_1 = numeric(0), to.comp_2 = numeric(0))
+    dimred_divergence_segments <- tibble(from = character(0), to = character(0), from.comp_1 = numeric(0), from.comp_2 = numeric(0), to.comp_1 = numeric(0), to.comp_2 = numeric(0))
     dimred_divergence_polys <- tibble(triagle_id = character(0), comp_1 = numeric(0), comp_2 = numeric(0))
   }
 
@@ -113,7 +113,7 @@ calculate_trajectory_dimred <- function(
     dimred_milestones,
     dimred_segments,
     dimred_cells,
-    dimred_divergence_lines,
+    dimred_divergence_segments,
     dimred_divergence_polys
   )
 }

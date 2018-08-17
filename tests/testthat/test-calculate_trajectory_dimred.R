@@ -49,18 +49,24 @@ trajectory <- wrap_data(
 test_that("calculate_trajectory_dimred output format is correct", {
   dimred <- calculate_trajectory_dimred(trajectory)
 
-  expect_equal(sort(names(dimred)), c("dimred_segments", "dimred_milestones", "dimred_cells"))
+  expect_equal(sort(names(dimred)), c("dimred_cells", "dimred_divergence_polys", "dimred_divergence_segments", "dimred_milestones", "dimred_segments"))
 
   dimred_segments <- dimred$dimred_segments
-  expect_equal(colnames(dimred_segments), c("from", "to", "length", "directed", "name", "from.comp_1", "from.comp_2", "to.comp_1", "to.comp_2"))
+  expect_equal(colnames(dimred_segments), c("from", "to", "length", "directed", "from.comp_1", "from.comp_2", "to.comp_1", "to.comp_2"))
   join_check <- dimred_segments %>% inner_join(milestone_network, by = c("from", "to"))
   expect_equal(join_check$length.x, join_check$length.y)
 
   dimred_milestones <- dimred$dimred_milestones
-  expect_equal(colnames(dimred_milestones), c("milestone_id", "comp_1", "comp_2", "name"))
+  expect_equal(colnames(dimred_milestones), c("milestone_id", "comp_1", "comp_2"))
   expect_true(all(milestone_ids %in% dimred_milestones$milestone_id))
 
   dimred_cells <- dimred$dimred_cells
-  expect_equal(colnames(dimred_cells), c("cell_id", "comp_1", "comp_2", "name"))
+  expect_equal(colnames(dimred_cells), c("cell_id", "comp_1", "comp_2"))
   expect_true(all(cell_ids %in% dimred_cells$cell_id))
+
+  dimred_divergence_segments <- dimred$dimred_divergence_segments
+  expect_equal(colnames(dimred_divergence_segments), c("from", "to", "from.comp_1", "from.comp_2", "to.comp_1", "to.comp_2"))
+
+  dimred_divergence_polys <- dimred$dimred_divergence_polys
+  expect_equal(colnames(dimred_divergence_polys), c("triangle_id", "triangle_part", "milestone_id", "comp_1", "comp_2"))
 })
