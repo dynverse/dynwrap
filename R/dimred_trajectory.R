@@ -22,7 +22,6 @@ calculate_trajectory_dimred <- function(
   testthat::expect_true(is_wrapper_with_trajectory(trajectory))
 
   # retrieve some objects to work with
-  name <- trajectory$id
   cell_ids <- trajectory$cell_ids
   milestone_ids <- trajectory$milestone_ids
   num_milestones <- length(milestone_ids)
@@ -74,27 +73,48 @@ calculate_trajectory_dimred <- function(
     group_by(cell_id) %>%
     do(mix_dimred(.$milestone_id, .$percentage)) %>%
     ungroup %>%
-    slice(match(cell_ids, cell_id)) %>%
-    mutate(name)
+    slice(match(cell_ids, cell_id))
 
   # create output for milestones
   dimred_milestones <- space_milest_df %>%
-    rename(milestone_id = rowname) %>%
-    mutate(
-      name
-    )
+    rename(milestone_id = rowname)
 
   # create output for edges between milestones
   dimred_segments <- milestone_network %>%
-    mutate(name) %>%
     left_join(space_milest_df %>% select(from = rowname, from.comp_1 = comp_1, from.comp_2 = comp_2), by = "from") %>%
     left_join(space_milest_df %>% select(to = rowname, to.comp_1 = comp_1, to.comp_2 = comp_2), by = "to")
 
+  # extra lines and polygons for divergence regions
+  if (nrow(trajectory$divergence_regions) > 0) {
+    # determine the divergence triangles
+    triags <- get_divergence_triangles(trajectory$divergence_regions)
+
+    dimred_divergence_lines <-
+      triags %>%
+      select(from = node1, to = node2) %>%
+      left_join(space_milest_df %>% select(from = rowname, from.comp_1 = comp_1, from.comp_2 = comp_2), by = "from") %>%
+      left_join(space_milest_df %>% select(to = rowname, to.comp_1 = comp_1, to.comp_2 = comp_2), by = "to")
+
+    # define polygon triangles
+    dimred_divergence_polys <-
+      triags %>%
+      mutate(triangle_id = paste0("triangle_", row_number())) %>%
+      select(-divergence_id) %>%
+      gather(triangle_part, milestone_id, -triangle_id) %>%
+      left_join(dimred_milestones, "milestone_id")
+  } else {
+    dimred_divergence_lines <- tibble(from = character(0), to = character(0), from.comp_1 = numeric(0), from.comp_2 = numeric(0), to.comp_1 = numeric(0), to.comp_2 = numeric(0))
+    dimred_divergence_polys <- tibble(triagle_id = character(0), comp_1 = numeric(0), comp_2 = numeric(0))
+  }
+
+
   # return all output
   lst(
-    dimred_milestones = dimred_milestones,
-    dimred_segments = dimred_segments,
-    dimred_cells = dimred_cells
+    dimred_milestones,
+    dimred_segments,
+    dimred_cells,
+    dimred_divergence_lines,
+    dimred_divergence_polys
   )
 }
 
