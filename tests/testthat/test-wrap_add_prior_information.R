@@ -58,6 +58,9 @@ cell_info <- data_frame(
 
 
 test_that("Testing generate_prior_information", {
+  tmp <- tempfile()
+  on.exit(file.remove(tmp))
+  sink(tmp)
   prior_info <-
     generate_prior_information(
       cell_ids = cell_ids,
@@ -69,8 +72,10 @@ test_that("Testing generate_prior_information", {
       expression = expression,
       feature_info = feature_info,
       cell_info = cell_info,
-      verbose = FALSE
+      verbose = TRUE
     )
+  sink()
+
 
   expected_prior <- c(
     "start_milestones",
@@ -308,7 +313,11 @@ test_that("Testing add_prior_information", {
       counts = expression
     )
 
-  traj2 <- add_prior_information(traj, verbose = FALSE)
+  tmp <- tempfile()
+  on.exit(file.remove(tmp))
+  sink(tmp)
+  traj2 <- add_prior_information(traj, verbose = TRUE)
+  sink()
 
   prior_info <- traj2$prior_information
 
