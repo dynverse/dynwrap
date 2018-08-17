@@ -26,24 +26,24 @@ dataset <-
   add_prior_information(start_id = cell_ids[[1]])
 
 test_that("Testing create_docker_ti_method with compone", {
-  method0 <- pull_docker_ti_method("dynverse/dynwrap_tester:R_dynwrap")
+  method0 <- pull_docker_ti_method("dynverse/dynwrap_tester")
   expect_true(method0()$id %in% c("componentone", "comp1"))
 
-  method1 <- create_docker_ti_method("dynverse/dynwrap_tester:R_dynwrap")
+  method1 <- create_docker_ti_method("dynverse/dynwrap_tester")
   expect_true(method0()$id %in% c("componentone", "comp1"))
 
   # test with custom definition
-  definition <- extract_definition_from_docker_image("dynverse/dynwrap_tester:R_dynwrap")
+  definition <- extract_definition_from_docker_image("dynverse/dynwrap_tester")
 
   definition$name <- "test"
-  method2 <- create_docker_ti_method("dynverse/dynwrap_tester:R_dynwrap", definition)
+  method2 <- create_docker_ti_method("dynverse/dynwrap_tester", definition)
   expect_true(method2()$name == "test")
 
   definition$input$required <- "whatever"
-  expect_error(create_docker_ti_method("dynverse/dynwrap_tester:R_dynwrap", definition))
+  expect_error(create_docker_ti_method("dynverse/dynwrap_tester", definition))
 
   definition$output$required <- "whatever"
-  expect_error(create_docker_ti_method("dynverse/dynwrap_tester:R_dynwrap", definition))
+  expect_error(create_docker_ti_method("dynverse/dynwrap_tester", definition))
 })
 
 if (Sys.getenv("TRAVIS") == "true") {
