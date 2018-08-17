@@ -249,7 +249,7 @@ output_object_specifications <- list(
 )
 # read text output
 read_infer <- function(file, arg) {
-  if(arg %in% names(output_object_specifications)) {
+  if (arg %in% names(output_object_specifications)) {
     # read as csv or json depending on the specification
     specification <- output_object_specifications[[arg]]
     if(is.function(specification)) {
@@ -265,18 +265,3 @@ read_infer <- function(file, arg) {
 }
 
 
-get_output_processor <- function(output_id) {
-  requireNamespace("dynwrap")
-  processor <- get(paste0("add_", output_id))
-
-  required_args <- names(as.list(formals(processor)) %>% map_chr(class) %>% keep(~. == "name"))
-  required_args <- setdiff(required_args, c("data_wrapper", "traj", "model", "pred", "object", "trajectory", "..."))
-  optional_args <- names(as.list(formals(processor)) %>% map_chr(class) %>% keep(~. != "name"))
-
-  lst(
-    processor,
-    required_args,
-    optional_args,
-    args = c(required_args, optional_args)
-  )
-}
