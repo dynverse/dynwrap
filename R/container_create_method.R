@@ -81,13 +81,8 @@ create_image_ti_method <- function(
     dir_output <- file.path(dir_dynwrap, "output")
     dir.create(dir_output)
 
-    # create workspace directory
-    dir_workspace <- file.path(dir_dynwrap, "workspace")
-    dir.create(dir_workspace)
-
-    # create tmp directory
-    dir_tmp <- file.path(dir_dynwrap, "tmp")
-    dir.create(dir_tmp)
+    # create workspace and tmp directories
+    dir.create(file.path(dir_dynwrap, c("workspace", "tmp")))
 
     # save data & params, see save_inputs function
     save_inputs(environment(), dir_input, input_format, input_ids, c(param_ids, "input_format", "output_format", "output_ids"))
