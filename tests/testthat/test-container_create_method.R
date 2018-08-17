@@ -2,8 +2,6 @@ skip_on_travis_mac <- function() {
   skip_if(Sys.getenv("TRAVIS") == "true" && "darwin" %in% tolower(Sys.info()[["sysname"]]))
 }
 
-skip()
-
 context("Testing create_docker_ti_method")
 
 skip_on_appveyor()
