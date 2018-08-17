@@ -68,7 +68,8 @@ test_that("Testing generate_prior_information", {
       divergence_regions = divergence_regions,
       expression = expression,
       feature_info = feature_info,
-      cell_info = cell_info
+      cell_info = cell_info,
+      verbose = FALSE
     )
 
   expected_prior <- c(
@@ -136,7 +137,7 @@ test_that("Testing add_prior_information", {
       feature_info = feature_info
     )
 
-  traj2 <- add_prior_information(traj)
+  traj2 <- add_prior_information(traj, verbose = FALSE)
 
   prior_info <- traj2$prior_information
 
@@ -307,7 +308,7 @@ test_that("Testing add_prior_information", {
       counts = expression
     )
 
-  traj2 <- add_prior_information(traj)
+  traj2 <- add_prior_information(traj, verbose = FALSE)
 
   prior_info <- traj2$prior_information
 
