@@ -58,7 +58,13 @@ wrap_text <- function(output_ids, dir_output) {
     read_fun <- function(file, specification) specification(jsonlite::read_json(file, simplifyVector = TRUE))
   } else {
     specs <- .wrap_text_reader_csv_specification
-    read_fun <- function(file, specification) readr::read_csv(file, col_types = specification)
+    read_fun <- function(file, specification) {
+      df <- readr::read_csv(file, col_types = specification)
+      if (ncol(df) == 1) {
+        df <- df %>% pull(1)
+      }
+      df
+    }
   }
 
   if (!output_type %in% names(specs)) {
