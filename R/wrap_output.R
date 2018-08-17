@@ -26,6 +26,6 @@ wrap_output <- function(output_ids, dir_output, output_format = c("text", "rds",
   } else if (output_format == "feather") {
     wrap_feather(output_ids, dir_output)
   } else if (output_format == "dynwrap") {
-    read_rds(file.path(dir_output, "output.rds"))
+    wrap_dynwrap(output_ids, dir_output)
   }
 }

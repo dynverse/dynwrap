@@ -111,6 +111,7 @@ Collate:
     'wrap_gather_cells_at_milestones.R'
     'wrap_label_milestones.R'
     'wrap_output.R'
+    'wrap_output_dynwrap.R'
     'wrap_output_feather.R'
     'wrap_output_rds.R'
     'wrap_output_text.R'
