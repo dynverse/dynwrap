@@ -1,15 +1,4 @@
-# get mountable temporary directory
-# on osx, the R temporary directory is placed in the /var folder, but this is not standard accessibale for docker
-# in that case, we put it in /tmp
-mytempdir <- function(subfolder) {
-  dir <- file.path(tempfile(), subfolder) %>% gsub("^/var/", "/tmp/", .)
-  if (dir.exists(dir)) {
-    unlink(dir, recursive = TRUE, force = TRUE)
-  }
-  dir.create(dir, recursive = TRUE)
 
-  dir
-}
 
 #' @importFrom jsonlite write_json read_json
 #' @importFrom utils data
@@ -67,22 +56,18 @@ create_image_ti_method <- function(
 
   # define run_fun ------------------------------------------------------------------------
   definition$run_fun <- function(input_ids, param_ids, output_ids, run_container) {
-    dir_dynwrap <- mytempdir("ti")
+    dir_dynwrap <- safe_tempdir("ti")
 
     if (remove_files && !debug) {
       on.exit(unlink(dir_dynwrap, recursive = TRUE))
     }
 
-    # create input directory
+    # get names for directories
     dir_input <- file.path(dir_dynwrap, "input")
-    dir.create(dir_input)
-
-    # create output directory
     dir_output <- file.path(dir_dynwrap, "output")
-    dir.create(dir_output)
 
-    # create workspace and tmp directories
-    dir.create(file.path(dir_dynwrap, c("workspace", "tmp")))
+    # create directories
+    dir.create(c(dir_input, dir_output, file.path(dir_dynwrap, c("workspace", "tmp"))))
 
     # save data & params, see save_inputs function
     save_inputs(environment(), dir_input, input_format, input_ids, c(param_ids, "input_format", "output_format", "output_ids"))
@@ -370,7 +355,7 @@ extract_definition_from_singularity_image <- function(
 
   singularity_image_location <- get_singularity_image_location(image, singularity_images_folder)
 
-  definition_folder_local <- mytempdir("")
+  definition_folder_local <- safe_tempdir("")
   processx::run(
     "singularity",
     c(

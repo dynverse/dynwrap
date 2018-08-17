@@ -69,7 +69,7 @@ test_docker_installation <- function(detailed = FALSE) {
     message(crayon::green("\u2714 Docker can run image"))
 
     # test if docker volume can be mounted
-    volume_dir <- mytempdir("")
+    safe_tempdir <- mytempdir("")
     output <- processx::run("docker", c("run", "-v", glue("{volume_dir}:/mount"), "alpine:3.7"), error_on_status = FALSE, stderr_callback = print_processx)
     if (output$status != 0) {
       stop(crayon::red("\u274C Unable to mount temporary directory: {volume_dir}. \n\tOn windows, you need to enable the shared drives (https://rominirani.com/docker-on-windows-mounting-host-directories-d96f3f056a2c)"))

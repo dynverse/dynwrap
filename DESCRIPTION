@@ -78,6 +78,7 @@ Collate:
     'dimred_trajectory.R'
     'get_cell_grouping.R'
     'helper_processx.R'
+    'helper_safe_tempdir.R'
     'metawrap_get_output_processor.R'
     'package.R'
     'simplify_igraph_network.R'
