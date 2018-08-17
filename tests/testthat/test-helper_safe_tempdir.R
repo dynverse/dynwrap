@@ -7,4 +7,6 @@ test_that("safe_tempdir works correctly", {
   on.exit(unlink(dir2, recursive = TRUE))
 
   expect_true(dir1 != dir2)
+  expect_true(dir.exists(dir1))
+  expect_true(dir.exists(dir2))
 })
