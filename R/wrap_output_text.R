@@ -7,7 +7,6 @@ wrap_text <- function(output_ids, dir_output) {
 
   # initial model with cell ids
   cell_ids_file <- files %>% str_subset("cell_ids\\.[^/\\.]*$")
-  if (length(cell_ids_file) > 1) cell_ids_file <- cell_ids_file %>% first()
   testthat::expect_length(cell_ids_file, 1)
   cell_ids <- .wrap_text_reader(cell_ids_file)
   model <- wrap_data(cell_ids = cell_ids)
