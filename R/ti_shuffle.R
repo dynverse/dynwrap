@@ -50,7 +50,7 @@ run_shuffle <- function(
 
   # permute cell labels
   allcells <- rownames(counts)
-  mapper <- setNames(sample(allcells), allcells)
+  mapper <- set_names(sample(allcells), allcells)
   progressions <- dataset$progressions %>% mutate(
     cell_id = mapper[cell_id]
   )

@@ -12,6 +12,7 @@ mytempdir <- function(subfolder) {
 }
 
 #' @importFrom jsonlite write_json read_json
+#' @importFrom utils data
 create_image_ti_method <- function(
   image,
   definition,
@@ -38,7 +39,7 @@ create_image_ti_method <- function(
 
   input_ids <- c(input_ids_required, input_ids_optional)
 
-  data(allowed_inputs, package = "dynwrap", envir = environment())
+  utils::data(allowed_inputs, package = "dynwrap", envir = environment())
   if (!all(input_ids %in% allowed_inputs$input_id)) {
     stop("Invalid input: ", setdiff(input_ids, allowed_inputs$input_id), ". See dynwrap::allowed_inputs")
   }
@@ -53,7 +54,7 @@ create_image_ti_method <- function(
   output_ids <- definition$output$outputs
   testthat::expect_true(is.null(output_ids) || is.character(output_ids))
 
-  data(allowed_outputs, package = "dynwrap", envir = environment())
+  utils::data(allowed_outputs, package = "dynwrap", envir = environment())
   if (length(output_ids) && !all(output_ids %in% allowed_outputs$output_id)) {
     stop("Invalid output: ", setdiff(output_ids, allowed_outputs$output_id), ". See dynwrap::allowed_outputs")
   }
@@ -262,6 +263,8 @@ create_docker_ti_method <- function(
 #'
 #' @param definition_location The location of the definition file within the image
 #'
+#' @importFrom utils tail
+#'
 #' @export
 extract_definition_from_docker_image <- function(
   image,
@@ -275,7 +278,7 @@ extract_definition_from_docker_image <- function(
     c("create", "--entrypoint", "bash", image),
     stderr_callback = print_processx
   )
-  id <- trimws(tail(output$stdout, 1))
+  id <- trimws(utils::tail(output$stdout, 1))
 
   # copy file from container
   definition_location_local <- tempfile()

@@ -214,13 +214,13 @@ infer_trajectory <- function(
   }
 }
 
-
+#' @importFrom utils data
 extract_args_from_dataset <- function(
   dataset,
   inputs,
   give_priors = NULL
 ) {
-  data("priors", package = "dynwrap", envir = environment()) # TODO: move to sysdata, avoiding loading of priors
+  utils::data("priors", package = "dynwrap", envir = environment()) # TODO: move to sysdata, avoiding loading of priors
 
   if(any(!give_priors %in% priors$prior_id)) {
     stop("Invalid priors requested: ", give_priors)

@@ -39,6 +39,7 @@ ti_random <- create_ti_method(
   plot_fun = NULL
 )
 
+#' @importFrom stats runif
 run_random <- function(
   counts,
   dummy_param = .5
@@ -66,7 +67,7 @@ run_random <- function(
   progressions <- data.frame(
     cell_id = cell_ids,
     milestone_network[sample.int(nrow(milestone_network), length(cell_ids), replace = TRUE), 1:2],
-    percentage = runif(length(cell_ids)),
+    percentage = stats::runif(length(cell_ids)),
     stringsAsFactors = FALSE
   )
 
