@@ -29,7 +29,7 @@ wrap_text <- function(output_ids, dir_output) {
 
     # also add extra params for this output
     matching <- stringr::str_subset(files, glue::glue(".*{output_id}[_/]params.json"))
-    if (length(matching)) {
+    if (length(matching) > 0) {
       output_list <- c(
         output_list,
         jsonlite::read_json(first(matching))
