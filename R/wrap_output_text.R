@@ -23,7 +23,7 @@ wrap_text <- function(output_ids, dir_output) {
     # read argument data
     for (argument_name in processor$args) {
       matching_file <- stringr::str_subset(c(files, inner_files), glue::glue(".*\\/{argument_name}\\.[^/]*$"))
-      if (length(matching)) {
+      if (length(matching_file) > 0) {
         output_list[[argument_name]] <- .wrap_text_reader(matching_file)
       }
     }
@@ -108,7 +108,7 @@ wrap_text <- function(output_ids, dir_output) {
   to_keep = function(x) {
     # `x` can be either a named logical vector or a character vector
     y <- unlist(x)
-    if (!is.logical) {
+    if (!is.logical(y)) {
       y <- as.character(y)
     }
     y

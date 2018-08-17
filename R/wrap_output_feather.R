@@ -12,7 +12,7 @@ wrap_feather <- function(output_ids, dir_output) {
   cell_ids_file <- files %>% str_subset("cell_ids")
   if (length(cell_ids_file) > 1) cell_ids_file <- cell_ids_file %>% first()
   testthat::expect_length(cell_ids_file, 1)
-  cell_ids <- feather::read_feather(file) %>% pull(cell_ids)
+  cell_ids <- feather::read_feather(cell_ids_file) %>% pull(cell_ids)
   model <- wrap_data(cell_ids = cell_ids)
 
   # iterate over all promised output ids and
@@ -25,7 +25,7 @@ wrap_feather <- function(output_ids, dir_output) {
 
     for(arg in processor$args) {
       matching <- stringr::str_subset(c(files, inner_files), glue::glue(".*\\/{arg}.feather"))
-      if(length(matching)) {
+      if(length(matching) > 0) {
         output_list[[arg]] <- feather::read_feather(first(matching))
       }
     }
