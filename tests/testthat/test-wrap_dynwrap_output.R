@@ -26,7 +26,7 @@ test_trajectory_type <- function(output_ids, files, model_test_fun) {
   file.copy(paste0(inst_dir, "/", files), dir_output)
 
   test_that(paste0("wrap_", output_format, " can process [", paste0(output_ids, collapse = ", "), "]"), {
-    model <- wrap_text(output_ids, dir_output)
+    model <- wrap_output(output_ids, dir_output, output_format = "text")
     readr::write_rds(model, paste0(dir_output, "/output.rds"))
     wrap_output(output_ids %>% str_replace("\\.[^\\.]*", ""), dir_output, output_format)
     model_test_fun(model)
