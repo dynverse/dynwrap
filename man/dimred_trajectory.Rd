@@ -5,7 +5,7 @@
 \alias{check_or_perform_dimred}
 \title{Perform dimensionality reduction on a trajectory and the respective samples in order to plot it}
 \usage{
-dimred_trajectory(trajectory)
+dimred_trajectory(trajectory, adjust_weights = TRUE)
 
 check_or_perform_dimred(object)
 }
