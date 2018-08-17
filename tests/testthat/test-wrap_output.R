@@ -6,7 +6,7 @@ test_that("Make sure that every output has a text example", {
     unique(
       unlist(c(allowed_outputs$required_args, allowed_outputs$optional_args))
     ) %>%
-    intersect(names(dynwrap:::output_object_specifications))
+    intersect(names(dynwrap:::.wrap_text_reader_csv_specification))
 
   # get all example files
   found_examples <- list.files(devtools:::shim_system.file("example_outputs/text/", package = "dynwrap")) %>% tools::file_path_sans_ext()
