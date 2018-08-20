@@ -284,18 +284,28 @@ simplify_replace_edges <- function(subgr, sub_edge_points, i, j, path, is_direct
 
   if (!is.null(sub_edge_points)) {
     path <- path %>% mutate(cs = cumsum(weight) - weight)
-    path2 <- bind_rows(path, path %>% rename(from = to, to = from) %>% anti_join(path, by = c("from", "to")))
-    sub_edge_points2 <- bind_rows(sub_edge_points, sub_edge_points %>% rename(from = to, to = from) %>% anti_join(sub_edge_points, by = c("from", "to")))
+    rev_path <- path %>% select(from = to, to = from)
 
-    sub_edge_points <- bind_rows(
-      sub_edge_points %>%
-        anti_join(path2, by = c("from", "to")),
-      sub_edge_points2 %>%
-        inner_join(path, by = c("from", "to")) %>%
-        mutate(from = igraph::V(subgr)$name[[i]], to = igraph::V(subgr)$name[[j]]) %>%
-        mutate(percentage = (cs + percentage * weight) / path_len) %>%
-        select(id, from, to, percentage)
-    )
+    sepaj <- sub_edge_points %>%
+      anti_join(path, by = c("from", "to"))
+    toflip <- sepaj %>%
+      inner_join(rev_path, by = c("from", "to"))
+
+    processed_edges <-
+      bind_rows(
+        sub_edge_points,
+        toflip %>% rename(from = to, to = from) %>% mutate(percentage = 1 - percentage)
+      ) %>%
+      inner_join(path, by = c("from", "to")) %>%
+      mutate(from = igraph::V(subgr)$name[[i]], to = igraph::V(subgr)$name[[j]]) %>%
+      mutate(percentage = (cs + percentage * weight) / path_len) %>%
+      select(id, from, to, percentage)
+
+    previous_edges <-
+      sepaj %>%
+      anti_join(rev_path, by = c("from", "to"))
+
+    sub_edge_points <- bind_rows(previous_edges, processed_edges)
   }
 
   lst(subgr, sub_edge_points)
