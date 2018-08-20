@@ -134,13 +134,21 @@ create_image_ti_method <- function(
           ),
         call. = FALSE)
       } else {
-        processx::run(
+        process <- processx::run(
           "docker",
           c("run", "-e", "TMPDIR=/ti/tmp", "--workdir", "/ti/workspace", as.character(rbind("-v", volumes)), image),
           echo = verbose,
           echo_cmd = verbose,
-          spinner = TRUE
+          spinner = TRUE,
+          error_on_status = FALSE
         )
+
+        if (process$status != 0 && !verbose) {
+          cat(process$stderr)
+          stop(call. = FALSE)
+        }
+
+        process
       }
     }
   } else if (image_type == "singularity") {
