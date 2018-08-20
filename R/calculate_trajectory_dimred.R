@@ -104,7 +104,7 @@ calculate_trajectory_dimred <- function(
       left_join(dimred_milestones, "milestone_id")
   } else {
     dimred_divergence_segments <- tibble(from = character(0), to = character(0), from.comp_1 = numeric(0), from.comp_2 = numeric(0), to.comp_1 = numeric(0), to.comp_2 = numeric(0))
-    dimred_divergence_polys <- tibble(triagle_id = character(0), comp_1 = numeric(0), comp_2 = numeric(0))
+    dimred_divergence_polys <- tibble(triangle_id = character(0), comp_1 = numeric(0), comp_2 = numeric(0))
   }
 
 
