@@ -28,8 +28,8 @@ save_inputs <- function(
       file$create_dataset(name, x)
 
       if(is.matrix(x)) {
-        hdf5r::h5attr(file[[name]], "rownames") <- rownames(x)
-        hdf5r::h5attr(file[[name]], "colnames") <- colnames(x)
+        file$create_dataset(paste0(name, "_rows"), rownames(x))
+        file$create_dataset(paste0(name, "_cols"), colnames(x))
       }
     })
     file$close_all() # important to do a close_all here, otherwise some parts of the data can still be open, resulting in invalid h5 files
