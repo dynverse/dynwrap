@@ -5,8 +5,13 @@
 #'
 #' @export
 simplify_trajectory <- function(traj, allow_self_loops = FALSE) {
+  gr <- igraph::graph_from_data_frame(
+    d = traj$milestone_network %>% rename(weight = length),
+    directed = any(traj$milestone_network$directed),
+    vertices = traj$milestone_ids
+  )
   out <- simplify_igraph_network(
-    gr = igraph::graph_from_data_frame(traj$milestone_network %>% rename(weight = length), directed = TRUE, traj$milestone_ids),
+    gr,
     allow_duplicated_edges = FALSE,
     allow_self_loops = allow_self_loops,
     force_keep = unique(traj$divergence_regions$milestone_id),
@@ -15,7 +20,8 @@ simplify_trajectory <- function(traj, allow_self_loops = FALSE) {
   milestone_ids <- igraph::V(out$gr)$name
   milestone_network <- igraph::as_data_frame(out$gr) %>%
     select(from, to, length = weight, directed)
-  progressions <- out$edge_points %>% select(cell_id = id, from, to, percentage)
+  progressions <- out$edge_points %>%
+    select(cell_id = id, from, to, percentage)
 
   newtraj <- traj %>%
     add_trajectory(

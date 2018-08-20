@@ -187,7 +187,7 @@ simplify_igraph_network <- function(
           }
           keep_v[v_rem] <- TRUE
         } else {
-          rplcd <- simplify_replace_edges(subgr, sub_edge_points, i, j, bind_rows(left_path, right_path), is_directed)
+          rplcd <- simplify_replace_edges(subgr, sub_edge_points, i, j, path = bind_rows(left_path, right_path), is_directed)
           subgr <- rplcd$subgr
           sub_edge_points <- rplcd$sub_edge_points
         }
@@ -284,14 +284,28 @@ simplify_replace_edges <- function(subgr, sub_edge_points, i, j, path, is_direct
 
   if (!is.null(sub_edge_points)) {
     path <- path %>% mutate(cs = cumsum(weight) - weight)
-    sub_edge_points <- bind_rows(
-      anti_join(sub_edge_points, path, by = c("from", "to")),
-      sub_edge_points %>%
-        inner_join(path, by = c("from", "to")) %>%
-        mutate(from = igraph::V(subgr)$name[[i]], to = igraph::V(subgr)$name[[j]]) %>%
-        mutate(percentage = (cs + percentage * weight) / path_len) %>%
-        select(id, from, to, percentage)
-    )
+    rev_path <- path %>% select(from = to, to = from)
+
+    sepaj <- sub_edge_points %>%
+      anti_join(path, by = c("from", "to"))
+    toflip <- sepaj %>%
+      inner_join(rev_path, by = c("from", "to"))
+
+    processed_edges <-
+      bind_rows(
+        sub_edge_points,
+        toflip %>% rename(from = to, to = from) %>% mutate(percentage = 1 - percentage)
+      ) %>%
+      inner_join(path, by = c("from", "to")) %>%
+      mutate(from = igraph::V(subgr)$name[[i]], to = igraph::V(subgr)$name[[j]]) %>%
+      mutate(percentage = (cs + percentage * weight) / path_len) %>%
+      select(id, from, to, percentage)
+
+    previous_edges <-
+      sepaj %>%
+      anti_join(rev_path, by = c("from", "to"))
+
+    sub_edge_points <- bind_rows(previous_edges, processed_edges)
   }
 
   lst(subgr, sub_edge_points)
