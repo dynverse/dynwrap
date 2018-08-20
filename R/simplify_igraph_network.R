@@ -187,7 +187,7 @@ simplify_igraph_network <- function(
           }
           keep_v[v_rem] <- TRUE
         } else {
-          rplcd <- simplify_replace_edges(subgr, sub_edge_points, i, j, bind_rows(left_path, right_path), is_directed)
+          rplcd <- simplify_replace_edges(subgr, sub_edge_points, i, j, path = bind_rows(left_path, right_path), is_directed)
           subgr <- rplcd$subgr
           sub_edge_points <- rplcd$sub_edge_points
         }
@@ -284,9 +284,13 @@ simplify_replace_edges <- function(subgr, sub_edge_points, i, j, path, is_direct
 
   if (!is.null(sub_edge_points)) {
     path <- path %>% mutate(cs = cumsum(weight) - weight)
+    path2 <- bind_rows(path, path %>% rename(from = to, to = from) %>% anti_join(path, by = c("from", "to")))
+    sub_edge_points2 <- bind_rows(sub_edge_points, sub_edge_points %>% rename(from = to, to = from) %>% anti_join(sub_edge_points, by = c("from", "to")))
+
     sub_edge_points <- bind_rows(
-      anti_join(sub_edge_points, path, by = c("from", "to")),
       sub_edge_points %>%
+        anti_join(path2, by = c("from", "to")),
+      sub_edge_points2 %>%
         inner_join(path, by = c("from", "to")) %>%
         mutate(from = igraph::V(subgr)$name[[i]], to = igraph::V(subgr)$name[[j]]) %>%
         mutate(percentage = (cs + percentage * weight) / path_len) %>%
