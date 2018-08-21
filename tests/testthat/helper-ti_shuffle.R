@@ -36,38 +36,35 @@ ti_shuffle <- create_ti_method(
       lower = 0,
       description = "Dummy parameter")
   ),
-  run_fun = "dynwrap::run_shuffle",
-  plot_fun = NULL
+  run_fun = function(
+    counts,
+    dataset,
+    dummy_param = .5
+  ) {
+    # TIMING: done with preproc
+    tl <- add_timing_checkpoint(NULL, "method_afterpreproc")
+
+    # permute cell labels
+    allcells <- rownames(counts)
+    mapper <- set_names(sample(allcells), allcells)
+    progressions <- dataset$progressions %>% mutate(
+      cell_id = mapper[cell_id]
+    )
+
+    # TIMING: done with method
+    tl <- tl %>% add_timing_checkpoint("method_aftermethod")
+
+    # return output
+    wrap_prediction_model(
+      cell_ids = dataset$cell_ids
+    ) %>% add_trajectory(
+      milestone_ids = dataset$milestone_ids,
+      milestone_network = dataset$milestone_network,
+      progressions = progressions,
+      divergence_regions = dataset$divergence_regions
+    ) %>% add_timings(
+      timings = tl %>% add_timing_checkpoint("method_afterpostproc")
+    )
+  }
 )
-
-run_shuffle <- function(
-  counts,
-  dataset,
-  dummy_param = .5
-) {
-  # TIMING: done with preproc
-  tl <- add_timing_checkpoint(NULL, "method_afterpreproc")
-
-  # permute cell labels
-  allcells <- rownames(counts)
-  mapper <- set_names(sample(allcells), allcells)
-  progressions <- dataset$progressions %>% mutate(
-    cell_id = mapper[cell_id]
-  )
-
-  # TIMING: done with method
-  tl <- tl %>% add_timing_checkpoint("method_aftermethod")
-
-  # return output
-  wrap_prediction_model(
-    cell_ids = dataset$cell_ids
-  ) %>% add_trajectory(
-    milestone_ids = dataset$milestone_ids,
-    milestone_network = dataset$milestone_network,
-    progressions = progressions,
-    divergence_regions = dataset$divergence_regions
-  ) %>% add_timings(
-    timings = tl %>% add_timing_checkpoint("method_afterpostproc")
-  )
-}
 

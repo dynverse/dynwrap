@@ -34,14 +34,11 @@ ti_error <- create_ti_method(
       lower = 0,
       description = "Dummy parameter")
   ),
-  run_fun = "dynwrap::run_error",
-  plot_fun = NULL
+  run_fun = function(
+    counts,
+    dummy_param
+  ) {
+    stop("This control method always errors.")
+  }
 )
-
-run_error <- function(
-  counts,
-  dummy_param
-) {
-  stop("This control method always errors.")
-}
 
