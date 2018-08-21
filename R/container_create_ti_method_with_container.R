@@ -10,6 +10,8 @@
 #' @param singularity_images_folder The location of the folder containing the singularity images.
 #'   By default, this will use either the `DYNWRAP_SINGULARITY_IMAGES_FOLDER` environment variable,
 #'   the `dynwrap_singularity_images_folder` option, or otherwise the working directory (not recommended).
+#'
+#' @export
 create_ti_method_with_container <- function(
   image,
   repo_digest,
