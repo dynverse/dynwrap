@@ -269,7 +269,7 @@ The `-t dynverse/comp1` argument gives a tag to this container, so that it can b
 Although this container can be run anywhere as long as the `/ti/input` and `/ti/output` folders are mounted, we'll run it here using the `dynwrap` workflow. First, we have to wrap the docker into a method function.
 ```r
 library(dynwrap)
-ti_comp1 <- create_docker_ti_method("dynverse/comp1")
+ti_comp1 <- create_ti_method_with_container("dynverse/comp1", repo_digest = NULL)
 ```
 
 ```{r, echo=FALSE}
@@ -278,14 +278,14 @@ library(dynwrap)
 
 If the method is on the docker hub, it can also be pulled
 ```r
-ti_comp1 <- pull_docker_ti_method("dynverse/comp1")
+ti_comp1 <- create_ti_method_with_container("dynverse/comp1" repo_digest = NULL)
 ```
 
 ```{r, echo=FALSE}
 if (Sys.getenv("TRAVIS") == "true" || Sys.getenv("APPVEYOR") == "True") {
   source(devtools:::shim_system.file("tests/testthat/helper-ti_comp1.R", package = "dynwrap"))
 } else {
-  ti_comp1 <- pull_docker_ti_method("dynverse/comp1")
+  ti_comp1 <- create_ti_method_with_container("dynverse/comp1", repo_digest = NULL)
 }
 ```
 
@@ -390,7 +390,7 @@ docker push dynverse/comp1
 Users will then be able to run the method by simply pulling the container:
 
 ```{r, eval=FALSE}
-method <- pull_docker_ti_method("dynverse/comp1")
+method <- create_ti_method_with_container("dynverse/comp1", repo_digest = NULL)
 ```
 
 We also strongly encourage you to include within our collection of TI methods available in the [dynmethods R package](https://github.com/dynverse/dynmethods). Feel free to [create an issue](https://github.com/dynverse/dynmethods/labels/new%20method) or [send us a pull request](https://github.com/dynverse/dynmethods/pulls).
