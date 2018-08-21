@@ -44,7 +44,7 @@ plot_comp1 <- function(prediction) {
 #' @param component The component to use
 #' @inheritParams dyndimred::dimred
 #'
-#' @include ti_create_method.R
+#' @include method_create_ti_method.R
 ti_comp1 <- create_ti_method(
   name = "Component 1",
   id = "comp1",

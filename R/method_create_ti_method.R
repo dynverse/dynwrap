@@ -14,7 +14,7 @@
 #'
 #' @export
 #'
-#' @include ti_parse_parameter_definition.R
+#' @include method_parse_parameter_definition.R
 create_ti_method <- function(
   id,
   name = id,
