@@ -6,7 +6,7 @@
 #' @param force_keep Nodes that will not be removed under any condition
 #' @param edge_points Points that are on edges
 #'
-#' @importFrom igraph V E are_adjacent is_directed degree graph_from_data_frame distances
+#' @importFrom igraph V E are_adjacent is_directed degree graph_from_data_frame distances %--% %->%
 #'
 #' @export
 #'
