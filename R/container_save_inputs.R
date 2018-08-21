@@ -1,4 +1,4 @@
-save_inputs <- function(
+.container_save_inputs <- function(
   envir,
   dir_input,
   input_format = c("hdf5", "text", "rds", "feather"),
