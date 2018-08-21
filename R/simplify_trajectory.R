@@ -10,6 +10,7 @@ simplify_trajectory <- function(traj, allow_self_loops = FALSE) {
     directed = any(traj$milestone_network$directed),
     vertices = traj$milestone_ids
   )
+
   out <- simplify_igraph_network(
     gr,
     allow_duplicated_edges = FALSE,
