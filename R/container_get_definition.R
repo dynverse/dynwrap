@@ -33,7 +33,7 @@
         "exec",
         "-B",
         glue("{tempfile}:/tmp_folder"),
-        image_loc,
+        image_location,
         "cp", definition_location, "/tmp_folder"
       ),
       stderr_callback = print_processx
