@@ -65,7 +65,7 @@ infer_trajectories <- function(
       )
     )
 
-    method <- list_as_tibble(map(method$method_func, ~.()))
+    method <- list_as_tibble(map(method$fun, ~.()))
   } else if (is_ti_method(method)) {
     # single method
     method <- list_as_tibble(list(method))
@@ -514,14 +514,14 @@ get_ti_methods <- function(
     function_names <- lsf.str(asNamespace(package), pattern = "^ti_")
 
     map(function_names, function(function_name) {
-      meth_func <- get(function_name, asNamespace(package))
+      fun <- get(function_name, asNamespace(package))
 
       if (evaluate) {
-        meth_metadata <- meth_func() %>% discard(is.function)
+        meth_metadata <- fun() %>% discard(is.function)
       } else {
         meth_metadata <- list(id = function_name %>% stringr::str_replace("^ti_", ""))
       }
-      meth_metadata$method_func <- meth_func
+      meth_metadata$fun <- fun
       meth_metadata
     })
   }) %>%
