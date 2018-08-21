@@ -9,7 +9,7 @@ execute_method_internal(method, arglist, time0)
 \arguments{
 \item{method}{One or more methods. Must be one of:
 \itemize{
-\item{an object or list of ti_... objects (eg. \code{\link[=ti_comp1]{ti_comp1()}})}
+\item{an object or list of ti_... objects (eg. \code{dynmethods::ti_comp1()})}
 \item{a character vector containing the names of methods to execute (e.g. \code{"scorpius"}), or}
 \item{a dynguidelines data frame.}
 }}
