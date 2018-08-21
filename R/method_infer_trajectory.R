@@ -207,8 +207,11 @@ infer_trajectory <- function(
     capture_output = FALSE
   )
 
-  if(is.null(design$model[[1]])) {
-    stop("Error during trajectory inference \n", design$summary[[1]]$error[[1]]$message, call. = FALSE)
+  if (is.null(design$model[[1]])) {
+    error <- design$summary[[1]]$error[[1]]
+    cat("Error traceback:\n")
+    traceback(error)
+    stop("Error during trajectory inference \n", error$message, call. = FALSE)
   } else {
     first(design$model)
   }
