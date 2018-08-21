@@ -1,4 +1,9 @@
-.container_make_run_fun <- function(definition) {
+.container_make_run_fun <- function(
+  definition,
+  image,
+  image_type,
+  singularity_images_folder
+) {
   # process params
   param_ids <- names(definition$parameters) %>% setdiff(c("forbidden"))
 
@@ -82,12 +87,12 @@
 
     # run container
     output <- .container_run(
-      image,
-      image_type,
+      image = image,
+      image_type = image_type,
       volumes = glue("{dir_dynwrap}:/ti"),
-      debug,
-      verbose,
-      singularity_images_folder
+      debug = debug,
+      verbose = verbose,
+      singularity_images_folder = singularity_images_folder
     )
 
     # exit if error
@@ -118,7 +123,16 @@
   }
 
   # adapt run_fun environment
-  environment(run_fun) <- list2env(lst(input_format, input_ids, param_ids, output_format, output_ids))
+  environment(run_fun) <- list2env(lst(
+    input_format,
+    input_ids,
+    param_ids,
+    output_format,
+    output_ids,
+    image,
+    image_type,
+    singularity_images_folder
+  ))
 
   # adapt run_fun arguments, some hocus pocus going on here ;)
   # the `list(expr())` creates a required function argument
