@@ -45,9 +45,10 @@ Imports:
   reshape2,
   testthat,
   tibble,
-  tidyr
+  tidyr,
+  yaml,
+  crayon
 Suggests:
-  crayon,
   devtools,
   feather,
   hdf5r,
@@ -56,8 +57,7 @@ Suggests:
   lhs,
   qsub,
   rmarkdown,
-  viridis,
-  yaml
+  viridis
 Remotes:
   dynverse/dynutils,
   dynverse/dyndimred,
@@ -89,6 +89,7 @@ Collate:
     'metawrap_get_output_processor.R'
     'method_parse_parameter_definition.R'
     'method_create_ti_method.R'
+    'method_get_ti_methods.R'
     'method_infer_trajectory.R'
     'package.R'
     'simplify_igraph_network.R'
