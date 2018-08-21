@@ -9,10 +9,9 @@
 #'
 #' @include method_create_ti_method.R
 ti_comp1 <- create_ti_method(
-  name = "Component 1",
   id = "comp1",
-  package_loaded = c(),
-  package_required = c(),
+  package_loaded = c("tidyverse", "dynwrap", "dynutils"),
+  package_required = c("dyndimred"),
   parameters = list(
     dimred = list(
       type = "discrete",

@@ -4,28 +4,9 @@
 #'
 #' @param dummy_param This parameter does not do anything.
 ti_error <- create_ti_method(
-  name = "Control: error",
   id = "error",
   package_loaded = c(),
   package_required = c(),
-  trajectory_types = c("linear", "bifurcation", "convergence"),
-  type = "control",
-  authors = list(
-    list(
-      given = "Robrecht",
-      family = "Cannoodt",
-      email = "rcannood@gmail.com",
-      ORCID = "0000-0003-3641-729X",
-      github = "rcannood"
-    ),
-    list(
-      given = "Wouter",
-      family = "Saelens",
-      email = "wouter.saelens@ugent.be",
-      ORCID = "0000-0002-7114-6248",
-      github = "zouter"
-    )
-  ),
   parameters = list(
     dummy_param = list(
       type = "numeric",

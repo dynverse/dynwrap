@@ -5,29 +5,9 @@
 #'
 #' @param dummy_param This parameter does not do anything.
 ti_shuffle <- create_ti_method(
-  name = "Control: shuffle",
   id = "shuffle",
-  package_loaded = c(),
-  package_required = c(),
-  trajectory_types = c("linear", "bifurcation", "convergence"),
-  topology_inference = "free",
-  type = "control_test",
-  authors = list(
-    list(
-      given = "Robrecht",
-      family = "Cannoodt",
-      email = "rcannood@gmail.com",
-      ORCID = "0000-0003-3641-729X",
-      github = "rcannood"
-    ),
-    list(
-      given = "Wouter",
-      family = "Saelens",
-      email = "wouter.saelens@ugent.be",
-      ORCID = "0000-0002-7114-6248",
-      github = "zouter"
-    )
-  ),
+  package_loaded = c("tidyverse", "dynwrap", "dynutils"),
+  package_required = c("dyndimred"),
   parameters = list(
     dummy_param = list(
       type = "numeric",
@@ -46,7 +26,7 @@ ti_shuffle <- create_ti_method(
 
     # permute cell labels
     allcells <- rownames(counts)
-    mapper <- set_names(sample(allcells), allcells)
+    mapper <- magrittr::set_names(sample(allcells), allcells)
     progressions <- dataset$progressions %>% mutate(
       cell_id = mapper[cell_id]
     )
