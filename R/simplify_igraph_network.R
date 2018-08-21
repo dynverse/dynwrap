@@ -336,12 +336,3 @@ simplify_get_edge <- function(subgr, i, j) {
     igraph::E(subgr)[i %--% j]
   }
 }
-
-#' @examples
-#' set.seed(1)
-#' traj <- dyntoy::generate_dataset(model = dyntoy::model_connected(3, 3))
-#' dynplot::plot_graph(traj, label_milestones = TRUE)
-#' gr <- igraph::graph_from_data_frame(traj$milestone_network, directed = TRUE, traj$milestone_ids)
-#' divergence_regions <- traj$divergence_regions
-#' progressions <- traj$progressions
-#'
