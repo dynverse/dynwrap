@@ -13,8 +13,9 @@ execute_method_on_dataset(dataset, method, parameters = list(),
 
 \item{method}{One or more methods. Must be one of:
 \itemize{
-\item{an object or list of ti_... objects (eg. \code{dynmethods::ti_comp1()})}
-\item{a character vector containing the names of methods to execute (e.g. \code{"scorpius"}), or}
+\item{an object or list of ti_... objects (eg. \code{dynmethods::ti_comp1()}),}
+\item{a character vector containing the names of methods to execute (e.g. \code{"scorpius"}),}
+\item{a character vector containing dockerhub repositories (e.g. \code{dynverse/paga}), or}
 \item{a dynguidelines data frame.}
 }}
 

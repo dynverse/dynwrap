@@ -3,8 +3,9 @@
 #' @param dataset One or more datasets, as created using dynwrap
 #' @param method One or more methods. Must be one of:
 #' \itemize{
-#'   \item{an object or list of ti_... objects (eg. \code{dynmethods::ti_comp1()})}
-#'   \item{a character vector containing the names of methods to execute (e.g. `"scorpius"`), or}
+#'   \item{an object or list of ti_... objects (eg. \code{dynmethods::ti_comp1()}),}
+#'   \item{a character vector containing the names of methods to execute (e.g. `"scorpius"`),}
+#'   \item{a character vector containing dockerhub repositories (e.g. `dynverse/paga`), or}
 #'   \item{a dynguidelines data frame.}
 #' }
 #' @param parameters A set of parameters to be used during trajectory inference.
@@ -34,7 +35,10 @@ infer_trajectories <- function(
   capture_output = FALSE
 ) {
   # process method ----------------------
-  if (is.character(method)) {
+  if (is.character(method) && grepl("/", method)) {
+    method <- list_as_tibble(list(create_ti_method_with_container(method, repo_digest = NULL)()))
+
+  } else if (is.character(method)) {
     # names of method
 
     # get a list of all methods
