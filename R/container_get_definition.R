@@ -1,7 +1,7 @@
 .container_get_definition <- function(
   image,
   image_type,
-  singularity_images_folder = .container_get_singularity_images_folder()
+  singularity_images_folder = .container_get_singularity_images_folder(image_type)
 ) {
   tempfile <- safe_tempdir("tmp_mount")
   definition_location <- "/code/definition.yml"

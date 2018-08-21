@@ -14,7 +14,7 @@ create_ti_method_with_container <- function(
   image,
   repo_digest,
   image_type = getOption("dynwrap_run_environment"),
-  singularity_images_folder = get_default_singularity_images_folder()
+  singularity_images_folder = .container_get_singularity_images_folder(image_type)
 ) {
   ######################################################
   ####               CHECK ARGUMENTS                ####
@@ -94,7 +94,12 @@ create_ti_method_with_container <- function(
   ####                CREATE RUN FUN                ####
   ######################################################
 
-  definition$run_fun <- .container_make_run_fun(definition)
+  definition$run_fun <- .container_make_run_fun(
+    definition = definition,
+    image = image,
+    image_type = image_type,
+    singularity_images_folder = singularity_images_folder
+  )
 
   ######################################################
   ####      TRANSFORM DEFINITION TO TI METHOD       ####

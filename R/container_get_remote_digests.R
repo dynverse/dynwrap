@@ -1,7 +1,7 @@
 .container_get_remote_digests <- function(
   image,
   image_type,
-  singularity_images_folder = .container_get_singularity_images_folder()
+  singularity_images_folder = .container_get_singularity_images_folder(image_type)
 ) {
   if (image_type == "docker") {
     # check whether image is available locally

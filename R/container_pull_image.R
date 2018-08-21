@@ -3,7 +3,7 @@
   image,
   image_type,
   repo_digest,
-  singularity_images_folder = .container_get_singularity_images_folder()
+  singularity_images_folder = .container_get_singularity_images_folder(image_type)
 ) {
   if (!is.null(repo_digest)) {
     testthat::expect_match(repo_digest, "[a-zA-Z0-9]*/[a-zA-Z0-9]*@sha256:[a-zA-Z0-9]*")

@@ -1,4 +1,8 @@
-.container_get_singularity_images_folder <- function() {
+.container_get_singularity_images_folder <- function(image_type) {
+  if (!identical(image_type, "singularity")) {
+    return(invisible())
+  }
+
   if (Sys.getenv("DYNWRAP_SINGULARITY_IMAGES_FOLDER") != "") {
     Sys.getenv("DYNWRAP_SINGULARITY_IMAGES_FOLDER")
   } else if (!is.null(getOption("dynwrap_singularity_images_folder"))) {

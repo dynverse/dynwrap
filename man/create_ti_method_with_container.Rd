@@ -6,7 +6,7 @@
 \usage{
 create_ti_method_with_container(image, repo_digest,
   image_type = getOption("dynwrap_run_environment"),
-  singularity_images_folder = get_default_singularity_images_folder())
+  singularity_images_folder = .container_get_singularity_images_folder(image_type))
 }
 \arguments{
 \item{image}{The naame of the docker repository (e.g. \code{"dynverse/angle"}).}
