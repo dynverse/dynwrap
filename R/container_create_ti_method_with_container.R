@@ -2,10 +2,9 @@
 #'
 #' These functions create a TI method from a docker image. Supports both docker and singularity as a backend.
 #'
-#' @param image The naame of the docker repository (e.g. `"dynverse/angle"`).
-#' @param repo_digest Which hash to use (e.g. `"dynverse/angle@sha256:473e54..."`).
-#'   If `NULL`, the docker installation cannot be automatically updated.
-#' @param image_type In which environment to run the method, can be `"docker"` or `"singularity"`.
+#' @param image The name of the docker repository (e.g. `"dynverse/angle"`).
+#'   It is recommended to include a specific version (e.g. `"dynverse/angle@sha256:473e54..."`).
+#' @param container_type In which environment to run the method, can be `"docker"` or `"singularity"`.
 #'   By default, docker will be used.
 #' @param singularity_images_folder The location of the folder containing the singularity images.
 #'   By default, this will use either the `DYNWRAP_SINGULARITY_IMAGES_FOLDER` environment variable,
@@ -14,31 +13,30 @@
 #' @export
 create_ti_method_with_container <- function(
   image,
-  repo_digest,
-  image_type = getOption("dynwrap_run_environment"),
-  singularity_images_folder = .container_get_singularity_images_folder(image_type)
+  container_type = getOption("dynwrap_run_environment"),
+  singularity_images_folder = .container_get_singularity_images_folder(container_type)
 ) {
   ######################################################
   ####               CHECK ARGUMENTS                ####
   ######################################################
   # Check arguments
-  if (is.null(image_type)) {
-    image_type <- "docker"
+  if (is.null(container_type)) {
+    container_type <- "docker"
   }
-  if (!image_type %in% c("docker", "singularity")) {
-    stop(sQuote("image_type"), " must be either \"docker\" or \"singularity\"")
+  if (!container_type %in% c("docker", "singularity")) {
+    stop(sQuote("container_type"), " must be either \"docker\" or \"singularity\"")
   }
 
   ######################################################
   ####           TEST DOCKER/SINGULARITY            ####
   ######################################################
 
-  if (image_type == "docker") {
+  if (container_type == "docker") {
     docker_installed <- test_docker_installation()
     if (!docker_installed) {
       test_docker_installation(detailed = TRUE)
     }
-  } else if (image_type == "singularity") {
+  } else if (container_type == "singularity") {
     # TODO: why is there no test_singularity_installation()?
   }
 
@@ -48,9 +46,11 @@ create_ti_method_with_container <- function(
 
   current_repo_digest <- .container_get_remote_digests(
     image = image,
-    image_type = image_type,
+    container_type = container_type,
     singularity_images_folder = singularity_images_folder
   )
+
+  repo_digest <- if (grepl("@sha256:", image)) gsub(":[^@]*@", "@", image) else NULL
 
   ######################################################
   ####          PULL NEW IMAGE (IF NEEDED)          ####
@@ -67,8 +67,7 @@ create_ti_method_with_container <- function(
 
     .container_pull_image(
       image = image,
-      image_type = image_type,
-      repo_digest = repo_digest,
+      container_type = container_type,
       singularity_images_folder = singularity_images_folder
     )
   }
@@ -79,7 +78,7 @@ create_ti_method_with_container <- function(
 
   definition <- .container_get_definition(
     image = image,
-    image_type = image_type,
+    container_type = container_type,
     singularity_images_folder = singularity_images_folder
   )
 
@@ -99,7 +98,7 @@ create_ti_method_with_container <- function(
   definition$run_fun <- .container_make_run_fun(
     definition = definition,
     image = image,
-    image_type = image_type,
+    container_type = container_type,
     singularity_images_folder = singularity_images_folder
   )
 

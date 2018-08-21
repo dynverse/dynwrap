@@ -1,5 +1,5 @@
-.container_get_singularity_images_folder <- function(image_type) {
-  if (!identical(image_type, "singularity")) {
+.container_get_singularity_images_folder <- function(container_type) {
+  if (!identical(container_type, "singularity")) {
     return(invisible())
   }
 

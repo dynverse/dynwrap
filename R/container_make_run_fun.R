@@ -1,7 +1,7 @@
 .container_make_run_fun <- function(
   definition,
   image,
-  image_type,
+  container_type,
   singularity_images_folder
 ) {
   # process params
@@ -88,7 +88,7 @@
     # run container
     output <- .container_run(
       image = image,
-      image_type = image_type,
+      container_type = container_type,
       volumes = glue("{dir_dynwrap}:/ti"),
       debug = debug,
       verbose = verbose,
@@ -130,7 +130,7 @@
     output_format,
     output_ids,
     image,
-    image_type,
+    container_type,
     singularity_images_folder
   ))
 

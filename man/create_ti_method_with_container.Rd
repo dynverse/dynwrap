@@ -4,17 +4,15 @@
 \alias{create_ti_method_with_container}
 \title{Create a TI method from a docker image}
 \usage{
-create_ti_method_with_container(image, repo_digest,
-  image_type = getOption("dynwrap_run_environment"),
-  singularity_images_folder = .container_get_singularity_images_folder(image_type))
+create_ti_method_with_container(image,
+  container_type = getOption("dynwrap_run_environment"),
+  singularity_images_folder = .container_get_singularity_images_folder(container_type))
 }
 \arguments{
-\item{image}{The naame of the docker repository (e.g. \code{"dynverse/angle"}).}
+\item{image}{The name of the docker repository (e.g. \code{"dynverse/angle"}).
+It is recommended to include a specific version (e.g. \code{"dynverse/angle@sha256:473e54..."}).}
 
-\item{repo_digest}{Which hash to use (e.g. \code{"dynverse/angle@sha256:473e54..."}).
-If \code{NULL}, the docker installation cannot be automatically updated.}
-
-\item{image_type}{In which environment to run the method, can be \code{"docker"} or \code{"singularity"}.
+\item{container_type}{In which environment to run the method, can be \code{"docker"} or \code{"singularity"}.
 By default, docker will be used.}
 
 \item{singularity_images_folder}{The location of the folder containing the singularity images.

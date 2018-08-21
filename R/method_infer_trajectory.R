@@ -36,7 +36,7 @@ infer_trajectories <- function(
 ) {
   # process method ----------------------
   if (is.character(method) && grepl("/", method)) {
-    method <- list_as_tibble(list(create_ti_method_with_container(method, repo_digest = NULL)()))
+    method <- list_as_tibble(list(create_ti_method_with_container(method)()))
 
   } else if (is.character(method)) {
     # names of method

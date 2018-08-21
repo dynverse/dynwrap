@@ -1,7 +1,7 @@
 #' @importFrom crayon bold
 .container_run <- function(
   image,
-  image_type,
+  container_type,
   volumes,
   debug,
   verbose,
@@ -10,11 +10,11 @@
   image_location <- normalizePath(paste0(singularity_images_folder, "/", image, ".simg"), mustWork = FALSE)
 
   if (debug) {
-    if (image_type == "docker") {
+    if (container_type == "docker") {
       command <- glue::glue(
         "docker run --entrypoint 'bash' -e TMPDIR=/ti/tmp --workdir /ti/workspace -it {paste0(paste0('-v ', volumes), collapse = ' ')} {image}"
       )
-    } else if (image_type == "singularity") {
+    } else if (container_type == "singularity") {
       command <- glue::glue(
         "SINGULARITYENV_TMPDIR=/ti/tmp singularity exec --cleanenv --pwd /ti/workspace -B {glue::glue_collapse(volumes, ',')} {image_location} bash"
       )
@@ -24,7 +24,7 @@
   }
 
 
-  if (image_type == "docker") {
+  if (container_type == "docker") {
     process <- processx::run(
       "docker",
       c("run", "-e", "TMPDIR=/ti/tmp", "--workdir", "/ti/workspace", as.character(rbind("-v", volumes)), image),
@@ -40,7 +40,7 @@
     }
 
     process
-  } else if (image_type == "singularity") {
+  } else if (container_type == "singularity") {
     if (!file.exists(image_location)) {
       stop(image_location, " not found!")
     }
