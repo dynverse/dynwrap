@@ -58,7 +58,7 @@ parameter_definition <- list(
     rate = 1,
     distribution = "exponential"
   ),
-  numeric_exp = list(
+  numeric_expunif = list(
     type = "numeric",
     lower = 10,
     upper = 20,
