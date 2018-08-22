@@ -58,6 +58,7 @@ create_ti_method_with_container <- function(
 
   image_not_found <- identical(current_repo_digest, NA)
   out_of_date <-
+    !image_not_found && # lazy eval
     !is.null(repo_digest) &&
     (length(current_repo_digest$remote_digests) == 0 || !any(grepl(repo_digest, current_repo_digest$remote_digests)))
 
