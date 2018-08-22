@@ -44,12 +44,19 @@
   definition <- yaml::read_yaml(paste0(tempfile, "/definition.yml"))
 
   # add the remote digests
-  definition$remote_digests <-
-    .container_get_remote_digests(
-      image = image,
-      container_type = container_type,
-      singularity_images_folder = singularity_images_folder
-    )
+  digests <- .container_get_digests(
+    image = image,
+    container_type = container_type,
+    singularity_images_folder = singularity_images_folder
+  )
+
+  if (!identical(digests, NA)) {
+    definition <-
+      list_merge(
+        definition,
+        !!! digests
+      )
+  }
 
   # return definition file
   definition

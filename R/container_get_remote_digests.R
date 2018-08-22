@@ -1,4 +1,4 @@
-.container_get_remote_digests <- function(
+.container_get_digests <- function(
   image,
   container_type,
   singularity_images_folder = .container_get_singularity_images_folder(container_type)
@@ -7,16 +7,21 @@
 
   if (container_type == "docker") {
     # check whether image is available locally
-    result <- processx::run("docker", c("inspect", "--type=image", image, "--format='{{.RepoDigests}}'"), error_on_status = FALSE)
+    result <- processx::run("docker", c("inspect", "--type=image", image, "--format='{{.Id}}\t{{.RepoDigests}}'"), error_on_status = FALSE)
 
     if (result$status > 0) {
       NA
     } else {
-      result$stdout %>%
+      digest <- result$stdout %>%
+        stringr::str_replace_all("\\t.*", "") %>%
+        stringr::str_replace_all("^'", "")
+      remote_digests <-
+        result$stdout %>%
         stringr::str_replace_all("^.*\\[", "") %>%
         stringr::str_replace_all("\\].*\n$", "") %>%
         stringr::str_split(",") %>%
         first()
+      lst(digest, remote_digests)
     }
   } else if (container_type == "singularity") {
     simg_location <- normalizePath(paste0(singularity_images_folder, "/", image, ".simg"), mustWork = FALSE)
@@ -26,9 +31,9 @@
       NA
     } else {
       if (!file.exists(json_location)) {
-        c()
+        list(digest = "", remote_digests = "") # image is from previous version of dynwrap
       } else {
-        jsonlite::read_json(json_location, simplifyVector = TRUE)$repo_digests
+        jsonlite::read_json(json_location, simplifyVector = TRUE)[c("digest", "remote_digests")]
       }
     }
   }

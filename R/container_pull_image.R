@@ -19,6 +19,6 @@
 
     processx::run("singularity", c("build", image_location, glue("docker://{image}")), echo = TRUE)
 
-    jsonlite::write_json(list(repo_digest = repo_digest), json_location)
+    jsonlite::write_json(list(digest = NA, repo_digest = repo_digest), json_location)
   }
 }

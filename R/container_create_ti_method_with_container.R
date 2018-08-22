@@ -44,7 +44,7 @@ create_ti_method_with_container <- function(
   ####          FETCH CURRENT REPO DIGEST           ####
   ######################################################
 
-  current_repo_digest <- .container_get_remote_digests(
+  current_repo_digest <- .container_get_digests(
     image = image,
     container_type = container_type,
     singularity_images_folder = singularity_images_folder
@@ -59,7 +59,7 @@ create_ti_method_with_container <- function(
   image_not_found <- identical(current_repo_digest, NA)
   out_of_date <-
     !is.null(repo_digest) &&
-    (length(current_repo_digest) == 0 || !any(grepl(repo_digest, current_repo_digest)))
+    (length(current_repo_digest$remote_digests) == 0 || !any(grepl(repo_digest, current_repo_digest$remote_digests)))
 
   if (image_not_found || out_of_date) {
     msg <- ifelse(image_not_found, "Image not found", "Local image is out of date")
