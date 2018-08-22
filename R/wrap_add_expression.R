@@ -85,6 +85,15 @@ wrap_expression <- function(expression, counts, cell_info = NULL, feature_info =
   testthat::expect_equivalent(colnames(expression), colnames(counts))
   testthat::expect_equivalent(rownames(expression), rownames(counts))
 
-  wrap_data(id, rownames(expression), cell_info, ...) %>%
-    add_expression(counts, expression, feature_info)
+  wrap_data(
+    id = id,
+    cell_ids = rownames(expression),
+    cell_info = cell_info,
+    ...
+  ) %>%
+    add_expression(
+      counts = counts,
+      expression = expression,
+      feature_info = feature_info
+    )
 }

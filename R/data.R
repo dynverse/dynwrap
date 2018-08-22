@@ -40,3 +40,8 @@
 #'
 #' @docType data
 "allowed_outputs"
+
+#' Example dataset
+#'
+#' @docType data
+"example_dataset"

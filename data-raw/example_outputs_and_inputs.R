@@ -113,28 +113,28 @@ model <- wrap_data(
   )
 
 # save the input
-save_inputs(
+.container_save_inputs(
   list2env(c(dataset, dataset$prior_information)),
   dir_input = "inst/example_inputs/text/",
   input_format = "text",
   input_ids = allowed_inputs$input_id
 )
 
-save_inputs(
+.container_save_inputs(
   list2env(c(dataset, dataset$prior_information)),
   dir_input = "inst/example_inputs/hdf5/",
   input_format = "hdf5",
   input_ids = allowed_inputs$input_id[allowed_inputs$input_id != "dataset"]
 )
 
-save_inputs(
+.container_save_inputs(
   list2env(c(dataset, dataset$prior_information)),
   dir_input = "inst/example_inputs/feather/",
   input_format = "feather",
   input_ids = allowed_inputs$input_id[allowed_inputs$input_id != "dataset"]
 )
 
-save_inputs(
+.container_save_inputs(
   list2env(c(dataset, dataset$prior_information)),
   dir_input = "inst/example_inputs/rds/",
   input_format = "rds",

@@ -6,7 +6,7 @@
 #' @param force_keep Nodes that will not be removed under any condition
 #' @param edge_points Points that are on edges
 #'
-#' @importFrom igraph V E are_adjacent is_directed degree graph_from_data_frame distances
+#' @importFrom igraph V E are_adjacent is_directed degree graph_from_data_frame distances %--% %->%
 #'
 #' @export
 #'
@@ -49,6 +49,15 @@ simplify_igraph_network <- function(
 ) {
   if (allow_duplicated_edges && !is.null(edge_points)) {
     stop("allow_duplicated_edges cannot be TRUE when edge_points is not NULL")
+  }
+
+  # in the case of undirected networks, igraph can flip the edges, but this flip is not done in the edge_points
+  # make sure all from -> to are present in edge points in the same directions as the graph
+  if (!is.null(edge_points)) {
+    edge_points <- bind_rows(
+      anti_join(edge_points, igraph::as_data_frame(gr), c("from", "to")) %>% rename(from = to, to = from) %>% mutate(percentage = 1 - percentage),
+      semi_join(edge_points, igraph::as_data_frame(gr), c("from", "to"))
+    )
   }
 
   # to make sure indexing is not confused with names
@@ -140,7 +149,7 @@ simplify_igraph_network <- function(
           path <- bind_rows(left_path, right_path)
 
           if (nrow(path) == 3 || (nrow(path) == 2 && allow_duplicated_edges)) {
-            # don't remove any edges
+            # don't remove any edges,
             keep_v[path$from] <- TRUE
           } else if (nrow(path) == 2) {
             # add an empty edge between the two paths
@@ -187,7 +196,7 @@ simplify_igraph_network <- function(
           }
           keep_v[v_rem] <- TRUE
         } else {
-          rplcd <- simplify_replace_edges(subgr, sub_edge_points, i, j, bind_rows(left_path, right_path), is_directed)
+          rplcd <- simplify_replace_edges(subgr, sub_edge_points, i, j, path = bind_rows(left_path, right_path), is_directed)
           subgr <- rplcd$subgr
           sub_edge_points <- rplcd$sub_edge_points
         }
@@ -276,6 +285,27 @@ simplify_get_next <- function(neighs, v_rem, is_directed, left = NA, prev = NA) 
   }
 }
 
+simplify_get_edge_points_on_path <- function(sub_edge_points, path) {
+  rev_path <- path %>% select(from = to, to = from)
+
+  sepaj <- sub_edge_points %>%
+    anti_join(path, by = c("from", "to"))
+  toflip <- sepaj %>%
+    inner_join(rev_path, by = c("from", "to"))
+
+  on_path <- bind_rows(
+    sub_edge_points,
+    toflip %>% rename(from = to, to = from) %>% mutate(percentage = 1 - percentage)
+  ) %>%
+    inner_join(path, by = c("from", "to"))
+
+  not_on_path <-
+    sepaj %>%
+    anti_join(rev_path, by = c("from", "to"))
+
+  lst(on_path, not_on_path)
+}
+
 simplify_replace_edges <- function(subgr, sub_edge_points, i, j, path, is_directed) {
   path_len <- sum(path$weight)
   subgr <- subgr %>% igraph::add.edges(
@@ -284,14 +314,16 @@ simplify_replace_edges <- function(subgr, sub_edge_points, i, j, path, is_direct
 
   if (!is.null(sub_edge_points)) {
     path <- path %>% mutate(cs = cumsum(weight) - weight)
-    sub_edge_points <- bind_rows(
-      anti_join(sub_edge_points, path, by = c("from", "to")),
-      sub_edge_points %>%
-        inner_join(path, by = c("from", "to")) %>%
-        mutate(from = igraph::V(subgr)$name[[i]], to = igraph::V(subgr)$name[[j]]) %>%
-        mutate(percentage = (cs + percentage * weight) / path_len) %>%
-        select(id, from, to, percentage)
-    )
+
+    out <- simplify_get_edge_points_on_path(sub_edge_points, path)
+
+    processed_edge_points <-
+      out$on_path %>%
+      mutate(from = igraph::V(subgr)$name[[i]], to = igraph::V(subgr)$name[[j]]) %>%
+      mutate(percentage = (cs + percentage * weight) / path_len) %>%
+      select(id, from, to, percentage)
+
+    sub_edge_points <- bind_rows(out$not_on_path, processed_edge_points)
   }
 
   lst(subgr, sub_edge_points)
@@ -304,12 +336,3 @@ simplify_get_edge <- function(subgr, i, j) {
     igraph::E(subgr)[i %--% j]
   }
 }
-
-#' @examples
-#' set.seed(1)
-#' traj <- dyntoy::generate_dataset(model = dyntoy::model_connected(3, 3))
-#' dynplot::plot_graph(traj, label_milestones = TRUE)
-#' gr <- igraph::graph_from_data_frame(traj$milestone_network, directed = TRUE, traj$milestone_ids)
-#' divergence_regions <- traj$divergence_regions
-#' progressions <- traj$progressions
-#'

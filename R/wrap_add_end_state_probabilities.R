@@ -55,7 +55,7 @@ add_end_state_probabilities <- function(
       )
   } else {
     # construct milestone ids and milestone network
-    start_milestone_id <- "milestone_start"
+    start_milestone_id <- "milestone_begin"
     end_milestone_ids <- colnames(end_state_probabilities)[colnames(end_state_probabilities) != "cell_id"]
     milestone_ids <- c(start_milestone_id, end_milestone_ids)
 

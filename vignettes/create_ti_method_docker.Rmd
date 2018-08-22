@@ -4,8 +4,10 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Creating a TI method using docker}
-  %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, echo=FALSE, message=FALSE}
@@ -159,7 +161,7 @@ tribble(
 - **outputs** The kinds of output this wrapper produces. This always include at least one output which contains enough information to produce a trajectory:
 
 ```{r, echo=FALSE}
-data(allowed_outputs, package="dynwrap")
+data(allowed_outputs, package = "dynwrap")
 
 # find example files
 found_output_example_files <- list.files(devtools:::shim_system.file("example_outputs/text/", package="dynwrap"))
@@ -269,7 +271,7 @@ The `-t dynverse/comp1` argument gives a tag to this container, so that it can b
 Although this container can be run anywhere as long as the `/ti/input` and `/ti/output` folders are mounted, we'll run it here using the `dynwrap` workflow. First, we have to wrap the docker into a method function.
 ```r
 library(dynwrap)
-ti_comp1 <- create_docker_ti_method("dynverse/comp1")
+ti_comp1 <- create_ti_method_with_container("dynverse/comp1")
 ```
 
 ```{r, echo=FALSE}
@@ -278,41 +280,17 @@ library(dynwrap)
 
 If the method is on the docker hub, it can also be pulled
 ```r
-ti_comp1 <- pull_docker_ti_method("dynverse/comp1")
+ti_comp1 <- create_ti_method_with_container("dynverse/comp1")
 ```
 
 ```{r, echo=FALSE}
-if (Sys.getenv("TRAVIS") == "true" || Sys.getenv("APPVEYOR") == "True" || TRUE) {
-  ti_comp1 <- dynwrap:::ti_comp1
-} else {
-  ti_comp1 <- pull_docker_ti_method("dynverse/comp1")
-}
+source(devtools:::shim_system.file("tests/testthat/helper-ti_comp1.R", package = "dynwrap"))
 ```
 
 Then we'll use some test data
 ```{r}
-ncells <- 1000
-pseudotime <- runif(ncells)
-
-expression <- matrix(
-  c(
-    (pseudotime - 0.5) ** 2,
-    sqrt(pseudotime + 20),
-    pseudotime
-  ),
-  ncol = 3,
-  dimnames = list(as.character(rep(seq_len(ncells))), as.character(c("A", "B", "C")))
-)
-expression <- expression + rnorm(length(expression), sd = 0.02)
-
-start_id = rownames(expression)[which.min(pseudotime)]
-
-counts <- round(expression)
-
-dataset <- wrap_expression(
-  expression,
-  counts
-) %>% add_prior_information(start_id=start_id)
+data(example_dataset)
+dataset <- example_dataset
 ```
 
 Now infer a trajectory
@@ -371,12 +349,6 @@ The container can be debugged by running the method with `debug = TRUE`:
 infer_trajectory(dataset, ti_comp1, debug = TRUE)
 ```
 
-```{r, error=TRUE, echo=FALSE}
-if (Sys.getenv("TRAVIS") != "true" || Sys.getenv("APPVEYOR") == "True") {
-  infer_trajectory(dataset, ti_comp1(), debug = TRUE)
-}
-```
-
 This will print a shell command which can be used to enter the container with the /ti/input and /ti/output directories mounted.
 
 ## Making your method available for other users
@@ -387,10 +359,19 @@ The easiest way to make your method available to other users is by [pushing the 
 docker push dynverse/comp1
 ```
 
-Users will then be able to run the method by simply pulling the container:
+Users will then be able to run the method by specifying the docker id:
 
 ```{r, eval=FALSE}
-method <- pull_docker_ti_method("dynverse/comp1")
+model <- infer_trajectory(dataset, "dynverse/comp1")
 ```
 
-We also strongly encourage you to include within our collection of TI methods available in the [dynmethods R package](https://github.com/dynverse/dynmethods). Feel free to [create an issue](https://github.com/dynverse/dynmethods/labels/new%20method) or [send us a pull request](https://github.com/dynverse/dynmethods/pulls).
+If you wish to automatically update the underlying docker to a certain version, you can specify the digest as follows:
+```{r, eval=FALSE}
+model <- infer_trajectory(dataset, "dynverse/comp1@sha256:f1e406c5a977a66eb5bdcdced615ddf39f0d05b308aa01092f69d81db0eb8a0a")
+```
+
+We encourage developers to submit their TI method to the 
+[dynmethods R package](https://github.com/dynverse/dynmethods),
+which presents TI methods wrapped in docker containers to users in a user-friendly format. 
+Feel free to [create an issue](https://github.com/dynverse/dynmethods/labels/new%20method)
+or [send us a pull request](https://github.com/dynverse/dynmethods/pulls).

@@ -200,11 +200,3 @@ has_cycle_function <- function(gr) {
 
 
 
-#' Convert directed trajectory type to simplified versions
-#' @param trajectory_types_oi trajectory types to simplify
-#' @export
-simplify_trajectory_type <- function(trajectory_types_oi) {
-  data("trajectory_types", package = "dynwrap", envir = environment())
-  set_names(c(trajectory_types$simplified, trajectory_types$simplified), c(trajectory_types$id, trajectory_types$simplified))[trajectory_types_oi] %>%
-    unname()
-}

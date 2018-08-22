@@ -12,6 +12,10 @@ add_timings <- function(
 ) {
   testthat::expect_true(is_data_wrapper(model))
 
+  if (is.data.frame(timings)) {
+    timings <- tibble::deframe(timings)
+  }
+
   if (is.numeric(timings) && !is.null(timings)) {
     timings <- as.list(timings)
   }

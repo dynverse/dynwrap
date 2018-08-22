@@ -36,20 +36,85 @@ test_that("Simple test", {
 
   # TODO: Add more tests! for more trajectory types! and more parameters!
 
+})
 
-  #' @examples
-  #' traj <- dyntoy::generate_dataset(model = dyntoy::model_disconnected())
-  #' traj <- dyntoy::generate_dataset(model = dyntoy::model_cyclic())
-  #' set.seed(1)
-  #' traj <- dyntoy::generate_dataset(model = dyntoy::model_connected(5, 3))
-  #' simp <- simplify_trajectory(traj, allow_self_loops = TRUE)
-  #' cowplot::plot_grid(
-  #'   dynplot::plot_graph(traj, label_milestones = T),
-  #'   dynplot::plot_graph(simp, label_milestones = T, milestone_percentages = traj$milestone_percentages),
-  #'   nrow = 1
-  #' )
-  #' traj$milestone_network
-  #' simp$milestone_network
-  #' sum(traj$milestone_network$length)
-  #' sum(simp$milestone_network$length)
+
+test_that("Test whether simplify is able to correctly simplify an undirected", {
+  id <- "a"
+  cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
+
+  milestone_ids <- c("A", "B", "C")
+  milestone_network <- data_frame(
+    from = c("A", "A"),
+    to = c("B", "C"),
+    length = c(1, 2),
+    directed = FALSE
+  )
+  progressions <- tribble(
+    ~cell_id,       ~from, ~to, ~percentage,
+    "truth",        "A",   "B", 0.3,
+    "universally",  "A",   "C", 1.0,
+    "acknowledged", "A",   "B", 0.5,
+    "that",         "A",   "C", 0.9,
+    "a",            "A",   "B", 0.0,
+    "single",       "A",   "C", 0.4
+  )
+
+  traj <-
+    wrap_data(
+      id = id,
+      cell_ids = cell_ids
+    ) %>%
+    add_trajectory(
+      milestone_ids = milestone_ids,
+      milestone_network = milestone_network,
+      progressions = progressions
+    )
+  simp <- simplify_trajectory(traj)
+
+  expect_true(all(cell_ids %in% simp$cell_ids))
+  expect_true(all(simp$milestone_network$from == "B"))
+  expect_true(all(simp$milestone_network$to == "C"))
+
+})
+
+
+
+
+test_that("Test whether simplify is able to correctly simplify an undirected cycle", {
+  id <- "round and round and round we go"
+  cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
+
+  milestone_ids <- c("A", "B", "C")
+  milestone_network <- data_frame(
+    from = c("A", "B", "C"),
+    to = c("B", "C", "A"),
+    length = c(1, 2, 3),
+    directed = FALSE
+  )
+  progressions <- tribble(
+    ~cell_id,       ~from, ~to, ~percentage,
+    "truth",        "A",   "B", 0.3,
+    "universally",  "B",   "C", 1.0,
+    "acknowledged", "A",   "B", 0.5,
+    "that",         "C",   "A", 0.9,
+    "a",            "C",   "A", 0.0,
+    "single",       "A",   "B", 0.4
+  )
+
+  traj <-
+    wrap_data(
+      id = id,
+      cell_ids = cell_ids
+    ) %>%
+    add_trajectory(
+      milestone_ids = milestone_ids,
+      milestone_network = milestone_network,
+      progressions = progressions
+    )
+  simp <- simplify_trajectory(traj)
+
+  expect_true(all(cell_ids %in% simp$cell_ids))
+  expect_true(all(simp$milestone_network$from == c("A", "B", "A")))
+  expect_true(all(simp$milestone_network$to == c("B", "C", "C")))
 })

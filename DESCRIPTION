@@ -45,9 +45,10 @@ Imports:
   reshape2,
   testthat,
   tibble,
-  tidyr
+  tidyr,
+  yaml,
+  crayon
 Suggests:
-  crayon,
   devtools,
   feather,
   hdf5r,
@@ -56,8 +57,7 @@ Suggests:
   lhs,
   qsub,
   rmarkdown,
-  viridis,
-  yaml
+  viridis
 Remotes:
   dynverse/dynutils,
   dynverse/dyndimred,
@@ -66,29 +66,36 @@ Remotes:
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Collate: 
-    'calculate_average_by.R'
+    'calculate_average_by_group.R'
+    'calculate_average_by_milestone_percentages.R'
+    'calculate_trajectory_dimred.R'
     'classify_milestone_network.R'
     'compute_tented_geodesic_distances.R'
-    'container_create_method.R'
-    'container_helpers.R'
-    'container_save_input.R'
+    'container_create_ti_method_with_container.R'
+    'container_get_definition.R'
+    'container_get_remote_digests.R'
+    'container_get_singularity_images_folder.R'
+    'container_make_run_fun.R'
+    'container_pull_image.R'
+    'container_run.R'
+    'container_save_inputs.R'
+    'container_test_docker_installation.R'
     'convert_milestone_percentages_to_progressions.R'
     'convert_progressions_to_milestone_percentages.R'
     'data.R'
-    'dimred_trajectory.R'
     'get_cell_grouping.R'
+    'get_divergence_triangles.R'
+    'helper_processx.R'
+    'helper_safe_tempdir.R'
+    'metawrap_get_output_processor.R'
+    'method_parse_parameter_definition.R'
+    'method_create_ti_method.R'
+    'method_get_ti_methods.R'
+    'method_infer_trajectory.R'
     'package.R'
     'simplify_igraph_network.R'
     'simplify_trajectory.R'
-    'ti_parse_parameter_definition.R'
-    'ti_create_method.R'
-    'ti_comp1.R'
-    'ti_error.R'
-    'ti_identity.R'
-    'ti_infer_trajectory.R'
-    'ti_random.R'
-    'ti_shuffle.R'
-    'utils.R'
+    'simplify_trajectory_type.R'
     'wrap_add_branch_trajectory.R'
     'wrap_add_cell_graph.R'
     'wrap_add_cell_waypoints.R'
@@ -110,4 +117,8 @@ Collate:
     'wrap_gather_cells_at_milestones.R'
     'wrap_label_milestones.R'
     'wrap_output.R'
+    'wrap_output_dynwrap.R'
+    'wrap_output_feather.R'
+    'wrap_output_rds.R'
+    'wrap_output_text.R'
     'wrap_prediction_model.R'

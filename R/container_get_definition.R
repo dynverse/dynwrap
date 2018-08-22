@@ -1,0 +1,63 @@
+.container_get_definition <- function(
+  image,
+  container_type,
+  singularity_images_folder = .container_get_singularity_images_folder(container_type)
+) {
+  tempfile <- safe_tempdir("tmp_mount")
+  definition_location <- "/code/definition.yml"
+
+  if (container_type == "docker") {
+    # start container
+    output <- processx::run(
+      "docker",
+      c("create", "--entrypoint", "bash", image),
+      stderr_callback = print_processx
+    )
+    id <- trimws(utils::tail(output$stdout, 1))
+
+    # remove container
+    on.exit(processx::run("docker", c("rm", id), stderr_callback = print_processx))
+
+    # copy file from container
+    processx::run(
+      "docker",
+      c("cp", glue::glue("{id}:{definition_location}"), paste0(tempfile, "/definition.yml")),
+      stderr_callback = print_processx
+    )
+  } else if (container_type == "singularity") {
+    image_location <- normalizePath(paste0(singularity_images_folder, "/", image, ".simg"), mustWork = FALSE)
+
+    processx::run(
+      "singularity",
+      c(
+        "exec",
+        "-B",
+        glue("{tempfile}:/tmp_folder"),
+        image_location,
+        "cp", definition_location, "/tmp_folder"
+      ),
+      stderr_callback = print_processx
+    )
+  }
+
+  # read definition file
+  definition <- yaml::read_yaml(paste0(tempfile, "/definition.yml"))
+
+  # add the remote digests
+  digests <- .container_get_digests(
+    image = image,
+    container_type = container_type,
+    singularity_images_folder = singularity_images_folder
+  )
+
+  if (!identical(digests, NA)) {
+    definition <-
+      list_merge(
+        definition,
+        !!! digests
+      )
+  }
+
+  # return definition file
+  definition
+}

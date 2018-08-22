@@ -1,0 +1,57 @@
+#' Return all TI ti_methods
+#'
+#' @param method_ids The method identifiers. NULL if listing all methods
+#' @param as_tibble Whether or not to return the ti_methods as a tibble
+#' @param ti_packages In which packages to look for ti methods
+#' @param evaluate Automatically evaluate the functions
+#'
+#' @importFrom utils lsf.str installed.packages
+#' @importFrom stringr str_replace
+#' @export
+get_ti_methods <- function(
+  method_ids = NULL,
+  as_tibble = TRUE,
+  ti_packages = ifelse("dynmethods" %in% rownames(utils::installed.packages()), "dynmethods", "dynwrap"),
+  evaluate = FALSE
+) {
+  ti_methods <- map(ti_packages, function(package) {
+
+    if (package == "dynwrap") {
+      root <- devtools:::shim_system.file("tests/testthat/", package = "dynwrap")
+      env <- new.env()
+      for (file in list.files(root, full.names = TRUE)) {
+        source(file, local = env)
+      }
+    } else {
+      requireNamespace(package)
+      env <- asNamespace(package)
+    }
+
+    function_names <- lsf.str(env, pattern = "^ti_")
+
+    map(function_names, function(function_name) {
+      fun <- get(function_name, env)
+
+      if (evaluate) {
+        meth_metadata <- fun() %>% discard(is.function)
+      } else {
+        meth_metadata <- list(id = function_name %>% stringr::str_replace("^ti_", ""))
+      }
+      meth_metadata$fun <- fun
+      meth_metadata
+    })
+  }) %>%
+    unlist(recursive = FALSE) %>%
+    list_as_tibble()
+
+  if (!is.null(method_ids)) {
+    testthat::expect_true(all(method_ids %in% ti_methods$id))
+    ti_methods <- ti_methods %>% slice(match(method_ids, id))
+  }
+
+  if (as_tibble) {
+    ti_methods
+  } else {
+    mapdf(ti_methods, identity)
+  }
+}
