@@ -3,7 +3,7 @@
 #' This control method will always produce a random trajectory.
 #'
 #' @param dummy_param This parameter does not do anything.
-ti_random <- create_ti_method(
+ti_random <- dynwrap::create_ti_method(
   id = "random",
   package_loaded = c("dplyr", "tidyr", "purrr", "dynwrap", "dynutils"),
   package_required = c("dyndimred"),

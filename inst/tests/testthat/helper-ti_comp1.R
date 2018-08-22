@@ -8,7 +8,7 @@
 #' @inheritParams dyndimred::dimred
 #'
 #' @include method_create_ti_method.R
-ti_comp1 <- create_ti_method(
+ti_comp1 <- dynwrap::create_ti_method(
   id = "comp1",
   package_loaded = c("dplyr", "tidyr", "purrr", "dynwrap", "dynutils"),
   package_required = c("dyndimred"),

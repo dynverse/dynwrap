@@ -4,7 +4,7 @@
 #' gold standard, but will shuffle the cell positions randomly.
 #'
 #' @param dummy_param This parameter does not do anything.
-ti_shuffle <- create_ti_method(
+ti_shuffle <- dynwrap::create_ti_method(
   id = "shuffle",
   package_loaded = c("dplyr", "tidyr", "purrr", "dynwrap", "dynutils"),
   package_required = c("dyndimred"),
