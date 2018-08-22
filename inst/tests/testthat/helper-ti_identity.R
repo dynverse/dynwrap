@@ -3,7 +3,7 @@
 #' This control method will return the gold standard.
 #'
 #' @param dummy_param This parameter does not do anything.
-ti_identity <- create_ti_method(
+ti_identity <- dynwrap::create_ti_method(
   id = "identity",
   package_loaded = c("tidyverse", "dynwrap", "dynutils"),
   package_required = c("dyndimred"),

@@ -3,7 +3,7 @@
 #' This control method will always produce an error.
 #'
 #' @param dummy_param This parameter does not do anything.
-ti_error <- create_ti_method(
+ti_error <- dynwrap::create_ti_method(
   id = "error",
   package_loaded = c(),
   package_required = c(),
