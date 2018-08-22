@@ -10,7 +10,8 @@
 #' data(example_dataset)
 #' calculate_average_by_group(example_dataset$expression, example_dataset$prior_information$groups_id)
 calculate_average_by_group <- function(x, cell_grouping) {
-  milestone_percentages <- cell_grouping %>%
+  milestone_percentages <-
+    cell_grouping %>%
     mutate(percentage = 1) %>%
     rename(milestone_id = group_id)
 
