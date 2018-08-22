@@ -29,7 +29,10 @@ create_ti_method <- function(
   remotes_package = ifelse("dynmethods" %in% rownames(installed.packages()), "dynmethods", "dynwrap")
 ) {
   if (is.null(plot_fun)) {
-    plot_fun <- function(prediction) ggplot()
+    plot_fun <- function(prediction) {
+      requireNamespace("ggplot2")
+      ggplot2::ggplot()
+    }
   }
 
   # process parameters
