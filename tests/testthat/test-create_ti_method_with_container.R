@@ -4,10 +4,8 @@ skip_on_appveyor()
 skip_on_os("mac")
 skip_on_cran()
 
-maintainer_usernames <- c(
-  "rcannood",
-  "wouters"
-)
+# only run all tags on maintainer platforms
+maintainer_usernames <- c("rcannood", "wouters")
 
 if (Sys.info()[["user"]] %in% maintainer_usernames) {
   tags <- c("R_text", "python_text", "R_hdf5", "python_hdf5", "R_rds", "R_dynwrap", "R_feather", "python_feather")
@@ -15,7 +13,9 @@ if (Sys.info()[["user"]] %in% maintainer_usernames) {
   tags <- "python_feather"
 }
 
-#' Obtained with:
+# specific dynwrap tester versions to test
+# Obtained with:
+
 #' @examples
 #' map_chr(tags, ~ .container_get_digests(paste0("dynverse/dynwrap_tester:", .), container_type = "docker")$remote_digests) %>% set_names(tags) %>% deparse() %>% str_replace("^c\\(", "c(\n") %>% paste(collapse = "\n") %>% cat
 
@@ -30,37 +30,17 @@ dynwrap_repo_digests <- c(
   python_feather = "dynverse/dynwrap_tester:python_feather@sha256:5a43d9fd50c9347c5487f121dc7aa27fa7fb3131a7c800a38e8d6d769959cb45"
 )
 
-singularity_images_folder <- safe_tempdir("singularity_images")
-on.exit(unlink(singularity_images_folder, recursive = TRUE))
-
-id <- "a"
-cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
-
-num_features <- round(runif(1, 100, 120))
-feature_names <- paste0("feature_", seq_len(num_features))
-
-expression <- matrix(runif(num_features * length(cell_ids), 8, 12), nrow = length(cell_ids), dimnames = list(cell_ids, feature_names))
-counts <- 2^expression - 1
-
-dataset <-
-  wrap_expression(
-    id = id,
-    expression,
-    counts
-  ) %>%
-  add_prior_information(
-    start_id = cell_ids[[1]]
-  )
-
+# get example dataset
+data("example_dataset")
+dataset <- example_dataset
 dataset_na <- dataset
 dataset_na$counts <- dataset_na$expression <- dataset$expression * NA
 
 for (tag in tags) {
   test_that(paste0("Testing create_ti_method_with_container and infer_trajectory with ", tag), {
 
-    method <- create_ti_method_with_container(
-      image = dynwrap_repo_digests[[tag]]
-    )
+    method <- create_ti_method_with_container(image = dynwrap_repo_digests[[tag]])
+
     definition <- method()
 
     expect_true(definition$id == paste0("dynwrap_tester_", tag))
