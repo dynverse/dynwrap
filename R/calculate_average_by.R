@@ -6,7 +6,10 @@
 #'
 #' @export
 calculate_average_by_group <- function(x, cell_grouping) {
-  milestone_percentages <- cell_grouping %>% mutate(percentage = 1) %>% rename(milestone_id = group_id)
+  milestone_percentages <- cell_grouping %>%
+    mutate(percentage = 1) %>%
+    rename(milestone_id = group_id)
+
   calculate_average_by_milestone_percentages(x, milestone_percentages)
 }
 
@@ -24,6 +27,7 @@ calculate_average_by_milestone_percentages <- function(x, milestone_percentages)
   # cast milestone percentages to matrix
   milpct_m <- milestone_percentages %>%
     reshape2::acast(cell_id ~ milestone_id, value.var = "percentage", fill = 0, fun.aggregate = sum)
+
   stat <- colSums(milpct_m)
   stat[stat == 0] <- 1
   milpct_m <- sweep(milpct_m, 2, stat, "/")
