@@ -1,19 +1,20 @@
-skip_on_travis_mac <- function() {
-  skip_if(Sys.getenv("TRAVIS") == "true" && "darwin" %in% tolower(Sys.info()[["sysname"]]))
-}
-
 context("Testing create_ti_method_with_container")
 
 skip_on_appveyor()
-skip_on_travis_mac()
+skip_on_os("mac")
 skip_on_cran()
 
+maintainer_usernames <- c(
+  "rcannood",
+  "wouters"
+)
 
-if (Sys.getenv("TRAVIS") == "true") {
-  tags <- "python_feather"
-} else {
+if (Sys.info()[["user"]] %in% maintainer_usernames) {
   tags <- c("R_text", "python_text", "R_hdf5", "python_hdf5", "R_rds", "R_dynwrap", "R_feather", "python_feather")
+} else {
+  tags <- "python_feather"
 }
+
 #' Obtained with:
 #' @examples
 #' map_chr(tags, ~ .container_get_remote_digests(paste0("dynverse/dynwrap_tester:", .), container_type = "docker")) %>% set_names(tags) %>% deparse() %>% paste(collapse = "\n") %>% cat
