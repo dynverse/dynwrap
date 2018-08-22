@@ -15,3 +15,7 @@ Format: \code{data_frame(cell_id = character(), milestone_id = character(), perc
 \description{
 Calculate mean values by milestone percentages
 }
+\examples{
+data(example_dataset)
+calculate_average_by_milestone_percentages(example_dataset$expression, example_dataset$milestone_percentages)
+}

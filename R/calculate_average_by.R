@@ -5,6 +5,10 @@
 #'  Format: `data_frame(cell_id = character(), group_id = character())`.
 #'
 #' @export
+#'
+#' @examples
+#' data(example_dataset)
+#' calculate_average_by_group(example_dataset$expression, example_dataset$prior_information$groups_id)
 calculate_average_by_group <- function(x, cell_grouping) {
   milestone_percentages <- cell_grouping %>%
     mutate(percentage = 1) %>%
@@ -23,6 +27,10 @@ calculate_average_by_group <- function(x, cell_grouping) {
 #' @importFrom testthat expect_equal expect_true
 #'
 #' @export
+#'
+#' @examples
+#' data(example_dataset)
+#' calculate_average_by_milestone_percentages(example_dataset$expression, example_dataset$milestone_percentages)
 calculate_average_by_milestone_percentages <- function(x, milestone_percentages) {
   # cast milestone percentages to matrix
   milpct_m <- milestone_percentages %>%

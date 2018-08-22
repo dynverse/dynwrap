@@ -15,3 +15,7 @@ Format: \code{data_frame(cell_id = character(), group_id = character())}.}
 \description{
 Calculate mean values per cell group
 }
+\examples{
+data(example_dataset)
+calculate_average_by_group(example_dataset$expression, example_dataset$prior_information$groups_id)
+}
