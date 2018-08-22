@@ -20,13 +20,20 @@ parameter_definition <- list(
     sd = 0.5,
     distribution = "normal"
   ),
-  integer_exp= list(
+  integer_exp = list(
     type = "integer",
     lower = 10,
     upper = 20,
     default = 15,
     rate = 1,
     distribution = "exponential"
+  ),
+  integer_expunif = list(
+    type = "integer",
+    lower = 10,
+    upper = 20,
+    default = 15,
+    distribution = "expuniform"
   ),
   numeric = list(
     type = "numeric",
@@ -50,6 +57,13 @@ parameter_definition <- list(
     default = 15,
     rate = 1,
     distribution = "exponential"
+  ),
+  numeric_exp = list(
+    type = "numeric",
+    lower = 10,
+    upper = 20,
+    default = 15,
+    distribution = "expuniform"
   ),
   integer_vector = list(
     type = "integer_vector",

@@ -81,7 +81,7 @@ parse_parameter_definition <- function(parameter_definition) {
         tunable = param$tunable
       )
     } else {
-      stop("Invalid paramter type, should be one of logical, logical_vector, integer, integer_vector, numeric, numeric_vector or discrete")
+      stop("Invalid paramater type, should be one of logical, logical_vector, integer, integer_vector, numeric, numeric_vector or discrete")
     }
   }) %>%
     invoke(ParamHelpers::makeParamSet, ., forbidden = forbidden)
@@ -94,19 +94,25 @@ get_distribution2uniform <- function(param) {
   switch(
     param$distribution,
     normal = {
-      if(is.null(param$mean)) {stop("Provide mean when using a normal distributed parameter")}
-      if(is.null(param$sd)) {stop("Provide sd when using a normal distributed parameter")}
+      if (is.null(param$mean)) {stop("Provide mean when using a normal distributed parameter")}
+      if (is.null(param$sd)) {stop("Provide sd when using a normal distributed parameter")}
       function(q) stats::pnorm(q, mean = param$mean, sd = param$sd)
     },
     exponential = {
-      if(is.null(param$rate)) {stop("Provide rate when using a normal distributed parameter")}
-      if(is.null(param$upper)) {stop("Provide upper when using a normal distributed parameter")}
+      if (is.null(param$rate)) {stop("Provide rate when using an exponential distributed parameter")}
+      if (is.null(param$upper)) {stop("Provide upper when using an exponential distributed parameter")}
 
       function(q) stats::pexp(q, rate = param$rate)
     },
+    expuniform = {
+      if (param$lower == -Inf) {stop("Provide rate when using an exp-uniformly distributed parameter")}
+      if (param$lower == -Inf) {stop("Provide upper when using an exp-uniformly distributed parameter")}
+
+      function(q) stats::punif(log(q), log(param$lower), log(param$upper))
+    },
     uniform = {
-      if(param$lower == -Inf) {stop("Provide lower boundary when using an uniformly distributed parameter")}
-      if(param$upper == -Inf) {stop("Provide upper boundary when using an uniformly distributed parameter")}
+      if (param$lower == -Inf) {stop("Provide lower boundary when using an uniformly distributed parameter")}
+      if (param$upper == -Inf) {stop("Provide upper boundary when using an uniformly distributed parameter")}
       function(q) stats::punif(q, param$lower, param$upper)
     }
   )
@@ -118,6 +124,7 @@ get_uniform2distribution <- function(param) {
     param$distribution,
     normal = function(p) stats::qnorm(p, mean = param$mean, sd = param$sd),
     exponential = function(p) stats::qexp(p, rate = param$rate),
+    expuniform = function(p) stats::qunif(log10(p), log10(param$lower), log10(param$upper)),
     uniform = function(p) stats::qunif(p, param$lower, param$upper)
   )
 
