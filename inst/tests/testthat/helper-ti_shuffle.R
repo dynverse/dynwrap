@@ -6,7 +6,7 @@
 #' @param dummy_param This parameter does not do anything.
 ti_shuffle <- dynwrap::create_ti_method(
   id = "shuffle",
-  package_loaded = c("tidyverse", "dynwrap", "dynutils"),
+  package_loaded = c("dplyr", "tidyr", "purrr", "dynwrap", "dynutils"),
   package_required = c("dyndimred"),
   parameters = list(
     dummy_param = list(
