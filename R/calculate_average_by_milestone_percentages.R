@@ -1,23 +1,3 @@
-#' Calculate mean values per cell group
-#'
-#' @param x A matrix. One row for every cell; one column for every feature. The rows must be named.
-#' @param cell_grouping A data frame denoting the grouping of the cells.
-#'  Format: `data_frame(cell_id = character(), group_id = character())`.
-#'
-#' @export
-#'
-#' @examples
-#' data(example_dataset)
-#' calculate_average_by_group(example_dataset$expression, example_dataset$prior_information$groups_id)
-calculate_average_by_group <- function(x, cell_grouping) {
-  milestone_percentages <-
-    cell_grouping %>%
-    mutate(percentage = 1) %>%
-    rename(milestone_id = group_id)
-
-  calculate_average_by_milestone_percentages(x, milestone_percentages)
-}
-
 #' Calculate mean values by milestone percentages
 #'
 #' @param x A matrix. One row for every cell; one column for every feature. The rows must be named.
@@ -31,7 +11,10 @@ calculate_average_by_group <- function(x, cell_grouping) {
 #'
 #' @examples
 #' data(example_dataset)
-#' calculate_average_by_milestone_percentages(example_dataset$expression, example_dataset$milestone_percentages)
+#' calculate_average_by_milestone_percentages(
+#'   x = example_dataset$expression,
+#'   milestone_percentages = example_dataset$milestone_percentages
+#' )
 calculate_average_by_milestone_percentages <- function(x, milestone_percentages) {
   # cast milestone percentages to matrix
   milpct_m <- milestone_percentages %>%
