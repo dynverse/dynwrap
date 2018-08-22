@@ -282,11 +282,7 @@ ti_comp1 <- create_ti_method_with_container("dynverse/comp1")
 ```
 
 ```{r, echo=FALSE}
-if (Sys.getenv("TRAVIS") == "true" || Sys.getenv("APPVEYOR") == "True") {
-  source(devtools:::shim_system.file("tests/testthat/helper-ti_comp1.R", package = "dynwrap"))
-} else {
-  ti_comp1 <- create_ti_method_with_container("dynverse/comp1")
-}
+source(devtools:::shim_system.file("tests/testthat/helper-ti_comp1.R", package = "dynwrap"))
 ```
 
 Then we'll use some test data
@@ -312,7 +308,7 @@ counts <- round(expression)
 dataset <- wrap_expression(
   expression,
   counts
-) %>% add_prior_information(start_id=start_id)
+) %>% add_prior_information(start_id = start_id)
 ```
 
 Now infer a trajectory
