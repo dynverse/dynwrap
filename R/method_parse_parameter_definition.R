@@ -124,7 +124,7 @@ get_uniform2distribution <- function(param) {
     param$distribution,
     normal = function(p) stats::qnorm(p, mean = param$mean, sd = param$sd),
     exponential = function(p) stats::qexp(p, rate = param$rate),
-    expuniform = function(p) stats::qunif(log10(p), log10(param$lower), log10(param$upper)),
+    expuniform = function(p) exp(stats::qunif(p, log10(param$lower), log10(param$upper))),
     uniform = function(p) stats::qunif(p, param$lower, param$upper)
   )
 
