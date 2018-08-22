@@ -34,7 +34,7 @@ add_linear_trajectory <- function(
   }
 
   # construct milestones
-  milestone_ids <- c("milestone_start", "milestone_end")
+  milestone_ids <- c("milestone_begin", "milestone_end")
 
   # construct milestone_network
   milestone_network <- data_frame(
