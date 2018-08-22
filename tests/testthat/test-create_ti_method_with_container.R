@@ -64,7 +64,8 @@ for (tag in tags) {
 
     expect_true(definition$id == paste0("dynwrap_tester_", tag))
     expect_is(definition$run_fun, "function")
-    expect_match(definition$remote_digests, gsub(":[^@]*@", "@", dynwrap_repo_digests[[tag]]))
+    expect_match(definition$remote_digests, gsub(".*@", "", dynwrap_repo_digests[[tag]]))
+    expect_match(definition$remote_digests, gsub(":.*", "", dynwrap_repo_digests[[tag]]))
 
     model0 <- infer_trajectory(dataset, definition, parameters = list())
     expect_true(is_wrapper_with_trajectory(model0))
