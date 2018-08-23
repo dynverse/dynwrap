@@ -13,7 +13,7 @@
     image_location <- normalizePath(paste0(singularity_images_folder, "/", repo_name, ".simg"), mustWork = FALSE)
     json_location <- normalizePath(paste0(singularity_images_folder, "/", repo_name, ".json"), mustWork = FALSE)
 
-    dir.create(singularity_images_folder, showWarnings = FALSE, recursive = TRUE)
+    dir.create(gsub("[^/]*$", "", image_location), showWarnings = FALSE, recursive = TRUE)
 
     if (file.exists(json_location)) file.remove(json_location)
 
