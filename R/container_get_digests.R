@@ -2,11 +2,11 @@
   image,
   config = container_config()
 ) {
-  image <- gsub("[@:].*$", "", image)
+  image_name <- gsub("[:@].*$", "", image)
 
   if (config$type == "docker") {
     # check whether image is available locally
-    result <- processx::run("docker", c("inspect", "--type=image", image, "--format='{{.Id}}\t{{.RepoDigests}}'"), error_on_status = FALSE)
+    result <- processx::run("docker", c("inspect", "--type=image", image_name, "--format='{{.Id}}\t{{.RepoDigests}}'"), error_on_status = FALSE)
 
     if (result$status > 0) {
       NA
@@ -23,8 +23,8 @@
       lst(digest, repo_digests)
     }
   } else if (config$type == "singularity") {
-    simg_location <- normalizePath(paste0(config$images_folder, "/", image, ".simg"), mustWork = FALSE)
-    json_location <- normalizePath(paste0(config$images_folder, "/", image, ".json"), mustWork = FALSE)
+    simg_location <- normalizePath(paste0(config$images_folder, "/", image_name, ".simg"), mustWork = FALSE)
+    json_location <- normalizePath(paste0(config$images_folder, "/", image_name, ".json"), mustWork = FALSE)
 
     if (!file.exists(simg_location)) {
       NA

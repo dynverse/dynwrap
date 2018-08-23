@@ -6,16 +6,24 @@
   verbose,
   config = container_config()
 ) {
-  image_location <- normalizePath(paste0(config$images_folder, "/", image, ".simg"), mustWork = FALSE)
+  image_name <- gsub("[:@].*$", "", image)
+  image_location <- normalizePath(paste0(config$images_folder, "/", image_name, ".simg"), mustWork = FALSE)
 
   if (debug) {
     if (config$type == "docker") {
-      command <- glue::glue(
-        "docker run --entrypoint 'bash' -e TMPDIR=/ti/tmp --workdir /ti/workspace -it {paste0(paste0('-v ', volumes), collapse = ' ')} {image}"
+      command <- paste0(
+        "docker run --entrypoint 'bash' -e TMPDIR=/ti/tmp --workdir /ti/workspace -it ",
+        paste0(paste0('-v ', volumes), collapse = ' '),
+        " ",
+        image
       )
     } else if (config$type == "singularity") {
-      command <- glue::glue(
-        "SINGULARITYENV_TMPDIR=/ti/tmp singularity exec --cleanenv --pwd /ti/workspace -B {glue::glue_collapse(volumes, ',')} {image_location} bash"
+      command <- paste0(
+        "SINGULARITYENV_TMPDIR=/ti/tmp singularity exec --cleanenv --pwd /ti/workspace -B ",
+        paste0(volumes, collapse = ","),
+        " ",
+        image_location,
+        " bash"
       )
     }
 
@@ -52,7 +60,7 @@
     stdout_file <- tempfile()
     output <- system2(
       "singularity",
-      c("-s", "run", "--cleanenv", "--pwd", "/ti/workspace", "-B", glue::glue_collapse(volumes, ','), image_location),
+      c("-s", "run", "--cleanenv", "--pwd", "/ti/workspace", "-B", paste0(volumes, collapse = ","), image_location),
       stdout = stdout_file,
       stderr = stdout_file,
       env = "SINGULARITYENV_TMPDIR=/ti/tmp"

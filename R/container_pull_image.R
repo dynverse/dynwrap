@@ -7,11 +7,11 @@
   if (config$type == "docker") {
     processx::run("docker", c("pull", image), echo = TRUE)
   } else if (config$type == "singularity") {
-    repo_name <- gsub("@sha256:.*", "", image)
+    image_name <- gsub("[.@].*$", "", image)
     repo_digests <- if (grepl("@sha256:", image)) image else NULL
 
-    image_location <- normalizePath(paste0(config$images_folder, "/", repo_name, ".simg"), mustWork = FALSE)
-    json_location <- normalizePath(paste0(config$images_folder, "/", repo_name, ".json"), mustWork = FALSE)
+    image_location <- normalizePath(paste0(config$images_folder, "/", image_name, ".simg"), mustWork = FALSE)
+    json_location <- normalizePath(paste0(config$images_folder, "/", image_name, ".json"), mustWork = FALSE)
 
     dir.create(gsub("[^/]*$", "", image_location), showWarnings = FALSE, recursive = TRUE)
 
