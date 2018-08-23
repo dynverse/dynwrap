@@ -25,7 +25,7 @@
     )
   } else if (config$type == "singularity") {
     image_name <- gsub("[:@].*$", "", image)
-    image_location <- normalizePath(paste0(singularity_images_folder, "/", image_name, ".simg"), mustWork = FALSE)
+    image_location <- normalizePath(paste0(config$images_folder, "/", image_name, ".simg"), mustWork = FALSE)
 
     processx::run(
       "singularity",
