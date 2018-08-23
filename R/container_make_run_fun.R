@@ -1,8 +1,8 @@
 .container_make_run_fun <- function(
   definition,
   image,
-  container_type,
-  singularity_images_folder
+  container_type = getOption("dynwrap_run_environment"),
+  singularity_images_folder = .container_get_singularity_images_folder(container_type)
 ) {
   # process params
   param_ids <- names(definition$parameters) %>% setdiff(c("forbidden"))
@@ -88,11 +88,9 @@
     # run container
     output <- .container_run(
       image = image,
-      container_type = container_type,
       volumes = glue("{dir_dynwrap}:/ti"),
       debug = debug,
-      verbose = verbose,
-      singularity_images_folder = singularity_images_folder
+      verbose = verbose
     )
 
     # exit if error
@@ -129,9 +127,7 @@
     param_ids,
     output_format,
     output_ids,
-    image,
-    container_type,
-    singularity_images_folder
+    image
   ))
 
   # adapt run_fun arguments, some hocus pocus going on here ;)

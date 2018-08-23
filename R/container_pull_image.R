@@ -1,7 +1,7 @@
 #' @importFrom jsonlite write_json
 .container_pull_image <- function(
   image,
-  container_type,
+  container_type = getOption("dynwrap_run_environment"),
   singularity_images_folder = .container_get_singularity_images_folder(container_type)
 ) {
   if (container_type == "docker") {

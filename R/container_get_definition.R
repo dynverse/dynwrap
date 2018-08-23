@@ -1,6 +1,6 @@
 .container_get_definition <- function(
   image,
-  container_type,
+  container_type = getOption("dynwrap_run_environment"),
   singularity_images_folder = .container_get_singularity_images_folder(container_type)
 ) {
   tempfile <- safe_tempdir("tmp_mount")

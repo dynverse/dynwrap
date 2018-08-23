@@ -1,11 +1,11 @@
 #' @importFrom crayon bold
 .container_run <- function(
   image,
-  container_type,
   volumes,
   debug,
   verbose,
-  singularity_images_folder
+  container_type = getOption("dynwrap_run_environment"),
+  singularity_images_folder = .container_get_singularity_images_folder(container_type)
 ) {
   image_location <- normalizePath(paste0(singularity_images_folder, "/", image, ".simg"), mustWork = FALSE)
 
