@@ -4,17 +4,16 @@
   volumes,
   debug,
   verbose,
-  container_type = getOption("dynwrap_run_environment"),
-  singularity_images_folder = .container_get_singularity_images_folder(container_type)
+  config = container_config()
 ) {
-  image_location <- normalizePath(paste0(singularity_images_folder, "/", image, ".simg"), mustWork = FALSE)
+  image_location <- normalizePath(paste0(config$images_folder, "/", image, ".simg"), mustWork = FALSE)
 
   if (debug) {
-    if (container_type == "docker") {
+    if (config$type == "docker") {
       command <- glue::glue(
         "docker run --entrypoint 'bash' -e TMPDIR=/ti/tmp --workdir /ti/workspace -it {paste0(paste0('-v ', volumes), collapse = ' ')} {image}"
       )
-    } else if (container_type == "singularity") {
+    } else if (config$type == "singularity") {
       command <- glue::glue(
         "SINGULARITYENV_TMPDIR=/ti/tmp singularity exec --cleanenv --pwd /ti/workspace -B {glue::glue_collapse(volumes, ',')} {image_location} bash"
       )
@@ -24,7 +23,7 @@
   }
 
 
-  if (container_type == "docker") {
+  if (config$type == "docker") {
     process <- processx::run(
       "docker",
       c("run", "-e", "TMPDIR=/ti/tmp", "--workdir", "/ti/workspace", as.character(rbind("-v", volumes)), image),
@@ -40,7 +39,7 @@
     }
 
     process
-  } else if (container_type == "singularity") {
+  } else if (config$type == "singularity") {
     if (!file.exists(image_location)) {
       stop(image_location, " not found!")
     }

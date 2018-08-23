@@ -1,8 +1,6 @@
 .container_make_run_fun <- function(
   definition,
-  image,
-  container_type = getOption("dynwrap_run_environment"),
-  singularity_images_folder = .container_get_singularity_images_folder(container_type)
+  image
 ) {
   # process params
   param_ids <- names(definition$parameters) %>% setdiff(c("forbidden"))

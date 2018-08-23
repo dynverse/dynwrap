@@ -1,12 +1,11 @@
 .container_get_definition <- function(
   image,
-  container_type = getOption("dynwrap_run_environment"),
-  singularity_images_folder = .container_get_singularity_images_folder(container_type)
+  config = container_config()
 ) {
   tempfile <- safe_tempdir("tmp_mount")
   definition_location <- "/code/definition.yml"
 
-  if (container_type == "docker") {
+  if (config$type == "docker") {
     # start container
     output <- processx::run(
       "docker",
@@ -24,7 +23,7 @@
       c("cp", glue::glue("{id}:{definition_location}"), paste0(tempfile, "/definition.yml")),
       stderr_callback = print_processx
     )
-  } else if (container_type == "singularity") {
+  } else if (config$type == "singularity") {
     image_name <- gsub("[:@].*$", "", image)
     image_location <- normalizePath(paste0(singularity_images_folder, "/", image_name, ".simg"), mustWork = FALSE)
 
@@ -47,8 +46,7 @@
   # add the remote digests
   digests <- .container_get_digests(
     image = image,
-    container_type = container_type,
-    singularity_images_folder = singularity_images_folder
+    config = config
   )
 
   if (!identical(digests, NA)) {

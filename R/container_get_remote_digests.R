@@ -1,11 +1,10 @@
 .container_get_digests <- function(
   image,
-  container_type = getOption("dynwrap_run_environment"),
-  singularity_images_folder = .container_get_singularity_images_folder(container_type)
+  config = container_config()
 ) {
   image <- gsub("[@:].*$", "", image)
 
-  if (container_type == "docker") {
+  if (config$type == "docker") {
     # check whether image is available locally
     result <- processx::run("docker", c("inspect", "--type=image", image, "--format='{{.Id}}\t{{.RepoDigests}}'"), error_on_status = FALSE)
 
@@ -23,9 +22,9 @@
         first()
       lst(digest, remote_digests)
     }
-  } else if (container_type == "singularity") {
-    simg_location <- normalizePath(paste0(singularity_images_folder, "/", image, ".simg"), mustWork = FALSE)
-    json_location <- normalizePath(paste0(singularity_images_folder, "/", image, ".json"), mustWork = FALSE)
+  } else if (config$type == "singularity") {
+    simg_location <- normalizePath(paste0(config$images_folder, "/", image, ".simg"), mustWork = FALSE)
+    json_location <- normalizePath(paste0(config$images_folder, "/", image, ".json"), mustWork = FALSE)
 
     if (!file.exists(simg_location)) {
       NA

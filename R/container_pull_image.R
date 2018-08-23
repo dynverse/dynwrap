@@ -1,17 +1,17 @@
 #' @importFrom jsonlite write_json
 .container_pull_image <- function(
   image,
-  container_type = getOption("dynwrap_run_environment"),
-  singularity_images_folder = .container_get_singularity_images_folder(container_type)
+  config = container_config()
 ) {
-  if (container_type == "docker") {
+
+  if (config$type == "docker") {
     processx::run("docker", c("pull", image), echo = TRUE)
-  } else if (container_type == "singularity") {
+  } else if (config$type == "singularity") {
     repo_name <- gsub("@sha256:.*", "", image)
     repo_digest <- if (grepl("@sha256:", image)) image else NULL
 
-    image_location <- normalizePath(paste0(singularity_images_folder, "/", repo_name, ".simg"), mustWork = FALSE)
-    json_location <- normalizePath(paste0(singularity_images_folder, "/", repo_name, ".json"), mustWork = FALSE)
+    image_location <- normalizePath(paste0(config$images_folder, "/", repo_name, ".simg"), mustWork = FALSE)
+    json_location <- normalizePath(paste0(config$images_folder, "/", repo_name, ".json"), mustWork = FALSE)
 
     dir.create(gsub("[^/]*$", "", image_location), showWarnings = FALSE, recursive = TRUE)
 
