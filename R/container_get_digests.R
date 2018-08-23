@@ -2,11 +2,11 @@
   image,
   config = container_config()
 ) {
-  image <- gsub("[@:].*$", "", image)
+  image_name <- gsub("[:@].*$", "", image)
 
   if (config$type == "docker") {
     # check whether image is available locally
-    result <- processx::run("docker", c("inspect", "--type=image", image, "--format='{{.Id}}\t{{.RepoDigests}}'"), error_on_status = FALSE)
+    result <- processx::run("docker", c("inspect", "--type=image", image_name, "--format='{{.Id}}\t{{.RepoDigests}}'"), error_on_status = FALSE)
 
     if (result$status > 0) {
       NA
@@ -14,25 +14,25 @@
       digest <- result$stdout %>%
         stringr::str_replace_all("\\t.*\n$", "") %>%
         stringr::str_replace_all("^'", "")
-      remote_digests <-
+      repo_digests <-
         result$stdout %>%
         stringr::str_replace_all("^.*\\[", "") %>%
         stringr::str_replace_all("\\].*\n$", "") %>%
         stringr::str_split(" ") %>%
         first()
-      lst(digest, remote_digests)
+      lst(digest, repo_digests)
     }
   } else if (config$type == "singularity") {
-    simg_location <- normalizePath(paste0(config$images_folder, "/", image, ".simg"), mustWork = FALSE)
-    json_location <- normalizePath(paste0(config$images_folder, "/", image, ".json"), mustWork = FALSE)
+    simg_location <- normalizePath(paste0(config$images_folder, "/", image_name, ".simg"), mustWork = FALSE)
+    json_location <- normalizePath(paste0(config$images_folder, "/", image_name, ".json"), mustWork = FALSE)
 
     if (!file.exists(simg_location)) {
       NA
     } else {
       if (!file.exists(json_location)) {
-        list(digest = "", remote_digests = "") # image is from previous version of dynwrap
+        list(digest = "", repo_digests = "") # image is from previous version of dynwrap
       } else {
-        jsonlite::read_json(json_location, simplifyVector = TRUE)[c("digest", "remote_digests")]
+        jsonlite::read_json(json_location, simplifyVector = TRUE)[c("digest", "repo_digests")]
       }
     }
   }

@@ -86,7 +86,7 @@
     # run container
     output <- .container_run(
       image = image,
-      volumes = glue("{dir_dynwrap}:/ti"),
+      dir_dynwrap = dir_dynwrap,
       debug = debug,
       verbose = verbose
     )

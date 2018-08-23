@@ -17,7 +17,7 @@ if (Sys.info()[["user"]] %in% maintainer_usernames) {
 # Obtained with:
 
 #' @examples
-#' map_chr(tags, ~ .container_get_digests(paste0("dynverse/dynwrap_tester:", .))$remote_digests) %>% set_names(tags) %>% deparse() %>% str_replace("^c\\(", "c(\n") %>% paste(collapse = "\n") %>% cat
+#' map_chr(tags, ~ .container_get_digests(paste0("dynverse/dynwrap_tester:", .))$repo_digests) %>% set_names(tags) %>% deparse() %>% str_replace("^c\\(", "c(\n") %>% paste(collapse = "\n") %>% cat
 
 dynwrap_repo_digests <- c(
   R_text = "dynverse/dynwrap_tester:R_text@sha256:cf23c3162b0f883b623dc474f0a985beafc2b5bb44bcf32bee76e3fd92768c9c",
@@ -45,8 +45,8 @@ for (tag in tags) {
 
     expect_true(definition$id == paste0("dynwrap_tester_", tag))
     expect_is(definition$run_fun, "function")
-    # expect_match(definition$remote_digests, gsub(".*@", "", dynwrap_repo_digests[[tag]]))
-    # expect_match(definition$remote_digests, gsub(":.*", "", dynwrap_repo_digests[[tag]]))
+    # expect_match(definition$repo_digests, gsub(".*@", "", dynwrap_repo_digests[[tag]]))
+    # expect_match(definition$repo_digests, gsub(":.*", "", dynwrap_repo_digests[[tag]]))
     # ???
 
     model0 <- infer_trajectory(dataset, definition, parameters = list())

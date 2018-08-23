@@ -51,7 +51,7 @@
 
   if (!identical(digests, NA)) {
     definition$digest <- digests$digest
-    definition$remote_digests <- digests$remote_digests
+    definition$repo_digests <- digests$repo_digests
   }
 
   # return definition file

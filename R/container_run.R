@@ -1,23 +1,21 @@
 #' @importFrom crayon bold
 .container_run <- function(
   image,
-  volumes,
+  dir_dynwrap,
   debug,
   verbose,
   config = container_config()
 ) {
-  image_location <- normalizePath(paste0(config$images_folder, "/", image, ".simg"), mustWork = FALSE)
+  image_name <- gsub("[:@].*$", "", image)
+  image_location <- normalizePath(paste0(config$images_folder, "/", image_name, ".simg"), mustWork = FALSE)
 
   if (debug) {
-    if (config$type == "docker") {
-      command <- glue::glue(
-        "docker run --entrypoint 'bash' -e TMPDIR=/ti/tmp --workdir /ti/workspace -it {paste0(paste0('-v ', volumes), collapse = ' ')} {image}"
-      )
-    } else if (config$type == "singularity") {
-      command <- glue::glue(
-        "SINGULARITYENV_TMPDIR=/ti/tmp singularity exec --cleanenv --pwd /ti/workspace -B {glue::glue_collapse(volumes, ',')} {image_location} bash"
-      )
-    }
+    command <-
+      if (config$type == "docker") {
+        paste0("docker run --entrypoint 'bash' -e TMPDIR=/ti/tmp --workdir /ti/workspace -it -v ", dir_dynwrap, ":/ti ", image)
+      } else if (config$type == "singularity") {
+        paste0("SINGULARITYENV_TMPDIR=/ti/tmp singularity exec --cleanenv --pwd /ti/workspace -B ", dir_dynwrap, ":/ti ", image_location, " bash")
+      }
 
     stop("Use this command for debugging: \n", crayon::bold(command), call. = FALSE)
   }
@@ -26,7 +24,7 @@
   if (config$type == "docker") {
     process <- processx::run(
       "docker",
-      c("run", "-e", "TMPDIR=/ti/tmp", "--workdir", "/ti/workspace", as.character(rbind("-v", volumes)), image),
+      c("run", "-e", "TMPDIR=/ti/tmp", "--workdir", "/ti/workspace", "-v", paste0(dir_dynwrap, ":/ti"), image),
       echo = verbose,
       echo_cmd = verbose,
       spinner = TRUE,
@@ -52,7 +50,7 @@
     stdout_file <- tempfile()
     output <- system2(
       "singularity",
-      c("-s", "run", "--cleanenv", "--pwd", "/ti/workspace", "-B", glue::glue_collapse(volumes, ','), image_location),
+      c("-s", "run", "--cleanenv", "--pwd", "/ti/workspace", "-B", paste0(dir_dynwrap, ":/ti"), image_location),
       stdout = stdout_file,
       stderr = stdout_file,
       env = "SINGULARITYENV_TMPDIR=/ti/tmp"

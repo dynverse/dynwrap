@@ -43,7 +43,7 @@ create_ti_method_with_container <- function(
   out_of_date <-
     !image_not_found && # lazy eval
     !is.null(repo_digest) &&
-    (length(current_repo_digest$remote_digests) == 0 || !any(grepl(repo_digest, current_repo_digest$remote_digests)))
+    (length(current_repo_digest$repo_digests) == 0 || !any(grepl(repo_digest, current_repo_digest$repo_digests)))
 
   if (image_not_found || out_of_date) {
     msg <- ifelse(image_not_found, "Image not found", "Local image is out of date")
