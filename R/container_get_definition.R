@@ -52,11 +52,8 @@
   )
 
   if (!identical(digests, NA)) {
-    definition <-
-      list_merge(
-        definition,
-        !!! digests
-      )
+    definition$digest <- digests$digest
+    definition$remote_digests <- digests$remote_digests
   }
 
   # return definition file
