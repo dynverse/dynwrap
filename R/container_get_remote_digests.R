@@ -3,7 +3,7 @@
   container_type,
   singularity_images_folder = .container_get_singularity_images_folder(container_type)
 ) {
-  image <- gsub("@sha256:.*", "", image)
+  image <- gsub("[@:].*$", "", image)
 
   if (container_type == "docker") {
     # check whether image is available locally
