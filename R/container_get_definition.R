@@ -25,7 +25,8 @@
       stderr_callback = print_processx
     )
   } else if (container_type == "singularity") {
-    image_location <- normalizePath(paste0(singularity_images_folder, "/", image, ".simg"), mustWork = FALSE)
+    image_name <- gsub("[:@].*$", "", image)
+    image_location <- normalizePath(paste0(singularity_images_folder, "/", image_name, ".simg"), mustWork = FALSE)
 
     processx::run(
       "singularity",
