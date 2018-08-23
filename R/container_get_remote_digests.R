@@ -13,13 +13,13 @@
       NA
     } else {
       digest <- result$stdout %>%
-        stringr::str_replace_all("\\t.*", "") %>%
+        stringr::str_replace_all("\\t.*\n$", "") %>%
         stringr::str_replace_all("^'", "")
       remote_digests <-
         result$stdout %>%
         stringr::str_replace_all("^.*\\[", "") %>%
         stringr::str_replace_all("\\].*\n$", "") %>%
-        stringr::str_split(",") %>%
+        stringr::str_split(" ") %>%
         first()
       lst(digest, remote_digests)
     }
