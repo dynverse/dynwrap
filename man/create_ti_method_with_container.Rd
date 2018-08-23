@@ -10,7 +10,7 @@ create_ti_method_with_container(image, config = container_config())
 \item{image}{The name of the docker repository (e.g. \code{"dynverse/angle"}).
 It is recommended to include a specific version (e.g. \code{"dynverse/angle@sha256:473e54..."}).}
 
-\item{config}{A container config. See \code{container_config()} for more information.}
+\item{config}{A container config. See \code{\link[=container_config]{container_config()}} for more information.}
 }
 \description{
 These functions create a TI method from a docker image. Supports both docker and singularity as a backend.

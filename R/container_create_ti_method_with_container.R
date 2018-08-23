@@ -4,7 +4,7 @@
 #'
 #' @param image The name of the docker repository (e.g. `"dynverse/angle"`).
 #'   It is recommended to include a specific version (e.g. `"dynverse/angle@sha256:473e54..."`).
-#' @param config A container config. See `container_config()` for more information.
+#' @param config A container config. See [container_config()] for more information.
 #'
 #' @export
 create_ti_method_with_container <- function(
