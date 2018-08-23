@@ -14,13 +14,13 @@
       digest <- result$stdout %>%
         stringr::str_replace_all("\\t.*\n$", "") %>%
         stringr::str_replace_all("^'", "")
-      remote_digests <-
+      repo_digests <-
         result$stdout %>%
         stringr::str_replace_all("^.*\\[", "") %>%
         stringr::str_replace_all("\\].*\n$", "") %>%
         stringr::str_split(" ") %>%
         first()
-      lst(digest, remote_digests)
+      lst(digest, repo_digests)
     }
   } else if (config$type == "singularity") {
     simg_location <- normalizePath(paste0(config$images_folder, "/", image, ".simg"), mustWork = FALSE)
@@ -30,9 +30,9 @@
       NA
     } else {
       if (!file.exists(json_location)) {
-        list(digest = "", remote_digests = "") # image is from previous version of dynwrap
+        list(digest = "", repo_digests = "") # image is from previous version of dynwrap
       } else {
-        jsonlite::read_json(json_location, simplifyVector = TRUE)[c("digest", "remote_digests")]
+        jsonlite::read_json(json_location, simplifyVector = TRUE)[c("digest", "repo_digests")]
       }
     }
   }

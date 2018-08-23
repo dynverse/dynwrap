@@ -74,7 +74,7 @@ Collate:
     'container_config.R'
     'container_create_ti_method_with_container.R'
     'container_get_definition.R'
-    'container_get_remote_digests.R'
+    'container_get_digests.R'
     'container_make_run_fun.R'
     'container_pull_image.R'
     'container_run.R'
