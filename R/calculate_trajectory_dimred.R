@@ -59,7 +59,7 @@ calculate_trajectory_dimred <- function(
   # reduce dimensionality on milestone_network
   gr <- igraph::graph_from_data_frame(structure, vertices = milestone_ids)
   layout <-
-    igraph::layout_with_kk(gr, dim = 2, maxiter = 1000) %>%
+    igraph::layout_with_kk(gr, dim = 2, maxiter = 10000) %>%
     dynutils::scale_uniform() %>%
     set_rownames(milestone_ids) %>%
     set_colnames(paste0("comp_", seq_len(ncol(.))))
