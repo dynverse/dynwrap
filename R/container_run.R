@@ -16,14 +16,14 @@ fix_windows_path <- function(path) {
 ) {
   command <- match.arg(config$type, choices = c("docker", "singularity"))
 
-  ti_run_sh <- "/ti/run.sh"
+  code_run_sh <- "/code/run.sh"
 
   # fix for windows computers
   dir_dynwrap <- fix_windows_path(dir_dynwrap)
 
   if (config$type == "docker") {
     # determine command arguments
-    args <- c("run", "--entrypoint", ti_run_sh, "-e", "TMPDIR=/ti/tmp", "--workdir", "/ti/workspace", "-v", paste0(dir_dynwrap, ":/ti"), image)
+    args <- c("run", "--entrypoint", code_run_sh, "-e", "TMPDIR=/ti/tmp", "--workdir", "/ti/workspace", "-v", paste0(dir_dynwrap, ":/ti"), image)
 
     # docker requires no extra environment variables to be set
     env <- NULL
@@ -40,15 +40,15 @@ fix_windows_path <- function(path) {
     }
 
     # determine command arguments
-    args <- c("exec", ti_run_sh, "--cleanenv", "--pwd", "/ti/workspace", "-B", paste0(dir_dynwrap, ":/ti"), image)
+    args <- c("exec", code_run_sh, "--cleanenv", "--pwd", "/ti/workspace", "-B", paste0(dir_dynwrap, ":/ti"), image)
 
     # tmpdir must be set to /ti/tmp
     env <- c("SINGULARITYENV_TMPDIR" = "/ti/tmp", "SINGULARITY_CACHEDIR" = tempcache)
   }
 
   if (debug) {
-    # change entrypoint from /ti/run.sh to bash
-    args[args == ti_run_sh] <- "bash"
+    # change entrypoint from /code/run.sh to bash
+    args[args == code_run_sh] <- "bash"
 
     # simply print the command the user needs to use to enter the container
     command <-
