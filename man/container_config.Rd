@@ -11,9 +11,9 @@ container_config(type = getOption("dynwrap_run_environment") \%||\%
 
 container_docker()
 
-
-  container_singularity(images_folder = getOption("dynwrap_singularity_images_folder")
-  \%||\% getenv("DYNWRAP_SINGULARITY_IMAGES_FOLDER") \%||\% "./")
+container_singularity(prebuild = FALSE,
+  images_folder = getOption("dynwrap_singularity_images_folder") \%||\%
+  getenv("DYNWRAP_SINGULARITY_IMAGES_FOLDER") \%||\% "./")
 }
 \arguments{
 \item{type}{Which backend to use. Can be either \code{"docker"} or \code{"singularity"}.
@@ -22,6 +22,8 @@ the \code{"dynwrap_run_environment"} option, the \code{"DYNWRAP_RUN_ENVIRONMENT"
 variable, or otherwise just \code{"docker"}.}
 
 \item{...}{Parameters to pass to \code{container_docker()} or \code{container_singularity()}.}
+
+\item{prebuild}{If the singularity images are not prebuilt, they will need to be built every time a method is run.}
 
 \item{images_folder}{A folder in which to store the singularity images. Each TI method will require about 1 to 2GB of space.}
 }
