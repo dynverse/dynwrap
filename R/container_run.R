@@ -29,6 +29,9 @@ fix_windows_path <- function(path) {
     env <- NULL
 
   } else if (config$type == "singularity") {
+    tempcache <- on.exit(unlink(tempcache, recursive = TRUE))
+    on.exit(.container_singularity_finalise_concurrent_cache(tempcache))
+
     # pull container directly from docker or use a prebuilt image
     if (config$prebuild) {
       image <- paste0("docker://", image)
@@ -40,7 +43,7 @@ fix_windows_path <- function(path) {
     args <- c("exec", ti_run_sh, "--cleanenv", "--pwd", "/ti/workspace", "-B", paste0(dir_dynwrap, ":/ti"), image)
 
     # tmpdir must be set to /ti/tmp
-    env <- c("SINGULARITYENV_TMPDIR"="/ti/tmp")
+    env <- c("SINGULARITYENV_TMPDIR" = "/ti/tmp", "SINGULARITY_CACHEDIR" = tempcache)
   }
 
   if (debug) {
