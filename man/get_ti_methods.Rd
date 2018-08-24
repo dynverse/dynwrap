@@ -7,7 +7,7 @@
 get_ti_methods(method_ids = NULL, as_tibble = TRUE,
   ti_packages = ifelse("dynmethods" \%in\%
   rownames(utils::installed.packages()), "dynmethods", "dynwrap"),
-  evaluate = FALSE)
+  evaluate = FALSE, config = container_config())
 }
 \arguments{
 \item{method_ids}{The method identifiers. NULL if listing all methods}

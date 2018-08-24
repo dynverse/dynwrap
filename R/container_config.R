@@ -44,7 +44,7 @@ container_singularity <- function(
   prebuild = FALSE,
   images_folder = getOption("dynwrap_singularity_images_folder") %||% getenv("DYNWRAP_SINGULARITY_IMAGES_FOLDER") %||% "./"
 ) {
-  if (!prebuild && images_folder == "./") {
+  if (prebuild && images_folder == "./") {
     warning(
       "No singularity images folder specified, will use the working directory.\n",
       "Check `?container_singularity` for more information on how to define the images folder."

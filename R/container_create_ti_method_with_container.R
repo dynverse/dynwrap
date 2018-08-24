@@ -39,20 +39,22 @@ create_ti_method_with_container <- function(
   ####          PULL NEW IMAGE (IF NEEDED)          ####
   ######################################################
 
-  image_not_found <- identical(current_repo_digest, NA)
-  out_of_date <-
-    !image_not_found && # lazy eval
-    !is.null(repo_digest) &&
-    (length(current_repo_digest$repo_digests) == 0 || !any(grepl(repo_digest, current_repo_digest$repo_digests)))
+  if (config$type != "singularity" || config$prebuild) {
+    image_not_found <- identical(current_repo_digest, NA)
+    out_of_date <-
+      !image_not_found && # lazy eval
+      !is.null(repo_digest) &&
+      (length(current_repo_digest$repo_digests) == 0 || !any(grepl(repo_digest, current_repo_digest$repo_digests)))
 
-  if (image_not_found || out_of_date) {
-    msg <- ifelse(image_not_found, "Image not found", "Local image is out of date")
-    message("Pulling image: '", image, "'. Reason: '", msg, "'. This might take a while.")
+    if (image_not_found || out_of_date) {
+      msg <- ifelse(image_not_found, "Image not found", "Local image is out of date")
+      message("Pulling image: '", image, "'. Reason: '", msg, "'. This might take a while.")
 
-    .container_pull_image(
-      image = image,
-      config = config
-    )
+      .container_pull_image(
+        image = image,
+        config = config
+      )
+    }
   }
 
   ######################################################

@@ -85,10 +85,14 @@
 
     # run container
     output <- .container_run(
-      image = image,
-      dir_dynwrap = dir_dynwrap,
+      image,
+      command = "/code/run.sh",
+      extra_args = NULL,
       debug = debug,
-      verbose = verbose
+      verbose = verbose,
+      volumes = paste(dir_dynwrap, ":/ti"),
+      config = container_config(),
+      workspace = "/ti/dynwrap"
     )
 
     # exit if error

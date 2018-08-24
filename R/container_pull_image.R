@@ -8,10 +8,11 @@
     processx::run("docker", c("pull", image), echo = TRUE)
 
   } else if (config$type == "singularity") {
-    tempcache <- .container_singularity_create_concurrent_cache()
-    on.exit(.container_singularity_finalise_concurrent_cache(tempcache))
 
     if (config$prebuild) {
+      tempcache <- .container_singularity_create_concurrent_cache()
+      on.exit(.container_singularity_finalise_concurrent_cache(tempcache))
+
       image_name <- gsub("[.@].*$", "", image)
       repo_digests <- if (grepl("@sha256:", image)) image else NULL
 
@@ -26,7 +27,8 @@
 
       jsonlite::write_json(list(digest = NA, repo_digests = repo_digests), json_location)
     } else {
-      processx::run("singularity", c("exec", paste0("docker://", image), "echo", "hi"), echo = TRUE, env = c("SINGULARITY_CACHEDIR" = tempcache))
+      # fill cache by running simple command
+      .container_run(image = image, command = "echo", extra_args = paste("Pulled ", image), config = config, verbose = TRUE)
     }
 
   }

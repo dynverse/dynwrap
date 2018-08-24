@@ -9,58 +9,90 @@ fix_windows_path <- function(path) {
 #' @importFrom crayon bold
 .container_run <- function(
   image,
-  dir_dynwrap,
-  debug,
-  verbose,
-  config = container_config()
+  command,
+  extra_args = NULL,
+  debug = FALSE,
+  verbose = FALSE,
+  volumes = NULL,
+  config = container_config(),
+  workspace = NULL,
+  environment_variables = NULL
 ) {
-  command <- match.arg(config$type, choices = c("docker", "singularity"))
+  container_cmd <- match.arg(config$type, choices = c("docker", "singularity"))
 
-  code_run_sh <- "/code/run.sh"
+  # add safe tempdir to volumes
+  safe_tmp <- safe_tempdir("tmp")
+  on.exit(unlink(safe_tmp, recursive = TRUE))
+  volumes <- c(volumes, paste0(safe_tmp, ":/tmp2"))
+
+  if (config$type == "docker") {
+    volumes <- unlist(map(volumes, ~ c("-v", .)))
+  } else if (config$type == "singularity") {
+    volumes <- c("-B", paste0(volumes, collapse = ","))
+  }
+
+  # check debug
+  if (debug) {
+    command <- "bash"
+    extra_args <- NULL
+  }
+
+  # process workspace
+  if (!is.null(workspace)) {
+    if (config$type == "docker") {
+      workspace <- c("--workdir", workspace)
+    } else if (config$type == "singularity") {
+      workspace <- c("--pwd", workspace)
+    }
+  }
+
+  # process environment variables
+  environment_variables <- c(environment_variables, "TMPDIR=/tmp2")
 
   # fix for windows computers
   dir_dynwrap <- fix_windows_path(dir_dynwrap)
 
   if (config$type == "docker") {
-    # determine command arguments
-    args <- c("run", "--entrypoint", code_run_sh, "-e", "TMPDIR=/ti/tmp", "--workdir", "/ti/workspace", "-v", paste0(dir_dynwrap, ":/ti"), image)
+    env1 <- unlist(map(environment_variables, ~ c("-e", .)))
+    env2 <- NULL
 
-    # docker requires no extra environment variables to be set
-    env <- NULL
+    # determine command arguments
+    args <- c("run", "--entrypoint", command, env1, workspace, volumes, image, extra_args)
 
   } else if (config$type == "singularity") {
     tempcache <- .container_singularity_create_concurrent_cache()
     on.exit(.container_singularity_finalise_concurrent_cache(tempcache))
 
+    env1 <- NULL
+    env2 <- set_names(
+      environment_variables %>% gsub("^(.*)=.*$", "SINGULARITYENV_\\1", .),
+      environment_variables %>% gsub("^.*=", "", .)
+    )
+    env2 <- c(env2, "SINGULARITY_CACHEDIR" = tempcache)
+
     # pull container directly from docker or use a prebuilt image
-    if (config$prebuild) {
+    if (!config$prebuild) {
       image <- paste0("docker://", image)
     } else {
-      image <- normalizePath(paste0(config$images_folder, "/", gsub("[:@].*$", ".simg", image)), mustWork = FALSE)
+      image <- normalizePath(paste0(config$images_folder, "/", gsub("[:@].*$", "", image), ".simg"), mustWork = FALSE)
     }
 
     # determine command arguments
-    args <- c("exec", code_run_sh, "--cleanenv", "--pwd", "/ti/workspace", "-B", paste0(dir_dynwrap, ":/ti"), image)
-
-    # tmpdir must be set to /ti/tmp
-    env <- c("SINGULARITYENV_TMPDIR" = "/ti/tmp", "SINGULARITY_CACHEDIR" = tempcache)
+    args <- c("exec", workspace, volumes, image, command, extra_args)
   }
 
   if (debug) {
-    # change entrypoint from /code/run.sh to bash
-    args[args == code_run_sh] <- "bash"
-
     # simply print the command the user needs to use to enter the container
     command <-
       switch(
         config$type,
-        docker = paste0(c(command, args, "-it"), collapse = " "),
-        singularity = paste0(c(paste0(names(env), "=", env, collapse = " "), command, args), collapse = " ")
+        docker = paste0(c(container_cmd, args, "-it"), collapse = " "),
+        singularity = paste0(c(paste0(names(env2), "=", env2, collapse = " "), container_cmd, args), collapse = " ")
       )
     stop("Use this command for debugging: \n", crayon::bold(command), call. = FALSE)
   } else {
     # run container
-    process <- processx::run(command, args, env = env, echo = verbose, echo_cmd = verbose, spinner = TRUE, error_on_status = FALSE)
+    process <- processx::run(container_cmd, args, env = env2, echo = verbose, echo_cmd = verbose, spinner = TRUE, error_on_status = FALSE)
 
     if (process$status != 0 && !verbose) {
       cat(process$stderr)
