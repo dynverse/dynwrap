@@ -1,9 +1,9 @@
 fix_windows_path <- function(path) {
   path <- path %>% gsub("\\\\", "/", .)
 
-  start <- path %>% gsub("^([a-zA-Z]*):/.*", "/\\1", .) %>% tolower
+  start <- path %>% sub("^([a-zA-Z]):/.*", "/\\1", .) %>% tolower
 
-  path %>% gsub("[^:/]:", start, .)
+  path %>% sub("[^:/]:", start, .)
 }
 
 #' @importFrom crayon bold
@@ -24,6 +24,9 @@ fix_windows_path <- function(path) {
   safe_tmp <- safe_tempdir("tmp")
   on.exit(unlink(safe_tmp, recursive = TRUE))
   volumes <- c(volumes, paste0(safe_tmp, ":/tmp2"))
+
+  # windows fix
+  volumes <- map_chr(volumes, fix_windows_path)
 
   if (config$type == "docker") {
     volumes <- unlist(map(volumes, ~ c("-v", .)))
@@ -48,9 +51,6 @@ fix_windows_path <- function(path) {
 
   # process environment variables
   environment_variables <- c(environment_variables, "TMPDIR=/tmp2")
-
-  # fix for windows computers
-  dir_dynwrap <- fix_windows_path(dir_dynwrap)
 
   if (config$type == "docker") {
     env1 <- unlist(map(environment_variables, ~ c("-e", .)))
