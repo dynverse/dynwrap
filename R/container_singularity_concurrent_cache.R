@@ -8,6 +8,8 @@
     cachedfile <- file.path(cachedir, "docker", file)
     file.symlink(cachedfile, tempfile)
   })
+
+  tempcache
 }
 
 .container_singularity_finalise_concurrent_cache <- function(tempcache) {

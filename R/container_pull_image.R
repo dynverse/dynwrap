@@ -26,7 +26,7 @@
 
       jsonlite::write_json(list(digest = NA, repo_digests = repo_digests), json_location)
     } else {
-      processx::run("singularity", c("exec", paste0("docker://", image), "ls"), echo = TRUE, env = c("SINGULARITY_CACHEDIR" = tempcache))
+      processx::run("singularity", c("exec", paste0("docker://", image), "echo", "hi"), echo = TRUE, env = c("SINGULARITY_CACHEDIR" = tempcache))
     }
 
   }
