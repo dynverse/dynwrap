@@ -12,7 +12,8 @@ get_ti_methods <- function(
   method_ids = NULL,
   as_tibble = TRUE,
   ti_packages = ifelse("dynmethods" %in% rownames(utils::installed.packages()), "dynmethods", "dynwrap"),
-  evaluate = FALSE
+  evaluate = FALSE,
+  config = container_config()
 ) {
   ti_methods <- map(ti_packages, function(package) {
 
@@ -47,6 +48,24 @@ get_ti_methods <- function(
   if (!is.null(method_ids)) {
     testthat::expect_true(all(method_ids %in% ti_methods$id))
     ti_methods <- ti_methods %>% slice(match(method_ids, id))
+
+    docker_repos <-
+      method_ids %>%
+      keep(~ grepl("/", .))
+
+    ti_methods2 <- list_as_tibble(map(docker_repos, function(repo) {
+      funner <- create_ti_method_with_container(repo, config = config)
+      out <- funner()
+      out$fun <- funner
+
+      if (evaluate) {
+        out <- out[c("id", "fun")]
+      }
+
+      out
+    }))
+
+    ti_methods <- bind_rows(ti_methods, ti_methods2)
   }
 
   if (as_tibble) {
@@ -55,3 +74,4 @@ get_ti_methods <- function(
     mapdf(ti_methods, identity)
   }
 }
+
