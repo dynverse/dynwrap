@@ -29,7 +29,7 @@ fix_windows_path <- function(path) {
     env <- NULL
 
   } else if (config$type == "singularity") {
-    tempcache <- on.exit(unlink(tempcache, recursive = TRUE))
+    tempcache <- .container_singularity_create_concurrent_cache()
     on.exit(.container_singularity_finalise_concurrent_cache(tempcache))
 
     # pull container directly from docker or use a prebuilt image

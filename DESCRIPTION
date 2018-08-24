@@ -79,6 +79,7 @@ Collate:
     'container_pull_image.R'
     'container_run.R'
     'container_save_inputs.R'
+    'container_singularity_concurrent_cache.R'
     'container_test_docker_installation.R'
     'convert_milestone_percentages_to_progressions.R'
     'convert_progressions_to_milestone_percentages.R'
