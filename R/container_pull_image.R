@@ -6,19 +6,26 @@
 
   if (config$type == "docker") {
     processx::run("docker", c("pull", image), echo = TRUE)
+
   } else if (config$type == "singularity") {
-    image_name <- gsub("[.@].*$", "", image)
-    repo_digests <- if (grepl("@sha256:", image)) image else NULL
 
-    image_location <- normalizePath(paste0(config$images_folder, "/", image_name, ".simg"), mustWork = FALSE)
-    json_location <- normalizePath(paste0(config$images_folder, "/", image_name, ".json"), mustWork = FALSE)
+    if (config$prebuild) {
+      image_name <- gsub("[.@].*$", "", image)
+      repo_digests <- if (grepl("@sha256:", image)) image else NULL
 
-    dir.create(gsub("[^/]*$", "", image_location), showWarnings = FALSE, recursive = TRUE)
+      image_location <- normalizePath(paste0(config$images_folder, "/", image_name, ".simg"), mustWork = FALSE)
+      json_location <- normalizePath(paste0(config$images_folder, "/", image_name, ".json"), mustWork = FALSE)
 
-    if (file.exists(json_location)) file.remove(json_location)
+      dir.create(gsub("[^/]*$", "", image_location), showWarnings = FALSE, recursive = TRUE)
 
-    processx::run("singularity", c("build", image_location, glue("docker://{image}")), echo = TRUE)
+      if (file.exists(json_location)) file.remove(json_location)
 
-    jsonlite::write_json(list(digest = NA, repo_digests = repo_digests), json_location)
+      processx::run("singularity", c("build", image_location, paste0("docker://", image)), echo = TRUE)
+
+      jsonlite::write_json(list(digest = NA, repo_digests = repo_digests), json_location)
+    } else {
+      processx::run("singularity", c("exec", "ls", paste0("docker://", image)), echo = TRUE)
+    }
+
   }
 }
