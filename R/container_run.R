@@ -1,3 +1,11 @@
+fix_windows_path <- function(path) {
+  path <- path %>% gsub("\\\\", "/", .)
+
+  start <- path %>% gsub("^([a-zA-Z]*):/.*", "/\\1", .) %>% tolower
+
+  path %>% gsub("[^:/]:", start, .)
+}
+
 #' @importFrom crayon bold
 .container_run <- function(
   image,
@@ -9,6 +17,9 @@
   command <- match.arg(config$type, choices = c("docker", "singularity"))
 
   ti_run_sh <- "/ti/run.sh"
+
+  # fix for windows computers
+  dir_dynwrap <- fix_windows_path(dir_dynwrap)
 
   if (config$type == "docker") {
     # determine command arguments
