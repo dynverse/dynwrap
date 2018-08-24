@@ -10,7 +10,7 @@
     verbose = FALSE
   )
 
-  definition <- yaml::read_yaml(text = gsub("^.*(id: [a-zA-Z_]*\n.*)", "\\1", out$stdout))
+  definition <- yaml::read_yaml(text = sub("^.*\n(id: [^\n]*\n.*)", "\\1", out$stdout))
 
   # add the remote digests
   digests <- .container_get_digests(
