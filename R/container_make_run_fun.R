@@ -92,7 +92,7 @@
       verbose = verbose,
       volumes = paste0(dir_dynwrap, ":/ti"),
       config = container_config(),
-      workspace = "/ti/dynwrap"
+      workspace = "/ti/workspace"
     )
 
     # exit if error
