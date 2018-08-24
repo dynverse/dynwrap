@@ -1,11 +1,3 @@
-fix_windows_path <- function(path) {
-  path <- path %>% gsub("\\\\", "/", .)
-
-  start <- path %>% sub("^([a-zA-Z]):/.*", "/\\1", .) %>% tolower
-
-  path %>% sub("[^:/]:", start, .)
-}
-
 #' @importFrom crayon bold
 .container_run <- function(
   image,
@@ -24,9 +16,6 @@ fix_windows_path <- function(path) {
   safe_tmp <- safe_tempdir("tmp")
   on.exit(unlink(safe_tmp, recursive = TRUE))
   volumes <- c(volumes, paste0(safe_tmp, ":/tmp2"))
-
-  # windows fix
-  volumes <- map_chr(volumes, fix_windows_path)
 
   if (config$type == "docker") {
     volumes <- unlist(map(volumes, ~ c("-v", .)))
