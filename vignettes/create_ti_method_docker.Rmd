@@ -23,7 +23,7 @@ There are two main ways to add a new method:
 * **Directly within R**. In this case you create an R function or R packages. The user will have to install all dependencies. This is use case is described in another vignette.
 * **Using a docker**. In this case you create a docker which uses some input files (eg. a file containing the expression) and returns some output files. This use case is described here.
 
-A TI docker requires at least three files. The files for this example are also available at [https://github.com/dynverse/comp1](https://github.com/dynverse/comp1).
+A TI docker requires at least three files. The files for this example are also available at [https://github.com/dynverse/dynwrap_tester](https://github.com/dynverse/dynwrap_tester).
 
 * A definition yaml or json file, used to determine the format of input, output and parameters.
 * A Dockerfile, used to construct the docker.
@@ -31,10 +31,10 @@ A TI docker requires at least three files. The files for this example are also a
 
 ## Method definition file (`definition.yml`)
 
-An example of a `definition.yml` file (as can be found on the [github](https://github.com/dynverse/comp1/blob/devel/R_feather/definition.yml)):
+An example of a `definition.yml` file (as can be found on the [github](https://github.com/dynverse/dynwrap_tester/blob/devel/R_feather/definition.yml)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/R_feather/definition.yml") %>%
+read_file("https://raw.githubusercontent.com/dynverse/dynwrap_tester/devel/R_feather/definition.yml") %>%
   paste0("```yaml\n", ., "\n```") %>% 
   cat()
 ```
@@ -81,9 +81,9 @@ The input determines which kind of expression and prior information is given to 
 
 - **format** The format of the input, which can be:
 ```{r, echo=FALSE}
-comp1_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/comp1/tree/devel/{x})")
+comp1_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/dynwrap_tester/tree/devel/{x})")
 comp1_urls <- function(names, xs) glue::collapse(map2_chr(names, xs, comp1_url), ", ")
-input_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/comp1/tree/devel/inst/example_inputs/{x})")
+input_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/dynwrap_tester/tree/devel/inst/example_inputs/{x})")
 inputs_url <- function(names, xs) glue::collapse(map2_chr(names, xs, input_url), ", ")
 
 tribble(
@@ -146,7 +146,7 @@ The output determines how the output of a method can be transformed into a commo
 - **format** The format of the output, which can be
 
 ```{r, echo=FALSE}
-comp1_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/comp1/tree/devel/{x})")
+comp1_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/dynwrap_tester/tree/devel/{x})")
 comp1_urls <- function(names, xs) glue::collapse(map2_chr(names, xs, comp1_url), ", ")
 
 tribble(
@@ -226,15 +226,15 @@ The `definition.yml` file can also contain other information about the methods, 
 
 ## The `Dockerfile`
 
-An example of a `Dockerfile` (as can be found on the [github](https://github.com/dynverse/comp1/blob/devel/R_feather/Dockerfile)):
+An example of a `Dockerfile` (as can be found on the [github](https://github.com/dynverse/dynwrap_tester/blob/devel/R_feather/Dockerfile)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/R_feather/Dockerfile") %>%
+read_file("https://raw.githubusercontent.com/dynverse/dynwrap_tester/devel/R_feather/Dockerfile") %>%
   paste0("```Dockerfile\n", ., "\n```") %>% 
   cat()
 ```
 
-In this example, we add all the files present in the current working directory (which contains the run.R file) to the /code directory.
+In this example, we add all the files present in the current working directory (which contains the run.sh file) to the /code directory.
 
 All dependencies of the method should be installed in this Dockerfile (or from parent docker images)
 
@@ -242,10 +242,10 @@ This file should always contain an entrypoint, which will be called when the TI 
 
 ## Doing trajectory inference
 
-All input files requested in the `definition.yml` will be mounted in the `/ti/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/ti/output` directory. An example (as can be found on the [github](https://github.com/dynverse/comp1/blob/devel/R_feather/run.R)):
+All input files requested in the `definition.yml` will be mounted in the `/ti/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/ti/output` directory. An example (as can be found on the [github](https://github.com/dynverse/dynwrap_tester/blob/devel/R_feather/run.sh)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/comp1/devel/R_feather/run.R") %>%
+read_file("https://raw.githubusercontent.com/dynverse/dynwrap_tester/devel/R_feather/run.sh") %>%
   paste0("```r\n", ., "\n```") %>% 
   cat()
 ```
