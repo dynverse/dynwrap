@@ -57,7 +57,12 @@
       environment_variables %>% gsub("^(.*)=.*$", "SINGULARITYENV_\\1", .),
       environment_variables %>% gsub("^.*=", "", .)
     )
-    env2 <- c(env2, "SINGULARITY_CACHEDIR" = tempcache)
+    env2 <- c(
+      env2,
+      "SINGULARITY_CACHEDIR" = tempcache,
+      "SINGULARITY_TMPDIR" = safe_tempdir("singularity_tmpdir"),
+      "SINGULARITY_LOCALCACHEDIR" = safe_tempdir("singularity_localcachedir")
+    )
 
     # pull container directly from docker or use a prebuilt image
     if (!config$prebuild) {

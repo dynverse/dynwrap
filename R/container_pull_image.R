@@ -23,7 +23,12 @@
 
       if (file.exists(json_location)) file.remove(json_location)
 
-      processx::run("singularity", c("build", image_location, paste0("docker://", image)), echo = TRUE, env = c("SINGULARITY_CACHEDIR" = tempcache))
+      env <- c(
+        "SINGULARITY_CACHEDIR" = tempcache,
+        "SINGULARITY_TMPDIR" = safe_tempdir("singularity_tmpdir"),
+        "SINGULARITY_LOCALCACHEDIR" = safe_tempdir("singularity_localcachedir")
+      )
+      processx::run("singularity", c("build", image_location, paste0("docker://", image)), echo = TRUE, env = env)
 
       jsonlite::write_json(list(digest = NA, repo_digests = repo_digests), json_location)
     } else {
