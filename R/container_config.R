@@ -41,8 +41,8 @@ container_docker <- function() {
 #' @rdname container_config
 #' @export
 container_singularity <- function(
-  prebuild = FALSE,
-  images_folder = getOption("dynwrap_singularity_images_folder") %||% getenv("DYNWRAP_SINGULARITY_IMAGES_FOLDER") %||% "./"
+  images_folder = getOption("dynwrap_singularity_images_folder") %||% getenv("DYNWRAP_SINGULARITY_IMAGES_FOLDER") %||% "./",
+  prebuild = images_folder != "./"
 ) {
   if (prebuild && images_folder == "./") {
     warning(
