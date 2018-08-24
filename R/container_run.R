@@ -6,30 +6,47 @@
   verbose,
   config = container_config()
 ) {
-  image_name <- gsub("[:@].*$", "", image)
-  image_location <- normalizePath(paste0(config$images_folder, "/", image_name, ".simg"), mustWork = FALSE)
+  command <- match.arg(config$type, choices = c("docker", "singularity"))
 
-  if (debug) {
-    command <-
-      if (config$type == "docker") {
-        paste0("docker run --entrypoint 'bash' -e TMPDIR=/ti/tmp --workdir /ti/workspace -it -v ", dir_dynwrap, ":/ti ", image)
-      } else if (config$type == "singularity") {
-        paste0("SINGULARITYENV_TMPDIR=/ti/tmp singularity exec --cleanenv --pwd /ti/workspace -B ", dir_dynwrap, ":/ti ", image_location, " bash")
-      }
-
-    stop("Use this command for debugging: \n", crayon::bold(command), call. = FALSE)
-  }
-
+  ti_run_sh <- "/ti/run.sh"
 
   if (config$type == "docker") {
-    process <- processx::run(
-      "docker",
-      c("run", "-e", "TMPDIR=/ti/tmp", "--workdir", "/ti/workspace", "-v", paste0(dir_dynwrap, ":/ti"), image),
-      echo = verbose,
-      echo_cmd = verbose,
-      spinner = TRUE,
-      error_on_status = FALSE
-    )
+    # determine command arguments
+    args <- c("run", "--entrypoint", ti_run_sh, "-e", "TMPDIR=/ti/tmp", "--workdir", "/ti/workspace", "-v", paste0(dir_dynwrap, ":/ti"), image)
+
+    # docker requires no extra environment variables to be set
+    env <- NULL
+
+  } else if (config$type == "singularity") {
+    # pull container directly from docker or use a prebuilt image
+    if (config$prebuild) {
+      image <- paste0("docker://", image)
+    } else {
+      image <- normalizePath(paste0(config$images_folder, "/", gsub("[:@].*$", ".simg", image)), mustWork = FALSE)
+    }
+
+    # determine command arguments
+    args <- c("exec", ti_run_sh, "--cleanenv", "--pwd", "/ti/workspace", "-B", paste0(dir_dynwrap, ":/ti"), image)
+
+    # tmpdir must be set to /ti/tmp
+    env <- c("SINGULARITYENV_TMPDIR"="/ti/tmp")
+  }
+
+  if (debug) {
+    # change entrypoint from /ti/run.sh to bash
+    args[args == ti_run_sh] <- "bash"
+
+    # simply print the command the user needs to use to enter the container
+    command <-
+      switch(
+        config$type,
+        docker = paste0(c(command, args, "-it"), collapse = " "),
+        singularity = paste0(c(paste0(names(env), "=", env, collapse = " "), command, args), collapse = " ")
+      )
+    stop("Use this command for debugging: \n", crayon::bold(command), call. = FALSE)
+  } else {
+    # run container
+    process <- processx::run(command, args, env = env, echo = verbose, echo_cmd = verbose, spinner = TRUE, error_on_status = FALSE)
 
     if (process$status != 0 && !verbose) {
       cat(process$stderr)
@@ -37,33 +54,5 @@
     }
 
     process
-  } else if (config$type == "singularity") {
-    if (!file.exists(image_location)) {
-      stop(image_location, " not found!")
-    }
-
-    stdout <- stderr <- if (verbose) {""} else {FALSE}
-
-    # use system2 here instead of processx
-    # processx has a strange bug that it doesn't show any output of the method
-    # probably some problem with buffering and singularity
-    stdout_file <- tempfile()
-    output <- system2(
-      "singularity",
-      c("-s", "run", "--cleanenv", "--pwd", "/ti/workspace", "-B", paste0(dir_dynwrap, ":/ti"), image_location),
-      stdout = stdout_file,
-      stderr = stdout_file,
-      env = "SINGULARITYENV_TMPDIR=/ti/tmp"
-    )
-
-    cat(paste0(readLines(stdout_file), collapse = "\n"))
-
-    if (output > 0) {
-      stop(call. = FALSE)
-    }
-
-    list(
-      status = output
-    )
   }
 }

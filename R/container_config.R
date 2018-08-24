@@ -35,18 +35,26 @@ container_docker <- function() {
   list(type = "docker") %>% dynutils::add_class("dynwrap::container_config")
 }
 
+#' @param prebuild If the singularity images are not prebuilt, they will need to be built every time a method is run.
 #' @param images_folder A folder in which to store the singularity images. Each TI method will require about 1 to 2GB of space.
+#'
 #' @rdname container_config
 #' @export
 container_singularity <- function(
+  prebuild = FALSE,
   images_folder = getOption("dynwrap_singularity_images_folder") %||% getenv("DYNWRAP_SINGULARITY_IMAGES_FOLDER") %||% "./"
 ) {
-  if (images_folder == "./") {
+  if (!prebuild && images_folder == "./") {
     warning(
       "No singularity images folder specified, will use the working directory.\n",
       "Check `?container_singularity` for more information on how to define the images folder."
     )
   }
 
-  list(type = "singularity", images_folder = images_folder) %>% dynutils::add_class("dynwrap::container_config")
+  lst(
+    type = "singularity",
+    prebuild,
+    images_folder
+  ) %>%
+    dynutils::add_class("dynwrap::container_config")
 }
