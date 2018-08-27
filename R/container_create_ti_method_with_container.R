@@ -5,11 +5,13 @@
 #' @param image The name of the docker repository (e.g. `"dynverse/angle"`).
 #'   It is recommended to include a specific version (e.g. `"dynverse/angle@sha256:473e54..."`).
 #' @param config A container config. See [container_config()] for more information.
+#' @param pull_if_needed Pull the image if not yet available.
 #'
 #' @export
 create_ti_method_with_container <- function(
   image,
-  config = container_config()
+  config = container_config(),
+  pull_if_needed = TRUE
 ) {
   ######################################################
   ####           TEST DOCKER/SINGULARITY            ####
@@ -32,6 +34,18 @@ create_ti_method_with_container <- function(
     image = image,
     config = config
   )
+
+  if (pull_if_needed && is.na(current_repo_digest)) {
+    .container_pull_image(
+      image = image,
+      config = config
+    )
+
+    current_repo_digest <- .container_get_digests(
+      image = image,
+      config = config
+    )
+  }
 
   repo_digest <- if (grepl("@sha256:", image)) gsub(":[^@]*@", "@", image) else NULL
 
