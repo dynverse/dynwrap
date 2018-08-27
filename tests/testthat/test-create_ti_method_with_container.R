@@ -21,14 +21,14 @@ if (Sys.info()[["user"]] %in% maintainer_usernames) {
 #' map_chr(tags, ~ dynwrap:::.container_get_digests(paste0("dynverse/dynwrap_tester:", .))$repo_digests) %>% set_names(tags) %>% deparse() %>% str_replace("^c\\(", "c(\n") %>% paste(collapse = "\n") %>% cat
 
 dynwrap_repo_digests <- c(
-  R_text = "dynverse/dynwrap_tester@sha256:d2b3950995eff97563981c9ce0ffefba6a654e45c90b8ab42f973d5602f58db6",
-  python_text = "dynverse/dynwrap_tester@sha256:d2b3950995eff97563981c9ce0ffefba6a654e45c90b8ab42f973d5602f58db6",
-  R_hdf5 = "dynverse/dynwrap_tester@sha256:d2b3950995eff97563981c9ce0ffefba6a654e45c90b8ab42f973d5602f58db6",
-  python_hdf5 = "dynverse/dynwrap_tester@sha256:d2b3950995eff97563981c9ce0ffefba6a654e45c90b8ab42f973d5602f58db6",
-  R_rds = "dynverse/dynwrap_tester@sha256:d2b3950995eff97563981c9ce0ffefba6a654e45c90b8ab42f973d5602f58db6",
-  R_dynwrap = "dynverse/dynwrap_tester@sha256:d2b3950995eff97563981c9ce0ffefba6a654e45c90b8ab42f973d5602f58db6",
-  R_feather = "dynverse/dynwrap_tester@sha256:d2b3950995eff97563981c9ce0ffefba6a654e45c90b8ab42f973d5602f58db6",
-  python_feather = "dynverse/dynwrap_tester@sha256:d2b3950995eff97563981c9ce0ffefba6a654e45c90b8ab42f973d5602f58db6"
+  R_text = "dynverse/dynwrap_tester@sha256:dbd95ba1212ddfac227fa138e3c5b3d697cbc9a3abba380863807abc7b400d2e",
+  python_text = "dynverse/dynwrap_tester@sha256:a0015b8fe9a08854adef747bd92123f5b5af22c70401fd9bee2727fe3df6f0ce",
+  R_hdf5 = "dynverse/dynwrap_tester@sha256:c2e4522aa0795e154b3ee5ffda8968e4f6d598aacf1da698db851f66112dd119",
+  python_hdf5 = "dynverse/dynwrap_tester@sha256:365101f1a6bcba50ed43a9f859745330c69caf054d23f86b6cabc9b87670fad8",
+  R_rds = "dynverse/dynwrap_tester@sha256:86c25c9e93417064bc5c1c2ebd2c193026aed16448a6fc1160ada7fdee88345a",
+  R_dynwrap = "dynverse/dynwrap_tester@sha256:290bdb2705353e93e4ddcd80aa7f143225473721d8bdacb03d071438691fb82b",
+  R_feather = "dynverse/dynwrap_tester@sha256:a0861f1dca8dd4a3d25ed9f56fe22b5f506c0e36ab0b2532ac44d217261ad815",
+  python_feather = "dynverse/dynwrap_tester@sha256:0cdf4400df40fa669e136f28382952ec0fe1407d1ec7cfbe30e4b0a5be0ba7f8"
 )
 
 # get example dataset
