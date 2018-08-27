@@ -4,6 +4,7 @@ bioc_required: true
 os:
   - linux
   - osx
+warnings_are_errors: true
 cache:
   directories:
     - $HOME/.cache/hdf5

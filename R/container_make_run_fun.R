@@ -1,8 +1,6 @@
 .container_make_run_fun <- function(
   definition,
-  image,
-  container_type,
-  singularity_images_folder
+  image
 ) {
   # process params
   param_ids <- names(definition$parameters) %>% setdiff(c("forbidden"))
@@ -87,12 +85,14 @@
 
     # run container
     output <- .container_run(
-      image = image,
-      container_type = container_type,
-      volumes = glue("{dir_dynwrap}:/ti"),
+      image,
+      command = "/code/run.sh",
+      extra_args = NULL,
       debug = debug,
       verbose = verbose,
-      singularity_images_folder = singularity_images_folder
+      volumes = paste0(dir_dynwrap, ":/ti"),
+      config = container_config(),
+      workspace = "/ti/workspace"
     )
 
     # exit if error
@@ -129,9 +129,7 @@
     param_ids,
     output_format,
     output_ids,
-    image,
-    container_type,
-    singularity_images_folder
+    image
   ))
 
   # adapt run_fun arguments, some hocus pocus going on here ;)

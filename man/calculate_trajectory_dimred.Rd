@@ -4,7 +4,7 @@
 \alias{calculate_trajectory_dimred}
 \title{Calculate a dimensionality reduction on a trajectory and its cells}
 \usage{
-calculate_trajectory_dimred(trajectory, adjust_weights = TRUE)
+calculate_trajectory_dimred(trajectory, adjust_weights = FALSE)
 }
 \arguments{
 \item{trajectory}{A dynwrap trajectory}

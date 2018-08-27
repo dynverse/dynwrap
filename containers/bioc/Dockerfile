@@ -1,3 +1,3 @@
 FROM dynverse/dynwrap:r
 
-RUN R -e 'install.packages("SingleCellExperiment")'
+RUN R -e 'devtools::install_cran("SingleCellExperiment")'

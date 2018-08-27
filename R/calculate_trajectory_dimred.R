@@ -11,7 +11,7 @@
 #' @seealso wrap_data
 calculate_trajectory_dimred <- function(
   trajectory,
-  adjust_weights = TRUE
+  adjust_weights = FALSE
 ) {
   if (!is_wrapper_with_trajectory(trajectory)) {
     stop(sQuote("trajectory"), " is not a trajectory")
@@ -52,10 +52,14 @@ calculate_trajectory_dimred <- function(
     )
   }
 
+  # add weights as length
+  structure <- structure %>%
+    mutate(weight = pmax(length, 1e-5))
+
   # reduce dimensionality on milestone_network
-  gr <- igraph::graph_from_data_frame(structure %>% rename(weight = length), vertices = milestone_ids)
+  gr <- igraph::graph_from_data_frame(structure, vertices = milestone_ids)
   layout <-
-    igraph::layout_with_fr(gr, dim = 2, niter = 10000) %>%
+    igraph::layout_with_kk(gr, dim = 2, maxiter = 10000) %>%
     dynutils::scale_uniform() %>%
     set_rownames(milestone_ids) %>%
     set_colnames(paste0("comp_", seq_len(ncol(.))))

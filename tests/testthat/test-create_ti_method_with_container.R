@@ -17,17 +17,18 @@ if (Sys.info()[["user"]] %in% maintainer_usernames) {
 # Obtained with:
 
 #' @examples
-#' map_chr(tags, ~ .container_get_digests(paste0("dynverse/dynwrap_tester:", .), container_type = "docker")$remote_digests) %>% set_names(tags) %>% deparse() %>% str_replace("^c\\(", "c(\n") %>% paste(collapse = "\n") %>% cat
+#' options(dynwrap_run_environment = "docker")
+#' map_chr(tags, ~ dynwrap:::.container_get_digests(paste0("dynverse/dynwrap_tester:", .))$repo_digests) %>% set_names(tags) %>% deparse() %>% str_replace("^c\\(", "c(\n") %>% paste(collapse = "\n") %>% cat
 
 dynwrap_repo_digests <- c(
-  R_text = "dynverse/dynwrap_tester:R_text@sha256:cf23c3162b0f883b623dc474f0a985beafc2b5bb44bcf32bee76e3fd92768c9c",
-  python_text = "dynverse/dynwrap_tester:python_text@sha256:59fe17a280c9de9f05aa55571615cb74e133613b8dfd83efe0311620dcb34f8f",
-  R_hdf5 = "dynverse/dynwrap_tester:R_hdf5@sha256:3160655bb37ffa36e4242caddd8e7b2d4296756892534fb20e97f8beec32b270",
-  python_hdf5 = "dynverse/dynwrap_tester:python_hdf5@sha256:e1dbffbaea3928a90325ca3d6b060b6cfd1dfa083cbe704069e8a360581157e5",
-  R_rds = "dynverse/dynwrap_tester:R_rds@sha256:7ed02baede27d91ad0a9458274932eb464e862161c630ae19b73312d0213f4e8",
-  R_dynwrap = "dynverse/dynwrap_tester:R_dynwrap@sha256:9c5f1fc988a944fa312d775a731fb8300ba4feb6d7986dbe72b9c5b8990d6c06",
-  R_feather = "dynverse/dynwrap_tester:R_feather@sha256:3e4370a4a9edde676f9ea0bd30cb4d5527f7bc28ba2fc9ab689e20c221bb6523",
-  python_feather = "dynverse/dynwrap_tester:python_feather@sha256:5a43d9fd50c9347c5487f121dc7aa27fa7fb3131a7c800a38e8d6d769959cb45"
+  R_text = "dynverse/dynwrap_tester@sha256:dbd95ba1212ddfac227fa138e3c5b3d697cbc9a3abba380863807abc7b400d2e",
+  python_text = "dynverse/dynwrap_tester@sha256:a0015b8fe9a08854adef747bd92123f5b5af22c70401fd9bee2727fe3df6f0ce",
+  R_hdf5 = "dynverse/dynwrap_tester@sha256:c2e4522aa0795e154b3ee5ffda8968e4f6d598aacf1da698db851f66112dd119",
+  python_hdf5 = "dynverse/dynwrap_tester@sha256:365101f1a6bcba50ed43a9f859745330c69caf054d23f86b6cabc9b87670fad8",
+  R_rds = "dynverse/dynwrap_tester@sha256:86c25c9e93417064bc5c1c2ebd2c193026aed16448a6fc1160ada7fdee88345a",
+  R_dynwrap = "dynverse/dynwrap_tester@sha256:290bdb2705353e93e4ddcd80aa7f143225473721d8bdacb03d071438691fb82b",
+  R_feather = "dynverse/dynwrap_tester@sha256:a0861f1dca8dd4a3d25ed9f56fe22b5f506c0e36ab0b2532ac44d217261ad815",
+  python_feather = "dynverse/dynwrap_tester@sha256:0cdf4400df40fa669e136f28382952ec0fe1407d1ec7cfbe30e4b0a5be0ba7f8"
 )
 
 # get example dataset
@@ -45,9 +46,12 @@ for (tag in tags) {
 
     expect_true(definition$id == paste0("dynwrap_tester_", tag))
     expect_is(definition$run_fun, "function")
-    # expect_match(definition$remote_digests, gsub(".*@", "", dynwrap_repo_digests[[tag]]))
-    # expect_match(definition$remote_digests, gsub(":.*", "", dynwrap_repo_digests[[tag]]))
-    # ???
+
+    # this doesn't work on travis, for some reason.
+    if (Sys.info()[["user"]] %in% maintainer_usernames) {
+      expect_match(definition$repo_digests, gsub(".*@", "", dynwrap_repo_digests[[tag]]))
+      expect_match(definition$repo_digests, gsub(":.*", "", dynwrap_repo_digests[[tag]]))
+    }
 
     model0 <- infer_trajectory(dataset, definition, parameters = list())
     expect_true(is_wrapper_with_trajectory(model0))
