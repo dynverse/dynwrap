@@ -5,6 +5,8 @@
 #' @param ti_packages In which packages to look for ti methods
 #' @param evaluate Automatically evaluate the functions
 #'
+#' @inheritParams create_ti_method_with_container
+#'
 #' @importFrom utils lsf.str installed.packages
 #' @importFrom stringr str_replace
 #' @export
