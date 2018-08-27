@@ -6,9 +6,10 @@
 
   if (config$type == "docker") {
     # check whether image is available locally
-    result <- processx::run("docker", c("inspect", "--type=image", image_name, "--format='{{.Id}}\t{{.RepoDigests}}'"), error_on_status = FALSE)
+    result <- processx::run("docker", c("inspect", "--type=image", image, "--format='{{.Id}}\t{{.RepoDigests}}'"), error_on_status = FALSE)
 
     if (result$status > 0) {
+      warning(paste0(result$stdout, "\n", result$stderr))
       NA
     } else {
       digest <- result$stdout %>%
