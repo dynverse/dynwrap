@@ -258,25 +258,28 @@ generate_prior_information <- function(
     features_id <- given$features_id
   } else {
     if (verbose) cat("Computing features id\n")
+
     if (!is.null(feature_info) && "housekeeping" %in% colnames(feature_info)) {
       features_id <- feature_info %>%
         filter(!housekeeping) %>%
         pull(feature_id)
+    } else if ("scran" %in% rownames(utils::installed.packages())) {
+      findMarkers <- get("findMarkers", asNamespace("scran"))
+      markers <- findMarkers(t(expression), groups_id %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
+
+      features_id <- map(markers, as, "data.frame") %>%
+        map(rownames_to_column, "gene") %>%
+        bind_rows() %>%
+        filter(FDR < marker_fdr) %>%
+        pull("gene") %>%
+        unique()
     } else {
-      if ("scran" %in% rownames(utils::installed.packages())) {
-        findMarkers <- get("findMarkers", asNamespace("scran"))
-        markers <- findMarkers(t(expression), groups_id %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
+      warning("scran should be installed to determine marker features, will simply order by standard deviation")
 
-        features_id <- map(markers, as, "data.frame") %>%
-          map(rownames_to_column, "gene") %>%
-          bind_rows() %>%
-          filter(FDR < marker_fdr) %>%
-          pull("gene")
-      } else {
-        warning("scran should be installed to determine marker features, will simply order by standard deviation")
-
-        features_id <- apply(expression, 2, sd) %>% sort() %>% rownames() %>% {utils::head(., round(length(.)*0.1))}
-      }
+      features_id <- apply(expression, 2, sd) %>%
+        sort() %>%
+        rownames() %>%
+        {utils::head(., round(length(.)*0.1))}
     }
   }
 
