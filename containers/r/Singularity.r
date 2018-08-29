@@ -12,4 +12,4 @@ From: rocker/tidyverse
 
 %post
     echo 'utils::setRepositories(ind=1:4); options(echo = TRUE)' > ~/.Rprofile
-    R -e 'devtools::install_github("dynverse/dynwrap")'
+    R -e 'devtools::install_github("dynverse/dynwrap", dependencies = TRUE)'
