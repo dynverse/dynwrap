@@ -2,6 +2,9 @@ Bootstrap: docker
 
 From: library/python:3.6
 
+%labels
+    version 0.1.0
+
 %environment
     OPENBLAS_NUM_THREADS=1
     NUMEXPR_NUM_THREADS=1

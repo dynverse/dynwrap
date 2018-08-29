@@ -2,6 +2,9 @@ Bootstrap: docker
 
 From: rocker/tidyverse
 
+%labels
+    version 0.1.0
+
 %environment
     OPENBLAS_NUM_THREADS=1
     NUMEXPR_NUM_THREADS=1
