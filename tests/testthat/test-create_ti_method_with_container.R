@@ -8,7 +8,7 @@ skip_on_cran()
 maintainer_usernames <- c("rcannood", "wouters")
 
 if (Sys.info()[["user"]] %in% maintainer_usernames) {
-  tags <- c("R_text", "python_text", "R_hdf5", "python_hdf5", "R_rds", "R_dynwrap", "R_feather", "python_feather")
+  tags <- c("R_text", "R_hdf5", "R_rds", "R_dynwrap", "R_feather", "python_hdf5", "python_text", "python_feather")
 } else {
   tags <- "python_feather"
 }
@@ -21,14 +21,14 @@ if (Sys.info()[["user"]] %in% maintainer_usernames) {
 #' map_chr(tags, ~ dynwrap:::.container_get_digests(paste0("dynverse/dynwrap_tester:", .))$repo_digests) %>% set_names(tags) %>% deparse() %>% str_replace("^c\\(", "c(\n") %>% paste(collapse = "\n") %>% cat
 
 dynwrap_repo_digests <- c(
-  R_text = "dynverse/dynwrap_tester@sha256:dbd95ba1212ddfac227fa138e3c5b3d697cbc9a3abba380863807abc7b400d2e",
-  python_text = "dynverse/dynwrap_tester@sha256:a0015b8fe9a08854adef747bd92123f5b5af22c70401fd9bee2727fe3df6f0ce",
-  R_hdf5 = "dynverse/dynwrap_tester@sha256:c2e4522aa0795e154b3ee5ffda8968e4f6d598aacf1da698db851f66112dd119",
-  python_hdf5 = "dynverse/dynwrap_tester@sha256:365101f1a6bcba50ed43a9f859745330c69caf054d23f86b6cabc9b87670fad8",
-  R_rds = "dynverse/dynwrap_tester@sha256:86c25c9e93417064bc5c1c2ebd2c193026aed16448a6fc1160ada7fdee88345a",
-  R_dynwrap = "dynverse/dynwrap_tester@sha256:290bdb2705353e93e4ddcd80aa7f143225473721d8bdacb03d071438691fb82b",
-  R_feather = "dynverse/dynwrap_tester@sha256:a0861f1dca8dd4a3d25ed9f56fe22b5f506c0e36ab0b2532ac44d217261ad815",
-  python_feather = "dynverse/dynwrap_tester@sha256:0cdf4400df40fa669e136f28382952ec0fe1407d1ec7cfbe30e4b0a5be0ba7f8"
+  R_text = "dynverse/dynwrap_tester@sha256:ad07aa736d8c883ae178943f117e1cfd5f6fc9397408a035986b882cf6223e17",
+  R_hdf5 = "dynverse/dynwrap_tester@sha256:cbaaf6e00e7df0ad239b33c43645d584d30670a6e6be04baa0615dea488b3689",
+  R_rds = "dynverse/dynwrap_tester@sha256:23c049245e9ef5dd9b760da6a5a94a2f3dbf2b598d21b0485fa5ac338aaab6bd",
+  R_dynwrap = "dynverse/dynwrap_tester@sha256:6130f4270dfd0bd0d9333422cc94041a62325cdffbec5a9fed34d2ff000899d9",
+  R_feather = "dynverse/dynwrap_tester@sha256:81753038bbcbf16f45604d4623ea229a9ad9036116175de659e8e76ccf535b0e",
+  python_hdf5 = "dynverse/dynwrap_tester@sha256:56ca0de1630fadbaa7bb7ec80767734bb75d87333f95b09ba008bd43e98c8177",
+  python_text = "dynverse/dynwrap_tester@sha256:3c0e6c3fbf77d6cf78e26b2f0771c7fc2352a2d3f0b615466a3aea432b891435",
+  python_feather = "dynverse/dynwrap_tester@sha256:96e9b3dddac349c43934c4a248af4e6a4e20b1fbcd78b8844aadb025711e9645"
 )
 
 # get example dataset
