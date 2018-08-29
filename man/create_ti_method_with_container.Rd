@@ -4,8 +4,8 @@
 \alias{create_ti_method_with_container}
 \title{Create a TI method from a docker image}
 \usage{
-create_ti_method_with_container(image, config = container_config(),
-  pull_if_needed = TRUE)
+create_ti_method_with_container(image, version = NULL,
+  config = container_config(), pull_if_needed = TRUE)
 }
 \arguments{
 \item{image}{The name of the docker repository (e.g. \code{"dynverse/angle"}).

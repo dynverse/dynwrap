@@ -10,6 +10,7 @@
 #' @export
 create_ti_method_with_container <- function(
   image,
+  version = NULL,
   config = container_config(),
   pull_if_needed = TRUE
 ) {
@@ -30,44 +31,32 @@ create_ti_method_with_container <- function(
   ####          FETCH CURRENT REPO DIGEST           ####
   ######################################################
 
-  current_repo_digest <- .container_get_digests(
-    image = image,
-    config = config
-  )
+  current_version <- .container_get_version(image, config)
 
-  if (pull_if_needed && identical(current_repo_digest, NA)) {
-    .container_pull_image(
-      image = image,
-      config = config
-    )
+  if (pull_if_needed && identical(current_version, NA)) {
+    .container_pull_image(image, config)
 
-    current_repo_digest <- .container_get_digests(
-      image = image,
-      config = config
-    )
+    current_version <- .container_get_version(image, config)
   }
-
-  repo_digest <- if (grepl("@sha256:", image)) gsub(":[^@]*@", "@", image) else NULL
 
   ######################################################
   ####          PULL NEW IMAGE (IF NEEDED)          ####
   ######################################################
 
   if (config$type != "singularity" || config$prebuild) {
-    image_not_found <- identical(current_repo_digest, NA)
-    out_of_date <-
-      !image_not_found && # lazy eval
-      !is.null(repo_digest) &&
-      (length(current_repo_digest$repo_digests) == 0 || !any(grepl(repo_digest, current_repo_digest$repo_digests)))
-
-    if (image_not_found || out_of_date) {
-      msg <- ifelse(image_not_found, "Image not found", "Local image is out of date")
+    if (identical(current_version, NA) || (!is.null(version) && current_version < version)) {
+      msg <- ifelse(identical(current_version, NA), "Image not found", "Local image is out of date")
       message("Pulling image: '", image, "'. Reason: '", msg, "'. This might take a while.")
 
       .container_pull_image(
         image = image,
         config = config
       )
+
+      new_version <- .container_get_version(image, config)
+      if (!is.null(version) && new_version < version) {
+        warning("After pulling '", image, "', version number is lower than requested.\nCurrent version: ", new_version, ", expected >= ", version)
+      }
     }
   }
 
@@ -75,10 +64,7 @@ create_ti_method_with_container <- function(
   ####              EXTRACT DEFINITION              ####
   ######################################################
 
-  definition <- .container_get_definition(
-    image = image,
-    config = config
-  )
+  definition <- .container_get_definition(image, config)
 
   ######################################################
   ####               CHECK DEFINITION               ####
@@ -93,10 +79,7 @@ create_ti_method_with_container <- function(
   ####                CREATE RUN FUN                ####
   ######################################################
 
-  definition$run_fun <- .container_make_run_fun(
-    definition = definition,
-    image = image
-  )
+  definition$run_fun <- .container_make_run_fun(definition, image)
 
   ######################################################
   ####      TRANSFORM DEFINITION TO TI METHOD       ####
