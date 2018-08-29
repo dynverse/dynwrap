@@ -3,7 +3,7 @@ Bootstrap: docker
 From: library/python:3.6
 
 %labels
-    version 0.1.0
+    version 0.1.0.2
 
 %environment
     OPENBLAS_NUM_THREADS=1
@@ -14,4 +14,5 @@ From: library/python:3.6
     export OPENBLAS_NUM_THREADS NUMEXPR_NUM_THREADS MKL_NUM_THREADS OMP_NUM_THREADS
 
 %post
-    pip install scipy numpy pandas matplotlib
+    apt-get update && apt-get install -y libhdf5-dev
+    pip install scipy numpy pandas matplotlib sklearn h5py tables
