@@ -3,7 +3,7 @@ Bootstrap: docker
 From: library/python:2.7
 
 %labels
-    version 0.1.0.2
+    version 0.1.0.3
 
 %environment
     OPENBLAS_NUM_THREADS=1
@@ -15,4 +15,4 @@ From: library/python:2.7
 
 %post
     apt-get update && apt-get install -y libhdf5-dev
-    pip install scipy numpy pandas matplotlib sklearn h5py tables
+    pip install scipy numpy pandas matplotlib sklearn h5py tables feather-format Cython
