@@ -35,7 +35,7 @@ create_ti_method_with_container <- function(
     config = config
   )
 
-  if (pull_if_needed && is.na(current_repo_digest)) {
+  if (pull_if_needed && identical(current_repo_digest, NA)) {
     .container_pull_image(
       image = image,
       config = config
