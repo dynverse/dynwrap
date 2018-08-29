@@ -30,7 +30,6 @@ Depends:
 Imports:
   dplyr,
   dynutils,
-  dyndimred,
   igraph,
   glue,
   jsonlite,
@@ -50,6 +49,7 @@ Imports:
   crayon
 Suggests:
   devtools,
+  dyndimred,
   feather,
   hdf5r,
   ggplot2,
