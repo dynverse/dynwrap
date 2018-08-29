@@ -1,0 +1,14 @@
+Bootstrap: docker
+
+From: library/python:2.7
+
+%environment
+    OPENBLAS_NUM_THREADS=1
+    NUMEXPR_NUM_THREADS=1
+    MKL_NUM_THREADS=1
+    OMP_NUM_THREADS=1
+
+    export OPENBLAS_NUM_THREADS NUMEXPR_NUM_THREADS MKL_NUM_THREADS OMP_NUM_THREADS
+
+%post
+    pip install scipy numpy pandas matplotlib
