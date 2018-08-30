@@ -73,6 +73,7 @@ Collate:
     'compute_tented_geodesic_distances.R'
     'container_config.R'
     'container_create_ti_method_with_container.R'
+    'container_dockerfile_to_singularityrecipe.R'
     'container_get_definition.R'
     'container_get_version.R'
     'container_make_run_fun.R'
