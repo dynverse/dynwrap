@@ -1,6 +1,6 @@
 #' A data wrapper for datasets and trajectories
 #'
-#' @param id A unique identifier for the data
+#' @param id A unique identifier for the data. If `NULL`, a random string will be generated.
 #' @param cell_ids The ids of the cells.
 #' @param cell_info Optional meta-information pertaining the cells.
 #' @param ... Extra information to be stored in the wrapper.
@@ -9,15 +9,21 @@
 #'
 #' @importFrom testthat expect_is expect_length expect_equal
 wrap_data <- function(
-  id = "",
+  id = NULL,
   cell_ids,
   cell_info = NULL,
   ...
 ) {
+  if (is.null(id)) {
+    id <- dynutils::random_time_string("data_wrapper")
+  }
+
   testthat::expect_is(id, "character")
   testthat::expect_length(id, 1)
 
-  if (is_tibble(cell_ids) && ncol(cell_ids) == 1 && "cell_ids" %in% names(cell_ids)) {cell_ids <- cell_ids$cell_ids}
+  if (is_tibble(cell_ids) && ncol(cell_ids) == 1 && "cell_ids" %in% names(cell_ids)) {
+    cell_ids <- cell_ids$cell_ids
+  }
   testthat::expect_is(cell_ids, "character")
 
   testthat::expect_false(any(duplicated(cell_ids)))

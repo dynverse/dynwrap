@@ -4,10 +4,12 @@
 \alias{wrap_expression}
 \title{Create a wrapper object with expression and counts}
 \usage{
-wrap_expression(expression, counts, cell_info = NULL,
-  feature_info = NULL, ..., id = "")
+wrap_expression(id = NULL, expression, counts, cell_info = NULL,
+  feature_info = NULL, ...)
 }
 \arguments{
+\item{id}{A unique identifier for the data. If \code{NULL}, a random string will be generated.}
+
 \item{expression}{The normalised expression values with genes in columns and cells in rows}
 
 \item{counts}{The counts with genes in columns and cells in rows}
@@ -17,8 +19,6 @@ wrap_expression(expression, counts, cell_info = NULL,
 \item{feature_info}{Optional meta-information of the features, a data.frame with at least feature_id as column}
 
 \item{...}{extra information to be stored in the model}
-
-\item{id}{A unique identifier for the data}
 }
 \description{
 Create a wrapper object with expression and counts
