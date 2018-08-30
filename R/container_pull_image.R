@@ -15,8 +15,15 @@
     # create directory if not present yet
     dir.create(image_folder, recursive = TRUE, showWarnings = FALSE)
 
-    env <- c("SINGULARITY_PULL_FOLDER" = image_folder)
+    tempcache <- .container_singularity_create_concurrent_cache()
+    on.exit(.container_singularity_finalise_concurrent_cache(tempcache))
 
+    env <- c(
+      "SINGULARITY_PULL_FOLDER" = image_folder,
+      "SINGULARITY_CACHEDIR" = tempcache
+    )
+
+    # pull container
     processx::run("singularity", c("pull", "--name", image_file, paste0("shub://", image)), echo = TRUE, env = env)
   }
 }
