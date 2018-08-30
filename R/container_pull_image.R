@@ -15,12 +15,10 @@
     # create directory if not present yet
     dir.create(image_folder, recursive = TRUE, showWarnings = FALSE)
 
-    tempcache <- .container_singularity_create_concurrent_cache()
-    on.exit(.container_singularity_finalise_concurrent_cache(tempcache))
-
+    # http://singularity.lbl.gov/docs-pull#pull-to-different-folder
     env <- c(
       "SINGULARITY_PULL_FOLDER" = image_folder,
-      "SINGULARITY_CACHEDIR" = tempcache
+      "SINGULARITY_CACHEDIR" = image_folder
     )
 
     # pull container
