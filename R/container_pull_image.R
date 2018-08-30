@@ -16,7 +16,7 @@
     dir.create(image_folder, recursive = TRUE, showWarnings = FALSE)
 
     # pull container
-    env <- c(SINGULARITY_PULL_FOLDER = image_folder)
+    env <- c(SINGULARITY_PULL_FOLDER = image_folder, SINGULARITY_CACHEDIR = image_folder)
     processx::run("singularity", c("pull", "--name", image_file, paste0("shub://", image)), echo = TRUE, env = env)
   }
 }
