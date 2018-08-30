@@ -1,6 +1,6 @@
 .container_dockerfile_to_singularityrecipe <- function(dockerfile, singularityrecipe) {
   lines <-
-    readr::read_lines(fidockerfilele) %>%
+    readr::read_lines(dockerfile) %>%
     discard(~ grepl("^ *$", .))
 
   add_header <- function(lines, header) {
