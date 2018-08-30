@@ -81,7 +81,7 @@
     if (!config$prebuild) {
       image <- paste0("docker://", image)
     } else {
-      image < .container_singularity_path(config, image)
+      image <- .container_singularity_path(config, image)
     }
 
     # determine command arguments
