@@ -46,7 +46,7 @@ ti_comp1 <- dynwrap::create_ti_method(
     tl <- tl %>% add_timing_checkpoint("method_aftermethod")
 
     # return output
-    wrap_prediction_model(
+    wrap_data(
       cell_ids = rownames(expression)
     ) %>% add_linear_trajectory(
       pseudotime = space[,component] %>% set_names(rownames(expression))

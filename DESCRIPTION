@@ -124,4 +124,3 @@ Collate:
     'wrap_output_feather.R'
     'wrap_output_rds.R'
     'wrap_output_text.R'
-    'wrap_prediction_model.R'

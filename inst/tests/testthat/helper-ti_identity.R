@@ -27,7 +27,7 @@ ti_identity <- dynwrap::create_ti_method(
     tl <- tl %>% add_timing_checkpoint("method_aftermethod")
 
     # return output
-    wrap_prediction_model(
+    wrap_data(
       cell_ids = dataset$cell_ids,
       cell_info = dataset$cell_info
     ) %>% add_trajectory(
