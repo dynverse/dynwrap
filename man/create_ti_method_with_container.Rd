@@ -8,8 +8,11 @@ create_ti_method_with_container(image, version = NULL,
   config = container_config(), pull_if_needed = TRUE)
 }
 \arguments{
-\item{image}{The name of the docker repository (e.g. \code{"dynverse/angle"}).
-It is recommended to include a specific version (e.g. \code{"dynverse/angle@sha256:473e54..."}).}
+\item{image}{The name of the docker repository (e.g. \code{"dynverse/angle"}).}
+
+\item{version}{The minimum required version of the TI method container.
+If the required version is higher than the currently installed version,
+the container will be pulled from dockerhub or singularityhub.}
 
 \item{config}{A container config. See \code{\link[=container_config]{container_config()}} for more information.}
 

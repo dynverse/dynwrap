@@ -3,7 +3,9 @@
 #' These functions create a TI method from a docker image. Supports both docker and singularity as a backend.
 #'
 #' @param image The name of the docker repository (e.g. `"dynverse/angle"`).
-#'   It is recommended to include a specific version (e.g. `"dynverse/angle@sha256:473e54..."`).
+#' @param version The minimum required version of the TI method container.
+#'   If the required version is higher than the currently installed version,
+#'   the container will be pulled from dockerhub or singularityhub.
 #' @param config A container config. See [container_config()] for more information.
 #' @param pull_if_needed Pull the image if not yet available.
 #'
