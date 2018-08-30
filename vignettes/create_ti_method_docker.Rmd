@@ -365,11 +365,6 @@ Users will then be able to run the method by specifying the docker id:
 model <- infer_trajectory(dataset, "dynverse/comp1")
 ```
 
-If you wish to automatically update the underlying docker to a certain version, you can specify the digest as follows:
-```{r, eval=FALSE}
-model <- infer_trajectory(dataset, "dynverse/comp1@sha256:f1e406c5a977a66eb5bdcdced615ddf39f0d05b308aa01092f69d81db0eb8a0a")
-```
-
 We encourage developers to submit their TI method to the 
 [dynmethods R package](https://github.com/dynverse/dynmethods),
 which presents TI methods wrapped in docker containers to users in a user-friendly format. 

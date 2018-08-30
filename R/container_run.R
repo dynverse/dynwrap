@@ -38,6 +38,19 @@
     }
   }
 
+  # process command
+  if (config$type == "singularity") {
+    sing_command <- "run"
+  }
+
+  if (!is.null(command)) {
+    if (config$type == "docker") {
+      command <- c("--entrypoint", command)
+    } else if (config$type == "singularity") {
+      sing_command <- "exec"
+    }
+  }
+
   # process environment variables
   environment_variables <- c(environment_variables, "TMPDIR=/tmp2")
 
@@ -46,7 +59,7 @@
     env2 <- NULL
 
     # determine command arguments
-    args <- c("run", "--entrypoint", command, env1, workspace, volumes, image, extra_args)
+    args <- c("run", command, env1, workspace, volumes, image, extra_args)
 
   } else if (config$type == "singularity") {
     tempcache <- .container_singularity_create_concurrent_cache()
@@ -68,11 +81,11 @@
     if (!config$prebuild) {
       image <- paste0("docker://", image)
     } else {
-      image <- normalizePath(paste0(config$images_folder, "/", gsub("[:@].*$", "", image), ".simg"), mustWork = FALSE)
+      image < .container_singularity_path(config, image)
     }
 
     # determine command arguments
-    args <- c("exec", workspace, volumes, image, command, extra_args)
+    args <- c(sing_command, workspace, volumes, image, command, extra_args)
   }
 
   if (debug) {

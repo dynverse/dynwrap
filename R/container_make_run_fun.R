@@ -86,7 +86,7 @@
     # run container
     output <- .container_run(
       image,
-      command = "/code/run.sh",
+      command = NULL,
       extra_args = NULL,
       debug = debug,
       verbose = verbose,

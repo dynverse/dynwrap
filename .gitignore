@@ -6,3 +6,4 @@
 *.o
 inst/doc
 .DS_Store
+*.simg

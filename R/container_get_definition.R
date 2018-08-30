@@ -12,15 +12,11 @@
 
   definition <- yaml::read_yaml(text = sub("^.*\n(id: [^\n]*\n.*)", "\\1", out$stdout))
 
-  # add the remote digests
-  digests <- .container_get_digests(
-    image = image,
-    config = config
-  )
+  # add the version number
+  version <- .container_get_version(image, config)
 
-  if (!identical(digests, NA)) {
-    definition$digest <- digests$digest
-    definition$repo_digests <- digests$repo_digests
+  if (!identical(version, NA)) {
+    definition$version <- version
   }
 
   # return definition file

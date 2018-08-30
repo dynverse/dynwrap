@@ -1,0 +1,18 @@
+Bootstrap: docker
+
+From: library/python:3.6
+
+%labels
+    version 0.1.0.3
+
+%environment
+    OPENBLAS_NUM_THREADS=1
+    NUMEXPR_NUM_THREADS=1
+    MKL_NUM_THREADS=1
+    OMP_NUM_THREADS=1
+
+    export OPENBLAS_NUM_THREADS NUMEXPR_NUM_THREADS MKL_NUM_THREADS OMP_NUM_THREADS
+
+%post
+    apt-get update && apt-get install -y libhdf5-dev
+    pip install scipy numpy pandas matplotlib sklearn h5py tables feather-format Cython

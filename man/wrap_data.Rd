@@ -4,10 +4,10 @@
 \alias{wrap_data}
 \title{A data wrapper for datasets and trajectories}
 \usage{
-wrap_data(id = "", cell_ids, cell_info = NULL, ...)
+wrap_data(id = NULL, cell_ids, cell_info = NULL, ...)
 }
 \arguments{
-\item{id}{A unique identifier for the data}
+\item{id}{A unique identifier for the data. If \code{NULL}, a random string will be generated.}
 
 \item{cell_ids}{The ids of the cells.}
 
