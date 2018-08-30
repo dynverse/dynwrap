@@ -9,16 +9,14 @@
 
   } else if (config$type == "singularity") {
     image_location <- .container_singularity_path(config, image)
+    image_folder <- dirname(image_location)
+    image_file <- basename(image_location)
 
-    tempcache <- .container_singularity_create_concurrent_cache()
-    on.exit(.container_singularity_finalise_concurrent_cache(tempcache))
+    # create directory if not present yet
+    dir.create(image_folder, recursive = TRUE, showWarnings = FALSE)
 
-    env <- c(
-      "SINGULARITY_CACHEDIR" = tempcache,
-      "SINGULARITY_TMPDIR" = safe_tempdir("singularity_tmpdir"),
-      "SINGULARITY_LOCALCACHEDIR" = safe_tempdir("singularity_localcachedir")
-    )
+    env <- c("SINGULARITY_PULL_FOLDER" = image_folder)
 
-    processx::run("singularity", c("pull", paste0("shub://", image), image_location), echo = TRUE, env = env)
+    processx::run("singularity", c("pull", "--name", image_file, paste0("shub://", image)), echo = TRUE, env = env)
   }
 }
