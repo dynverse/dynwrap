@@ -70,7 +70,7 @@
       dir_input = dir_input,
       input_format = input_format,
       input_ids = input_ids,
-      param_ids = c(param_ids, "input_format", "output_format", "output_ids")
+      param_ids = c(param_ids, "input_format", "output_format", "output_ids", "seed")
     )
 
     if (verbose) {
@@ -143,7 +143,8 @@
     alist(
       debug = FALSE,
       verbose = FALSE,
-      remove_files = TRUE
+      remove_files = TRUE,
+      seed = 1
     ) # default arguments (evaluated when running run_fun)
   )
 

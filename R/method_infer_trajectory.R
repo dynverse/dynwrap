@@ -14,6 +14,7 @@
 #'    `parameters` must be an unnamed list of the same length.
 #' @param give_priors All the priors a method is allowed to receive.
 #'   Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).
+#' @param seed A seed to be set, if the method allows for it.
 #' @param mc_cores The number of cores to use, allowing to parallellise the different datasets
 #' @param verbose Whether or not to print information output
 #' @param capture_output Whether to capture the stdout and stderr produced by a method
@@ -30,6 +31,7 @@ infer_trajectories <- function(
   method,
   parameters = NULL,
   give_priors = NULL,
+  seed = 1,
   mc_cores = 1,
   verbose = FALSE,
   capture_output = FALSE
@@ -170,7 +172,8 @@ infer_trajectories <- function(
         parameters = pari,
         give_priors = give_priors,
         verbose = verbose,
-        capture_output = capture_output
+        capture_output = capture_output,
+        seed = seed
       )
     }
   )
@@ -310,7 +313,8 @@ execute_method_on_dataset <- function(
   give_priors = NULL,
   mc_cores = 1,
   verbose = FALSE,
-  capture_output = FALSE
+  capture_output = FALSE,
+  seed = 1
 ) {
   # start the timer
   time0 <- as.numeric(Sys.time())
@@ -323,7 +327,8 @@ execute_method_on_dataset <- function(
   inputs <- extract_args_from_dataset(dataset, method$inputs, give_priors)
   args <- c(
     inputs,
-    parameters
+    parameters,
+    seed = seed
   )
 
   if (verbose) {

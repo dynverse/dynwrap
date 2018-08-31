@@ -6,7 +6,7 @@
 \usage{
 execute_method_on_dataset(dataset, method, parameters = list(),
   give_priors = NULL, mc_cores = 1, verbose = FALSE,
-  capture_output = FALSE)
+  capture_output = FALSE, seed = 1)
 }
 \arguments{
 \item{dataset}{The dataset}
@@ -32,6 +32,8 @@ Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).
 \item{verbose}{Whether or not to print information output}
 
 \item{capture_output}{Whether to capture the stdout and stderr produced by a method}
+
+\item{seed}{A seed to be set, if the method allows for it.}
 }
 \description{
 Run a method on a dataset with a set of parameters
