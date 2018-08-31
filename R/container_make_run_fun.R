@@ -55,14 +55,14 @@
     }
 
     # get paths for directories
-    dir_input <- file.path(dir_dynwrap, "input")
-    dir_output <- file.path(dir_dynwrap, "output")
+    dir_input <- file.path(dir_dynwrap %>% unfix_windows_path(), "input")
+    dir_output <- file.path(dir_dynwrap %>% unfix_windows_path(), "output")
 
     # create directories
     dir.create(dir_input)
     dir.create(dir_output)
-    dir.create(file.path(dir_dynwrap, "workspace"))
-    dir.create(file.path(dir_dynwrap, "tmp"))
+    dir.create(file.path(dir_dynwrap %>% unfix_windows_path(), "workspace"))
+    dir.create(file.path(dir_dynwrap %>% unfix_windows_path(), "tmp"))
 
     # save data & params, see save_inputs function
     .container_save_inputs(

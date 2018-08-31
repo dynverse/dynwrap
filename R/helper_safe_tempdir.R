@@ -27,3 +27,9 @@ fix_windows_path <- function(path) {
 fix_macosx_tmp <- function(path) {
   gsub("^/var/", "/tmp/", path)
 }
+
+
+
+unfix_windows_path <- function(path) {
+  path %>% gsub("^/c/", "C:/", .)
+}
