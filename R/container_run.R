@@ -67,8 +67,8 @@
 
     env1 <- NULL
     env2 <- set_names(
-      environment_variables %>% gsub("^(.*)=.*$", "SINGULARITYENV_\\1", .),
-      environment_variables %>% gsub("^.*=", "", .)
+      environment_variables %>% gsub("^.*=", "", .),
+      environment_variables %>% gsub("^(.*)=.*$", "SINGULARITYENV_\\1", .)
     )
     env2 <- c(
       env2,
