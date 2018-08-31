@@ -13,7 +13,7 @@
   container_cmd <- match.arg(config$type, choices = c("docker", "singularity"))
 
   # add safe tempdir to volumes
-  safe_tmp <- safe_tempdir("tmp")
+  safe_tmp <- safe_tempdir("tmp") %>% fix_windows_path()
   on.exit(unlink(safe_tmp, recursive = TRUE))
   volumes <- c(volumes, paste0(safe_tmp, ":/tmp2"))
 
