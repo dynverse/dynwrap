@@ -44,34 +44,9 @@ infer_trajectories <- function(
     # names of method
 
     # get a list of all methods
-    all_desc <- get_ti_methods()
+    descs <- get_ti_methods(method_ids = method)
 
-    # do some fuzzy matching
-    method <- all_desc %>% slice(
-      map_int(
-        method,
-        function(x) {
-          distances <- utils::adist(
-            x,
-            all_desc$id,
-            costs = list(
-              insertions = 0.1,
-              deletions = 0.5,
-              substitutions = 1
-            )
-          )
-
-          id <- as.integer(which.min(distances))
-          if(min(distances) > 0) {
-            message(stringr::str_glue("Fuzzy matching {x} -> {all_desc$id[[id]]}"))
-          }
-
-          id
-        }
-      )
-    )
-
-    method <- list_as_tibble(map(method$fun, ~.()))
+    method <- list_as_tibble(map(descs$fun, ~.()))
   } else if (is_ti_method(method)) {
     # single method
     method <- list_as_tibble(list(method))
