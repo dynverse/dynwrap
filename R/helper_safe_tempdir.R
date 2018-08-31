@@ -3,8 +3,7 @@
 # in that case, we put it in /tmp
 safe_tempdir <- function(subfolder) {
   dir <- file.path(tempfile(), subfolder) %>%
-    fix_macosx_tmp %>%
-    fix_windows_path()
+    fix_macosx_tmp()
 
   if (dir.exists(dir)) {
     unlink(dir, recursive = TRUE, force = TRUE)
