@@ -35,8 +35,11 @@ ti_comp1 <- dynwrap::create_ti_method(
     expression,
     ndim,
     dimred,
-    component
+    component,
+    seed = NA
   ) {
+    if (is.finite(seed)) set.seed(seed)
+
     # TIMING: done with preproc
     tl <- add_timing_checkpoint(NULL, "method_afterpreproc")
 

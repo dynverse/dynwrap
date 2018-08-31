@@ -17,7 +17,8 @@ ti_error <- dynwrap::create_ti_method(
   ),
   run_fun = function(
     counts,
-    dummy_param
+    dummy_param,
+    seed = NA
   ) {
     stop("This control method always errors.")
   }

@@ -19,8 +19,11 @@ ti_shuffle <- dynwrap::create_ti_method(
   run_fun = function(
     counts,
     dataset,
-    dummy_param = .5
+    dummy_param = .5,
+    seed = MA
   ) {
+    if (is.finite(seed)) set.seed(seed)
+
     # TIMING: done with preproc
     tl <- add_timing_checkpoint(NULL, "method_afterpreproc")
 
