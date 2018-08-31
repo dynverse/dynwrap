@@ -19,7 +19,6 @@
     on.exit(.container_singularity_finalise_concurrent_cache(tempcache, cachedir = image_folder))
 
     env <- c(
-      "SINGULARITY_PULL_FOLDER" = tempcache,
       "SINGULARITY_CACHEDIR" = tempcache
     )
 
