@@ -10,7 +10,7 @@ infer_trajectories(dataset, method, parameters = NULL,
   capture_output = FALSE)
 
 infer_trajectory(dataset, method, parameters = list(),
-  give_priors = NULL, mc_cores = 1, verbose = FALSE, ...)
+  give_priors = NULL, mc_cores = 1, verbose = FALSE, seed = 1, ...)
 }
 \arguments{
 \item{dataset}{One or more datasets, as created using dynwrap}

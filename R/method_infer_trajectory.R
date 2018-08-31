@@ -175,6 +175,7 @@ infer_trajectory <- function(
   give_priors = NULL,
   mc_cores = 1,
   verbose = FALSE,
+  seed = 1,
   ...
 ) {
   parameters <- c(parameters, list(...))
@@ -186,7 +187,8 @@ infer_trajectory <- function(
     give_priors = give_priors,
     mc_cores = mc_cores,
     verbose = verbose,
-    capture_output = FALSE
+    capture_output = FALSE,
+    seed = seed
   )
 
   if (is.null(design$model[[1]])) {
