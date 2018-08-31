@@ -20,7 +20,7 @@ ti_random <- dynwrap::create_ti_method(
     dummy_param = .5,
     seed = NA
   ) {
-    if (is.finite(seed)) set.seed(seed)
+    if (length(seed) > 0 && is.finite(seed)) set.seed(seed)
 
     num_milestones <- 15
 

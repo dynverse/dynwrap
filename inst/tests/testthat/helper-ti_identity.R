@@ -21,7 +21,7 @@ ti_identity <- dynwrap::create_ti_method(
     dummy_param = .5,
     seed = NA
   ) {
-    if (is.finite(seed)) set.seed(seed)
+    if (length(seed) > 0 && is.finite(seed)) set.seed(seed)
 
     # TIMING: done with preproc
     tl <- add_timing_checkpoint(NULL, "method_afterpreproc")
