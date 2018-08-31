@@ -90,7 +90,7 @@
       extra_args = NULL,
       debug = debug,
       verbose = verbose,
-      volumes = paste0(dir_dynwrap, ":/ti"),
+      volumes = paste0(dir_dynwrap %>% fix_windows_path(), ":/ti"),
       config = container_config(),
       workspace = "/ti/workspace"
     )

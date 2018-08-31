@@ -5,7 +5,7 @@
 test_docker_installation <- function(detailed = FALSE) {
   if (!detailed) {
     output <- tryCatch(
-      processx::run("docker", "version", error_on_status = FALSE, stderr_callback = print_processx),
+      processx::run("docker", "version", error_on_status = FALSE, stderr_callback = print_processx, timeout = 1),
       error = function(e) {list(status = 1)}
     )
 

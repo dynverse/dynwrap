@@ -3,8 +3,7 @@
 # in that case, we put it in /tmp
 safe_tempdir <- function(subfolder) {
   dir <- file.path(tempfile(), subfolder) %>%
-    fix_macosx_tmp %>%
-    fix_windows_path()
+    fix_macosx_tmp()
 
   if (dir.exists(dir)) {
     unlink(dir, recursive = TRUE, force = TRUE)
@@ -26,4 +25,10 @@ fix_windows_path <- function(path) {
 
 fix_macosx_tmp <- function(path) {
   gsub("^/var/", "/tmp/", path)
+}
+
+
+
+unfix_windows_path <- function(path) {
+  path %>% gsub("^/c/", "C:/", .)
 }
