@@ -14,7 +14,7 @@
   from <- str_subset(lines, "^FROM ") %>% str_replace_all("FROM ", "From: ")
   environment <- str_subset(lines, "^ENV ") %>% str_replace_all("ENV ", "    export ") %>% add_header("%environment")
   labels <- str_subset(lines, "^LABEL ") %>% str_replace_all("LABEL ", "    ") %>% add_header("%labels")
-  post <- str_subset(lines, "^RUN ") %>% str_replace_all("RUN ", "    ") %>% add_header("%post")
+  post <- str_subset(lines, "^RUN ") %>% str_replace_all("RUN ", "    ") %>% c("    chmod -R a+r /code", .) %>% add_header("%post")
   files <- str_subset(lines, "^ADD ") %>% str_replace_all("ADD ", "    ") %>% add_header("%files")
   runscript <- str_subset(lines, "^ENTRYPOINT ") %>% str_replace_all("ENTRYPOINT ", "    exec ") %>% add_header("%runscript")
 
