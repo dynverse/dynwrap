@@ -46,6 +46,9 @@
   if (!is.null(command)) {
     if (config$type == "docker") {
       command <- c("--entrypoint", command)
+      if (debug) {
+        command <- c(command, "-it")
+      }
     } else if (config$type == "singularity") {
       sing_command <- "exec"
     }
@@ -93,7 +96,7 @@
     command <-
       switch(
         config$type,
-        docker = paste0(c(container_cmd, args, "-it"), collapse = " "),
+        docker = paste0(c(container_cmd, args), collapse = " "),
         singularity = paste0(c(paste0(names(env2), "=", env2, collapse = " "), container_cmd, args), collapse = " ")
       )
     stop("Use this command for debugging: \n", crayon::bold(command), call. = FALSE)
