@@ -67,7 +67,7 @@
     # save data & params, see save_inputs function
     .container_save_inputs(
       envir = environment(),
-      dir_input = dir_input %>% fix_windows_path(),
+      dir_input = dir_input,
       input_format = input_format,
       input_ids = input_ids,
       param_ids = c(param_ids, "input_format", "output_format", "output_ids")
@@ -90,7 +90,7 @@
       extra_args = NULL,
       debug = debug,
       verbose = verbose,
-      volumes = paste0(dir_dynwrap, ":/ti"),
+      volumes = paste0(dir_dynwrap %>% fix_windows_path(), ":/ti"),
       config = container_config(),
       workspace = "/ti/workspace"
     )
