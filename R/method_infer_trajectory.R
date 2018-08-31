@@ -340,6 +340,13 @@ execute_method_on_dataset <- function(
     args["verbose"] <- verbose
   }
 
+  remove_args <- setdiff(names(args), formalArgs(method$run_fun))
+  if (length(remove_args) > 0) {
+    warning("Parameters [", paste(remove_args, ", "), "] not recognised by method; removing them from the arglist.")
+    sel_args <- setdiff(names(args), remove_args)
+    args <- args[remove_args]
+  }
+
   # initialise stdout/stderr files
   if (capture_output) {
     stdout_file <- tempfile()
