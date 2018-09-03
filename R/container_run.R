@@ -80,9 +80,9 @@
       "SINGULARITY_LOCALCACHEDIR" = safe_tempdir("singularity_localcachedir")
     )
 
-    # pull container directly from docker or use a prebuilt image
+    # pull container directly from shub or use a prebuilt image
     if (!config$prebuild) {
-      image <- paste0("docker://", image)
+      image <- paste0("shub://", image)
     } else {
       image <- .container_singularity_path(config, image)
     }
