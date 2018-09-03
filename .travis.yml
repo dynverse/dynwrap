@@ -16,12 +16,7 @@ addons:
     packages:
       - libssh-dev  # PRISM > ssh > libssh-dev
 before_install:
-  - export HDF5_DIR=$HOME/.cache/hdf5
-  - echo $HDF5_DIR
-  - export HDF5_VERSION=1.10.1
-  - echo $HDF5_VERSION
-  - source .travis_get_hdf5_if_needed.sh
-  - R -e "install.packages('hdf5r')"
+  - source <(curl -s https://raw.githubusercontent.com/dynverse/travis_scripts/master/hdf5.sh)
 install:
  - sedi () { sed --version >/dev/null 2>&1 && sed -i -- "$@" || sed -i "" "$@" ; }
  - if [ `git branch | grep '* master' | wc -l` == 0 ]; then sedi 's#\(dynverse/[^, ]*\)#\1@devel#' 'DESCRIPTION'; fi
