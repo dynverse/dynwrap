@@ -189,7 +189,9 @@ if ("dynplot" %in% rownames(installed.packages())) {
 Combining everything in a function:
 
 ```{r}
-run_fun <- function(expression, component, start_id = NULL) {
+run_fun <- function(expression, component, start_id = NULL, seed = NA) {
+  if (length(seed) == 1 && is.finite(seed)) set.seed(seed)
+  
   # do pca and extract pseudotime
   pca <- prcomp(expression)
   
