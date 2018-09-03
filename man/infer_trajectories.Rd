@@ -6,11 +6,11 @@
 \title{Infer trajectories}
 \usage{
 infer_trajectories(dataset, method, parameters = NULL,
-  give_priors = NULL, mc_cores = 1, verbose = FALSE,
+  give_priors = NULL, seed = 1, mc_cores = 1, verbose = FALSE,
   capture_output = FALSE)
 
 infer_trajectory(dataset, method, parameters = list(),
-  give_priors = NULL, mc_cores = 1, verbose = FALSE, ...)
+  give_priors = NULL, mc_cores = 1, verbose = FALSE, seed = 1, ...)
 }
 \arguments{
 \item{dataset}{One or more datasets, as created using dynwrap}
@@ -30,6 +30,8 @@ If multiple methods were provided in the \code{method} parameter,
 
 \item{give_priors}{All the priors a method is allowed to receive.
 Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).}
+
+\item{seed}{A seed to be set, if the method allows for it.}
 
 \item{mc_cores}{The number of cores to use, allowing to parallellise the different datasets}
 

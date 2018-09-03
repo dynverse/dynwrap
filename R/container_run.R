@@ -13,7 +13,7 @@
   container_cmd <- match.arg(config$type, choices = c("docker", "singularity"))
 
   # add safe tempdir to volumes
-  safe_tmp <- safe_tempdir("tmp")
+  safe_tmp <- safe_tempdir("tmp") %>% fix_windows_path()
   on.exit(unlink(safe_tmp, recursive = TRUE))
   volumes <- c(volumes, paste0(safe_tmp, ":/tmp2"))
 
@@ -46,6 +46,9 @@
   if (!is.null(command)) {
     if (config$type == "docker") {
       command <- c("--entrypoint", command)
+      if (debug) {
+        command <- c(command, "-it")
+      }
     } else if (config$type == "singularity") {
       sing_command <- "exec"
     }
@@ -67,8 +70,8 @@
 
     env1 <- NULL
     env2 <- set_names(
-      environment_variables %>% gsub("^(.*)=.*$", "SINGULARITYENV_\\1", .),
-      environment_variables %>% gsub("^.*=", "", .)
+      environment_variables %>% gsub("^.*=", "", .),
+      environment_variables %>% gsub("^(.*)=.*$", "SINGULARITYENV_\\1", .)
     )
     env2 <- c(
       env2,
@@ -81,7 +84,7 @@
     if (!config$prebuild) {
       image <- paste0("docker://", image)
     } else {
-      image < .container_singularity_path(config, image)
+      image <- .container_singularity_path(config, image)
     }
 
     # determine command arguments
@@ -93,7 +96,7 @@
     command <-
       switch(
         config$type,
-        docker = paste0(c(container_cmd, args, "-it"), collapse = " "),
+        docker = paste0(c(container_cmd, args), collapse = " "),
         singularity = paste0(c(paste0(names(env2), "=", env2, collapse = " "), container_cmd, args), collapse = " ")
       )
     stop("Use this command for debugging: \n", crayon::bold(command), call. = FALSE)

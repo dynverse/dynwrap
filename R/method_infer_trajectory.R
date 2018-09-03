@@ -14,6 +14,7 @@
 #'    `parameters` must be an unnamed list of the same length.
 #' @param give_priors All the priors a method is allowed to receive.
 #'   Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).
+#' @param seed A seed to be set, if the method allows for it.
 #' @param mc_cores The number of cores to use, allowing to parallellise the different datasets
 #' @param verbose Whether or not to print information output
 #' @param capture_output Whether to capture the stdout and stderr produced by a method
@@ -30,6 +31,7 @@ infer_trajectories <- function(
   method,
   parameters = NULL,
   give_priors = NULL,
+  seed = 1,
   mc_cores = 1,
   verbose = FALSE,
   capture_output = FALSE
@@ -42,34 +44,9 @@ infer_trajectories <- function(
     # names of method
 
     # get a list of all methods
-    all_desc <- get_ti_methods()
+    descs <- get_ti_methods(method_ids = method)
 
-    # do some fuzzy matching
-    method <- all_desc %>% slice(
-      map_int(
-        method,
-        function(x) {
-          distances <- utils::adist(
-            x,
-            all_desc$id,
-            costs = list(
-              insertions = 0.1,
-              deletions = 0.5,
-              substitutions = 1
-            )
-          )
-
-          id <- as.integer(which.min(distances))
-          if(min(distances) > 0) {
-            message(stringr::str_glue("Fuzzy matching {x} -> {all_desc$id[[id]]}"))
-          }
-
-          id
-        }
-      )
-    )
-
-    method <- list_as_tibble(map(method$fun, ~.()))
+    method <- list_as_tibble(map(descs$fun, ~.()))
   } else if (is_ti_method(method)) {
     # single method
     method <- list_as_tibble(list(method))
@@ -170,7 +147,8 @@ infer_trajectories <- function(
         parameters = pari,
         give_priors = give_priors,
         verbose = verbose,
-        capture_output = capture_output
+        capture_output = capture_output,
+        seed = seed
       )
     }
   )
@@ -197,6 +175,7 @@ infer_trajectory <- function(
   give_priors = NULL,
   mc_cores = 1,
   verbose = FALSE,
+  seed = 1,
   ...
 ) {
   parameters <- c(parameters, list(...))
@@ -208,7 +187,8 @@ infer_trajectory <- function(
     give_priors = give_priors,
     mc_cores = mc_cores,
     verbose = verbose,
-    capture_output = FALSE
+    capture_output = FALSE,
+    seed = seed
   )
 
   if (is.null(design$model[[1]])) {
@@ -310,7 +290,8 @@ execute_method_on_dataset <- function(
   give_priors = NULL,
   mc_cores = 1,
   verbose = FALSE,
-  capture_output = FALSE
+  capture_output = FALSE,
+  seed = 1
 ) {
   # start the timer
   time0 <- as.numeric(Sys.time())
@@ -323,7 +304,8 @@ execute_method_on_dataset <- function(
   inputs <- extract_args_from_dataset(dataset, method$inputs, give_priors)
   args <- c(
     inputs,
-    parameters
+    parameters,
+    seed = seed
   )
 
   if (verbose) {
@@ -338,6 +320,13 @@ execute_method_on_dataset <- function(
   # add verbose if in inputs
   if ("verbose" %in% method$inputs$input_id) {
     args["verbose"] <- verbose
+  }
+
+  remove_args <- setdiff(names(args), formalArgs(method$run_fun))
+  if (length(remove_args) > 0) {
+    warning("Parameters [", paste(remove_args, ", "), "] not recognised by method; removing them from the arglist.")
+    sel_args <- setdiff(names(args), remove_args)
+    args <- args[remove_args]
   }
 
   # initialise stdout/stderr files

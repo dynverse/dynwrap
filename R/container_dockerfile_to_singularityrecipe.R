@@ -1,7 +1,13 @@
+#' @importFrom stringr str_replace_all str_subset
 .container_dockerfile_to_singularityrecipe <- function(dockerfile, singularityrecipe) {
   lines <-
     readr::read_lines(dockerfile) %>%
-    discard(~ grepl("^ *$", .))
+    gsub("# .*", "", .) %>%
+    discard(~ grepl("^ *$", .)) %>%
+    paste(collapse = "\n") %>%
+    gsub(" *\\\\\n *", " <NEWLINEPLACEHOLDER>", .) %>%
+    strsplit("\n") %>%
+    first()
 
   add_header <- function(lines, header) {
     if (length(lines) > 0) {
@@ -14,9 +20,16 @@
   from <- str_subset(lines, "^FROM ") %>% str_replace_all("FROM ", "From: ")
   environment <- str_subset(lines, "^ENV ") %>% str_replace_all("ENV ", "    export ") %>% add_header("%environment")
   labels <- str_subset(lines, "^LABEL ") %>% str_replace_all("LABEL ", "    ") %>% add_header("%labels")
-  post <- str_subset(lines, "^RUN ") %>% str_replace_all("RUN ", "    ") %>% add_header("%post")
   files <- str_subset(lines, "^ADD ") %>% str_replace_all("ADD ", "    ") %>% add_header("%files")
   runscript <- str_subset(lines, "^ENTRYPOINT ") %>% str_replace_all("ENTRYPOINT ", "    exec ") %>% add_header("%runscript")
+
+  mounts <- files %>% str_subset("^[^%]") %>% str_replace_all(" *[^ ]* *([^ ]*) *", "\\1")
+
+  extra_commands <- paste0(
+    "    chmod -R 755 ", paste0("'", mounts, "'", collapse = " ")
+  )
+
+  post <- str_subset(lines, "^RUN ") %>% str_replace_all("RUN ", "    ") %>% c(extra_commands, .) %>% add_header("%post")
 
   sing_lines <- c(
     "#######################################################################################",
@@ -30,10 +43,11 @@
     "",
     environment,
     labels,
-    post,
     files,
+    post,
     runscript
-  )
+  ) %>%
+    gsub("<NEWLINEPLACEHOLDER>", "\\\\\n      ", .)
 
   readr::write_lines(sing_lines, singularityrecipe)
 }

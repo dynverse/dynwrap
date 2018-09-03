@@ -17,8 +17,11 @@ ti_random <- dynwrap::create_ti_method(
   ),
   run_fun = function(
     counts,
-    dummy_param = .5
+    dummy_param = .5,
+    seed = NA
   ) {
+    if (length(seed) > 0 && is.finite(seed)) set.seed(seed)
+
     num_milestones <- 15
 
     # generate network
