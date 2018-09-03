@@ -85,7 +85,7 @@ test_that("Testing infer_trajectory with control methods", {
   models <- infer_trajectories(
     dataset = list(dataset, dataset),
     method = list_as_tibble(list(ti_comp1(), ti_comp1())),
-    parameters = list(list(method = "mds"), list(method = "pca"))
+    parameters = list(list(dimred = "mds"), list(dimred = "pca"))
   )
 
   expect_true(is_tibble(models))
