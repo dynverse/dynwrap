@@ -3,7 +3,7 @@ Bootstrap: docker
 From: rocker/tidyverse
 
 %labels
-    version 0.1.0.2
+    version 0.1.0.3
 
 %environment
     OPENBLAS_NUM_THREADS=1
@@ -17,3 +17,4 @@ From: rocker/tidyverse
     apt-get update && apt-get install -y libhdf5-dev libssh-dev
     echo 'utils::setRepositories(ind=1:4); options(echo = TRUE)' > ~/.Rprofile
     R -e 'devtools::install_github("dynverse/dynwrap", dependencies = TRUE)'
+    R -e 'devtools::install_cran(c("RcppEigen", "RSpectra", "RcppArmadillo"))' # preinstall certain rcpp libraries
