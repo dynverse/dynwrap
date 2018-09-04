@@ -13,9 +13,9 @@
   container_cmd <- match.arg(config$type, choices = c("docker", "singularity"))
 
   # add safe tempdir to volumes
-  safe_tmp <- safe_tempdir("tmp") %>% fix_windows_path()
+  safe_tmp <- safe_tempdir("tmp")
   on.exit(unlink(safe_tmp, recursive = TRUE))
-  volumes <- c(volumes, paste0(safe_tmp, ":/tmp2"))
+  volumes <- c(volumes, paste0(fix_windows_path(safe_tmp), ":/tmp2"))
 
   if (config$type == "docker") {
     volumes <- unlist(map(volumes, ~ c("-v", .)))
@@ -77,12 +77,13 @@
       env2,
       "SINGULARITY_CACHEDIR" = tempcache,
       "SINGULARITY_TMPDIR" = safe_tempdir("singularity_tmpdir"),
-      "SINGULARITY_LOCALCACHEDIR" = safe_tempdir("singularity_localcachedir")
+      "SINGULARITY_LOCALCACHEDIR" = safe_tempdir("singularity_localcachedir"),
+      "PATH" = Sys.getenv("PATH") # pass the path along
     )
 
-    # pull container directly from docker or use a prebuilt image
+    # pull container directly from shub or use a prebuilt image
     if (!config$prebuild) {
-      image <- paste0("docker://", image)
+      image <- paste0("shub://", image)
     } else {
       image <- .container_singularity_path(config, image)
     }
