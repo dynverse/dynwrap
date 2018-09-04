@@ -77,7 +77,8 @@
       env2,
       "SINGULARITY_CACHEDIR" = tempcache,
       "SINGULARITY_TMPDIR" = safe_tempdir("singularity_tmpdir"),
-      "SINGULARITY_LOCALCACHEDIR" = safe_tempdir("singularity_localcachedir")
+      "SINGULARITY_LOCALCACHEDIR" = safe_tempdir("singularity_localcachedir"),
+      "PATH" = Sys.getenv("PATH") # pass the path along
     )
 
     # pull container directly from shub or use a prebuilt image
