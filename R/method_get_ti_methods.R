@@ -14,8 +14,7 @@ get_ti_methods <- function(
   method_ids = NULL,
   as_tibble = TRUE,
   ti_packages = ifelse("dynmethods" %in% rownames(utils::installed.packages()), "dynmethods", "dynwrap"),
-  evaluate = FALSE,
-  config = container_config()
+  evaluate = FALSE
 ) {
   ti_methods <- map(ti_packages, function(package) {
 
@@ -56,7 +55,7 @@ get_ti_methods <- function(
       keep(~ grepl("/", .))
 
     ti_methods2 <- list_as_tibble(map(docker_repos, function(repo) {
-      funner <- create_ti_method_with_container(repo, config = config)
+      funner <- create_ti_method_with_container(repo)
       out <- funner()
       out$fun <- funner
 

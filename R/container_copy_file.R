@@ -1,9 +1,9 @@
 .container_copy_file <- function(
   image,
-  config = container_config(),
   path_container,
   path_local
 ) {
+  config <- container_get_default_config()
 
   if (config$type == "docker") {
     # start container
@@ -33,8 +33,7 @@
       image = image,
       command = "cp",
       extra_args = c(path_container, "/copy_mount"),
-      volumes = paste0(temp_folder, ":/copy_mount"),
-      config = config
+      volumes = paste0(temp_folder, ":/copy_mount")
     )
 
     file.copy(paste0(temp_folder, gsub(".*/", "", path_container)), path_local)

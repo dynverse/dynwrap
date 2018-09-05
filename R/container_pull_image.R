@@ -1,8 +1,6 @@
 #' @importFrom jsonlite write_json
-.container_pull_image <- function(
-  image,
-  config = container_config()
-) {
+.container_pull_image <- function(image) {
+  config <- container_get_default_config()
 
   if (config$type == "docker") {
     processx::run("docker", c("pull", image), echo = TRUE)

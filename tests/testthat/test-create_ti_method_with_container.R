@@ -17,10 +17,9 @@ if (Sys.info()[["user"]] %in% maintainer_usernames) {
 # Obtained with:
 
 #' @examples
-#' options(dynwrap_run_environment = "docker")
 #' map_chr(tags, ~ dynwrap:::.container_get_version(paste0("dynverse/dynwrap_tester:", .))) %>% set_names(tags) %>% deparse() %>% paste(collapse = "") %>% cat()
 
-tester_versions <- c(R_text = "0.1.0.1", R_hdf5 = "0.1.0.1", R_rds = "0.1.0.1", R_dynwrap = "0.1.0.1", R_feather = "0.1.0.1", python_hdf5 = "0.1.0.1", python_text = "0.1.0.1", python_feather = "0.1.0.1")
+tester_versions <- c(R_text = "0.1.0.3", R_hdf5 = "0.1.0.3", R_rds = "0.1.0.3", R_dynwrap = "0.1.0.3", R_feather = "0.1.0.3", python_hdf5 = "0.1.0.3", python_text = "0.1.0.3", python_feather = "0.1.0.3")
 
 # get example dataset
 data("example_dataset")

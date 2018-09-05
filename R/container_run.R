@@ -6,10 +6,11 @@
   debug = FALSE,
   verbose = FALSE,
   volumes = NULL,
-  config = container_config(),
   workspace = NULL,
   environment_variables = NULL
 ) {
+  config <- container_get_default_config()
+
   ###############################
   #### PREPROCESS PARAMETERS ####
   ###############################

@@ -90,6 +90,7 @@ Collate:
     'data.R'
     'get_cell_grouping.R'
     'get_divergence_triangles.R'
+    'helper_null_pipers.R'
     'helper_processx.R'
     'helper_safe_tempdir.R'
     'metawrap_get_output_processor.R'

@@ -1,5 +1,5 @@
 .container_singularity_create_concurrent_cache <- function(
-  cachedir = getenv("SINGULARITY_CACHEDIR") %||% paste0(getenv("HOME"), "/.singularity")
+  cachedir = get_env_or_null("SINGULARITY_CACHEDIR") %||% paste0(get_env_or_null("HOME"), "/.singularity")
 ) {
   tempcache <- safe_tempdir("tempcache")
 
@@ -17,7 +17,7 @@
 
 .container_singularity_finalise_concurrent_cache <- function(
   tempcache,
-  cachedir = getenv("SINGULARITY_CACHEDIR") %||% paste0(getenv("HOME"), "/.singularity")
+  cachedir = get_env_or_null("SINGULARITY_CACHEDIR") %||% paste0(get_env_or_null("HOME"), "/.singularity")
 ) {
   cache_files <- list.files(cachedir, recursive = TRUE, full.names = FALSE)
   temp_files <- list.files(tempcache, recursive = TRUE, full.names = FALSE)

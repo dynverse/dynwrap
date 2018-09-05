@@ -7,7 +7,7 @@
 get_ti_methods(method_ids = NULL, as_tibble = TRUE,
   ti_packages = ifelse("dynmethods" \%in\%
   rownames(utils::installed.packages()), "dynmethods", "dynwrap"),
-  evaluate = FALSE, config = container_config())
+  evaluate = FALSE)
 }
 \arguments{
 \item{method_ids}{The method identifiers. NULL if listing all methods}
@@ -17,8 +17,6 @@ get_ti_methods(method_ids = NULL, as_tibble = TRUE,
 \item{ti_packages}{In which packages to look for ti methods}
 
 \item{evaluate}{Automatically evaluate the functions}
-
-\item{config}{A container config. See \code{\link[=container_config]{container_config()}} for more information.}
 }
 \description{
 Return all TI ti_methods

@@ -1,7 +1,6 @@
 #' @importFrom readr read_lines
 .container_read_file <- function(
   image,
-  config = container_config(),
   path_container
 ) {
   temp_folder <- safe_tempdir("")
@@ -11,7 +10,6 @@
 
   .container_copy_file(
     image = image,
-    config = config,
     path_container = path_container,
     path_local = path_local
   )
