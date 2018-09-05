@@ -176,3 +176,14 @@ for (network_type in names(all_networks)) {
     })
   }
 }
+
+
+
+
+test_that("Example trajectories match", {
+  example_trajectory_types <- map(trajectory_types$example_network, mutate, directed = TRUE, length = 1) %>%
+    map(classify_milestone_network) %>%
+    map_chr("network_type")
+
+  testthat::expect_equal(trajectory_types$id, example_trajectory_types)
+})
