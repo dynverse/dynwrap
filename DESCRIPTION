@@ -76,6 +76,7 @@ Collate:
     'container_create_ti_method_with_container.R'
     'container_dockerfile_to_singularityrecipe.R'
     'container_get_definition.R'
+    'container_get_example.R'
     'container_get_version.R'
     'container_make_run_fun.R'
     'container_pull_image.R'
