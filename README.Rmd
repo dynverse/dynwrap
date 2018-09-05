@@ -27,7 +27,7 @@ data("methods")
 * Wrap the output of a trajectory inference method, such as the pseudotime, a clustering or a branch network, and convert it into a common trajectory model
 * Further postprocess the trajectory model, such as labelling the milestones and rooting the trajectory
 
-dynwrap was used to wrap over `r nrow(methods)` trajectory inference method within docker containers in [dynmethods](https://github.com/dynverse/dynmethods).
+dynwrap was used to wrap `r nrow(methods)` trajectory inference method within docker containers in [dynmethods](https://github.com/dynverse/dynmethods).
 
 ![](man/figures/overview_wrapping_v1.svg)
 

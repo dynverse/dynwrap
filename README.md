@@ -23,9 +23,8 @@ trajectories. The package can:
   - Further postprocess the trajectory model, such as labelling the
     milestones and rooting the trajectory
 
-dynwrap was used to wrap over 57 trajectory inference method within
-docker containers in
-[dynmethods](https://github.com/dynverse/dynmethods).
+dynwrap was used to wrap 57 trajectory inference method within docker
+containers in [dynmethods](https://github.com/dynverse/dynmethods).
 
 ![](man/figures/overview_wrapping_v1.svg)
 
