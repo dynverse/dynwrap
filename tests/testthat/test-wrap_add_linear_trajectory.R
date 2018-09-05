@@ -34,7 +34,8 @@ test_that("Testing add_linear_trajectory", {
   expect_true(all(cell_ids %in% wr$progressions$cell_id))
   expect_equivalent(nrow(wr$progressions), length(cell_ids))
 
-  expect_equivalent(wr$trajectory_type, "undirected_linear")
+  expect_equivalent(wr$trajectory_type, "linear")
+  expect_equivalent(wr$directed, FALSE)
 })
 
 
@@ -61,7 +62,8 @@ test_that("Testing add_linear_trajectory", {
   expect_true(all(cell_ids %in% wr$progressions$cell_id))
   expect_equivalent(nrow(wr$progressions), length(cell_ids))
 
-  expect_equivalent(wr$trajectory_type, "directed_linear")
+  expect_equivalent(wr$trajectory_type, "linear")
+  expect_equivalent(wr$directed, TRUE)
 })
 
 

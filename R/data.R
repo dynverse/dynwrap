@@ -11,12 +11,6 @@
 "trajectory_type_dag"
 
 
-#' Metadata on simplified trajectory types
-#'
-#' @docType data
-"trajectory_types_simplified"
-
-
 #' Metadata on priors
 #'
 #' @docType data
