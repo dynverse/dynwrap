@@ -82,9 +82,9 @@ The input determines which kind of expression and prior information is given to 
 - **format** The format of the input, which can be:
 ```{r, echo=FALSE}
 comp1_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/dynwrap_tester/tree/devel/{x})")
-comp1_urls <- function(names, xs) glue::collapse(map2_chr(names, xs, comp1_url), ", ")
+comp1_urls <- function(names, xs) glue::glue_collapse(map2_chr(names, xs, comp1_url), ", ")
 input_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/dynwrap_tester/tree/devel/inst/example_inputs/{x})")
-inputs_url <- function(names, xs) glue::collapse(map2_chr(names, xs, input_url), ", ")
+inputs_url <- function(names, xs) glue::glue_collapse(map2_chr(names, xs, input_url), ", ")
 
 tribble(
   ~output_format, ~description, ~example_script,
@@ -147,7 +147,7 @@ The output determines how the output of a method can be transformed into a commo
 
 ```{r, echo=FALSE}
 comp1_url <- function(name, x) glue::glue("[{name}](https://github.com/dynverse/dynwrap_tester/tree/devel/{x})")
-comp1_urls <- function(names, xs) glue::collapse(map2_chr(names, xs, comp1_url), ", ")
+comp1_urls <- function(names, xs) glue::glue_collapse(map2_chr(names, xs, comp1_url), ", ")
 
 tribble(
   ~output_format, ~description, ~example_script,
@@ -181,7 +181,7 @@ output_example_url <- function(output_id) {
 output_example_urls <- function(output_ids) {
   if (length(output_ids) > 0) {
     map(output_ids, output_example_url) %>% 
-      glue::collapse("<br>") %>% 
+      glue::glue_collapse("<br>") %>% 
       stringr::str_replace("(.*milestone_percentages.*)<br>(.*progressions.*)", "\\1 or \\2") # put or in between percentages and progressions
   } else {
     ""
@@ -245,7 +245,7 @@ This file should always contain an entrypoint, which will be called when the TI 
 All input files requested in the `definition.yml` will be mounted in the `/ti/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/ti/output` directory. An example (as can be found on the [github](https://github.com/dynverse/dynwrap_tester/blob/devel/R_feather/run.sh)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/dynwrap_tester/devel/R_feather/run.sh") %>%
+read_file("https://raw.githubusercontent.com/dynverse/dynwrap_tester/devel/R_feather/run.R") %>%
   paste0("```r\n", ., "\n```") %>% 
   cat()
 ```
