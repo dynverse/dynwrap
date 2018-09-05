@@ -17,17 +17,17 @@ lighten <- function(color, factor = 1.4){
 }
 
 trajectory_types <- tribble(
-  ~id, ~colour,
-  "cycle", "#003d76",
-  "linear", "#0278dd",
-  "bifurcation", "#3ad1d1",
-  "convergence", "#1f8888",
-  "multifurcation", "#7fbe00",
-  "binary_tree", "#00b009",
-  "tree", "#e0ab00",
-  "acyclic_graph", "#ff8821",
-  "graph", "#ff4237",
-  "disconnected_graph", "#ca0565"
+  ~id, ~colour, ~example_network, ~example_nodes,
+  "cycle", "#003d76", tribble(~from, ~to, 1, 2, 2, 3, 3, 1), tribble(~x, ~y, 0, 0, 3, 5, 6, 0),
+  "linear", "#0278dd", tribble(~from, ~to, 1, 2), tribble(~x, ~y, 0, 2, 6, 2),
+  "bifurcation", "#3ad1d1", tribble(~from, ~to, 1, 2, 2, 3, 2, 4),  tribble(~x, ~y, 0, 2, 3, 2, 6, 5, 6, 0),
+  "convergence", "#1f8888", tribble(~from, ~to, 1, 3, 2, 3, 3, 4),  tribble(~x, ~y, 0, 0, 0, 5, 3, 0, 6, 2),
+  "multifurcation", "#7fbe00", tribble(~from, ~to, 1, 2, 2, 3, 2, 4, 2, 5),  tribble(~x, ~y, 0, 2, 3, 2, 6, 5, 6, 2, 6, 0),
+  "binary_tree", "#00b009", tribble(~from, ~to, 1, 2, 2, 3, 2, 4, 4, 5, 4, 6), tribble(~x, ~y, 0, 2, 2, 2, 4, 0, 4, 3, 6, 5, 6, 2),
+  "tree", "#e0ab00", tribble(~from, ~to, 1, 2, 2, 3, 2, 4, 2, 5, 5, 6, 5, 7), tribble(~x, ~y, 0, 2, 2, 2, 4, 5, 4, 0, 4, 2, 6, 3, 6, 1),
+  "acyclic_graph", "#ff8821", tribble(~from, ~to, 1, 2, 2, 3, 2, 4, 3, 5, 4, 5), tribble(~x, ~y, 0, 2, 2, 2, 4, 5, 4, 0, 6, 2),
+  "graph", "#ff4237", tribble(~from, ~to, 1, 2, 2, 3, 3, 4, 2, 5, 5, 6, 5, 7, 7, 8, 8, 2), tribble(~x, ~y, 0, 2, 2, 2, 3, 0, 5, 0, 4, 2, 6, 2, 4, 5, 2, 5),
+  "disconnected_graph", "#ca0565", tribble(~from, ~to, 1, 2, 2, 3, 3, 4, 4, 2, 5, 6, 6, 7, 6, 8), tribble(~x, ~y, 0, 2, 2, 2, 3, 0, 2, 5, 5, 0, 5, 2, 4, 5, 6, 5)
 ) %>% mutate(
   background_colour = lighten(colour, 0.3)
 )
