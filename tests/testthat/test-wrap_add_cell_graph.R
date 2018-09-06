@@ -2,7 +2,7 @@ context("Testing add_cell_graph")
 
 
 # cell data
-cell_ids <- c("A", "B", "C", "D", "E", "F", "a", "b", "bb", "c", "cc", "d")
+cell_ids <- c("A", "B", "C", "D", "E", "F", "G", "H", "a", "b", "bb", "c", "cc", "d")
 
 wr_orig <- wrap_data(
   id = "test",
@@ -18,6 +18,9 @@ test_that("Testing add_cell_graph", {
     "C", "D", .7, F,
     "D", "E", .8, F,
     "D", "F", .9, F,
+    "E", "G", 0.5, F,
+    "F", "G", 0.1, F,
+    "G", "H", 1, F,
     "a", "A", .1, F,
     "b", "B", .1, F,
     "bb", "B", .08, F,
@@ -25,7 +28,7 @@ test_that("Testing add_cell_graph", {
     "cc", "c", .1, F,
     "d", "D", .01, F
   )
-  to_keep <- c(A = T, B = T, C = T, D = T, E = T, "F" = T, a = F, b = F, bb = F, c = F, cc = F, d = F)
+  to_keep <- c(A = T, B = T, C = T, D = T, E = T, "F" = T, G = T, H = T, a = F, b = F, bb = F, c = F, cc = F, d = F)
 
   wr <- wr_orig %>% add_cell_graph(
     cell_graph = cell_graph,
@@ -39,17 +42,19 @@ test_that("Testing add_cell_graph", {
 
   # testing milestone ids
   expect_equal(wr$cell_ids, cell_ids)
-  expect_equal(length(wr$milestone_ids), 4)
-  expect_equal(nrow(wr$milestone_network), 3)
+  expect_equal(length(wr$milestone_ids), 5)
+  expect_equal(nrow(wr$milestone_network), 5)
   expect_equal(nrow(wr$progressions), length(cell_ids))
 
-  expect_equal(wr$milestone_ids, paste0("ML_", c("A", "D", "E", "F")))
+  expect_equal(wr$milestone_ids, paste0("ML_", c("A", "D", "F", "G", "H")))
 
   test_strs <- wr$milestone_network %>% {paste(.$from, .$to, .$length, .$directed, sep = "|")} %>% sort
   expected_strs <- c(
     "ML_A|ML_D|1.8|FALSE",
-    "ML_D|ML_E|0.8|FALSE",
-    "ML_D|ML_F|0.9|FALSE"
+    "ML_D|ML_F|0.9|FALSE",
+    "ML_D|ML_G|1.3|FALSE",
+    "ML_F|ML_G|0.1|FALSE",
+    "ML_G|ML_H|1|FALSE"
   ) %>% sort
   expect_equal(test_strs, expected_strs)
 
@@ -63,10 +68,12 @@ test_that("Testing add_cell_graph", {
     'c|ML_A|ML_D|0.61',
     'C|ML_A|ML_D|0.61',
     'cc|ML_A|ML_D|0.61',
-    'd|ML_D|ML_E|0',
-    'D|ML_D|ML_E|0',
-    'E|ML_D|ML_E|1',
-    'F|ML_D|ML_F|1'
+    'd|ML_A|ML_D|1',
+    'D|ML_A|ML_D|1',
+    'E|ML_D|ML_G|0.62',
+    'F|ML_D|ML_F|1',
+    'G|ML_D|ML_G|1',
+    'H|ML_G|ML_H|1'
   ) %>% sort
   expect_equal(test_strs, expected_strs)
 })

@@ -102,7 +102,9 @@ add_trajectory <- function(
   }
 
   ## Find out trajectory type from milestone network
-  trajectory_type <- classify_milestone_network(milestone_network)$network_type
+  classification <- classify_milestone_network(milestone_network)
+  trajectory_type <- classification$network_type
+  directed <- classification$directed
 
   # create output structure
   model %>% extend_with(
@@ -113,6 +115,7 @@ add_trajectory <- function(
     milestone_percentages = milestone_percentages,
     progressions = progressions,
     trajectory_type = trajectory_type,
+    directed = directed,
     ...
   )
 }

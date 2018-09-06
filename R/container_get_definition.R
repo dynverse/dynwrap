@@ -1,19 +1,10 @@
-.container_get_definition <- function(
-  image,
-  config = container_config()
-) {
-  out <- .container_run(
-    image = image,
-    command = "cat",
-    extra_args = "/code/definition.yml",
-    config = config,
-    verbose = FALSE
-  )
+.container_get_definition <- function(image) {
+  lines <- .container_read_file(image = image, path_container = "/code/definition.yml")
 
-  definition <- yaml::read_yaml(text = sub("^.*\n(id: [^\n]*\n.*)", "\\1", out$stdout))
+  definition <- yaml::read_yaml(text = lines)
 
   # add the version number
-  version <- .container_get_version(image, config)
+  version <- .container_get_version(image)
 
   if (!identical(version, NA)) {
     definition$version <- version

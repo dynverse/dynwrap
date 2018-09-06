@@ -17,18 +17,18 @@ classify_milestone_network <- function(milestone_network) {
 
   network_type <- determine_network_type(props)
 
-  lst(network_type, properties = props)
+  lst(network_type, directed = props$is_directed, properties = props)
 }
 
 determine_network_type <- function(props) {
   with(props, {
     if (is_directed) {
       if (num_components > 1) {
-        "disconnected_directed_graph"
+        "disconnected_graph"
       } else {
         if (!has_cycles) {
           if (num_branch_nodes == 0) {
-            "directed_linear"
+            "linear"
           } else if (num_branch_nodes == 1) {
 
             if (num_convergences == 0) {
@@ -40,45 +40,45 @@ determine_network_type <- function(props) {
             } else if (num_divergences == 0) {
               "convergence"
             } else {
-              "directed_acyclic_graph"
+              "acyclic_graph"
             }
 
           } else {
             if (num_convergences == 0) {
-              "rooted_tree"
+              "tree"
             } else {
-              "directed_acyclic_graph"
+              "acyclic_graph"
             }
           }
         } else {
           if (num_branch_nodes == 0) {
-            "directed_cycle"
+            "cycle"
           } else
-            "directed_graph"
+            "graph"
         }
       }
 
     } else {
       if (num_components > 1) {
-        "disconnected_undirected_graph"
+        "disconnected_graph"
       } else {
         if (!has_cycles) {
           if (num_branch_nodes == 0) {
-            "undirected_linear"
+            "linear"
           } else if (num_branch_nodes == 1) {
             if (max_degree == 3) {
-              "simple_fork"
+              "bifurcation"
             } else {
-              "complex_fork"
+              "multifurcation"
             }
           } else {
-            "unrooted_tree"
+            "tree"
           }
         } else {
           if (num_branch_nodes == 0) {
-            "undirected_cycle"
+            "cycle"
           } else {
-            "undirected_graph"
+            "graph"
           }
         }
       }

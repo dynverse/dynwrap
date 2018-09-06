@@ -1,7 +1,6 @@
-.container_get_version <- function(
-  image,
-  config = container_config()
-) {
+.container_get_version <- function(image) {
+  config <- container_get_default_config()
+
   if (config$type == "docker") {
     # check whether image is available locally
     result <- processx::run("docker", c("inspect", "--type=image", image, "--format='{{ index .Config.Labels \"version\" }}'"), error_on_status = FALSE)
