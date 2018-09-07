@@ -11,7 +11,7 @@
   inputs <- map(input_ids, get, envir) %>% set_names(input_ids) %>% discard(is.null)
 
   # save data depending on the input_format
-  if(input_format == "text") {
+  if (input_format == "text") {
     for (input_id in names(inputs)) {
       input <- inputs[[input_id]]
       write_text_infer(input, glue::glue("{dir_input}/{input_id}"))
@@ -49,7 +49,7 @@
   }
 
   # save params as json
-  write_json(params, file.path(dir_input, "params.json"), auto_unbox = TRUE)
+  jsonlite::write_json(params, file.path(dir_input, "params.json"), auto_unbox = TRUE)
 }
 
 #' @importFrom utils write.csv
@@ -57,9 +57,9 @@ write_text_infer <- function(x, path) {
   if(is.matrix(x)) {
     utils::write.csv(x, paste0(path, ".csv"))
   } else if (is.data.frame(x)) {
-    write_csv(x, paste0(path, ".csv"))
+    readr::write_csv(x, paste0(path, ".csv"))
   } else {
-    write_json(x, paste0(path, ".json"))
+    jsonlite::write_json(x, paste0(path, ".json"))
   }
 }
 
