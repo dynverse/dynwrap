@@ -1,6 +1,6 @@
 FROM rocker/tidyverse
 
-LABEL version 0.1.0.3
+LABEL version 0.1.0.4
 
 ENV OPENBLAS_NUM_THREADS=1
 ENV NUMEXPR_NUM_THREADS=1
