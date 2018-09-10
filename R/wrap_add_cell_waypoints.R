@@ -49,7 +49,7 @@ determine_cell_trajectory_positions <- function(
   divergence_ids <- divergence_regions$divergence_id %>% unique
 
   cells_in_milestone <- milestone_percentages %>%
-    filter(percentage > 1-1e-6) %>%
+    filter(percentage > 1-1e-8) %>%
     mutate(index = match(milestone_id, milestone_ids))
 
   cells_in_divergence <-
@@ -65,7 +65,7 @@ determine_cell_trajectory_positions <- function(
         pull(milestone_id)
 
       cells <- progressions %>%
-        filter(percentage < 1-1e-6, percentage > 1e-6) %>%
+        filter(percentage < 1-1e-8, percentage > 1e-8) %>%
         filter(from == mid_start, to %in% mid) %>%
         filter(cell_id %in% cell_id[duplicated(cell_id)]) %>%
         pull(cell_id) %>%
@@ -75,7 +75,7 @@ determine_cell_trajectory_positions <- function(
     })
 
   cells_on_edge <- progressions %>%
-    filter(percentage < 1-1e-6, percentage > 1e-6) %>%
+    filter(percentage < 1-1e-8, percentage > 1e-8) %>%
     filter(!cell_id %in% cell_id[duplicated(cell_id)]) %>%
     left_join(milestone_network %>% mutate(index = seq_len(n())) %>% select(from, to, index), by = c("from", "to"))
 

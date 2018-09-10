@@ -374,7 +374,9 @@ execute_method_on_dataset <- function(
       stderr <- ""
     }
 
-    # wd to previous folder
+    # check whether the method produced output files and
+    # wd to previous state
+    num_files_created <- length(list.files(tmp_dir, recursive = TRUE))
     setwd(old_wd)
 
     # Remove temporary folder
@@ -408,6 +410,7 @@ execute_method_on_dataset <- function(
     error = list(error),
     stdout = stdout,
     stderr = stderr,
+    num_files_created = num_files_created,
     prior_df = list(method$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(args)))
   )
 
