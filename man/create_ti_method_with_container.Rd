@@ -2,20 +2,20 @@
 % Please edit documentation in R/container_create_ti_method_with_container.R
 \name{create_ti_method_with_container}
 \alias{create_ti_method_with_container}
-\title{Create a TI method from a docker image}
+\title{Create a TI method from a docker / singularity container}
 \usage{
-create_ti_method_with_container(image, version = NULL,
+create_ti_method_with_container(container_id, version = NULL,
   pull_if_needed = TRUE)
 }
 \arguments{
-\item{image}{The name of the docker repository (e.g. \code{"dynverse/angle"}).}
+\item{container_id}{The name of the container repository (e.g. \code{"dynverse/angle"}).}
 
 \item{version}{The minimum required version of the TI method container.
 If the required version is higher than the currently installed version,
 the container will be pulled from dockerhub or singularityhub.}
 
-\item{pull_if_needed}{Pull the image if not yet available.}
+\item{pull_if_needed}{Pull the container if not yet available.}
 }
 \description{
-These functions create a TI method from a docker image. Supports both docker and singularity as a backend.
+These functions create a TI method from a container using \code{babelwhale}. Supports both docker and singularity as a backend.
 }

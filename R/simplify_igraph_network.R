@@ -179,6 +179,7 @@ simplify_igraph_network <- function(
 
             rplcd <- simplify_replace_edges(subgr, sub_edge_points, i_prev, j_prev, rem_path, is_directed)
             subgr <- rplcd$subgr
+
             sub_edge_points <- rplcd$sub_edge_points
             keep_v[c(i_prev, j_prev)] <- TRUE
           }
