@@ -44,7 +44,7 @@ test_that("Testing add_cluster_graph", {
   expect_equivalent(wr$milestone_network, milestone_network)
 
   # percentages are either 0 or 1
-  expect_true(all(abs(abs(wr$milestone_percentages$percentage - .5) - .5) < 1e-8))
+  expect_true(all(abs(abs(wr$milestone_percentages$percentage - .5) - .5) < 1e-6))
 
   # test with providing a grouping in cluster_graph
   wr <- wr_without_grouping %>%
