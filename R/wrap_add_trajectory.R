@@ -69,7 +69,7 @@ add_trajectory <- function(
       milestone_percentages
     )
 
-    check_progressions(cell_ids, milestone_ids, milestone_network, progressions)
+    progressions <- check_progressions(cell_ids, milestone_ids, milestone_network, progressions)
   } else if (is.null(milestone_percentages)) {
     progressions <- check_progressions(cell_ids, milestone_ids, milestone_network, progressions)
 
@@ -80,7 +80,7 @@ add_trajectory <- function(
       progressions
     )
 
-    check_milestone_percentages(cell_ids, milestone_ids, milestone_percentages)
+    milestone_percentages <- check_milestone_percentages(cell_ids, milestone_ids, milestone_percentages)
   }
 
   # check whether cells in tents are explicitly mentioned in divergence_regions
@@ -172,8 +172,12 @@ check_milestone_percentages <- function(cell_ids, milestone_ids, milestone_perce
   testthat::expect_true(all(milestone_percentages$cell_id %in% cell_ids))
   testthat::expect_true(all(milestone_percentages$milestone_id %in% milestone_ids))
 
+  # fix precision errors
+  milestone_percentages$percentage[milestone_percentages$percentage < 0 & milestone_percentages$percentage > -1e-6] <- 0
+  milestone_percentages$percentage[milestone_percentages$percentage > 1 & milestone_percentages$percentage < 1+1e-6] <- 1
+
   mp_check <- tapply(milestone_percentages$percentage, milestone_percentages$cell_id, sum)
-  testthat::expect_true(all(abs(mp_check - 1) < 1e-8), info = "Sum of milestone percentages per cell_id should be exactly one")
+  testthat::expect_true(all(abs(mp_check - 1) < 1e-6), info = "Sum of milestone percentages per cell_id should be exactly one")
 
   milestone_percentages
 }
@@ -189,9 +193,15 @@ check_progressions <- function(cell_ids, milestone_ids, milestone_network, progr
   testthat::expect_true(all(progressions$from %in% milestone_ids))
   testthat::expect_true(all(progressions$to %in% milestone_ids))
 
-  pg_check <- tapply(progressions$percentage, progressions$cell_id, sum)
-  testthat::expect_true(all(pg_check >= 0 & pg_check < (1 + 1e-8)), info = "Sum of progressions per cell_id should be exactly one")
+  # fix precision errors
+  progressions$percentage[progressions$percentage < 0 & progressions$percentage > -1e-6] <- 0
+  progressions$percentage[progressions$percentage > 1 & progressions$percentage < 1+1e-6] <- 1
 
+  # check percentage sum
+  pg_check <- tapply(progressions$percentage, progressions$cell_id, sum)
+  testthat::expect_true(all(pg_check >= 0 & pg_check < (1 + 1e-6)), info = "Sum of progressions per cell_id should be exactly one")
+
+  # check edges
   pg_check <- progressions %>% left_join(milestone_network, by = c("from", "to"))
   testthat::expect_true(all(!is.na(pg_check$directed)), info = "All progressions (from, to) edges need to be part of the milestone network")
 

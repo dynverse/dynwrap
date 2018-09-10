@@ -31,7 +31,7 @@ for (tag in tags) {
   test_that(paste0("Testing create_ti_method_with_container and infer_trajectory with ", tag), {
     wanted_version <- tester_versions[[tag]]
 
-    method <- create_ti_method_with_container(image = paste0("dynverse/dynwrap_tester:", tag), version = wanted_version)
+    method <- create_ti_method_with_container(container_id = paste0("dynverse/dynwrap_tester:", tag), version = wanted_version)
 
     definition <- method()
 

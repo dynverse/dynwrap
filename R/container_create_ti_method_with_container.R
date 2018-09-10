@@ -1,31 +1,33 @@
-#' Create a TI method from a docker image
+#' Create a TI method from a docker / singularity container
 #'
-#' These functions create a TI method from a docker image. Supports both docker and singularity as a backend.
+#' These functions create a TI method from a container using `babelwhale`. Supports both docker and singularity as a backend.
 #'
-#' @param image The name of the docker repository (e.g. `"dynverse/angle"`).
+#' @param container_id The name of the container repository (e.g. `"dynverse/angle"`).
 #' @param version The minimum required version of the TI method container.
 #'   If the required version is higher than the currently installed version,
 #'   the container will be pulled from dockerhub or singularityhub.
-#' @param pull_if_needed Pull the image if not yet available.
+#' @param pull_if_needed Pull the container if not yet available.
+#'
+#' @importFrom babelwhale get_default_config pull_container
 #'
 #' @export
 create_ti_method_with_container <- function(
-  image,
+  container_id,
   version = NULL,
   pull_if_needed = TRUE
 ) {
-  config <- container_get_default_config()
+  config <- babelwhale::get_default_config()
 
   ######################################################
   ####           TEST DOCKER/SINGULARITY            ####
   ######################################################
 
-  if (config$type == "docker") {
+  if (config$backend == "docker") {
     docker_installed <- test_docker_installation()
     if (!docker_installed) {
       test_docker_installation(detailed = TRUE)
     }
-  } else if (config$type == "singularity") {
+  } else if (config$backend == "singularity") {
     # TODO: there should be a test_singularity_installation()
   }
 
@@ -33,28 +35,28 @@ create_ti_method_with_container <- function(
   ####          FETCH CURRENT REPO DIGEST           ####
   ######################################################
 
-  current_version <- .container_get_version(image)
+  current_version <- .container_get_version(container_id)
 
   if (pull_if_needed && identical(current_version, NA)) {
-    .container_pull_image(image)
+    babelwhale::pull_container(container_id)
 
-    current_version <- .container_get_version(image)
+    current_version <- .container_get_version(container_id)
   }
 
   ######################################################
   ####          PULL NEW IMAGE (IF NEEDED)          ####
   ######################################################
 
-  if (config$type != "singularity" || config$prebuild) {
+  if (config$backend != "singularity" || config$use_cache) {
     if (identical(current_version, NA) || (!is.null(version) && current_version < version)) {
-      msg <- ifelse(identical(current_version, NA), "Image not found", "Local image is out of date")
-      message("Pulling image: '", image, "'. Reason: '", msg, "'. This might take a while.")
+      msg <- ifelse(identical(current_version, NA), "Container is not in cache", "Cache is out of date")
+      message("Pulling container: '", container_id, "'. Reason: '", msg, "'. This might take a while.")
 
-      .container_pull_image(image = image)
+      babelwhale::pull_container(container_id)
 
-      new_version <- .container_get_version(image)
+      new_version <- .container_get_version(container_id)
       if (!is.null(version) && new_version < version) {
-        warning("After pulling '", image, "', version number is lower than requested.\nCurrent version: ", new_version, ", expected >= ", version)
+        warning("After pulling '", container_id, "', version number is lower than requested.\nCurrent version: ", new_version, ", expected >= ", version)
       }
     }
   }
@@ -63,7 +65,7 @@ create_ti_method_with_container <- function(
   ####              EXTRACT DEFINITION              ####
   ######################################################
 
-  definition <- .container_get_definition(image)
+  definition <- .container_get_definition(container_id)
 
   ######################################################
   ####               CHECK DEFINITION               ####
@@ -78,7 +80,7 @@ create_ti_method_with_container <- function(
   ####                CREATE RUN FUN                ####
   ######################################################
 
-  definition$run_fun <- .container_make_run_fun(definition, image)
+  definition$run_fun <- .container_make_run_fun(definition, container_id)
 
   ######################################################
   ####      TRANSFORM DEFINITION TO TI METHOD       ####
