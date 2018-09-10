@@ -179,7 +179,6 @@ simplify_igraph_network <- function(
 
             rplcd <- simplify_replace_edges(subgr, sub_edge_points, i_prev, j_prev, rem_path, is_directed)
             subgr <- rplcd$subgr
-
             sub_edge_points <- rplcd$sub_edge_points
             keep_v[c(i_prev, j_prev)] <- TRUE
           }
@@ -317,7 +316,7 @@ simplify_replace_edges <- function(subgr, sub_edge_points, i, j, path, is_direct
       j <- i_orig
     }
   }
-
+  
   path_len <- sum(path$weight)
   subgr <- subgr %>% igraph::add.edges(
     c(i, j), attr = list(weight = path_len, directed = is_directed)

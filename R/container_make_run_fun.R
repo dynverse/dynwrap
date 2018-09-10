@@ -1,7 +1,6 @@
-#' @importFrom babelwhale run
 .container_make_run_fun <- function(
   definition,
-  container_id
+  image
 ) {
   # process params
   param_ids <- names(definition$parameters) %>% setdiff(c("forbidden"))
@@ -49,7 +48,7 @@
 
   # create function
   run_fun <- function(..., debug, verbose, remove_files) {
-    dir_dynwrap <- dynutils::safe_tempdir("ti")
+    dir_dynwrap <- safe_tempdir("ti")
 
     if (remove_files && !debug) {
       on.exit(unlink(dir_dynwrap, recursive = TRUE))
@@ -85,14 +84,14 @@
     }
 
     # run container
-    output <- babelwhale::run(
-      container_id = container_id,
+    output <- .container_run(
+      image,
       command = NULL,
-      args = NULL,
-      volumes = paste0(dir_dynwrap %>% babelwhale:::fix_windows_path(), ":/ti"),
-      workspace = "/ti/workspace",
+      extra_args = NULL,
+      debug = debug,
       verbose = verbose,
-      debug = debug
+      volumes = paste0(dir_dynwrap %>% fix_windows_path(), ":/ti"),
+      workspace = "/ti/workspace"
     )
 
     # exit if error
@@ -129,7 +128,7 @@
     param_ids,
     output_format,
     output_ids,
-    container_id
+    image
   ))
 
   # adapt run_fun arguments, some hocus pocus going on here ;)

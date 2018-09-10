@@ -24,12 +24,6 @@ simplify_trajectory <- function(traj, allow_self_loops = FALSE) {
   progressions <- out$edge_points %>%
     select(cell_id = id, from, to, percentage)
 
-  # test whether milestone_network and progressions contain the exact same edges
-  different_edges <- progressions %>% group_by(from, to) %>% summarise() %>% anti_join(milestone_network, c("from", "to"))
-  if (nrow(different_edges) > 0) {
-    stop("Trajectory simplification: some edges that are in the progressions are not present in the milestone network! This indicates a bug with edge flipping.")
-  }
-
   newtraj <- traj %>%
     add_trajectory(
       milestone_ids = milestone_ids,
@@ -38,7 +32,6 @@ simplify_trajectory <- function(traj, allow_self_loops = FALSE) {
       divergence_regions = traj$divergence_regions
     )
   # TODO: if newtraj contains grouping, dimred, ..., remove them as necessary
-  # We need a "filter_milestones" thing for this :)
 
   newtraj
 }

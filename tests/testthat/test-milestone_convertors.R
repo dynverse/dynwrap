@@ -61,7 +61,7 @@ test_that("Testing convert_milestone_percentages_to_progressions", {
     full_join(progressions_calc %>% rename(calc = percentage), by = c("cell_id", "from", "to")) %>%
     mutate(
       diff = abs(orig - calc),
-      check = !is.na(orig) & !is.na(calc) & diff < 1e-6
+      check = !is.na(orig) & !is.na(calc) & diff < 1e-8
     )
   expect_true(all(prog_control$check))
 
@@ -76,7 +76,7 @@ test_that("Testing convert_progressions_to_milestone_percentages", {
     mutate(
       diff = abs(orig - calc),
       orig_check = !is.na(orig) | calc == 0,
-      check = !is.na(calc) & orig_check & ((is.na(orig) & calc == 0) | diff < 1e-6)
+      check = !is.na(calc) & orig_check & ((is.na(orig) & calc == 0) | diff < 1e-8)
     )
   expect_true(all(perc_control$check))
 
