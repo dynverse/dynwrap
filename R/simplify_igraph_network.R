@@ -331,7 +331,7 @@ simplify_replace_edges <- function(subgr, sub_edge_points, i, j, path, is_direct
     processed_edge_points <-
       out$on_path %>%
       mutate(from = igraph::V(subgr)$name[[i]], to = igraph::V(subgr)$name[[j]]) %>%
-      mutate(percentage = ifelse(path_len == 0, 0.5, (cs + percentage * weight) / path_len)) %>%
+      mutate(percentage = case_when(path_len == 0 ~ 0.5, TRUE ~ (cs + percentage * weight) / path_len)) %>%
       select(id, from, to, percentage)
 
     sub_edge_points <- bind_rows(out$not_on_path, processed_edge_points)
