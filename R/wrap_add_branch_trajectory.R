@@ -68,6 +68,7 @@ add_branch_trajectory <- function(
     left_join(branches, "branch_id")
 
   # add extra milestones between loops, ie. A -> A becomes A -> A-0a -> A-0b -> A
+  new_edge_length <- sum(milestone_network$length)/nrow(milestone_network)/100
   for (branch_id in milestone_network %>% filter(from == to) %>% pull(branch_id)) {
     milestone_id <- milestone_network %>% filter(branch_id == !!branch_id) %>% pull(from)
     new_milestone_ids <- paste0(milestone_id, "-", branch_id, c("a", "b"))
@@ -79,7 +80,7 @@ add_branch_trajectory <- function(
           to = c(new_milestone_ids[2], milestone_id),
           branch_id = "whatever",
           directed = TRUE,
-          length = 0
+          length = new_edge_length
         )
       )
   }
