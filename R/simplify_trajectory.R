@@ -20,7 +20,10 @@ simplify_trajectory <- function(traj, allow_self_loops = FALSE) {
   )
   milestone_ids <- igraph::V(out$gr)$name
   milestone_network <- igraph::as_data_frame(out$gr) %>%
-    select(from, to, length = weight, directed)
+    select(from, to, length = weight, directed) %>%
+    group_by(from, to) %>%
+    slice(1) %>%
+    ungroup()
   progressions <- out$edge_points %>%
     select(cell_id = id, from, to, percentage)
 
