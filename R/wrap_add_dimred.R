@@ -75,7 +75,7 @@ get_dimred <- function(model, dimred = NULL, expression_source = "expression") {
     # matrix
     testthat::expect_true(is.numeric(dimred))
     testthat::expect_true(length(rownames(dimred)) == nrow(dimred))
-    testthat::expect_setequal(model$cell_ids, rownames(dimred))
+    testthat::expect_true(all(model$cell_ids %in% rownames(dimred)))
 
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   } else if (is.data.frame(dimred)) {
@@ -103,6 +103,9 @@ get_dimred <- function(model, dimred = NULL, expression_source = "expression") {
   } else {
     stop("Invalid dimred argument")
   }
+
+  # make sure the rownames are in the correct order
+  dimred <- dimred[model$cell_ids, ]
 
   dimred
 }
