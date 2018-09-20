@@ -5,7 +5,7 @@
 \title{Root the trajectory}
 \usage{
 add_root(trajectory, root_cell_id = trajectory$root_cell_id,
-  root_milestone_id = trajectory$root_milestone_id)
+  root_milestone_id = trajectory$root_milestone_id, flip_edges = TRUE)
 }
 \arguments{
 \item{trajectory}{the trajectory object}
@@ -13,6 +13,8 @@ add_root(trajectory, root_cell_id = trajectory$root_cell_id,
 \item{root_cell_id}{The root cell id, not required if root_milestone_id is given}
 
 \item{root_milestone_id}{The root milestone id, not required if root_cell_id is given}
+
+\item{flip_edges}{Whether to flip edges which are going in the other direction compared to the root}
 }
 \description{
 Roots the trajectory by changing the directionality of all edges given a root cell

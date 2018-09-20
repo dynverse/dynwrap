@@ -72,6 +72,7 @@ all_networks <- list(
     "small" = data_frame(from = c("A", "B"), to = c("C", "C"), length = 1, directed = T)
   ),
   "multifurcation" = list(
+    "supersimple" = data_frame(from = c("B", "B", "B"), to = c("C", "D", "E"), length = 1, directed = TRUE),
     "simple" = data_frame(from = c("A", "B", "B", "B"), to = c("B", "C", "D", "E"), length = 1, directed = TRUE),
     "intermediate" = data_frame(from = c("A", "a", "B", "B", "B", "C", "D"), to = c("a", "B", "C", "D", "E", "c", "d"), length = 1, directed = TRUE),
     "shuffled" = data_frame(from = c("B", "A", "B", "B"), to = c("C", "B" ,"D", "E"), length = 1, directed = TRUE),

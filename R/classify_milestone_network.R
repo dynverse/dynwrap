@@ -32,7 +32,7 @@ determine_network_type <- function(props) {
           } else if (num_branch_nodes == 1) {
 
             if (num_convergences == 0) {
-              if (max_degree <= 3) {
+              if (max_degree <= 3 && max_degree_out < 3) {
                 "bifurcation"
               } else {
                 "multifurcation"
@@ -105,6 +105,9 @@ determine_milenet_props <- function(gr) {
     degr_out <- igraph::degree(gr, mode = "out")
     degr_tot <- degr_in + degr_out
 
+    max_degree_in <- max(degr_in)
+    max_degree_out <- max(degr_out)
+
     # begin/end/branch/outer
     is_begin <- degr_in == is_self_loop & degr_out != 0
     is_end <- degr_in != 0 & degr_out == 0
@@ -152,6 +155,8 @@ determine_milenet_props <- function(gr) {
     c(out, lst(
       degr_in,
       degr_out,
+      max_degree_in,
+      max_degree_out,
       num_divergences,
       num_convergences,
       is_begin,

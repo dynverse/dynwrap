@@ -5,11 +5,12 @@
 #' @param trajectory the trajectory object
 #' @param root_cell_id The root cell id, not required if root_milestone_id is given
 #' @param root_milestone_id The root milestone id, not required if root_cell_id is given
+#' @param flip_edges Whether to flip edges which are going in the other direction compared to the root
 #'
 #' @importFrom purrr map2_int
 #'
 #' @export
-add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_milestone_id = trajectory$root_milestone_id) {
+add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_milestone_id = trajectory$root_milestone_id, flip_edges = TRUE) {
   if (!is.null(root_cell_id)) {
     if(!root_cell_id %in% trajectory$cell_ids) {stop("Invalid root_cell_id")}
 
@@ -26,47 +27,50 @@ add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_mi
     message(paste0("Using '", root_milestone_id, "' as root"))
   }
 
-  milestone_order <- igraph::graph_from_data_frame(trajectory$milestone_network) %>%
-    igraph::ego(nodes = root_milestone_id, 999) %>%
-    first() %>%
-    names()
-  milestone_order <- c(milestone_order, setdiff(trajectory$milestone_ids, milestone_order)) # add disconnected milestones
+  if (flip_edges) {
 
-  # flip edge if from is later than to
-  trajectory$milestone_network <- trajectory$milestone_network %>%
-    mutate(
-      flip = match(from, milestone_order) > match(to, milestone_order)
-    )
+    milestone_order <- igraph::graph_from_data_frame(trajectory$milestone_network) %>%
+      igraph::ego(nodes = root_milestone_id, 999) %>%
+      first() %>%
+      names()
+    milestone_order <- c(milestone_order, setdiff(trajectory$milestone_ids, milestone_order)) # add disconnected milestones
 
-  # flip milestone network & progressions
-  trajectory$progressions <- trajectory$progressions %>%
-    left_join(trajectory$milestone_network %>% select(from, to, flip), c("from", "to")) %>%
-    mutate(
-      from2 = from,
-      from = ifelse(flip, to, from),
-      to = ifelse(flip, from2, to),
-      percentage = ifelse(flip, 1-percentage, percentage)
-    ) %>%
-    select(-flip, -from2)
+    # flip edge if from is later than to
+    trajectory$milestone_network <- trajectory$milestone_network %>%
+      mutate(
+        flip = match(from, milestone_order) > match(to, milestone_order)
+      )
 
-  trajectory$milestone_network <- trajectory$milestone_network %>%
-    mutate(
-      from2 = from,
-      from = ifelse(flip, to, from),
-      to = ifelse(flip, from2, to),
-      directed = TRUE
-    ) %>%
-    select(-flip, -from2)
+    # flip milestone network & progressions
+    trajectory$progressions <- trajectory$progressions %>%
+      left_join(trajectory$milestone_network %>% select(from, to, flip), c("from", "to")) %>%
+      mutate(
+        from2 = from,
+        from = ifelse(flip, to, from),
+        to = ifelse(flip, from2, to),
+        percentage = ifelse(flip, 1-percentage, percentage)
+      ) %>%
+      select(-flip, -from2)
 
-  # order milestone network
-  milestone_order <- trajectory$milestone_network %>%
-    igraph::graph_from_data_frame() %>%
-    igraph::dfs(root_milestone_id, unreachable = TRUE) %>%
-    .$order %>%
-    names()
+    trajectory$milestone_network <- trajectory$milestone_network %>%
+      mutate(
+        from2 = from,
+        from = ifelse(flip, to, from),
+        to = ifelse(flip, from2, to),
+        directed = TRUE
+      ) %>%
+      select(-flip, -from2)
 
-  trajectory$milestone_network <- trajectory$milestone_network %>%
-    arrange(map2_int(from, to, ~max(which(milestone_order %in% c(.x, .y)))))
+    # order milestone network
+    milestone_order <- trajectory$milestone_network %>%
+      igraph::graph_from_data_frame() %>%
+      igraph::dfs(root_milestone_id, unreachable = TRUE) %>%
+      .$order %>%
+      names()
+
+    trajectory$milestone_network <- trajectory$milestone_network %>%
+      arrange(map2_int(from, to, ~max(which(milestone_order %in% c(.x, .y)))))
+  }
 
   trajectory$root_milestone_id <- root_milestone_id
 

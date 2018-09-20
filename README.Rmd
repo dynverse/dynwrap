@@ -8,9 +8,6 @@ editor_options:
 
 ```{r, echo = FALSE, message = FALSE, error = FALSE, warning = FALSE}
 library(tidyverse)
-library(dynmethods)
-
-data("methods")
 ```
 
 [![Build Status](https://img.shields.io/travis/dynverse/dynwrap.svg?logo=travis)](https://travis-ci.org/dynverse/dynwrap)
@@ -27,9 +24,11 @@ data("methods")
 * Wrap the output of a trajectory inference method, such as the pseudotime, a clustering or a branch network, and convert it into a common trajectory model
 * Further postprocess the trajectory model, such as labelling the milestones and rooting the trajectory
 
-dynwrap was used to wrap `r nrow(methods)` trajectory inference method within docker containers in [dynmethods](https://github.com/dynverse/dynmethods).
+![common trajectory model](man/figures/trajectory_model.png)
 
-![](man/figures/overview_wrapping_v1.svg)
+dynwrap was used to wrap 50+ trajectory inference method within docker containers in [dynmethods](https://github.com/dynverse/dynmethods).
+
+![](man/figures/overview_wrapping_v2.png)
 
 The advantage of using a common model is that it allows:
 
