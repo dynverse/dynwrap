@@ -107,7 +107,7 @@ if (!is.null(start_id)) {
 
 In the end, the output of the method should be transformed into the common trajectory format:
 
-![](../man/figures/overview_wrapping_v1.svg)
+![](../man/figures/overview_wrapping_v2.png)
 
 The topology of the trajectory requires:
 
