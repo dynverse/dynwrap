@@ -25,7 +25,7 @@ trajectories. The package can:
 
 ![common trajectory model](man/figures/trajectory_model.png)
 
-dynwrap was used to wrap 58 trajectory inference method within docker
+dynwrap was used to wrap 50+ trajectory inference method within docker
 containers in [dynmethods](https://github.com/dynverse/dynmethods).
 
 ![](man/figures/overview_wrapping_v2.png)
