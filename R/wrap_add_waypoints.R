@@ -91,7 +91,7 @@ select_waypoints <- function(
     group_by(from, to) %>%
     mutate(from_waypoint = waypoint_id, to_waypoint = lead(waypoint_id, 1)) %>%
     drop_na() %>% ungroup() %>%
-    select(from = from_waypoint, to = to_waypoint)
+    select(from = from_waypoint, to = to_waypoint, from_milestone_id = from, to_milestone_id = to)
 
   # create waypoints and their properties
   waypoints <- waypoint_milestone_percentages %>%
