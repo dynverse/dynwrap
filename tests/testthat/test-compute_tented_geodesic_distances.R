@@ -187,3 +187,18 @@ test_that("Testing compute_tented_geodesic_distances with filtered cells", {
   expect_true(all(abs(geodist[upper.tri(geodist)] - expected_dists) < 1e-10))
   expect_equal(trajectory$cell_ids, colnames(geodist))
 })
+
+
+
+
+test_that("Testing compute_geodesic_distances with zero length self loops", {
+  traj <- wrap_data(cell_ids = c("A", "B", "C")) %>%
+    add_trajectory(
+      milestone_network = tibble(from = "a", to = "a", length = 0, directed = TRUE),
+      progressions = tibble(from = "a", to = "a", cell_id = c("A", "B", "C"), percentage = 1)
+    )
+
+  geodesic_distances <- compute_tented_geodesic_distances(traj)
+
+  testthat::expect_true(all(geodesic_distances == 0))
+})

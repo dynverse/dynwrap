@@ -6,7 +6,7 @@
 \usage{
 add_trajectory(model, milestone_ids = NULL, milestone_network,
   divergence_regions = NULL, milestone_percentages = NULL,
-  progressions = NULL, ...)
+  progressions = NULL, allow_self_loops = FALSE, ...)
 }
 \arguments{
 \item{model}{The model to which the trajectory will be added.}
@@ -26,6 +26,9 @@ Type: Data frame(cell_id = character, milestone_id = character, percentage = num
 
 \item{progressions}{Specifies the progression of a cell along a transition in the milestone_network.
 Type: Data frame(cell_id = character, from = character, to = character, percentage = numeric).}
+
+\item{allow_self_loops}{Whether to allow self loops
+Type: Logical}
 
 \item{...}{extra information to be stored in the model}
 }

@@ -12,6 +12,8 @@
 #'   Type: Data frame(cell_id = character, milestone_id = character, percentage = numeric).
 #' @param progressions Specifies the progression of a cell along a transition in the milestone_network.
 #'   Type: Data frame(cell_id = character, from = character, to = character, percentage = numeric).
+#' @param allow_self_loops Whether to allow self loops
+#'   Type: Logical
 #' @param ... extra information to be stored in the model
 #'
 #' @return The trajectory model
@@ -26,6 +28,7 @@ add_trajectory <- function(
   divergence_regions = NULL,
   milestone_percentages = NULL,
   progressions = NULL,
+  allow_self_loops = FALSE,
   ...
 ) {
   # check whether object is a data wrapper
@@ -40,7 +43,7 @@ add_trajectory <- function(
   # check milestone ids and milestone network
   testthat::expect_is(milestone_ids, "character")
   testthat::expect_false(any(duplicated(c(milestone_ids, cell_ids))))
-  milestone_network <- check_milestone_network(milestone_ids, milestone_network)
+  milestone_network <- check_milestone_network(milestone_ids, milestone_network, allow_self_loops = allow_self_loops)
 
   # check divergence regions
   if (is.null(divergence_regions) || (is.data.frame(divergence_regions) && nrow(divergence_regions) == 0)) {
@@ -132,7 +135,7 @@ is_wrapper_with_trajectory <- function(object) {
 
 # Check given trajectory input ----------------------------------------
 #' @importFrom testthat expect_is expect_equal expect_true
-check_milestone_network <- function(milestone_ids, milestone_network) {
+check_milestone_network <- function(milestone_ids, milestone_network, allow_self_loops = FALSE) {
   testthat::expect_is(milestone_network, "data.frame")
   testthat::expect_equal(ncol(milestone_network), 4)
   testthat::expect_setequal(colnames(milestone_network), c("from", "to", "length", "directed"))
@@ -142,7 +145,11 @@ check_milestone_network <- function(milestone_ids, milestone_network) {
   testthat::expect_true(all(milestone_network$to %in% milestone_ids))
   testthat::expect_false(any(duplicated(milestone_network %>% select(from, to))))
 
-  ## TODO: check if edges such as A->A or A->B B->A are presnet
+  if (!allow_self_loops) {
+    testthat::expect_false(any((milestone_network$from == milestone_network$to) & milestone_network$length > 0))
+  }
+
+  ## TODO: check if edges such as A->B B->A are presnet
 
   milestone_network
 }
