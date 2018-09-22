@@ -5,7 +5,7 @@ test_that("get_output_processor works correctly", {
   expect_is(op_trajectory, "list")
   expect_equal(op_trajectory$processor, add_trajectory)
   expect_equal(sort(op_trajectory$required_args), c("milestone_network"))
-  expect_equal(sort(op_trajectory$optional_args), c("divergence_regions", "milestone_ids", "milestone_percentages", "progressions"))
+  expect_equal(sort(op_trajectory$optional_args), c("divergence_regions", "milestone_ids", "milestone_percentages", "progressions", "allow_self_loops"))
   expect_equal(sort(op_trajectory$args), sort(c(op_trajectory$required_args, op_trajectory$optional_args)))
 
   op_expression <- get_output_processor("expression")
