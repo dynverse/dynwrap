@@ -36,7 +36,8 @@ simplify_trajectory <- function(traj, allow_self_loops = FALSE) {
       milestone_ids = milestone_ids,
       milestone_network = milestone_network,
       progressions = progressions,
-      divergence_regions = traj$divergence_regions
+      divergence_regions = traj$divergence_regions,
+      allow_self_loops = allow_self_loops
     )
   # TODO: if newtraj contains grouping, dimred, ..., remove them as necessary
   # We need a "filter_milestones" thing for this :)
