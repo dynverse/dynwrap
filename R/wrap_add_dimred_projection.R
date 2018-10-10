@@ -49,7 +49,6 @@ add_dimred_projection <- function(
   # make sure milestone_ids and cell_ids don't overlap
   testthat::expect_false(any(duplicated(c(cell_ids, milestone_ids))))
 
-
   if (is.null(grouping)) {
     # if no grouping is given, just project all cells to the segments
     proj <- dynutils::project_to_segments(
