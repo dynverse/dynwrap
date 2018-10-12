@@ -304,8 +304,7 @@ execute_method_on_dataset <- function(
   inputs <- extract_args_from_dataset(dataset, method$inputs, give_priors)
   args <- c(
     inputs,
-    parameters,
-    seed = seed
+    parameters
   )
 
   if (verbose) {
@@ -320,6 +319,11 @@ execute_method_on_dataset <- function(
   # add verbose if in inputs
   if ("verbose" %in% method$inputs$input_id) {
     args["verbose"] <- verbose
+  }
+
+  # add seed if in inputs
+  if ("seed" %in% method$inputs$input_id) {
+    args["seed"] <- verbose
   }
 
   remove_args <- setdiff(names(args), formalArgs(method$run_fun))
