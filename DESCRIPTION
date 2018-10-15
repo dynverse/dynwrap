@@ -109,6 +109,7 @@ Collate:
     'wrap_add_prior_information.R'
     'wrap_add_pseudotime.R'
     'wrap_add_root.R'
+    'wrap_add_tde_overall.R'
     'wrap_add_timings.R'
     'wrap_add_trajectory.R'
     'wrap_add_waypoints.R'
