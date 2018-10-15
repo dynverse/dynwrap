@@ -438,7 +438,7 @@ execute_method_internal <- function(method, arglist, time0) {
       }
     }
 
-    if (!is.null(method$package_required) && !is.na(method$package_loaded)) {
+    if (!is.null(method$package_required) && !is.na(method$package_required)) {
       for (pack in method$package_required) {
         suppressMessages(do.call(requireNamespace, list(pack)))
       }
