@@ -140,7 +140,7 @@ simplify_igraph_network <- function(
           right_path[[length(right_path) + 1]] <- data_frame(from = j_prev, to = j, weight = simplify_get_edge(subgr, j_prev, j)$weight)
         }
 
-        left_path <- bind_rows(left_path) %>%
+        left_path <- bind_rows(rev(left_path)) %>%
           mutate_at(c("from", "to"), ~ igraph::V(subgr)$name[.])
         right_path <- bind_rows(right_path) %>%
           mutate_at(c("from", "to"), ~ igraph::V(subgr)$name[.])
