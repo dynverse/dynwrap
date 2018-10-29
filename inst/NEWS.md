@@ -1,0 +1,17 @@
+
+# dynwrap 0.3.0 (unreleased)
+
+
+# dynwrap 0.2.0 (29-10-2018)
+
+* BUG FIX: Fix suggested dependencies not being installed in the dynwrap containers.
+
+* Remove feather data format because it's not being used and creates dependency issues every now and again.
+
+# dynwrap 0.1.0 (07-03-2018)
+
+* INITIAL RELEASE: dynwrap, functionality for containerised trajectory inference.
+ - Wrap the input data of a trajectory inference method, such as expression and prior information
+ - Run a trajectory inference method in R, in a docker container or a singularity container
+ - Wrap the output of a trajectory inference method, such as the pseudotime, a clustering or a branch network, and convert it into a common trajectory model
+ - Further postprocess the trajectory model, such as labelling the milestones and rooting the trajectory

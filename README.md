@@ -39,3 +39,21 @@ The advantage of using a common model is that it allows:
     [dynplot](https://www.github.com/dynverse/dynplot)
   - Extracting relevant features/genes, eg. using
     [dynfeature](https://www.github.com/dynverse/dynfeature)
+
+## Latest changes
+
+Check out `news(package = "dynfeature")` or [NEWS.md](inst/NEWS.md) for
+a full list of
+changes.
+
+<!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
+
+### Latest changes in dynwrap 0.3.0 (unreleased)
+
+### Latest changes in dynwrap 0.2.0 (29-10-2018)
+
+  - BUG FIX: Fix suggested dependencies not being installed in the
+    dynwrap containers.
+
+  - Remove feather data format because it’s not being used and creates
+    dependency issues every now and again.
