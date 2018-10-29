@@ -53,7 +53,7 @@ changes.
 ### Latest changes in dynwrap 0.2.0 (29-10-2018)
 
   - BUG FIX: Fix suggested dependencies not being installed in the
-    dynwrap containers.
+    dynwrap containers (\#100).
 
   - Remove feather data format because it’s not being used and creates
     dependency issues every now and again.
