@@ -16,6 +16,6 @@ From: rocker/tidyverse
 %post
     apt-get update && apt-get install -y libhdf5-dev libssh-dev
     echo 'utils::setRepositories(ind=1:4); options(echo = TRUE)' > ~/.Rprofile
-    R -e 'devtools::install_github("dynverse/dynwrap", dependencies = TRUE)'
-    R -e 'devtools::install_github("dynverse/dyndimred", dependencies = TRUE)'
-    R -e 'devtools::install_cran(c("RcppEigen", "RSpectra", "RcppArmadillo"))' # preinstall certain rcpp libraries
+    R --vanilla -e 'devtools::install_github("dynverse/dynwrap", dependencies = TRUE)'
+    R --vanilla -e 'devtools::install_github("dynverse/dyndimred", dependencies = TRUE)'
+    R --vanilla -e 'devtools::install_cran(c("RcppEigen", "RSpectra", "RcppArmadillo"))' # preinstall certain rcpp libraries
