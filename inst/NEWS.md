@@ -16,6 +16,8 @@
 
 * TESTING: Solve issue with the unit tests by not using any helpers.
 
+* MINOR CHANGE: Have docker images build from dynwrap@devel
+
 # dynwrap 0.1.0 (07-03-2018)
 
 * INITIAL RELEASE: dynwrap, functionality for containerised trajectory inference.

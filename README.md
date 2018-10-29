@@ -67,3 +67,5 @@ changes.
     `pkgload:::shim_system.file()`.
 
   - TESTING: Solve issue with the unit tests by not using any helpers.
+
+  - MINOR CHANGE: Have docker images build from <dynwrap@devel>
