@@ -55,11 +55,10 @@ changes.
   - BUG FIX: Fix incorrect calculation of milestone percentage during
     trajectory simplification. Occurs only in a rare edge case, namely
     when the order of the milestones in the milestone network is very
-    different from the order of the milestone ids
-    (0475e9426344f3d30a79eb1a98a5c99ee92199f8).
+    different from the order of the milestone ids (0475e94).
 
   - BUG FIX: Fix suggested dependencies not being installed in the
     dynwrap containers (\#100).
 
-  - Remove feather data format because it’s not being used and creates
-    dependency issues every now and again.
+  - FEATURE REMOVAL: Remove feather data format because it’s not being
+    used and creates dependency issues every now and again.
