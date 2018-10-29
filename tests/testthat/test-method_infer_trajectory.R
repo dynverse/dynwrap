@@ -1,6 +1,6 @@
 context("Testing infer_trajectory")
 
-source("tests/testthat/nothelper-methods.R")
+source(paste0(ifelse(file.exists("nothelper-methods.R"), "", "tests/testthat/"), "nothelper-methods.R"))
 
 # create dataset
 id <- "a"
