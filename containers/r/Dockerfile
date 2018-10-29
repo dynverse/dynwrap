@@ -1,7 +1,5 @@
 FROM rocker/tidyverse
 
-LABEL version 0.1.0.4
-
 ENV OPENBLAS_NUM_THREADS=1
 ENV NUMEXPR_NUM_THREADS=1
 ENV MKL_NUM_THREADS=1
@@ -13,4 +11,8 @@ RUN echo 'utils::setRepositories(ind=1:4); options(echo = TRUE)' > ~/.Rprofile
 
 RUN R -e 'devtools::install_github("dynverse/dynwrap", dependencies = TRUE)'
 
+RUN R -e 'devtools::install_github("dynverse/dyndimred", dependencies = TRUE)'
+
 RUN R -e 'devtools::install_cran(c("RcppEigen", "RSpectra", "RcppArmadillo"))' # preinstall certain rcpp libraries
+
+LABEL version 0.1.0.5
