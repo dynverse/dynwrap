@@ -16,7 +16,7 @@ From: rocker/tidyverse
 %post
     apt-get update && apt-get install -y libhdf5-dev libssh-dev
     R -e 'options(echo = TRUE); install.packages("minqa")' # weird problem where minqa can't install when .Rprofile isn't empty
-    echo 'utils::setRepositories(ind=1:4))' > ~/.Rprofile
+    echo 'utils::setRepositories(ind=1:4)' > ~/.Rprofile
     R -e 'devtools::install_github("dynverse/dyndimred", dependencies = TRUE)'
     R -e 'devtools::install_github("dynverse/dynwrap@devel", dependencies = TRUE)'
     R -e 'devtools::install_cran(c("RcppEigen", "RSpectra", "RcppArmadillo"))' # preinstall certain rcpp libraries
