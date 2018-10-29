@@ -12,7 +12,11 @@
 
 * FEATURE REMOVAL: Remove feather data format because it's not being used and creates dependency issues every now and again.
 
-* BUG FIX: `devtools:::shim_system.file()` has been moved to `pkgload:::shim_system.file()`
+* BUG FIX: `devtools:::shim_system.file()` has been moved to `pkgload:::shim_system.file()`.
+
+* TESTING: Solve issue with the unit tests by not using any helpers.
+
+* MINOR CHANGE: Have docker images build from dynwrap@devel
 
 # dynwrap 0.1.0 (07-03-2018)
 
