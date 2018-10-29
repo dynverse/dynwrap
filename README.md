@@ -52,6 +52,12 @@ changes.
 
 ### Latest changes in dynwrap 0.2.0 (29-10-2018)
 
+  - BUG FIX: Fix incorrect calculation of milestone percentage during
+    trajectory simplification. Occurs only in a rare edge case, namely
+    when the order of the milestones in the milestone network is very
+    different from the order of the milestone ids
+    (0475e9426344f3d30a79eb1a98a5c99ee92199f8).
+
   - BUG FIX: Fix suggested dependencies not being installed in the
     dynwrap containers (\#100).
 
