@@ -3,7 +3,7 @@ Bootstrap: docker
 From: rocker/tidyverse
 
 %labels
-    version 0.1.0.5
+    version 0.2.0.1
 
 %environment
     OPENBLAS_NUM_THREADS=1

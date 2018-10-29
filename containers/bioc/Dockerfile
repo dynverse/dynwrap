@@ -17,4 +17,4 @@ RUN R -e 'devtools::install_cran(c("RcppEigen", "RSpectra", "RcppArmadillo"))' #
 
 RUN R -e 'devtools::install_cran("SingleCellExperiment")'
 
-LABEL version 0.1.0.5
+LABEL version 0.2.0.1

@@ -15,4 +15,4 @@ RUN R -e 'devtools::install_github("dynverse/dyndimred", dependencies = TRUE)'
 
 RUN R -e 'devtools::install_cran(c("RcppEigen", "RSpectra", "RcppArmadillo"))' # preinstall certain rcpp libraries
 
-LABEL version 0.1.0.5
+LABEL version 0.2.0.1
