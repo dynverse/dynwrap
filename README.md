@@ -68,4 +68,7 @@ changes.
 
   - TESTING: Solve issue with the unit tests by not using any helpers.
 
-  - MINOR CHANGE: Have docker images build from <dynwrap@devel>
+  - MINOR CHANGE: Have docker images build from <dynwrap@devel>.
+
+  - BUG FIX: Fix weird bug in Dockerfiles / recipes where minqa can’t be
+    installed when .Rprofile is not empty.
