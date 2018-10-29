@@ -18,7 +18,7 @@
 
 * MINOR CHANGE: Have docker images build from dynwrap@devel.
 
-* BUG FIX: Fix weird bug in Dockerfiles / recipes where minqa can't be installed when .Rprofile is not empty.
+* BUG FIX: Fix weird bug in Dockerfiles / recipes where Rcpp can't install certain things if .Rprofile contains `options(echo = TRUE)`.
 
 # dynwrap 0.1.0 (07-03-2018)
 
