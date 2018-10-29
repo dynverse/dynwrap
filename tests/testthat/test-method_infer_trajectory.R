@@ -1,5 +1,7 @@
 context("Testing infer_trajectory")
 
+source("tests/testthat/nothelper-methods.R")
+
 # create dataset
 id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")

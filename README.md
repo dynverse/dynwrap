@@ -62,3 +62,8 @@ changes.
 
   - FEATURE REMOVAL: Remove feather data format because it’s not being
     used and creates dependency issues every now and again.
+
+  - BUG FIX: `devtools:::shim_system.file()` has been moved to
+    `pkgload:::shim_system.file()`.
+
+  - TESTING: Solve issue with the unit tests by not using any helpers.
