@@ -70,5 +70,6 @@ changes.
 
   - MINOR CHANGE: Have docker images build from <dynwrap@devel>.
 
-  - BUG FIX: Fix weird bug in Dockerfiles / recipes where Rcpp can’t
-    install certain things if .Rprofile contains `options(echo = TRUE)`.
+  - BUG FIX: Remove `option(echo = FALSE)` from .Rprofile in recipes
+    because some packages directly rely on standard output from R, so
+    printing the command wreaks havoc.
