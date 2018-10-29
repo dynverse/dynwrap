@@ -1,7 +1,7 @@
 .container_save_inputs <- function(
   envir,
   dir_input,
-  input_format = c("hdf5", "text", "rds", "feather"),
+  input_format = c("hdf5", "text", "rds"),
   input_ids = NULL,
   param_ids = NULL
 ) {
@@ -33,19 +33,6 @@
       }
     })
     file$close_all() # important to do a close_all here, otherwise some parts of the data can still be open, resulting in invalid h5 files
-  } else if (input_format == "feather") {
-    # install feather if not available
-    dynutils::install_packages("feather", "dynwrap", prompt = TRUE)
-    requireNamespace("feather")
-
-    for (input_id in names(inputs)) {
-      input <- inputs[[input_id]]
-      write_feather_infer(
-        input,
-        glue::glue("{dir_input}/{input_id}.feather"),
-        input_id
-      )
-    }
   }
 
   # save params as json
@@ -60,21 +47,5 @@ write_text_infer <- function(x, path) {
     readr::write_csv(x, paste0(path, ".csv"))
   } else {
     jsonlite::write_json(x, paste0(path, ".json"))
-  }
-}
-
-write_feather_infer <- function(x, path, name) {
-  if(is.matrix(x)) {
-    feather::write_feather(x %>% as.data.frame() %>% rownames_to_column("rownames"), path)
-  } else if (is.data.frame(x)) {
-    feather::write_feather(x, path)
-  } else if (is.vector(x) || is.list(x)) {
-    if (is.null(names(x))) {
-      feather::write_feather(tibble(!!name := unlist(x)), path)
-    } else {
-      feather::write_feather(tibble(!!name := unlist(x), name = names(x)), path)
-    }
-  } else {
-    stop("Feather does not support this output")
   }
 }
