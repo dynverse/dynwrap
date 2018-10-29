@@ -1,7 +1,7 @@
 context("Testing wrap_rds")
 
 output_format <- "rds"
-inst_dir <- devtools:::shim_system.file(paste0("example_outputs/", output_format, "/"), package = "dynwrap")
+inst_dir <- pkgload:::shim_system.file(paste0("example_outputs/", output_format, "/"), package = "dynwrap")
 
 test_trajectory_type <- function(output_ids, files, model_test_fun) {
   dir_output <- tempfile()

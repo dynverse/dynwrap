@@ -9,7 +9,7 @@ test_that("Make sure that every output has a text example", {
     intersect(names(dynwrap:::.wrap_text_reader_csv_specification))
 
   # get all example files
-  found_examples <- list.files(devtools:::shim_system.file("example_outputs/text/", package = "dynwrap")) %>% tools::file_path_sans_ext()
+  found_examples <- list.files(pkgload:::shim_system.file("example_outputs/text/", package = "dynwrap")) %>% tools::file_path_sans_ext()
 
   expect_true(all(all_args %in% found_examples))
 })

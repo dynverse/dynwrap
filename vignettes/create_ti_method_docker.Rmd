@@ -102,7 +102,7 @@ data(allowed_inputs, package="dynwrap")
 allowed_inputs <- allowed_inputs %>% filter(input_id != "dataset")
 
 # find example files
-found_input_example_files <- list.files(devtools:::shim_system.file("example_inputs/text/", package="dynwrap"))
+found_input_example_files <- list.files(pkgload:::shim_system.file("example_inputs/text/", package="dynwrap"))
 input_examples <- set_names(
   found_input_example_files, 
   tools::file_path_sans_ext(found_input_example_files)
@@ -162,7 +162,7 @@ tribble(
 data(allowed_outputs, package = "dynwrap")
 
 # find example files
-found_output_example_files <- list.files(devtools:::shim_system.file("example_outputs/text/", package="dynwrap"))
+found_output_example_files <- list.files(pkgload:::shim_system.file("example_outputs/text/", package="dynwrap"))
 output_examples <- set_names(
   found_output_example_files, 
   tools::file_path_sans_ext(found_output_example_files)
@@ -282,7 +282,7 @@ ti_comp1 <- create_ti_method_with_container("dynverse/comp1")
 ```
 
 ```{r, echo=FALSE}
-source(devtools:::shim_system.file("tests/testthat/helper-ti_comp1.R", package = "dynwrap"))
+source(pkgload:::shim_system.file("tests/testthat/helper-ti_comp1.R", package = "dynwrap"))
 ```
 
 Then we'll use some test data

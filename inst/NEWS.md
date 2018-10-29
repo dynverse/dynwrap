@@ -12,6 +12,8 @@
 
 * FEATURE REMOVAL: Remove feather data format because it's not being used and creates dependency issues every now and again.
 
+* BUG FIX: `devtools:::shim_system.file()` has been moved to `pkgload:::shim_system.file()`
+
 # dynwrap 0.1.0 (07-03-2018)
 
 * INITIAL RELEASE: dynwrap, functionality for containerised trajectory inference.

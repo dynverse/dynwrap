@@ -4,7 +4,7 @@ context("Testing wrap_dynwrap")
 # simple test
 output_format <- "dynwrap"
 test_that(paste0("Output processors can process output with ", output_format), {
-  dir_output <- devtools:::shim_system.file(paste0("example_outputs/", output_format, "/"), package = "dynwrap")
+  dir_output <- pkgload:::shim_system.file(paste0("example_outputs/", output_format, "/"), package = "dynwrap")
 
   model <- wrap_output(
     NULL,
@@ -17,7 +17,7 @@ test_that(paste0("Output processors can process output with ", output_format), {
 
 # test by rewrapping text output
 output_format <- "dynwrap"
-inst_dir <- devtools:::shim_system.file(paste0("example_outputs/text/"), package = "dynwrap")
+inst_dir <- pkgload:::shim_system.file(paste0("example_outputs/text/"), package = "dynwrap")
 
 test_trajectory_type <- function(output_ids, files, model_test_fun) {
   dir_output <- tempfile()

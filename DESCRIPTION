@@ -55,6 +55,7 @@ Suggests:
   ggplot2,
   knitr,
   lhs,
+  pkgload,
   qsub,
   rmarkdown,
   viridis
