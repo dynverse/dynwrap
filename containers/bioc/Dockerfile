@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y libhdf5-dev libssh-dev
 
 RUN echo 'utils::setRepositories(ind=1:4)' > ~/.Rprofile
 
+RUN R -e 'devtools::install_github("r-lib/remotes")' # remotes 2.0.1 is causing some issues
+
 RUN R -e 'devtools::install_github("dynverse/dyndimred", dependencies = TRUE)'
 
 RUN R -e 'devtools::install_github("dynverse/dynwrap@devel", dependencies = TRUE)'
@@ -17,4 +19,4 @@ RUN R -e 'devtools::install_cran(c("RcppEigen", "RSpectra", "RcppArmadillo"))' #
 
 RUN R -e 'devtools::install_cran("SingleCellExperiment")'
 
-LABEL version 0.2.0.4
+LABEL version 0.2.0.5
