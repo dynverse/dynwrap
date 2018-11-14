@@ -8,9 +8,9 @@ skip_on_cran()
 maintainer_usernames <- c("rcannood", "wouters")
 
 if (Sys.info()[["user"]] %in% maintainer_usernames) {
-  tags <- c("R_text", "R_hdf5", "R_rds", "R_dynwrap", "R_feather", "python_hdf5", "python_text", "python_feather")
+  tags <- c("R_text", "R_hdf5", "R_rds", "R_dynwrap", "python_hdf5", "python_text")
 } else {
-  tags <- "python_feather"
+  tags <- "python_hdf5"
 }
 
 # specific dynwrap tester versions to test
@@ -19,7 +19,7 @@ if (Sys.info()[["user"]] %in% maintainer_usernames) {
 #' @examples
 #' map_chr(tags, ~ dynwrap:::.container_get_version(paste0("dynverse/dynwrap_tester:", .))) %>% set_names(tags) %>% deparse() %>% paste(collapse = "") %>% cat()
 
-tester_versions <- c(R_text = "0.1.0.3", R_hdf5 = "0.1.0.3", R_rds = "0.1.0.3", R_dynwrap = "0.1.0.3", R_feather = "0.1.0.3", python_hdf5 = "0.1.0.3", python_text = "0.1.0.3", python_feather = "0.1.0.3")
+tester_versions <- c(R_text = "0.2.0.1", R_hdf5 = "0.2.0.1", R_rds = "0.2.0.1", R_dynwrap = "0.2.0.1", python_hdf5 = "0.2.0.1", python_text = "0.2.0.1")
 
 # get example dataset
 data("example_dataset")

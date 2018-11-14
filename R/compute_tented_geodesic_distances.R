@@ -49,11 +49,12 @@ compute_tented_geodesic_distances_ <- function(
   cell_ids_trajectory <- unique(milestone_percentages$cell_id)
 
   # get waypoints and milestone percentages
-  waypoint_ids <- c()
   if (!is.null(waypoint_cells)) {
-    waypoint_ids <- c(waypoint_ids, waypoint_cells)
+    waypoint_ids <- waypoint_cells
   } else if (is.null(waypoint_milestone_percentages)){
     waypoint_ids <- cell_ids_trajectory
+  } else {
+    waypoint_ids <- c()
   }
 
   if (!is.null(waypoint_milestone_percentages)) {

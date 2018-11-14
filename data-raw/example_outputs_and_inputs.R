@@ -129,13 +129,6 @@ model <- wrap_data(
 
 .container_save_inputs(
   list2env(c(dataset, dataset$prior_information)),
-  dir_input = "inst/example_inputs/feather/",
-  input_format = "feather",
-  input_ids = allowed_inputs$input_id[allowed_inputs$input_id != "dataset"]
-)
-
-.container_save_inputs(
-  list2env(c(dataset, dataset$prior_information)),
   dir_input = "inst/example_inputs/rds/",
   input_format = "rds",
   input_ids = allowed_inputs$input_id[allowed_inputs$input_id != "dataset"]
@@ -169,13 +162,6 @@ dir_output <- "inst/example_outputs/text/"
 dir.create(dir_output, recursive=TRUE)
 walk2(objects, names(objects), function(x, name) {
   write_text_infer(x, glue::glue("{dir_output}/{name}"))
-})
-
-# feather
-dir_output <- "inst/example_outputs/feather/"
-dir.create(dir_output)
-walk2(objects, names(objects), function(x, name) {
-  write_feather_infer(x, glue::glue("{dir_output}/{name}.feather"), name)
 })
 
 # rds

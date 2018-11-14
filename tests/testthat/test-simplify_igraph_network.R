@@ -250,5 +250,36 @@ test_that("simplifications with a large cycle works as expected", {
 })
 
 
+test_that("edge case failure", {
+  milnet <- tribble(
+    ~from, ~to, ~weight, ~directed,
+    "D",   "C", 1,       FALSE,
+    "C",   "B", 1,       FALSE,
+    "B",   "A", 1,       FALSE,
+    "D",   "E", 1,       FALSE
+  )
+  milids <- c("B", "C", "D", "E", "A")
+  edgeps <- tribble(
+    ~from, ~to, ~percentage, ~id,
+    "C",   "B", 0,           "c"
+  )
+
+  gr <- igraph::graph_from_data_frame(
+    d = milnet,
+    directed = any(milnet$directed),
+    vertices = milids
+  )
+
+  out <- simplify_igraph_network(
+    gr,
+    allow_duplicated_edges = FALSE,
+    allow_self_loops = FALSE,
+    force_keep = c(),
+    edge_points = edgeps
+  )
+
+  expect_lte(abs(out$edge_points$percentage - .5), .001)
+})
 
 # TODO: add more tests that check whether combinations of trajectory types, edge_points, allow_self_loops and allow_duplicated edges work correctly
+

@@ -19,7 +19,8 @@ get_ti_methods <- function(
   ti_methods <- map(ti_packages, function(package) {
 
     if (package == "dynwrap") {
-      root <- devtools:::shim_system.file("tests/testthat/", package = "dynwrap")
+      requireNamespace("pkgload")
+      root <- pkgload:::shim_system.file("tests/testthat/", package = "dynwrap")
       env <- new.env()
       for (file in list.files(root, full.names = TRUE)) {
         source(file, local = env)

@@ -1,7 +1,7 @@
 Package: dynwrap
 Type: Package
 Title: Common trajectory model for representing trajectories from all sources
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(
     person(
       "Robrecht", 
@@ -23,7 +23,7 @@ BugReports: https://github.com/dynverse/dynwrap/issues
 Description: The common trajectory model for representing trajectories from real and synthetic datasets and method predictions.
 License: GPL-3
 LazyData: TRUE
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.0.9000
 Encoding: UTF-8
 Depends:
   R (>= 3.0.0)
@@ -51,11 +51,11 @@ Imports:
 Suggests:
   devtools,
   dyndimred,
-  feather,
   hdf5r,
   ggplot2,
   knitr,
   lhs,
+  pkgload,
   qsub,
   rmarkdown,
   viridis
@@ -63,8 +63,7 @@ Remotes:
   dynverse/babelwhale,
   dynverse/dynutils,
   dynverse/dyndimred,
-  rcannood/qsub,
-  wesm/feather/R
+  rcannood/qsub
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Collate: 
@@ -118,6 +117,5 @@ Collate:
     'wrap_label_milestones.R'
     'wrap_output.R'
     'wrap_output_dynwrap.R'
-    'wrap_output_feather.R'
     'wrap_output_rds.R'
     'wrap_output_text.R'

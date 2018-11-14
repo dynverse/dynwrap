@@ -1,0 +1,13 @@
+citEntry(
+  entry    = "Article",
+  author   = "Robrecht Cannoodt and Wouter Saelens",
+  title    = "dynwrap: Functionality for containerised trajectory inference.",
+  journal  = "In Progress",
+  year     = "2019",
+  month    = "",
+  volume   = "",
+  number   = "",
+  pages    = "",
+  doi      = "",
+  textVersion = "Cannoodt R. and Saelens W., dynwrap: Functionality for containerised trajectory inference, In Progress, 2019."
+)

@@ -31,10 +31,10 @@ A TI docker requires at least three files. The files for this example are also a
 
 ## Method definition file (`definition.yml`)
 
-An example of a `definition.yml` file (as can be found on the [github](https://github.com/dynverse/dynwrap_tester/blob/devel/R_feather/definition.yml)):
+An example of a `definition.yml` file (as can be found on the [github](https://github.com/dynverse/dynwrap_tester/blob/devel/R_hdf5/definition.yml)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/dynwrap_tester/devel/R_feather/definition.yml") %>%
+read_file("https://raw.githubusercontent.com/dynverse/dynwrap_tester/devel/R_hdf5/definition.yml") %>%
   paste0("```yaml\n", ., "\n```") %>% 
   cat()
 ```
@@ -90,7 +90,6 @@ tribble(
   ~output_format, ~description, ~example_script,
   "hdf5", "HDF5 format", comp1_urls(c("python", "R"), c("python_hdf5", "R_hdf5")), 
   "text", "csv and json files", comp1_urls(c("python", "R"), c("python_text", "R_text")),
-  "feather", "[Feather](https://github.com/wesm/feather) dataframe files", comp1_urls(c("python", "R"), c("python_feather", "R_feather")),
   "rds", "R binary files", comp1_urls(c("R"), c("R_rds"))
 ) %>% knitr::kable()
 ```
@@ -103,7 +102,7 @@ data(allowed_inputs, package="dynwrap")
 allowed_inputs <- allowed_inputs %>% filter(input_id != "dataset")
 
 # find example files
-found_input_example_files <- list.files(devtools:::shim_system.file("example_inputs/text/", package="dynwrap"))
+found_input_example_files <- list.files(pkgload:::shim_system.file("example_inputs/text/", package="dynwrap"))
 input_examples <- set_names(
   found_input_example_files, 
   tools::file_path_sans_ext(found_input_example_files)
@@ -152,7 +151,6 @@ comp1_urls <- function(names, xs) glue::glue_collapse(map2_chr(names, xs, comp1_
 tribble(
   ~output_format, ~description, ~example_script,
   "text", "csv and json files", comp1_urls(c("python", "R"), c("python_text", "R_text")),
-  "feather", "[Feather](https://github.com/wesm/feather) dataframe files", comp1_urls(c("python", "R"), c("python_feather", "R_feather")),
   "rds", "R binary files", comp1_urls(c("R"), c("R_rds")),
   "dynwrap", "directly wrapped using [dynwrap](https://github.com/dynverse/dynwrap) functions", comp1_urls(c("R"), c("R_dynwrap"))
 ) %>% knitr::kable()
@@ -164,7 +162,7 @@ tribble(
 data(allowed_outputs, package = "dynwrap")
 
 # find example files
-found_output_example_files <- list.files(devtools:::shim_system.file("example_outputs/text/", package="dynwrap"))
+found_output_example_files <- list.files(pkgload:::shim_system.file("example_outputs/text/", package="dynwrap"))
 output_examples <- set_names(
   found_output_example_files, 
   tools::file_path_sans_ext(found_output_example_files)
@@ -226,10 +224,10 @@ The `definition.yml` file can also contain other information about the methods, 
 
 ## The `Dockerfile`
 
-An example of a `Dockerfile` (as can be found on the [github](https://github.com/dynverse/dynwrap_tester/blob/devel/R_feather/Dockerfile)):
+An example of a `Dockerfile` (as can be found on the [github](https://github.com/dynverse/dynwrap_tester/blob/devel/R_hdf5/Dockerfile)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/dynwrap_tester/devel/R_feather/Dockerfile") %>%
+read_file("https://raw.githubusercontent.com/dynverse/dynwrap_tester/devel/R_hdf5/Dockerfile") %>%
   paste0("```Dockerfile\n", ., "\n```") %>% 
   cat()
 ```
@@ -242,10 +240,10 @@ This file should always contain an entrypoint, which will be called when the TI 
 
 ## Doing trajectory inference
 
-All input files requested in the `definition.yml` will be mounted in the `/ti/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/ti/output` directory. An example (as can be found on the [github](https://github.com/dynverse/dynwrap_tester/blob/devel/R_feather/run.sh)):
+All input files requested in the `definition.yml` will be mounted in the `/ti/input` directory of the docker. After inferring a trajectory, the method should write output files into the `/ti/output` directory. An example (as can be found on the [github](https://github.com/dynverse/dynwrap_tester/blob/devel/R_hdf5/run.sh)):
 
 ```{r, echo=FALSE, results="asis"}
-read_file("https://raw.githubusercontent.com/dynverse/dynwrap_tester/devel/R_feather/run.R") %>%
+read_file("https://raw.githubusercontent.com/dynverse/dynwrap_tester/devel/R_hdf5/run.R") %>%
   paste0("```r\n", ., "\n```") %>% 
   cat()
 ```
@@ -284,7 +282,7 @@ ti_comp1 <- create_ti_method_with_container("dynverse/comp1")
 ```
 
 ```{r, echo=FALSE}
-source(devtools:::shim_system.file("tests/testthat/helper-ti_comp1.R", package = "dynwrap"))
+source(pkgload:::shim_system.file("tests/testthat/helper-ti_comp1.R", package = "dynwrap"))
 ```
 
 Then we'll use some test data

@@ -39,3 +39,37 @@ The advantage of using a common model is that it allows:
     [dynplot](https://www.github.com/dynverse/dynplot)
   - Extracting relevant features/genes, eg. using
     [dynfeature](https://www.github.com/dynverse/dynfeature)
+
+## Latest changes
+
+Check out `news(package = "dynfeature")` or [NEWS.md](inst/NEWS.md) for
+a full list of
+changes.
+
+<!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
+
+### Latest changes in dynwrap 0.3.0 (unreleased)
+
+### Latest changes in dynwrap 0.2.0 (29-10-2018)
+
+  - BUG FIX: Fix incorrect calculation of milestone percentage during
+    trajectory simplification. Occurs only in a rare edge case, namely
+    when the order of the milestones in the milestone network is very
+    different from the order of the milestone ids (0475e94).
+
+  - BUG FIX: Fix suggested dependencies not being installed in the
+    dynwrap containers (\#100).
+
+  - FEATURE REMOVAL: Remove feather data format because it’s not being
+    used and creates dependency issues every now and again.
+
+  - BUG FIX: `devtools:::shim_system.file()` has been moved to
+    `pkgload:::shim_system.file()`.
+
+  - TESTING: Solve issue with the unit tests by not using any helpers.
+
+  - MINOR CHANGE: Have docker images build from <dynwrap@devel>.
+
+  - BUG FIX: Remove `option(echo = FALSE)` from .Rprofile in recipes
+    because some packages directly rely on standard output from R, so
+    printing the command wreaks havoc.

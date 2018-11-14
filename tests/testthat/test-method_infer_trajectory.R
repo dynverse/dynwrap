@@ -1,5 +1,7 @@
 context("Testing infer_trajectory")
 
+source(paste0(ifelse(file.exists("nothelper-methods.R"), "", "tests/testthat/"), "nothelper-methods.R"))
+
 # create dataset
 id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
