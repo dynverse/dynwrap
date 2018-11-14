@@ -1,6 +1,7 @@
 
 # dynwrap 0.3.0 (unreleased)
 
+* MINOR CHANGE: Add metadata on the different wrapper types implemented in dynwrap.
 
 # dynwrap 0.2.0 (29-10-2018)
 
