@@ -7,7 +7,6 @@
 #' @param parameters A list of parameters, which can be parsed using [parse_parameter_definition()]
 #' @param par_set A bunch of parameters created by [ParamHelpers::makeParamSet()]
 #' @param run_fun A function to run the TI, needs to have 'counts' as its first param.
-#' @param plot_fun A function to plot the results of a TI, needs to have 'prediction' as its first param.
 #' @param type The type of TI metod
 #' @param ... Other information about the wrapper, eg. apt_dependencies
 #' @param remotes_package Package from which the remote locations of dependencies have to be extracted, eg. `dynmethods`
@@ -21,19 +20,12 @@ create_ti_method <- function(
   parameters = NULL,
   par_set = NULL,
   run_fun,
-  plot_fun = NULL,
   package_loaded = c(),
   package_required = c(),
   type = c("algorithm", "algorithm_test", "control", "control_test"),
   ...,
   remotes_package = ifelse("dynmethods" %in% rownames(installed.packages()), "dynmethods", "dynwrap")
 ) {
-  if (is.null(plot_fun)) {
-    plot_fun <- function(prediction) {
-      requireNamespace("ggplot2")
-      ggplot2::ggplot()
-    }
-  }
 
   # process parameters
   if (is.null(parameters) && is.null(par_set)) {
@@ -74,7 +66,6 @@ create_ti_method <- function(
 
     # create run and plot functions
     run_fun <- get_function(run_fun)
-    plot_fun <- get_function(plot_fun)
 
     # get the parameters from this function
     run_fun_defaults <- as.list(environment())[formalArgs(ti_fun_constructor_with_params)]
@@ -84,7 +75,6 @@ create_ti_method <- function(
 
     # supply run_fun to the description
     desc$run_fun <- run_fun
-    desc$plot_fun <- plot_fun
 
     # add inputs tibble
     input_ids <- names(formals(run_fun))

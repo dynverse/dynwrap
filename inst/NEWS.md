@@ -3,6 +3,8 @@
 
 * MINOR CHANGE: Add metadata on the different wrapper types implemented in dynwrap.
 
+* CLEAN UP: remove `plot_fun` from `create_ti_method()`.
+
 # dynwrap 0.2.0 (29-10-2018)
 
 * BUG FIX: Fix incorrect calculation of milestone percentage during trajectory simplification.

@@ -39,9 +39,6 @@ test_that("Testing infer_trajectory with control methods", {
   model <- infer_trajectory(dataset, method)
   expect_s3_class(model, "dynwrap::with_trajectory")
 
-  # test plotting
-  expect_true("ggplot" %in% class(method$plot_fun(model)))
-
   # test priors
   model <- infer_trajectory(dataset, method, give_priors = c("start_id"))
   expect_s3_class(model, "dynwrap::with_trajectory")
@@ -110,13 +107,7 @@ test_that("Testing ti_comp1", {
   method <- ti_comp1()
   model2 <- method$run_fun(dataset$expression)
   testthat::expect_true(is_wrapper_with_trajectory(model2))
-
-  plot <- method$plot_fun(model2)
-  expect_is(plot, "ggplot")
 })
-
-
-
 
 test_that("Testing get_ti_methods", {
   methods <- get_ti_methods(c("comp1"))
