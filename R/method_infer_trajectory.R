@@ -114,14 +114,10 @@ infer_trajectories <- function(
   output <- map_fun(
     seq_len(nrow(design)),
     function(ri) {
-      tari <- dataset[[design$dataset_ix[[ri]]]]
-      meri <- method[[design$method_ix[[ri]]]]
-      pari <- parameters[[design$method_ix[[ri]]]]
-
-      execute_method_on_dataset(
-        dataset = tari,
-        method = meri,
-        parameters = pari,
+      .method_execute(
+        dataset = dataset[[design$dataset_ix[[ri]]]],
+        method = method[[design$method_ix[[ri]]]],
+        parameters = parameters[[design$method_ix[[ri]]]],
         give_priors = give_priors,
         verbose = verbose,
         capture_output = capture_output,
@@ -140,7 +136,6 @@ infer_trajectories <- function(
     summary = map(output, "summary")
   )
 }
-
 
 #' @rdname infer_trajectories
 #' @param ... Any additional parameters given to the method, will be concatednated to the parameters argument
@@ -180,8 +175,10 @@ infer_trajectory <- dynutils::inherit_default_params(
     }
   })
 
+
+
 #' @importFrom utils data
-extract_args_from_dataset <- function(
+.method_extract_args <- function(
   dataset,
   inputs,
   give_priors = NULL
@@ -257,182 +254,93 @@ extract_args_from_dataset <- function(
 }
 
 
-#' Helper function for running a method on a set of parameters
-#'
-#' @inheritParams infer_trajectory
-#' @param dataset The dataset
-#' @export
-execute_method_on_dataset <- dynutils::inherit_default_params(
-  list(infer_trajectory),
-  function(
-    dataset,
-    method,
-    parameters,
-    give_priors,
-    verbose,
-    capture_output,
-    seed
-  ) {
-    # start the timer
-    time0 <- as.numeric(Sys.time())
+.method_execute <- function(
+  dataset,
+  method,
+  parameters,
+  give_priors,
+  verbose,
+  capture_output,
+  seed
+) {
+  # start the timer
+  time0 <- as.numeric(Sys.time())
 
-    # test whether the dataset contains expression
-    testthat::expect_true(is_data_wrapper(dataset))
-    testthat::expect_true(is_wrapper_with_expression(dataset))
+  # test whether the dataset contains expression
+  testthat::expect_true(is_data_wrapper(dataset))
+  testthat::expect_true(is_wrapper_with_expression(dataset))
 
-    # extract args from dataset and combine with parameters
-    inputs <- extract_args_from_dataset(dataset, method$inputs, give_priors)
-    args <- c(
-      inputs,
-      parameters
-    )
+  # check method
+  testthat::expect_true(is_ti_method(method))
 
-    if (verbose) {
-      cat(
-        "Executing '", method$id, "' on '", dataset$id, "'\n",
-        "With parameters: ", deparse(parameters), "\n",
-        "And inputs: ", paste0(names(inputs), collapse = ", "), "\n",
-        sep = ""
-      )
-    }
+  # extract args from dataset
+  inputs <- .method_extract_args(dataset, method$inputs, give_priors)
 
-    # add verbose if in inputs
-    if ("verbose" %in% method$inputs$input_id) {
-      args["verbose"] <- verbose
-    }
+  # extract parameters from method
+  params <- get_default_parameters(method)
+  params[names(parameters)] <- parameters
+  parameters <- params
+  rm(params)
 
-    # add seed if in inputs
-    if ("seed" %in% method$inputs$input_id) {
-      args["seed"] <- verbose
-    }
+  # combine inputs and parameters
+  args <- c(
+    inputs,
+    parameters
+  )
 
-    remove_args <- setdiff(names(args), formalArgs(method$run_fun))
-    if (length(remove_args) > 0) {
-      warning("Parameters [", paste(remove_args, ", "), "] not recognised by method; removing them from the arglist.")
-      sel_args <- setdiff(names(args), remove_args)
-      args <- args[remove_args]
-    }
+  # add extra params
+  if ("verbose" %in% method$inputs$input_id) args["verbose"] <- verbose
+  if ("seed" %in% method$inputs$input_id) args["seed"] <- verbose
 
-    # initialise stdout/stderr files
-    if (capture_output) {
-      stdout_file <- tempfile()
-      sink(stdout_file, type = "output")
-
-      stderr_file <- tempfile()
-      stderr_con <- file(stderr_file, open = "wt")
-      sink(stderr_con, type = "message")
-    }
-
-    tryCatch({
-      # create a temporary directory to set as working directory,
-      # to avoid polluting the working directory if a method starts
-      # producing files :angry_face:
-      tmp_dir <- tempfile(pattern = method$id)
-      dir.create(tmp_dir)
-      old_wd <- getwd()
-      setwd(tmp_dir)
-
-      # run the method and catch the error, if necessary
-      out <- execute_method_internal(
-        method = method,
-        arglist = args,
-        time0 = time0
-      )
-
-      # retrieve the model, error message, and timings
-      model <- out$model
-      error <- out$error
-      timings_list <- out$timings_list
-
-    }, finally = {
-      # read in stdout/stderr
-      if (capture_output) {
-        sink(type = "output")
-        stdout <- read_file(stdout_file)
-
-        sink(type = "message")
-        close(stderr_con)
-        stderr <- read_file(stderr_file)
-      } else {
-        stdout <- ""
-        stderr <- ""
-      }
-
-      # wd to previous folder
-      setwd(old_wd)
-
-      # Remove temporary folder
-      unlink(tmp_dir, recursive = TRUE, force = TRUE)
-    })
-
-    # stop the timer
-    time3 <- as.numeric(Sys.time())
-
-    timings_list <- map(timings_list, as.numeric)
-
-    # add missing timings
-    timings_list[
-      setdiff(
-        c("method_start", "method_afterpreproc", "method_aftermethod", "method_afterpostproc", "method_stop"),
-        names(timings_list)
-      )
-      ] <- time3
-
-    # create a summary tibble
-    summary <- tibble(
-      method_name = method$name,
-      method_id = method$id,
-      dataset_id = dataset$id,
-      time_sessionsetup = timings_list$method_start - time0,
-      time_preprocessing = timings_list$method_afterpreproc - timings_list$method_start,
-      time_method = timings_list$method_aftermethod - timings_list$method_afterpreproc,
-      time_postprocessing = timings_list$method_afterpostproc - timings_list$method_aftermethod,
-      time_wrapping = timings_list$method_stop - timings_list$method_afterpostproc,
-      time_sessioncleanup = time3 - timings_list$method_stop,
-      error = list(error),
-      stdout = stdout,
-      stderr = stderr,
-      prior_df = list(method$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(args)))
-    )
-
-    lst(model, summary)
+  # remove params that are not supposed to be here
+  remove_args <- setdiff(c(names(args)), method$inputs$input_id)
+  if (length(remove_args) > 0) {
+    warning("Parameters [", paste(remove_args, ", "), "] not recognised by method; removing them from the arglist.")
+    sel_args <- setdiff(names(args), remove_args)
+    args <- args[remove_args]
   }
-)
 
-#' Internal method for executing a method
-#'
-#' If you're reading this, you're supposed to be using `infer_trajectory` instead.
-#'
-#' @inheritParams execute_method_on_dataset
-#'
-#' @param arglist The arguments to apply to the method
-#' @param time0 The start of the timer.
-#'
-#' @export
-#' @importFrom readr write_file
-execute_method_internal <- function(method, arglist, time0) {
-  tryCatch({
-    # Load required packages and namespaces
-    if (!is.null(method$package_loaded) && !is.na(method$package_loaded)) {
-      for (pack in method$package_loaded) {
-        suppressMessages(do.call(require, list(pack)))
-      }
+  # print helpful message
+  if (verbose) {
+    cat(
+      "Executing '", method$id, "' on '", dataset$id, "'\n",
+      "With parameters: ", deparse(parameters), "\n",
+      "And inputs: ", paste0(names(inputs), collapse = ", "), "\n",
+      sep = ""
+    )
+  }
+
+  run_info <- method$run_info
+
+  # run preproc
+  preproc_meta <-
+    if (run_info$backend == "function") {
+      .method_execute_preproc_function(run_info)
+    } else {
+      .method_execute_preproc_container(run_info)
     }
 
-    if (!is.null(method$package_required) && !is.na(method$package_required)) {
-      for (pack in method$package_required) {
-        suppressMessages(do.call(requireNamespace, list(pack)))
-      }
-    }
-
+  # run the method and catch the error, if necessary
+  out <- tryCatch({
     # measure second time point
     time_start <- as.numeric(Sys.time())
 
     # execute method and return model
-    model <- do.call(method$run_fun, arglist)
+    if (run_info$backend == "function") {
+      .method_execute_run_function(...)
+    } else {
+      .method_execute_run_container(...)
+    }
 
     # measure third time point
     time_stop <- as.numeric(Sys.time())
+
+    # run postproc
+    if (run_info$backend == "function") {
+      .method_execute_postproc_function(...)
+    } else {
+      .method_execute_postproc_container(...)
+    }
 
     # add missing timings
     if (is.null(model$timings)) {
@@ -466,4 +374,42 @@ execute_method_internal <- function(method, arglist, time0) {
     )
     list(model = NULL, timings_list = timings_list, error = e)
   })
+
+
+  # retrieve the model, error message, and timings
+  model <- out$model
+  error <- out$error
+  timings_list <- out$timings_list
+
+  # stop the timer
+  time3 <- as.numeric(Sys.time())
+
+  timings_list <- map(timings_list, as.numeric)
+
+  # add missing timings
+  timings_list[
+    setdiff(
+      c("method_start", "method_afterpreproc", "method_aftermethod", "method_afterpostproc", "method_stop"),
+      names(timings_list)
+    )
+    ] <- time3
+
+  # create a summary tibble
+  summary <- tibble(
+    method_name = method$name,
+    method_id = method$id,
+    dataset_id = dataset$id,
+    time_sessionsetup = timings_list$method_start - time0,
+    time_preprocessing = timings_list$method_afterpreproc - timings_list$method_start,
+    time_method = timings_list$method_aftermethod - timings_list$method_afterpreproc,
+    time_postprocessing = timings_list$method_afterpostproc - timings_list$method_aftermethod,
+    time_wrapping = timings_list$method_stop - timings_list$method_afterpostproc,
+    time_sessioncleanup = time3 - timings_list$method_stop,
+    error = list(error),
+    stdout = stdout,
+    stderr = stderr,
+    prior_df = list(method$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(args)))
+  )
+
+  lst(model, summary)
 }

@@ -2,7 +2,7 @@
 #'
 #' These functions create a TI method from a container using `babelwhale`. Supports both docker and singularity as a backend.
 #'
-#' @param container_id The name of the container repository (e.g. `"dynverse/angle"`).
+#' @param container_id The name of the container repository (e.g. `"dynverse/ti_angle"`).
 #' @param version The minimum required version of the TI method container.
 #'   If the required version is higher than the currently installed version,
 #'   the container will be pulled from dockerhub or singularityhub.
@@ -11,7 +11,7 @@
 #' @importFrom babelwhale get_default_config pull_container
 #'
 #' @export
-create_ti_method_with_container <- function(
+create_ti_container <- function(
   container_id,
   version = NULL,
   pull_if_needed = TRUE
@@ -37,6 +37,7 @@ create_ti_method_with_container <- function(
 
   current_version <- .container_get_version(container_id)
 
+  # pull if container can't be found
   if (pull_if_needed && identical(current_version, NA)) {
     babelwhale::pull_container(container_id)
 
@@ -62,29 +63,14 @@ create_ti_method_with_container <- function(
   }
 
   ######################################################
-  ####              EXTRACT DEFINITION              ####
+  ####               CREATE DEFINITION              ####
   ######################################################
 
   definition <- .container_get_definition(container_id)
+  definition$run_info <- list(
+    backend = "container",
+    container_id = container_id
+  )
 
-  ######################################################
-  ####               CHECK DEFINITION               ####
-  ######################################################
-
-  testthat::expect_true(is.character(definition$id))
-  testthat::expect_true(is.character(definition$name))
-
-  # TODO: Expand this, in case 3rd party containers are naughty
-
-  ######################################################
-  ####                CREATE RUN FUN                ####
-  ######################################################
-
-  definition$run_fun <- .container_make_run_fun(definition, container_id)
-
-  ######################################################
-  ####      TRANSFORM DEFINITION TO TI METHOD       ####
-  ######################################################
-
-  method <- do.call(create_ti_method, definition)
+  .method_process_definition(definition)
 }
