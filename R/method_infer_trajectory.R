@@ -1,6 +1,6 @@
 #' Infer trajectories
 #'
-#' @param dataset One or more datasets, as created using dynwrap
+#' @param dataset One or more datasets, as created using dynwrap.
 #' @param method One or more methods. Must be one of:
 #' \itemize{
 #'   \item{an object or list of ti_... objects (eg. \code{dynmethods::ti_comp1()}),}
@@ -15,14 +15,14 @@
 #' @param give_priors All the priors a method is allowed to receive.
 #'   Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).
 #' @param seed A seed to be set, if the method allows for it.
-#' @param mc_cores The number of cores to use, allowing to parallellise the different datasets
-#' @param verbose Whether or not to print information output
-#' @param capture_output Whether to capture the stdout and stderr produced by a method
+#' @param map_fun A mao function to use when inferring trajectories with multiple datasets or methods.
+#'   Allows to parallellise the execution in an arbitrary way.
+#' @param verbose Whether or not to print information output.
+#' @param capture_output Whether to capture the stdout and stderr produced by a method.
 #'
 #' @importFrom utils capture.output adist installed.packages
 #' @importFrom readr read_file
 #' @importFrom stringr str_length
-#' @importFrom parallel mclapply
 #' @importFrom testthat expect_true
 #'
 #' @export
@@ -32,7 +32,7 @@ infer_trajectories <- function(
   parameters = NULL,
   give_priors = NULL,
   seed = 1,
-  mc_cores = 1,
+  map_fun = map,
   verbose = FALSE,
   capture_output = FALSE
 ) {
@@ -111,32 +111,9 @@ infer_trajectories <- function(
     method_ix = seq_along(method)
   )
 
-  parfun <-
-    if (is.integer(mc_cores) || is.numeric(mc_cores)) {
-      function(X, FUN) {
-        parallel::mclapply(
-          X = X,
-          mc.cores = mc_cores,
-          FUN = FUN
-        )
-      }
-    } else if ("qsub::qsub_config" %in% class(mc_cores)) {
-      requireNamespace("qsub")
-      function(X, FUN) {
-        qsub::qsub_lapply(
-          X = X,
-          qsub_config = mc_cores,
-          qsub_packages = c("dynmethods", "dynwrap", "dynutils"),
-          FUN = FUN
-        )
-      }
-    } else {
-      stop("Invalid ", sQuote("mc_cores"), " argument. Must be an integer or a qsub config.")
-    }
-
-  output <- parfun(
-    X = seq_len(nrow(design)),
-    FUN = function(ri) {
+  output <- map_fun(
+    seq_len(nrow(design)),
+    function(ri) {
       tari <- dataset[[design$dataset_ix[[ri]]]]
       meri <- method[[design$method_ix[[ri]]]]
       pari <- parameters[[design$method_ix[[ri]]]]
@@ -168,38 +145,40 @@ infer_trajectories <- function(
 #' @rdname infer_trajectories
 #' @param ... Any additional parameters given to the method, will be concatednated to the parameters argument
 #' @export
-infer_trajectory <- function(
-  dataset,
-  method,
-  parameters = list(),
-  give_priors = NULL,
-  mc_cores = 1,
-  verbose = FALSE,
-  seed = 1,
-  ...
-) {
-  parameters <- c(parameters, list(...))
+infer_trajectory <- dynutils::inherit_default_params(
+  list(infer_trajectories),
+  function(
+    dataset,
+    method,
+    parameters,
+    give_priors,
+    seed,
+    map_fun,
+    verbose,
+    ...
+  ) {
+    parameters <- c(parameters, list(...))
 
-  design <- infer_trajectories(
-    dataset = dataset,
-    method = method,
-    parameters = list(parameters),
-    give_priors = give_priors,
-    mc_cores = mc_cores,
-    verbose = verbose,
-    capture_output = FALSE,
-    seed = seed
-  )
+    design <- infer_trajectories(
+      dataset = dataset,
+      method = method,
+      parameters = list(parameters),
+      give_priors = give_priors,
+      map_fun = map_fun,
+      verbose = verbose,
+      capture_output = FALSE,
+      seed = seed
+    )
 
-  if (is.null(design$model[[1]])) {
-    error <- design$summary[[1]]$error[[1]]
-    cat("Error traceback:\n")
-    traceback(error)
-    stop("Error during trajectory inference \n", error$message, call. = FALSE)
-  } else {
-    first(design$model)
-  }
-}
+    if (is.null(design$model[[1]])) {
+      error <- design$summary[[1]]$error[[1]]
+      cat("Error traceback:\n")
+      traceback(error)
+      stop("Error during trajectory inference \n", error$message, call. = FALSE)
+    } else {
+      first(design$model)
+    }
+  })
 
 #' @importFrom utils data
 extract_args_from_dataset <- function(
@@ -278,145 +257,147 @@ extract_args_from_dataset <- function(
 }
 
 
-#' Run a method on a dataset with a set of parameters
+#' Helper function for running a method on a set of parameters
 #'
 #' @inheritParams infer_trajectory
 #' @param dataset The dataset
 #' @export
-execute_method_on_dataset <- function(
-  dataset,
-  method,
-  parameters = list(),
-  give_priors = NULL,
-  mc_cores = 1,
-  verbose = FALSE,
-  capture_output = FALSE,
-  seed = 1
-) {
-  # start the timer
-  time0 <- as.numeric(Sys.time())
+execute_method_on_dataset <- dynutils::inherit_default_params(
+  list(infer_trajectory),
+  function(
+    dataset,
+    method,
+    parameters,
+    give_priors,
+    verbose,
+    capture_output,
+    seed
+  ) {
+    # start the timer
+    time0 <- as.numeric(Sys.time())
 
-  # test whether the dataset contains expression
-  testthat::expect_true(is_data_wrapper(dataset))
-  testthat::expect_true(is_wrapper_with_expression(dataset))
+    # test whether the dataset contains expression
+    testthat::expect_true(is_data_wrapper(dataset))
+    testthat::expect_true(is_wrapper_with_expression(dataset))
 
-  # extract args from dataset and combine with parameters
-  inputs <- extract_args_from_dataset(dataset, method$inputs, give_priors)
-  args <- c(
-    inputs,
-    parameters
-  )
-
-  if (verbose) {
-    cat(
-      "Executing '", method$id, "' on '", dataset$id, "'\n",
-      "With parameters: ", deparse(parameters), "\n",
-      "And inputs: ", paste0(names(inputs), collapse = ", "), "\n",
-      sep = ""
-    )
-  }
-
-  # add verbose if in inputs
-  if ("verbose" %in% method$inputs$input_id) {
-    args["verbose"] <- verbose
-  }
-
-  # add seed if in inputs
-  if ("seed" %in% method$inputs$input_id) {
-    args["seed"] <- verbose
-  }
-
-  remove_args <- setdiff(names(args), formalArgs(method$run_fun))
-  if (length(remove_args) > 0) {
-    warning("Parameters [", paste(remove_args, ", "), "] not recognised by method; removing them from the arglist.")
-    sel_args <- setdiff(names(args), remove_args)
-    args <- args[remove_args]
-  }
-
-  # initialise stdout/stderr files
-  if (capture_output) {
-    stdout_file <- tempfile()
-    sink(stdout_file, type = "output")
-
-    stderr_file <- tempfile()
-    stderr_con <- file(stderr_file, open = "wt")
-    sink(stderr_con, type = "message")
-  }
-
-  tryCatch({
-    # create a temporary directory to set as working directory,
-    # to avoid polluting the working directory if a method starts
-    # producing files :angry_face:
-    tmp_dir <- tempfile(pattern = method$id)
-    dir.create(tmp_dir)
-    old_wd <- getwd()
-    setwd(tmp_dir)
-
-    # run the method and catch the error, if necessary
-    out <- execute_method_internal(
-      method = method,
-      arglist = args,
-      time0 = time0
+    # extract args from dataset and combine with parameters
+    inputs <- extract_args_from_dataset(dataset, method$inputs, give_priors)
+    args <- c(
+      inputs,
+      parameters
     )
 
-    # retrieve the model, error message, and timings
-    model <- out$model
-    error <- out$error
-    timings_list <- out$timings_list
-
-  }, finally = {
-    # read in stdout/stderr
-    if (capture_output) {
-      sink(type = "output")
-      stdout <- read_file(stdout_file)
-
-      sink(type = "message")
-      close(stderr_con)
-      stderr <- read_file(stderr_file)
-    } else {
-      stdout <- ""
-      stderr <- ""
+    if (verbose) {
+      cat(
+        "Executing '", method$id, "' on '", dataset$id, "'\n",
+        "With parameters: ", deparse(parameters), "\n",
+        "And inputs: ", paste0(names(inputs), collapse = ", "), "\n",
+        sep = ""
+      )
     }
 
-    # wd to previous folder
-    setwd(old_wd)
+    # add verbose if in inputs
+    if ("verbose" %in% method$inputs$input_id) {
+      args["verbose"] <- verbose
+    }
 
-    # Remove temporary folder
-    unlink(tmp_dir, recursive = TRUE, force = TRUE)
-  })
+    # add seed if in inputs
+    if ("seed" %in% method$inputs$input_id) {
+      args["seed"] <- verbose
+    }
 
-  # stop the timer
-  time3 <- as.numeric(Sys.time())
+    remove_args <- setdiff(names(args), formalArgs(method$run_fun))
+    if (length(remove_args) > 0) {
+      warning("Parameters [", paste(remove_args, ", "), "] not recognised by method; removing them from the arglist.")
+      sel_args <- setdiff(names(args), remove_args)
+      args <- args[remove_args]
+    }
 
-  timings_list <- map(timings_list, as.numeric)
+    # initialise stdout/stderr files
+    if (capture_output) {
+      stdout_file <- tempfile()
+      sink(stdout_file, type = "output")
 
-  # add missing timings
-  timings_list[
-    setdiff(
-      c("method_start", "method_afterpreproc", "method_aftermethod", "method_afterpostproc", "method_stop"),
-      names(timings_list)
+      stderr_file <- tempfile()
+      stderr_con <- file(stderr_file, open = "wt")
+      sink(stderr_con, type = "message")
+    }
+
+    tryCatch({
+      # create a temporary directory to set as working directory,
+      # to avoid polluting the working directory if a method starts
+      # producing files :angry_face:
+      tmp_dir <- tempfile(pattern = method$id)
+      dir.create(tmp_dir)
+      old_wd <- getwd()
+      setwd(tmp_dir)
+
+      # run the method and catch the error, if necessary
+      out <- execute_method_internal(
+        method = method,
+        arglist = args,
+        time0 = time0
+      )
+
+      # retrieve the model, error message, and timings
+      model <- out$model
+      error <- out$error
+      timings_list <- out$timings_list
+
+    }, finally = {
+      # read in stdout/stderr
+      if (capture_output) {
+        sink(type = "output")
+        stdout <- read_file(stdout_file)
+
+        sink(type = "message")
+        close(stderr_con)
+        stderr <- read_file(stderr_file)
+      } else {
+        stdout <- ""
+        stderr <- ""
+      }
+
+      # wd to previous folder
+      setwd(old_wd)
+
+      # Remove temporary folder
+      unlink(tmp_dir, recursive = TRUE, force = TRUE)
+    })
+
+    # stop the timer
+    time3 <- as.numeric(Sys.time())
+
+    timings_list <- map(timings_list, as.numeric)
+
+    # add missing timings
+    timings_list[
+      setdiff(
+        c("method_start", "method_afterpreproc", "method_aftermethod", "method_afterpostproc", "method_stop"),
+        names(timings_list)
+      )
+      ] <- time3
+
+    # create a summary tibble
+    summary <- tibble(
+      method_name = method$name,
+      method_id = method$id,
+      dataset_id = dataset$id,
+      time_sessionsetup = timings_list$method_start - time0,
+      time_preprocessing = timings_list$method_afterpreproc - timings_list$method_start,
+      time_method = timings_list$method_aftermethod - timings_list$method_afterpreproc,
+      time_postprocessing = timings_list$method_afterpostproc - timings_list$method_aftermethod,
+      time_wrapping = timings_list$method_stop - timings_list$method_afterpostproc,
+      time_sessioncleanup = time3 - timings_list$method_stop,
+      error = list(error),
+      stdout = stdout,
+      stderr = stderr,
+      prior_df = list(method$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(args)))
     )
-  ] <- time3
 
-  # create a summary tibble
-  summary <- tibble(
-    method_name = method$name,
-    method_id = method$id,
-    dataset_id = dataset$id,
-    time_sessionsetup = timings_list$method_start - time0,
-    time_preprocessing = timings_list$method_afterpreproc - timings_list$method_start,
-    time_method = timings_list$method_aftermethod - timings_list$method_afterpreproc,
-    time_postprocessing = timings_list$method_afterpostproc - timings_list$method_aftermethod,
-    time_wrapping = timings_list$method_stop - timings_list$method_afterpostproc,
-    time_sessioncleanup = time3 - timings_list$method_stop,
-    error = list(error),
-    stdout = stdout,
-    stderr = stderr,
-    prior_df = list(method$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(args)))
-  )
-
-  lst(model, summary)
-}
+    lst(model, summary)
+  }
+)
 
 #' Internal method for executing a method
 #'

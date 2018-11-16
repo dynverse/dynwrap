@@ -5,6 +5,8 @@
 
 * CLEAN UP: remove `plot_fun` from `create_ti_method()`.
 
+* MINOR CHANGE: Replace `mc_cores` with more flexible `map_fun`.
+
 # dynwrap 0.2.0 (29-10-2018)
 
 * BUG FIX: Fix incorrect calculation of milestone percentage during trajectory simplification.

@@ -2,11 +2,10 @@
 % Please edit documentation in R/method_infer_trajectory.R
 \name{execute_method_on_dataset}
 \alias{execute_method_on_dataset}
-\title{Run a method on a dataset with a set of parameters}
+\title{Helper function for running a method on a set of parameters}
 \usage{
-execute_method_on_dataset(dataset, method, parameters = list(),
-  give_priors = NULL, mc_cores = 1, verbose = FALSE,
-  capture_output = FALSE, seed = 1)
+execute_method_on_dataset(dataset, method, parameters = NULL,
+  give_priors = NULL, verbose = FALSE, capture_output, seed = 1)
 }
 \arguments{
 \item{dataset}{The dataset}
@@ -27,14 +26,12 @@ If multiple methods were provided in the \code{method} parameter,
 \item{give_priors}{All the priors a method is allowed to receive.
 Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).}
 
-\item{mc_cores}{The number of cores to use, allowing to parallellise the different datasets}
+\item{verbose}{Whether or not to print information output.}
 
-\item{verbose}{Whether or not to print information output}
-
-\item{capture_output}{Whether to capture the stdout and stderr produced by a method}
+\item{capture_output}{Whether to capture the stdout and stderr produced by a method.}
 
 \item{seed}{A seed to be set, if the method allows for it.}
 }
 \description{
-Run a method on a dataset with a set of parameters
+Helper function for running a method on a set of parameters
 }

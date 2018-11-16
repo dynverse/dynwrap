@@ -23,7 +23,8 @@ BugReports: https://github.com/dynverse/dynwrap/issues
 Description: The common trajectory model for representing trajectories from real and synthetic datasets and method predictions.
 License: GPL-3
 LazyData: TRUE
-RoxygenNote: 6.1.0.9000
+RoxygenNote: 6.1.0
+Roxygen: list(markdown = TRUE)
 Encoding: UTF-8
 Depends:
   R (>= 3.0.0)
@@ -56,7 +57,6 @@ Suggests:
   knitr,
   lhs,
   pkgload,
-  qsub,
   rmarkdown,
   viridis
 Remotes:
@@ -64,7 +64,6 @@ Remotes:
   dynverse/dynutils,
   dynverse/dyndimred,
   rcannood/qsub
-Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Collate: 
     'calculate_average_by_group.R'
