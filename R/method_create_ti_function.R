@@ -40,3 +40,74 @@ create_ti_function <- function(
 
   .method_process_definition(definition, return_function = return_function)
 }
+
+
+.method_execution_preproc_function <- function(
+  method
+) {
+  run_info <- method$run_info
+
+  # initialise stdout/stderr files
+  if (capture_output) {
+    stdout_file <- tempfile()
+    sink(stdout_file, type = "output")
+
+    stderr_file <- tempfile()
+    stderr_con <- file(stderr_file, open = "wt")
+    sink(stderr_con, type = "message")
+  }
+
+  # create a temporary directory to set as working directory,
+  # to avoid polluting the working directory if a method starts
+  # producing files haphazardly
+  tmp_dir <- tempfile(pattern = method$id)
+  dir.create(tmp_dir)
+  old_wd <- getwd()
+  setwd(tmp_dir)
+
+  # Load required packages and namespaces
+  if (!is.null(run_info$package_loaded) && !is.na(run_info$package_loaded)) {
+    for (pack in run_info$package_loaded) {
+      suppressMessages(do.call(require, list(pack)))
+    }
+  }
+
+  if (!is.null(run_info$package_required) && !is.na(run_info$package_required)) {
+    for (pack in run_info$package_required) {
+      suppressMessages(do.call(requireNamespace, list(pack)))
+    }
+  }
+
+  lst(
+    stdout_file,
+    stderr_file,
+    stderr_con,
+    tmp_dir,
+    old_wd
+  )
+}
+
+.method_execution_execute_function <- function() {
+  model <- do.call(method$run_info$run_fun, arglist)
+}
+
+
+.method_execution_postproc_function <- function(preproc_meta) {
+  sink(type = "output")
+  sink(type = "message")
+  close(preproc_meta$stderr_con)
+
+  if (capture_output) {
+    stdout <- read_file(preproc_meta$stdout_file)
+    stderr <- read_file(preproc_meta$stderr_file)
+  } else {
+    stdout <- ""
+    stderr <- ""
+  }
+
+  # wd to previous folder
+  setwd(preproc_meta$old_wd)
+
+  # Remove temporary folder
+  unlink(preproc_meta$tmp_dir, recursive = TRUE, force = TRUE)
+}
