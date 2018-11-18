@@ -4,8 +4,10 @@
   parameters,
   give_priors,
   verbose,
-  capture_output,
-  seed
+  seed,
+  capture_output = TRUE,
+  debug = FALSE
+  remove_files = TRUE
 ) {
   # start the timer
   time0 <- as.numeric(Sys.time())
@@ -26,24 +28,6 @@
   parameters <- params
   rm(params)
 
-  # combine inputs and parameters
-  args <- c(
-    inputs,
-    parameters
-  )
-
-  # add extra params
-  if ("verbose" %in% method$inputs$input_id) args["verbose"] <- verbose
-  if ("seed" %in% method$inputs$input_id) args["seed"] <- verbose
-
-  # remove params that are not supposed to be here
-  remove_args <- setdiff(c(names(args)), method$inputs$input_id)
-  if (length(remove_args) > 0) {
-    warning("Parameters [", paste(remove_args, ", "), "] not recognised by method; removing them from the arglist.")
-    sel_args <- setdiff(names(args), remove_args)
-    args <- args[remove_args]
-  }
-
   # print helpful message
   if (verbose) {
     cat(
@@ -54,14 +38,12 @@
     )
   }
 
-  run_info <- method$run_info
-
   # run preproc
   preproc_meta <-
     if (run_info$backend == "function") {
-      .method_execute_preproc_function(run_info)
+      .method_execute_preproc_function(method = method, capture_output = capture_output)
     } else {
-      .method_execute_preproc_container(run_info)
+      .method_execute_preproc_container(method = method, inputs = inputs, parameters = parameters, verbose = verbose, seed = seed, debug = debug, remove_files = remove_files)
     }
 
   # run the method and catch the error, if necessary
@@ -71,20 +53,13 @@
 
     # execute method and return model
     if (run_info$backend == "function") {
-      .method_execute_run_function(...)
+      .method_execute_run_function(method = method, inputs = inputs, parameters = parameters, verbose = verbose, seed = seed, preproc_meta = preproc_meta)
     } else {
-      .method_execute_run_container(...)
+      .method_execute_run_container(method = method, preproc_meta = preproc_meta)
     }
 
     # measure third time point
     time_stop <- as.numeric(Sys.time())
-
-    # run postproc
-    if (run_info$backend == "function") {
-      .method_execute_postproc_function(...)
-    } else {
-      .method_execute_postproc_container(...)
-    }
 
     # add missing timings
     if (is.null(model$timings)) {
@@ -119,6 +94,13 @@
     list(model = NULL, timings_list = timings_list, error = e)
   })
 
+  # run postproc
+  postproc_meta <-
+    if (run_info$backend == "function") {
+      .method_execute_postproc_function(preproc_meta = preproc_meta)
+    } else {
+      .method_execute_postproc_container(preproc_meta = preproc_meta)
+    }
 
   # retrieve the model, error message, and timings
   model <- out$model
@@ -131,12 +113,11 @@
   timings_list <- map(timings_list, as.numeric)
 
   # add missing timings
-  timings_list[
-    setdiff(
-      c("method_start", "method_afterpreproc", "method_aftermethod", "method_afterpostproc", "method_stop"),
-      names(timings_list)
-    )
-    ] <- time3
+  missing_timing_ids <- setdiff(
+    c("method_start", "method_afterpreproc", "method_aftermethod", "method_afterpostproc", "method_stop"),
+    names(timings_list)
+  )
+  timings_list[missing_timing_ids] <- time3
 
   # create a summary tibble
   summary <- tibble(
@@ -150,8 +131,8 @@
     time_wrapping = timings_list$method_stop - timings_list$method_afterpostproc,
     time_sessioncleanup = time3 - timings_list$method_stop,
     error = list(error),
-    stdout = stdout,
-    stderr = stderr,
+    stdout = postproc_meta$stdout,
+    stderr = postproc_meta$stderr,
     prior_df = list(method$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(args)))
   )
 

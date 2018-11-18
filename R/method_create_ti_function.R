@@ -42,9 +42,7 @@ create_ti_function <- function(
 }
 
 
-.method_execution_preproc_function <- function(
-  method
-) {
+.method_execution_preproc_function <- function(method, capture_output) {
   run_info <- method$run_info
 
   # initialise stdout/stderr files
@@ -83,12 +81,30 @@ create_ti_function <- function(
     stderr_file,
     stderr_con,
     tmp_dir,
-    old_wd
+    old_wd,
+    capture_output
   )
 }
 
-.method_execution_execute_function <- function() {
-  model <- do.call(method$run_info$run_fun, arglist)
+.method_execution_execute_function <- function(method, inputs, parameters, verbose, seed, preproc_meta) {
+
+  # combine inputs and parameters
+  args <- c(
+    inputs,
+    parameters
+  )
+
+  # remove params that are not supposed to be here
+  remove_args <- setdiff(c(names(args)), method$inputs$input_id)
+  if (length(remove_args) > 0) {
+    warning("Parameters [", paste(remove_args, ", "), "] not recognised by method; removing them from the arglist.")
+    sel_args <- setdiff(names(args), remove_args)
+    args <- args[remove_args]
+  }
+
+  model <- do.call(method$run_info$run_fun, args)
+
+  model
 }
 
 
@@ -97,7 +113,7 @@ create_ti_function <- function(
   sink(type = "message")
   close(preproc_meta$stderr_con)
 
-  if (capture_output) {
+  if (preproc_meta$capture_output) {
     stdout <- read_file(preproc_meta$stdout_file)
     stderr <- read_file(preproc_meta$stderr_file)
   } else {
@@ -110,4 +126,7 @@ create_ti_function <- function(
 
   # Remove temporary folder
   unlink(preproc_meta$tmp_dir, recursive = TRUE, force = TRUE)
+
+  # return stdout and stderr
+  lst(stdout, stderr)
 }

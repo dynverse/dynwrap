@@ -7,6 +7,7 @@
   # TODO: Expand testing of definition, in case 3rd party containers are naughty
 
   # create params tibble
+  # TODO: support forbidden!!!
   if (!is_tibble(definition$parameters)) {
     definition$parameters <- map2_df(
       names(definition$parameters),

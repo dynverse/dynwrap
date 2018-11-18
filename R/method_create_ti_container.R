@@ -67,6 +67,25 @@ create_ti_container <- function(
   ######################################################
 
   definition <- .container_get_definition(container_id)
+
+  # check input format
+  testthat::expect_true(is.character(definition$input$format))
+  testthat::expect_equal(length(definition$input$format), 1)
+  testthat::expect_true(definition$input$format %in% c("hdf5", "text", "rds"))
+
+  # check available inputs
+  testthat::expect_true(all(definition$input$required %in% dynwrap::allowed_inputs$input_id))
+  testthat::expect_true(all(definition$input$optional %in% dynwrap::allowed_inputs$input_id))
+
+  # check output format
+  testthat::expect_true(is.character(definition$output$format))
+  testthat::expect_equal(length(definition$output$format), 1)
+  testthat::expect_true(definition$output$format %in% c("hdf5", "text", "rds", "dynwrap"))
+
+  # check available outputs
+  testthat::expect_true(all(definition$output$outputs %in% dynwrap::allowed_outputs$output_id))
+
+  # save container info
   definition$run_info <- list(
     backend = "container",
     container_id = container_id
@@ -78,129 +97,109 @@ create_ti_container <- function(
 
 
 
-.method_execution_preproc_container <- function(
-  run_info
-) {
-  # # process params
-  # param_ids <- names(definition$parameters) %>% setdiff(c("forbidden"))
-  #
-  # # process required inputs
-  # input_ids_required <- definition$input$required
-  # testthat::expect_true(length(input_ids_required) > 0)
-  # testthat::expect_true(is.character(input_ids_required))
-  #
-  # # process optional inputs
-  # input_ids_optional <- if (!is.null(definition$input$optional)) definition$input$optional else character()
-  # testthat::expect_true(is.character(input_ids_optional))
-  #
-  # # check input ids
-  # input_ids <- c(input_ids_required, input_ids_optional)
-  #
-  # utils::data(allowed_inputs, package = "dynwrap", envir = environment())
-  # if (!all(input_ids %in% allowed_inputs$input_id)) {
-  #   stop("Invalid input: ", setdiff(input_ids, allowed_inputs$input_id), ". See dynwrap::allowed_inputs")
-  # }
-  #
-  # # determine input format
-  # if (length(definition$input$format) > 1) {
-  #   message("Available input_formats are: ", glue::glue_collapse(definition$input$format, ", "), "; using first")
-  # }
-  # input_format <- definition$input$format[[1]]
-  # testthat::expect_true(is.character(input_format))
-  #
-  # # process outputs
-  # output_ids <- definition$output$outputs
-  # testthat::expect_true(is.null(output_ids) || is.character(output_ids))
-  #
-  # # check output ids
-  # utils::data(allowed_outputs, package = "dynwrap", envir = environment())
-  # if (length(output_ids) && !all(output_ids %in% allowed_outputs$output_id)) {
-  #   stop("Invalid output: ", setdiff(output_ids, allowed_outputs$output_id), ". See dynwrap::allowed_outputs")
-  # }
-  #
-  # # determine output format
-  # if (length(definition$output$format) > 1) {
-  #   message("Available output_formats are: ", glue::glue_collapse(definition$output$format, ", "), ", using first")
-  # }
-  # output_format <- definition$output$format[[1]]
-  # testthat::expect_true(is.character(output_format))
-
+.method_execution_preproc_container <- function(method, inputs, parameters, verbose, seed, debug, remove_files) {
   dir_dynwrap <- dynutils::safe_tempdir("ti")
 
-  if (remove_files && !debug) {
-    on.exit(unlink(dir_dynwrap, recursive = TRUE))
+  # construct paths
+  paths <- lst(
+    dir_dynwrap,
+    dir_input = file.path(dir_dynwrap, "input"),
+    dir_output = file.path(dir_dynwrap, "output"),
+    dir_workspace = file.path(dir_dynwrap, "workspace"),
+    dir_tmp = file.path(dir_dynwrap, "tmp")
+  )
+  dir_input <- paths$dir_input
+
+  # create all subdirectories
+  walk(paths, dir.create, showWarnings = FALSE)
+
+  # get formats
+  input_format <- method$input$format
+  output_format <- method$output$format
+
+  # save data depending on the input_format
+  if (input_format == "text") {
+    walk2(inputs, names(inputs), function(input, input_id) {
+      write_text_infer(input, glue::glue("{dir_input}/{input_id}"))
+    })
+  } else if (input_format == "rds") {
+    write_rds(inputs, file.path(dir_input, "data.rds"))
+  } else if (input_format == "hdf5") {
+    # install hdf5r if not available
+    dynutils::install_packages("hdf5r", "dynwrap", prompt = TRUE)
+    requireNamespace("hdf5r")
+
+    file <- hdf5r::H5File$new(file.path(dir_input, "data.h5"), "w")
+    walk2(inputs, names(inputs), function(x, name) {
+      file$create_dataset(name, x)
+
+      if (is.matrix(x)) {
+        file$create_dataset(paste0(name, "_rows"), rownames(x))
+        file$create_dataset(paste0(name, "_cols"), colnames(x))
+      }
+    })
+    file$close_all() # important to do a close_all here, otherwise some parts of the data can still be open, resulting in invalid h5 files
   }
 
-  # get paths for directories
-  dir_input <- file.path(dir_dynwrap, "input")
-  dir_output <- file.path(dir_dynwrap, "output")
+  # save params as json
+  parameters$verbose <- verbose
+  parameters$seed <- seed
+  parameters$input_format <- input_format
+  parameters$output_format <- output_format
 
-  # create directories
-  dir.create(dir_input)
-  dir.create(dir_output)
-  dir.create(file.path(dir_dynwrap, "workspace"))
-  dir.create(file.path(dir_dynwrap, "tmp"))
+  jsonlite::write_json(parameters, file.path(dir_input, "params.json"), auto_unbox = TRUE)
 
-  # save data & params, see save_inputs function
-  .container_save_inputs(
-    envir = environment(),
-    dir_input = dir_input,
-    input_format = input_format,
-    input_ids = input_ids,
-    param_ids = c(param_ids, "input_format", "output_format", "output_ids", "seed")
-  )
+  # return path information
+  paths$debug <- debug
+  paths$remove_files <- remove_files
 
-  lst(
-    dir_dynwrap
-  )
+  paths
 }
 
 
-
-
-
-
-.method_execution_execute_container <- function() {
+.method_execution_execute_container <- function(method, preproc_meta) {
+  # print information if desired
   if (verbose) {
-    # print provided input files
-    requireNamespace("crayon")
-    list.files(dir_input) %>%
-      crayon::bold() %>%
-      glue::glue_collapse("\n\t") %>%
-      paste0("Input saved to ", dir_input, ": \n\t", ., "\n") %>%
-      cat
+    cat(
+      "Input saved to ", preproc_meta$dir_input, ": \n\t",
+      paste(list_files(preproc_meta$dir_input), collapse = "\n\t"),
+      "\n",
+      sep = ""
+    )
   }
 
   # run container
   output <- babelwhale::run(
-    container_id = container_id,
+    container_id = method$run_info$container_id,
     command = NULL,
     args = NULL,
-    volumes = paste0(dir_dynwrap %>% babelwhale:::fix_windows_path(), ":/ti"),
+    volumes = paste0(preproc_meta$dir_dynwrap %>% babelwhale:::fix_windows_path(), ":/ti"),
     workspace = "/ti/workspace",
-    verbose = verbose,
-    debug = debug
+    verbose = preproc_meta$verbose,
+    debug = preproc_meta$debug
   )
 
+  if (verbose) {
+    cat(
+      "Output found in ", preproc_meta$dir_output, ": \n\t",
+      paste(list_files(preproc_meta$dir_output), collapse = "\n\t"),
+      "\n",
+      sep = ""
+    )
+  }
 
   # exit if error
   if (output$status != 0) {
     stop(call. = FALSE)
   }
 
-  if (verbose) {
-    # print found output files
-    requireNamespace("crayon")
-    list.files(dir_output) %>%
-      crayon::bold() %>%
-      glue::glue_collapse("\n\t") %>%
-      paste0("output saved in ", dir_output, ": \n\t", ., "\n") %>%
-      cat
-  }
-
   # wrap output
   model <-
-    wrap_output(output_ids, dir_output, output_format)
+    wrap_output(
+      output_ids = method$output$outputs,
+      dir_output = preproc_meta$dir_output,
+      output_format =  method$output$format
+    )
 
   # add timing
   if(!is.null(model$timings)) {
@@ -213,9 +212,23 @@ create_ti_container <- function(
 
 
 
-.method_execution_postproc_container <- function() {
-  if (remove_files && !debug) {
-    unlink(dir_dynwrap, recursive = TRUE)
+.method_execution_postproc_container <- function(preproc_meta) {
+  # TODO: make container return stdout and stderr
+
+  if (preproc_meta$remove_files && !preproc_meta$debug) {
+    unlink(preproc_meta$dir_dynwrap, recursive = TRUE)
   }
 }
 
+
+
+#' @importFrom utils write.csv
+write_text_infer <- function(x, path) {
+  if(is.matrix(x)) {
+    utils::write.csv(x, paste0(path, ".csv"))
+  } else if (is.data.frame(x)) {
+    readr::write_csv(x, paste0(path, ".csv"))
+  } else {
+    jsonlite::write_json(x, paste0(path, ".json"))
+  }
+}
