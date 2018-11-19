@@ -3,10 +3,19 @@
 #' This control method will always produce a random trajectory.
 #'
 #' @param dummy_param This parameter does not do anything.
-ti_random <- dynwrap::create_ti_method(
+ti_random <- dynwrap::create_ti_method_r(
   id = "random",
+
+  # describe packages needed by method
   package_loaded = c("dplyr", "tidyr", "purrr", "dynwrap", "dynutils"),
   package_required = c("dyndimred"),
+
+  # describe run fun inputs and outputs
+  input_required = "counts",
+  input_optional = NULL,
+  output = c("trajectory", "timings"),
+
+  # describe tuneable parameters
   parameters = list(
     dummy_param = list(
       type = "numeric",
@@ -15,10 +24,13 @@ ti_random <- dynwrap::create_ti_method(
       lower = 0,
       description = "Dummy parameter")
   ),
+
+  # function to run the method with
   run_fun = function(
     counts,
     dummy_param = .5,
-    seed = NA
+    seed = NA,
+    verbose = FALSE
   ) {
     if (length(seed) > 0 && is.finite(seed)) set.seed(seed)
 

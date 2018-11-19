@@ -3,10 +3,19 @@
 #' This control method will return the gold standard.
 #'
 #' @param dummy_param This parameter does not do anything.
-ti_identity <- dynwrap::create_ti_method(
+ti_identity <- dynwrap::create_ti_method_r(
   id = "identity",
+
+  # describe packages needed by method
   package_loaded = c("dplyr", "tidyr", "purrr", "dynwrap", "dynutils"),
   package_required = c("dyndimred"),
+
+  # describe run fun inputs and outputs
+  input_required = c("counts", "dataset"),
+  input_optional = NULL,
+  output = c("trajectory", "timings"),
+
+  # describe tuneable parameters
   parameters = list(
     dummy_param = list(
       type = "numeric",
@@ -15,11 +24,14 @@ ti_identity <- dynwrap::create_ti_method(
       lower = 0,
       description = "Dummy parameter")
   ),
+
+  # function to run the method with
   run_fun = function(
     counts,
     dataset,
     dummy_param = .5,
-    seed = NA
+    seed = NA,
+    verbose = FALSE
   ) {
     if (length(seed) > 0 && is.finite(seed)) set.seed(seed)
 

@@ -1,9 +1,9 @@
 ---
-title: "Creating a TI method using docker"
+title: "Creating a TI method using docker or singularity"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Creating a TI method using docker}
+  %\VignetteIndexEntry{Creating a TI method using docker or singularity}
   \usepackage[utf8]{inputenc}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -269,7 +269,7 @@ The `-t dynverse/comp1` argument gives a tag to this container, so that it can b
 Although this container can be run anywhere as long as the `/ti/input` and `/ti/output` folders are mounted, we'll run it here using the `dynwrap` workflow. First, we have to wrap the docker into a method function.
 ```r
 library(dynwrap)
-ti_comp1 <- create_ti_method_with_container("dynverse/comp1")
+ti_comp1 <- create_ti_method_container("dynverse/comp1")
 ```
 
 ```{r, echo=FALSE}
@@ -278,7 +278,7 @@ library(dynwrap)
 
 If the method is on the docker hub, it can also be pulled
 ```r
-ti_comp1 <- create_ti_method_with_container("dynverse/comp1")
+ti_comp1 <- create_ti_method_container("dynverse/comp1")
 ```
 
 ```{r, echo=FALSE}

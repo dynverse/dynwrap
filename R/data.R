@@ -39,3 +39,8 @@
 #'
 #' @docType data
 "example_dataset"
+
+#' Metadata on wrapper types
+#'
+#' @docType data
+"wrapper_types"
