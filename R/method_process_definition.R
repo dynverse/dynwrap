@@ -60,7 +60,7 @@ is_ti_method <- function(object) {
 
 #' Get the default parameters of a method
 #'
-#' @param method A TI method description
+#' @param definition A TI method description
 #'
 #' @export
 #'

@@ -7,7 +7,7 @@
 get_default_parameters(definition)
 }
 \arguments{
-\item{method}{A TI method description}
+\item{definition}{A TI method description}
 }
 \description{
 Get the default parameters of a method

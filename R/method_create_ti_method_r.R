@@ -9,7 +9,7 @@
 #' @param run_fun A function to run the TI, needs to have 'counts' as its first param.
 #' @param input_required The required inputs for this method. See `dynwrap::allowed_inputs()`.
 #' @param input_optional Optional inputs for this method. See `dynwrap::allowed_inputs()`.
-#' @param outputs The outputs produced by this method. See `dynwrap::allowed_outputs()`.
+#' @param output The outputs produced by this method. See `dynwrap::allowed_outputs()`.
 #' @param remotes_package Package from which the remote locations of dependencies have to be extracted, eg. `dynmethods`.
 #' @param return_function Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.
 #' @param ... Other information about the wrapper, eg. apt_dependencies.

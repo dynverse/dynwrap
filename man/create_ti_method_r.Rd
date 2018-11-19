@@ -23,6 +23,8 @@ create_ti_method_r(id, name = id, parameters = NULL, run_fun,
 
 \item{input_optional}{Optional inputs for this method. See \code{dynwrap::allowed_inputs()}.}
 
+\item{output}{The outputs produced by this method. See \code{dynwrap::allowed_outputs()}.}
+
 \item{package_loaded}{The packages that need to be loaded before executing the method.}
 
 \item{package_required}{The packages that need to be installed before executing the method.}
@@ -32,8 +34,6 @@ create_ti_method_r(id, name = id, parameters = NULL, run_fun,
 \item{return_function}{Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.}
 
 \item{...}{Other information about the wrapper, eg. apt_dependencies.}
-
-\item{outputs}{The outputs produced by this method. See \code{dynwrap::allowed_outputs()}.}
 }
 \description{
 Create a TI method wrapper
