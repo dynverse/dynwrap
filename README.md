@@ -65,6 +65,9 @@ changes.
     `create_ti_method_container()`, and the underlying functions for
     executing a method on a dataset.
 
+  - CLEAN UP: Remove `parse_parameter_definition()` and thereby
+    dependency on ParamHelpers.
+
 ### Latest changes in dynwrap 0.2.0 (29-10-2018)
 
   - BUG FIX: Fixed incorrect calculation of milestone percentage during

@@ -37,7 +37,6 @@ Imports:
   jsonlite,
   magrittr,
   methods,
-  ParamHelpers (>= 1.11),
   processx,
   pdist,
   purrr,

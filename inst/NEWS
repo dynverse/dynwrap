@@ -1,4 +1,3 @@
-
 dynwrap 0.3.0 (19-11-2018)
 
 * MINOR CHANGE: Added metadata on the different wrapper types implemented in dynwrap.
@@ -12,6 +11,8 @@ dynwrap 0.3.0 (19-11-2018)
 
 * CLEAN UP: Drastically reworked `create_ti_method_r()` and `create_ti_method_container()`, 
   and the underlying functions for executing a method on a dataset. 
+  
+* CLEAN UP: Remove `parse_parameter_definition()` and thereby dependency on ParamHelpers.
 
 dynwrap 0.2.0 (29-10-2018)
 

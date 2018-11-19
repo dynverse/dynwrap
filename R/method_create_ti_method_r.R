@@ -5,7 +5,7 @@
 #' @param name The name of the TI method.
 #' @param package_loaded The packages that need to be loaded before executing the method.
 #' @param package_required The packages that need to be installed before executing the method.
-#' @param parameters A list of parameters, which can be parsed using [parse_parameter_definition()].
+#' @param parameters A list of parameters.
 #' @param run_fun A function to run the TI, needs to have 'counts' as its first param.
 #' @param input_required The required inputs for this method. See `dynwrap::allowed_inputs()`.
 #' @param input_optional Optional inputs for this method. See `dynwrap::allowed_inputs()`.

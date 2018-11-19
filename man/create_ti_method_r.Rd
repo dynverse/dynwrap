@@ -15,7 +15,7 @@ create_ti_method_r(id, name = id, parameters = NULL, run_fun,
 
 \item{name}{The name of the TI method.}
 
-\item{parameters}{A list of parameters, which can be parsed using \code{\link[=parse_parameter_definition]{parse_parameter_definition()}}.}
+\item{parameters}{A list of parameters.}
 
 \item{run_fun}{A function to run the TI, needs to have 'counts' as its first param.}
 
