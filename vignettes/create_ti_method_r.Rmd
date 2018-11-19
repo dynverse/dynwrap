@@ -27,7 +27,6 @@ To test our method, we will use a very simple toy data example.
 
 ```{r, message=FALSE}
 library(dynwrap)
-library(ParamHelpers)
 library(dplyr)
 ```
 
@@ -194,7 +193,7 @@ if ("dynplot" %in% rownames(installed.packages())) {
 Combining everything in a function:
 
 ```{r}
-run_fun <- function(expression, component, start_id = NULL, seed = NA) {
+run_fun <- function(expression, component, start_id = NULL, seed = NA, verbose = FALSE) {
   if (length(seed) == 1 && is.finite(seed)) set.seed(seed)
   
   # do pca and extract pseudotime
@@ -224,7 +223,10 @@ ti_dummy <- create_ti_method_r(
   id = "dummy", 
   name = "Dummy",
   parameters = parameters,
-  run_fun = run_fun
+  run_fun = run_fun,
+  input_required = "expression",
+  input_optional = NULL,
+  output = "linear_trajectory"
 )
 ```
 
