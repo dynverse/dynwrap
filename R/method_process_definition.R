@@ -7,6 +7,7 @@
   # TODO: Expand testing of definition, in case 3rd party containers are naughty
 
   # create inputs tibble
+  utils::data("priors", package = "dynwrap", envir = environment()) # TODO: move to sysdata, avoiding loading of priors
   definition$inputs <-
     data_frame(
       input_id = c(definition$input$required, definition$input$optional, definition$parameters$id),
