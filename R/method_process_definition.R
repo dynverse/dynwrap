@@ -29,8 +29,8 @@
 
       # remove previous defaults
       for (param_name in names(new_defaults)) {
-        if (param_name %in% names(definition$parameter)) {
-          definition$parameter[[param_name]]$default <- new_defaults[[param_name]]
+        if (param_name %in% names(definition$parameters)) {
+          definition$parameters[[param_name]]$default <- new_defaults[[param_name]]
         } else {
           warning("Unknown parameter: ", param_name, ", skipping.")
         }

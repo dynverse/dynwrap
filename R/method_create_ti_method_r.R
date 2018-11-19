@@ -17,20 +17,22 @@
 #' @export
 #'
 #' @include method_parse_parameter_definition.R
-create_ti_function <- function(
+create_ti_method_r <- function(
   id,
   name = id,
   parameters = NULL,
   run_fun,
   input_required,
   input_optional = NULL,
-  outputs,
+  output,
   package_loaded = c(),
   package_required = c(),
   remotes_package = ifelse("dynmethods" %in% rownames(installed.packages()), "dynmethods", "dynwrap"),
   return_function = TRUE,
   ...
 ) {
+  testthat::expect_true(all(c("verbose", "seed") %in% formalArgs(run_fun)))
+
   input <- list( # could be derived from the run_fn
     format = NA,
     required = input_required,
@@ -39,7 +41,7 @@ create_ti_function <- function(
 
   output <- list( # this cannot
     format = NA,
-    outputs = outputs
+    outputs = output
   )
 
   definition <- lst(
@@ -102,9 +104,9 @@ create_ti_function <- function(
   )
 
   # remove params that are not supposed to be here
-  remove_args <- setdiff(c(names(args)), method$inputs$input_id)
+  remove_args <- setdiff(names(args), c(method$inputs$input_id, names(method$parameters), "verbose", "seed"))
   if (length(remove_args) > 0) {
-    warning("Parameters [", paste(remove_args, ", "), "] not recognised by method; removing them from the arglist.")
+    warning("Parameters [", paste(remove_args, collapse = ", "), "] not recognised by method; removing them from the arglist.")
     sel_args <- setdiff(names(args), remove_args)
     args <- args[remove_args]
   }

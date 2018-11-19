@@ -52,7 +52,7 @@
   model <- NULL
   timings$method_beforepreproc <- Sys.time()
 
-  try({
+  error <- tryCatch({
     # execute method and return model
     model <-
       if (method$run_info$backend == "function") {
@@ -68,6 +68,10 @@
     # remove timings from model
     model$timings <- NULL
     class(model) <- setdiff(class(model), "dynwrap::with_timings")
+
+    NA_character_
+  }, error = function(e) {
+    e$message
   })
 
   # run postproc
@@ -101,6 +105,7 @@
     dataset_id = dataset$id,
     stdout = stds$stdout,
     stderr = stds$stderr,
+    error = error,
     prior_df = list(method$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(inputs)))
   ) %>%
     bind_cols(as.data.frame(as.list(timings_diff)))

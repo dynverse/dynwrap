@@ -12,7 +12,7 @@
 #' @importFrom babelwhale get_default_config pull_container
 #'
 #' @export
-create_ti_container <- function(
+create_ti_method_container <- function(
   container_id,
   version = NULL,
   pull_if_needed = TRUE,
@@ -188,11 +188,6 @@ create_ti_container <- function(
       "\n",
       sep = ""
     )
-  }
-
-  # exit if error
-  if (output$status != 0) {
-    stop(call. = FALSE)
   }
 
   # wrap output

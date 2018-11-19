@@ -40,7 +40,7 @@ infer_trajectories <- function(
 ) {
   # process method ----------------------
   if (is.character(method) && grepl("/", method)) {
-    method <- list_as_tibble(list(create_ti_container(method)()))
+    method <- list_as_tibble(list(create_ti_method_container(method)()))
 
   } else if (is.character(method)) {
     # names of method
