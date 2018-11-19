@@ -7,6 +7,7 @@
 #'   If the required version is higher than the currently installed version,
 #'   the container will be pulled from dockerhub or singularityhub.
 #' @param pull_if_needed Pull the container if not yet available.
+#' @param return_function Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.
 #'
 #' @importFrom babelwhale get_default_config pull_container
 #'
@@ -14,7 +15,8 @@
 create_ti_container <- function(
   container_id,
   version = NULL,
-  pull_if_needed = TRUE
+  pull_if_needed = TRUE,
+  return_function = TRUE
 ) {
   config <- babelwhale::get_default_config()
 
@@ -91,13 +93,13 @@ create_ti_container <- function(
     container_id = container_id
   )
 
-  .method_process_definition(definition)
+  .method_process_definition(definition = definition, return_function = return_function)
 }
 
 
 
 
-.method_execution_preproc_container <- function(method, inputs, parameters, verbose, seed, debug, remove_files) {
+.method_execution_preproc_container <- function(method, inputs, parameters, verbose, seed, debug) {
   dir_dynwrap <- dynutils::safe_tempdir("ti")
 
   # construct paths
@@ -151,7 +153,7 @@ create_ti_container <- function(
 
   # return path information
   paths$debug <- debug
-  paths$remove_files <- remove_files
+  paths$verbose <- verbose
 
   paths
 }
@@ -159,10 +161,10 @@ create_ti_container <- function(
 
 .method_execution_execute_container <- function(method, preproc_meta) {
   # print information if desired
-  if (verbose) {
+  if (preproc_meta$verbose) {
     cat(
       "Input saved to ", preproc_meta$dir_input, ": \n\t",
-      paste(list_files(preproc_meta$dir_input), collapse = "\n\t"),
+      paste(list.files(preproc_meta$dir_input), collapse = "\n\t"),
       "\n",
       sep = ""
     )
@@ -179,10 +181,10 @@ create_ti_container <- function(
     debug = preproc_meta$debug
   )
 
-  if (verbose) {
+  if (preproc_meta$verbose) {
     cat(
       "Output found in ", preproc_meta$dir_output, ": \n\t",
-      paste(list_files(preproc_meta$dir_output), collapse = "\n\t"),
+      paste(list.files(preproc_meta$dir_output), collapse = "\n\t"),
       "\n",
       sep = ""
     )
@@ -201,11 +203,7 @@ create_ti_container <- function(
       output_format =  method$output$format
     )
 
-  # add timing
-  if(!is.null(model$timings)) {
-    model$timings$method_afterpostproc <- as.numeric(Sys.time())
-  }
-
+  # return output
   model
 }
 
@@ -213,9 +211,7 @@ create_ti_container <- function(
 
 
 .method_execution_postproc_container <- function(preproc_meta) {
-  # TODO: make container return stdout and stderr
-
-  if (preproc_meta$remove_files && !preproc_meta$debug) {
+  if (!preproc_meta$debug) {
     unlink(preproc_meta$dir_dynwrap, recursive = TRUE)
   }
 }

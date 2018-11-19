@@ -18,7 +18,8 @@
 #' @param map_fun A mao function to use when inferring trajectories with multiple datasets or methods.
 #'   Allows to parallellise the execution in an arbitrary way.
 #' @param verbose Whether or not to print information output.
-#' @param capture_output Whether to capture the stdout and stderr produced by a method.
+#' @param return_verbose Whether to store and return messages printed by the method.
+#' @param debug Used for debugging containers methods.
 #'
 #' @importFrom utils capture.output adist installed.packages
 #' @importFrom readr read_file
@@ -32,13 +33,14 @@ infer_trajectories <- function(
   parameters = NULL,
   give_priors = NULL,
   seed = 1,
-  map_fun = map,
   verbose = FALSE,
-  capture_output = FALSE
+  return_verbose = FALSE,
+  debug = FALSE,
+  map_fun = map
 ) {
   # process method ----------------------
   if (is.character(method) && grepl("/", method)) {
-    method <- list_as_tibble(list(create_ti_method_with_container(method)()))
+    method <- list_as_tibble(list(create_ti_container(method)()))
 
   } else if (is.character(method)) {
     # names of method
@@ -91,7 +93,7 @@ infer_trajectories <- function(
   testthat::expect_equal(length(method), length(parameters))
 
   # process dataset ----------------------
-  if(dynwrap::is_data_wrapper(dataset)) {
+  if (dynwrap::is_data_wrapper(dataset)) {
     # allow single dataset
     dataset <- list_as_tibble(list(dataset))
   } else if (is.data.frame(dataset)) {
@@ -119,9 +121,10 @@ infer_trajectories <- function(
         method = method[[design$method_ix[[ri]]]],
         parameters = parameters[[design$method_ix[[ri]]]],
         give_priors = give_priors,
+        seed = seed,
         verbose = verbose,
-        capture_output = capture_output,
-        seed = seed
+        return_verbose = return_verbose,
+        debug = debug
       )
     }
   )
@@ -148,8 +151,9 @@ infer_trajectory <- dynutils::inherit_default_params(
     parameters,
     give_priors,
     seed,
-    map_fun,
     verbose,
+    return_verbose,
+    debug,
     ...
   ) {
     parameters <- c(parameters, list(...))
@@ -159,10 +163,10 @@ infer_trajectory <- dynutils::inherit_default_params(
       method = method,
       parameters = list(parameters),
       give_priors = give_priors,
-      map_fun = map_fun,
+      seed = seed,
       verbose = verbose,
-      capture_output = FALSE,
-      seed = seed
+      return_verbose = FALSE,
+      debug = debug
     )
 
     if (is.null(design$model[[1]])) {

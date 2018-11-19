@@ -7,7 +7,11 @@
 #' @param package_required The packages that need to be installed before executing the method.
 #' @param parameters A list of parameters, which can be parsed using [parse_parameter_definition()].
 #' @param run_fun A function to run the TI, needs to have 'counts' as its first param.
+#' @param input_required The required inputs for this method. See `dynwrap::allowed_inputs()`.
+#' @param input_optional Optional inputs for this method. See `dynwrap::allowed_inputs()`.
+#' @param outputs The outputs produced by this method. See `dynwrap::allowed_outputs()`.
 #' @param remotes_package Package from which the remote locations of dependencies have to be extracted, eg. `dynmethods`.
+#' @param return_function Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.
 #' @param ... Other information about the wrapper, eg. apt_dependencies.
 #'
 #' @export
@@ -18,12 +22,26 @@ create_ti_function <- function(
   name = id,
   parameters = NULL,
   run_fun,
+  input_required,
+  input_optional = NULL,
+  outputs,
   package_loaded = c(),
   package_required = c(),
   remotes_package = ifelse("dynmethods" %in% rownames(installed.packages()), "dynmethods", "dynwrap"),
   return_function = TRUE,
   ...
 ) {
+  input <- list( # could be derived from the run_fn
+    format = NA,
+    required = input_required,
+    optional = input_optional
+  )
+
+  output <- list( # this cannot
+    format = NA,
+    outputs = outputs
+  )
+
   definition <- lst(
     id,
     name,
@@ -35,25 +53,18 @@ create_ti_function <- function(
       package_required,
       remotes_package
     ),
+    input,
+    output,
     ...
   )
 
-  .method_process_definition(definition, return_function = return_function)
+
+  .method_process_definition(definition = definition, return_function = return_function)
 }
 
 
-.method_execution_preproc_function <- function(method, capture_output) {
+.method_execution_preproc_function <- function(method) {
   run_info <- method$run_info
-
-  # initialise stdout/stderr files
-  if (capture_output) {
-    stdout_file <- tempfile()
-    sink(stdout_file, type = "output")
-
-    stderr_file <- tempfile()
-    stderr_con <- file(stderr_file, open = "wt")
-    sink(stderr_con, type = "message")
-  }
 
   # create a temporary directory to set as working directory,
   # to avoid polluting the working directory if a method starts
@@ -77,21 +88,17 @@ create_ti_function <- function(
   }
 
   lst(
-    stdout_file,
-    stderr_file,
-    stderr_con,
     tmp_dir,
-    old_wd,
-    capture_output
+    old_wd
   )
 }
 
 .method_execution_execute_function <- function(method, inputs, parameters, verbose, seed, preproc_meta) {
-
   # combine inputs and parameters
   args <- c(
     inputs,
-    parameters
+    parameters,
+    lst(verbose, seed)
   )
 
   # remove params that are not supposed to be here
@@ -109,24 +116,9 @@ create_ti_function <- function(
 
 
 .method_execution_postproc_function <- function(preproc_meta) {
-  sink(type = "output")
-  sink(type = "message")
-  close(preproc_meta$stderr_con)
-
-  if (preproc_meta$capture_output) {
-    stdout <- read_file(preproc_meta$stdout_file)
-    stderr <- read_file(preproc_meta$stderr_file)
-  } else {
-    stdout <- ""
-    stderr <- ""
-  }
-
   # wd to previous folder
   setwd(preproc_meta$old_wd)
 
   # Remove temporary folder
   unlink(preproc_meta$tmp_dir, recursive = TRUE, force = TRUE)
-
-  # return stdout and stderr
-  lst(stdout, stderr)
 }

@@ -6,21 +6,6 @@
   # check params
   # TODO: Expand testing of definition, in case 3rd party containers are naughty
 
-  # create params tibble
-  # TODO: support forbidden!!!
-  if (!is_tibble(definition$parameters)) {
-    definition$parameters <- map2_df(
-      names(definition$parameters),
-      definition$parameters,
-      function(id, values) {
-        bind_cols(
-          tibble(id),
-          list_as_tibble(list(values))
-        )
-      }
-    )
-  }
-
   # create inputs tibble
   definition$inputs <-
     data_frame(
@@ -36,18 +21,20 @@
   definition <- definition %>%
     add_class("dynwrap::ti_method")
 
-  if (!return_function) {
+  if (return_function) {
     # create function with which you can instantiate the method with a set of parameters
     param_overrider_fun <- function(...) {
       # get the parameters from this function
-      new_defaults <- as.list(environment())[formalArgs(param_overrider_fun)] %>%
-        enframe(name = "id", value = "default")
+      new_defaults <- as.list(environment())[formalArgs(param_overrider_fun)]
 
       # remove previous defaults
-      definition$parameters <-
-        definition$parameters %>%
-        select(-default) %>%
-        full_join(new_defaults, by = "id")
+      for (param_name in names(new_defaults)) {
+        if (param_name %in% names(definition$parameter)) {
+          definition$parameter[[param_name]]$default <- new_defaults[[param_name]]
+        } else {
+          warning("Unknown parameter: ", param_name, ", skipping.")
+        }
+      }
 
       definition
     }
@@ -81,8 +68,10 @@ is_ti_method <- function(object) {
 get_default_parameters <- function(definition) {
   testthat::expect_true(is_ti_method(definition))
 
-  definition$parameters %>%
-    select(id, default) %>%
-    deframe() %>%
-    as.list()
+  params <- definition$parameters
+  params <- params[names(params) != "forbidden"]
+
+  map2(names(params), params, function(name, param) {
+    as.list(set_names(param$default, name))
+  }) %>% unlist(recursive = FALSE)
 }

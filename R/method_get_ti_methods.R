@@ -5,7 +5,7 @@
 #' @param ti_packages In which packages to look for ti methods
 #' @param evaluate Automatically evaluate the functions
 #'
-#' @inheritParams create_ti_method_with_container
+#' @inheritParams create_ti_container
 #'
 #' @importFrom utils lsf.str installed.packages
 #' @importFrom stringr str_replace
@@ -56,7 +56,7 @@ get_ti_methods <- function(
       keep(~ grepl("/", .))
 
     ti_methods2 <- list_as_tibble(map(docker_repos, function(repo) {
-      funner <- create_ti_method_with_container(repo)
+      funner <- create_ti_container(repo)
       out <- funner()
       out$fun <- funner
 
