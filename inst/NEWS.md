@@ -1,3 +1,8 @@
+# dynwrap 0.4.0 (unreleased)
+
+* CLEAN UP: Removed helper functions that are not required any more:
+  `get_env_or_null()`, `read_rds_or_null()` and `print_processx()`.
+
 # dynwrap 0.3.1 (19-11-2018)
 
 * HOTFIX: Use `utils::data()` to get access to `priors`.

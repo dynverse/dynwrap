@@ -37,7 +37,6 @@ Imports:
   jsonlite,
   magrittr,
   methods,
-  processx,
   pdist,
   purrr,
   readr,
@@ -78,8 +77,6 @@ Collate:
     'data.R'
     'get_cell_grouping.R'
     'get_divergence_triangles.R'
-    'helper_null_pipers.R'
-    'helper_processx.R'
     'metawrap_get_output_processor.R'
     'method_create_ti_method_container.R'
     'method_parse_parameter_definition.R'

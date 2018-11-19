@@ -48,26 +48,11 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
+### Latest changes in dynwrap 0.4.0 (unreleased)
+
+  - CLEAN UP: Removed helper functions that are not required any more:
+    `get_env_or_null()`, `read_rds_or_null()` and `print_processx()`.
+
 ### Latest changes in dynwrap 0.3.1 (19-11-2018)
 
   - HOTFIX: Use `utils::data()` to get access to `priors`.
-
-### Latest changes in dynwrap 0.3.0 (19-11-2018)
-
-  - MINOR CHANGE: Added metadata on the different wrapper types
-    implemented in dynwrap.
-
-  - CLEAN UP: Removed `plot_fun` argument from `create_ti_method()`.
-
-  - MINOR CHANGE: Replaced `mc_cores` with more flexible `map_fun`.
-
-  - MINOR CHANGE: Renamed `create_ti_method()` to
-    `create_ti_method_r()`, and `create_ti_method_with_container()` to
-    `create_ti_method_container()`.
-
-  - CLEAN UP: Drastically reworked `create_ti_method_r()` and
-    `create_ti_method_container()`, and the underlying functions for
-    executing a method on a dataset.
-
-  - CLEAN UP: Remove `parse_parameter_definition()` and thereby
-    dependency on ParamHelpers.
