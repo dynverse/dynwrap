@@ -31,19 +31,22 @@ create_ti_method_r <- function(
   return_function = TRUE,
   ...
 ) {
-  testthat::expect_true(all(c("verbose", "seed") %in% formalArgs(run_fun)))
+  # check that run_fun has the required arguments
+  expected_arguments <- c(input_required, input_optional, names(parameters), "verbose", "seed")
+  testthat::expect_true(all(expected_arguments %in% formalArgs(run_fun)))
 
+  # process input and output vectors
   input <- list( # could be derived from the run_fn
     format = NA,
     required = input_required,
     optional = input_optional
   )
-
   output <- list( # this cannot
     format = NA,
     outputs = output
   )
 
+  # create definition list
   definition <- lst(
     id,
     name,
@@ -60,7 +63,7 @@ create_ti_method_r <- function(
     ...
   )
 
-
+  # further process the definition
   .method_process_definition(definition = definition, return_function = return_function)
 }
 
@@ -104,7 +107,7 @@ create_ti_method_r <- function(
   )
 
   # remove params that are not supposed to be here
-  remove_args <- setdiff(names(args), c(method$inputs$input_id, names(method$parameters), "verbose", "seed"))
+  remove_args <- setdiff(names(args), formalArgs(method$run_info$run_fun))
   if (length(remove_args) > 0) {
     warning("Parameters [", paste(remove_args, collapse = ", "), "] not recognised by method; removing them from the arglist.")
     sel_args <- setdiff(names(args), remove_args)
