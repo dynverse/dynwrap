@@ -1,24 +1,26 @@
 #' Inferring trajectories with Control: error
 #'
 #' This control method will always produce an error.
-#'
-#' @param dummy_param This parameter does not do anything.
-ti_error <- dynwrap::create_ti_method(
+ti_error <- dynwrap::create_ti_method_r(
   id = "error",
+
+  # describe packages needed by method
   package_loaded = c(),
   package_required = c(),
-  parameters = list(
-    dummy_param = list(
-      type = "numeric",
-      default = 0.5,
-      upper = 1,
-      lower = 0,
-      description = "Dummy parameter")
-  ),
+
+  # describe run fun inputs and outputs
+  input_required = "counts",
+  input_optional = NULL,
+  output = NULL,
+
+  # describe tuneable parameters
+  parameters = list(),
+
+  # function to run the method with
   run_fun = function(
     counts,
-    dummy_param,
-    seed = NA
+    seed = NA,
+    verbose = FALSE
   ) {
     stop("This control method always errors.")
   }
