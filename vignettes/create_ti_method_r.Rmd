@@ -15,7 +15,7 @@ There are two main ways to add a new method:
 * **Directly within R**. In this case you create an R function or R packages. The user will have to install all dependencies. This is the use case described here.
 * **Using a docker**. In this case you create a docker which uses some input files (eg. a file containing the expression) and returns some output files. This use case is described in a separate vignette.
 
-The main function to create a new ti method is `create_ti_method`. This wraps:
+The main function to create a new ti method is `create_ti_method_r`. This wraps:
 
 * The name of the method
 * The main function to run a method on a dataset
@@ -60,13 +60,18 @@ pca <- prcomp(expression)
 
 ### Parameters
 
-The main function can accept any additional parameters, which should also be defined in a parameter set using the `ParamHelpers` package. This allows you to specify the type of parameter (integer, numeric, discrete, logical, ...), the possible range of values and the default value.
+The main function can accept any additional parameters, which should also be defined in a parameter list. This allows you to specify the type of parameter (integer, numeric, discrete, logical, ...), the possible range of values and the default value.
 
 In this example we'll define one parameter, the `component`:
 
 ```{r}
-par_set <- makeParamSet(
-  makeIntegerParam("component", lower = 1, upper = 10, default = 1)
+parameters <- list(
+  component = list(
+    type = "numeric",
+    lower = 1,
+    upper = 10,
+    default = 1
+  )
 )
 ```
 
@@ -215,10 +220,10 @@ run_fun <- function(expression, component, start_id = NULL, seed = NA) {
 We can now create the TI object
 
 ```{r}
-ti_dummy <- create_ti_method(
+ti_dummy <- create_ti_method_r(
   id = "dummy", 
   name = "Dummy",
-  par_set = par_set,
+  parameters = parameters,
   run_fun = run_fun
 )
 ```
