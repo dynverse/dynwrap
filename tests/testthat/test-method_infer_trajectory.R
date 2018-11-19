@@ -95,19 +95,12 @@ test_that("Testing infer_trajectory with control methods", {
     dataset = dataset,
     method = ti_comp1(),
     parameters = list(),
-    capture_output = TRUE
+    return_verbose = TRUE
   )
   expect_equal(models$summary[[1]]$stdout, "")
   expect_equal(models$summary[[1]]$stderr, "")
 })
 
-
-
-test_that("Testing ti_comp1", {
-  method <- ti_comp1()
-  model2 <- method$run_fun(dataset$expression)
-  testthat::expect_true(is_wrapper_with_trajectory(model2))
-})
 
 test_that("Testing get_ti_methods", {
   methods <- get_ti_methods(c("comp1"))

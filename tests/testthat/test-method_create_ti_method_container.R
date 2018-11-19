@@ -1,4 +1,4 @@
-context("Testing create_ti_method_with_container")
+context("Testing create_ti_method_container")
 
 skip_on_appveyor()
 skip_on_os("mac")
@@ -28,31 +28,31 @@ dataset_na <- dataset
 dataset_na$counts <- dataset_na$expression <- dataset$expression * NA
 
 for (tag in tags) {
-  test_that(paste0("Testing create_ti_method_with_container and infer_trajectory with ", tag), {
+  test_that(paste0("Testing create_ti_method_container and infer_trajectory with ", tag), {
     wanted_version <- tester_versions[[tag]]
 
-    method <- create_ti_method_with_container(container_id = paste0("dynverse/dynwrap_tester:", tag), version = wanted_version)
+    container_id <- paste0("dynverse/dynwrap_tester:", tag)
+    method <- create_ti_method_container(container_id = container_id, version = wanted_version, return_function = FALSE)
 
-    definition <- method()
+    expect_true(method$id == paste0("dynwrap_tester_", tag))
+    expect_equal(method$run_info$backend, "container")
+    expect_equal(method$run_info$container_id, container_id)
 
-    expect_true(definition$id == paste0("dynwrap_tester_", tag))
-    expect_is(definition$run_fun, "function")
+    expect_true(method$version >= wanted_version)
 
-    expect_true(definition$version >= wanted_version)
-
-    model0 <- infer_trajectory(dataset, definition, parameters = list())
+    model0 <- infer_trajectory(dataset, method, parameters = list())
     expect_true(is_wrapper_with_trajectory(model0))
 
     expect_output({
-      model1 <- infer_trajectory(dataset, definition, parameters = list(verbose = TRUE), verbose = TRUE)
+      model1 <- infer_trajectory(dataset, method, parameters = list(verbose = TRUE), verbose = TRUE)
       expect_true(is_wrapper_with_trajectory(model1))
     })
 
-    expect_output(expect_error(infer_trajectory(dataset, definition, debug = TRUE)), regexp = "Error traceback")
+    expect_output(expect_error(infer_trajectory(dataset, method, debug = TRUE)), regexp = "Error traceback")
 
     expect_output(
       expect_error(
-        infer_trajectory(dataset_na, definition)
+        infer_trajectory(dataset_na, method)
       ),
       regexp = "missing values in|contains NaN"
     )
