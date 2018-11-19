@@ -7,6 +7,11 @@
 
 * MINOR CHANGE: Replace `mc_cores` with more flexible `map_fun`.
 
+* MINOR CHANGE: Renamed `create_ti_method()` to `create_ti_method_r()`.
+
+* MAJOR CHANGE: Reworked `create_ti_method_r()` and `create_ti_method_container()` and underlying functions
+  for executing a method on a dataset.
+
 # dynwrap 0.2.0 (29-10-2018)
 
 * BUG FIX: Fix incorrect calculation of milestone percentage during trajectory simplification.
