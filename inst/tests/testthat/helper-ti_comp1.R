@@ -8,10 +8,19 @@
 #' @inheritParams dyndimred::dimred
 #'
 #' @include method_create_ti_method.R
-ti_comp1 <- dynwrap::create_ti_method(
+ti_comp1 <- dynwrap::create_ti_method_r(
   id = "comp1",
+
+  # describe packages needed by method
   package_loaded = c("dplyr", "tidyr", "purrr", "dynwrap", "dynutils"),
   package_required = c("dyndimred"),
+
+  # describe run fun inputs and outputs
+  input_required = "expression",
+  input_optional = NULL,
+  output = c("linear_trajectory", "dimred", "timings"),
+
+  # describe tuneable parameters
   parameters = list(
     dimred = list(
       type = "discrete",
@@ -31,12 +40,15 @@ ti_comp1 <- dynwrap::create_ti_method(
       upper = 10
     )
   ),
+
+  # function to run the method with
   run_fun = function(
     expression,
     ndim,
     dimred,
     component,
-    seed = NA
+    seed = NA,
+    verbose = FALSE
   ) {
     if (length(seed) > 0 && is.finite(seed)) set.seed(seed)
 

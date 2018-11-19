@@ -6,14 +6,15 @@
 \title{Infer trajectories}
 \usage{
 infer_trajectories(dataset, method, parameters = NULL,
-  give_priors = NULL, seed = 1, mc_cores = 1, verbose = FALSE,
-  capture_output = FALSE)
+  give_priors = NULL, seed = 1, verbose = FALSE,
+  return_verbose = FALSE, debug = FALSE, map_fun = map)
 
-infer_trajectory(dataset, method, parameters = list(),
-  give_priors = NULL, mc_cores = 1, verbose = FALSE, seed = 1, ...)
+infer_trajectory(dataset, method, parameters = NULL,
+  give_priors = NULL, seed = 1, verbose = FALSE,
+  return_verbose = FALSE, debug = FALSE, ...)
 }
 \arguments{
-\item{dataset}{One or more datasets, as created using dynwrap}
+\item{dataset}{One or more datasets, as created using dynwrap.}
 
 \item{method}{One or more methods. Must be one of:
 \itemize{
@@ -33,11 +34,14 @@ Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).
 
 \item{seed}{A seed to be set, if the method allows for it.}
 
-\item{mc_cores}{The number of cores to use, allowing to parallellise the different datasets}
+\item{verbose}{Whether or not to print information output.}
 
-\item{verbose}{Whether or not to print information output}
+\item{return_verbose}{Whether to store and return messages printed by the method.}
 
-\item{capture_output}{Whether to capture the stdout and stderr produced by a method}
+\item{debug}{Used for debugging containers methods.}
+
+\item{map_fun}{A mao function to use when inferring trajectories with multiple datasets or methods.
+Allows to parallellise the execution in an arbitrary way.}
 
 \item{...}{Any additional parameters given to the method, will be concatednated to the parameters argument}
 }

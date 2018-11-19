@@ -1,21 +1,32 @@
+# dynwrap 0.3.0 (19-11-2018)
 
-# dynwrap 0.3.0 (unreleased)
+* MINOR CHANGE: Added metadata on the different wrapper types implemented in dynwrap.
 
-* MINOR CHANGE: Add metadata on the different wrapper types implemented in dynwrap.
+* CLEAN UP: Removed `plot_fun` argument from `create_ti_method()`.
+
+* MINOR CHANGE: Replaced `mc_cores` with more flexible `map_fun`.
+
+* MINOR CHANGE: Renamed `create_ti_method()` to `create_ti_method_r()`, 
+  and `create_ti_method_with_container()` to `create_ti_method_container()`.
+
+* CLEAN UP: Drastically reworked `create_ti_method_r()` and `create_ti_method_container()`, 
+  and the underlying functions for executing a method on a dataset. 
+  
+* CLEAN UP: Remove `parse_parameter_definition()` and thereby dependency on ParamHelpers.
 
 # dynwrap 0.2.0 (29-10-2018)
 
-* BUG FIX: Fix incorrect calculation of milestone percentage during trajectory simplification.
+* BUG FIX: Fixed incorrect calculation of milestone percentage during trajectory simplification.
   Occurs only in a rare edge case, namely when the order of the milestones in the milestone network
   is very different from the order of the milestone ids (0475e94).
 
-* BUG FIX: Fix suggested dependencies not being installed in the dynwrap containers (#100).
+* BUG FIX: Fixed suggested dependencies not being installed in the dynwrap containers (#100).
 
-* FEATURE REMOVAL: Remove feather data format because it's not being used and creates dependency issues every now and again.
+* FEATURE REMOVAL: Removed feather data format because it's not being used and creates dependency issues every now and again.
 
 * BUG FIX: `devtools:::shim_system.file()` has been moved to `pkgload:::shim_system.file()`.
 
-* TESTING: Solve issue with the unit tests by not using any helpers.
+* TESTING: Solved issue with the unit tests by not using any helpers.
 
 * MINOR CHANGE: Have docker images build from dynwrap@devel.
 
