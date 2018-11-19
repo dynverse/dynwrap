@@ -48,7 +48,9 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
-### Latest changes in dynwrap 0.4.0 (unreleased)
+### Latest changes in dynwrap 0.3.1 (19-11-2018)
+
+  - HOTFIX: Use `utils::data()` to get access to `priors`.
 
 ### Latest changes in dynwrap 0.3.0 (19-11-2018)
 
