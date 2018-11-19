@@ -34,7 +34,7 @@ The main function will receive three different types of input parameters: the ex
 
 ### Expression data
 
-The The raw `counts` or normalised `expression`. This is a matrix with in the columns different features (genes) and in the rows different cells.
+The raw `counts` or normalised `expression`. This is a matrix with in the columns different features (genes) and in the rows different cells.
 
 ```{r}
 ncells <- 1000
