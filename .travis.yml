@@ -24,4 +24,4 @@ script:
   - R CMD build .
   - R CMD check *tar.gz
 after_success:
- - echo codecov is failing? # R -e 'covr::codecov()'
+ - R -e 'covr::codecov()'
