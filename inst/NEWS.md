@@ -2,6 +2,8 @@
 
 * CLEAN UP: Removed helper functions that are not required any more:
   `get_env_or_null()`, `read_rds_or_null()` and `print_processx()`.
+  
+* MINOR CHANGE: remove requirement that `milestone_ids` and `cell_ids` cannot overlap
 
 # dynwrap 0.3.1 (19-11-2018)
 
