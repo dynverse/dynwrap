@@ -60,8 +60,7 @@ Suggests:
 Remotes:
   dynverse/babelwhale,
   dynverse/dynutils,
-  dynverse/dyndimred,
-  rcannood/qsub
+  dynverse/dyndimred
 VignetteBuilder: knitr
 Collate: 
     'calculate_average_by_group.R'
