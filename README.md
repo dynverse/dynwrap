@@ -48,10 +48,13 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
-### Latest changes in dynwrap 0.4.0 (unreleased)
+### Latest changes in dynwrap 0.3.1.1 (17-12-2018)
 
   - CLEAN UP: Removed helper functions that are not required any more:
     `get_env_or_null()`, `read_rds_or_null()` and `print_processx()`.
+
+  - MINOR CHANGE: remove requirement that `milestone_ids` and `cell_ids`
+    cannot overlap
 
 ### Latest changes in dynwrap 0.3.1 (19-11-2018)
 

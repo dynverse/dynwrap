@@ -1,4 +1,4 @@
-# dynwrap 0.4.0 (unreleased)
+# dynwrap 0.3.1.1 (17-12-2018)
 
 * CLEAN UP: Removed helper functions that are not required any more:
   `get_env_or_null()`, `read_rds_or_null()` and `print_processx()`.
