@@ -29,7 +29,6 @@ add_branch_trajectory <- function(
 
   # check branch ids, branch network network and branches
   testthat::expect_is(branch_ids, "character")
-  testthat::expect_false(any(duplicated(c(branch_ids, cell_ids))))
   branch_network <- check_branch_network(branch_ids, branch_network)
   branches <- check_branches(branch_ids, branches)
 

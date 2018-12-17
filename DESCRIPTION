@@ -1,7 +1,7 @@
 Package: dynwrap
 Type: Package
 Title: Common trajectory model for representing trajectories from all sources
-Version: 0.3.1
+Version: 0.3.1.1
 Authors@R: c(
     person(
       "Robrecht", 
@@ -37,7 +37,6 @@ Imports:
   jsonlite,
   magrittr,
   methods,
-  processx,
   pdist,
   purrr,
   readr,
@@ -61,8 +60,7 @@ Suggests:
 Remotes:
   dynverse/babelwhale,
   dynverse/dynutils,
-  dynverse/dyndimred,
-  rcannood/qsub
+  dynverse/dyndimred
 VignetteBuilder: knitr
 Collate: 
     'calculate_average_by_group.R'
@@ -78,8 +76,6 @@ Collate:
     'data.R'
     'get_cell_grouping.R'
     'get_divergence_triangles.R'
-    'helper_null_pipers.R'
-    'helper_processx.R'
     'metawrap_get_output_processor.R'
     'method_create_ti_method_container.R'
     'method_parse_parameter_definition.R'
