@@ -308,14 +308,14 @@ simplify_get_edge_points_on_path <- function(sub_edge_points, path) {
 }
 
 simplify_replace_edges <- function(subgr, sub_edge_points, i, j, path, is_directed) {
-  if (!is_directed && i > j) {
+  swap <- !is_directed && i > j
+
+  if (swap) {
     # make sure i is larger than j, because otherwise igraph is going to add an edge j -> i instead if undirected
     # this will mess up the edge_points, as these will still add an edge between i -> j
-    if (i > j) {
-      i_orig <- i
-      i <- j
-      j <- i_orig
-    }
+    i_orig <- i
+    i <- j
+    j <- i_orig
   }
 
   path_len <- sum(path$weight)
@@ -333,6 +333,10 @@ simplify_replace_edges <- function(subgr, sub_edge_points, i, j, path, is_direct
       mutate(from = igraph::V(subgr)$name[[i]], to = igraph::V(subgr)$name[[j]]) %>%
       mutate(percentage = case_when(path_len == 0 ~ 0.5, TRUE ~ (cs + percentage * weight) / path_len)) %>%
       select(id, from, to, percentage)
+
+    if (swap) {
+      processed_edge_points <- processed_edge_points %>% mutate(percentage = 1 - percentage)
+    }
 
     sub_edge_points <- bind_rows(out$not_on_path, processed_edge_points)
   }

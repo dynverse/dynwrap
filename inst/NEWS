@@ -1,3 +1,7 @@
+dynwrap 0.3.1.2 (unreleased)
+
+* BUG FIX: simplify igraph network would sometimes swap edges around.
+
 dynwrap 0.3.1.1 (17-12-2018)
 
 * CLEAN UP: Removed helper functions that are not required any more:
