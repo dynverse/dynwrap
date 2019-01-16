@@ -72,7 +72,5 @@ get_default_parameters <- function(definition) {
   params <- definition$parameters
   params <- params[names(params) != "forbidden"]
 
-  map2(names(params), params, function(name, param) {
-    as.list(set_names(param$default, name))
-  }) %>% unlist(recursive = FALSE)
+  map(params, ~.$default)
 }
