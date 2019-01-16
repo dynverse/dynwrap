@@ -50,7 +50,8 @@ changes.
 
 ### Latest changes in dynwrap 0.3.1.2 (unreleased)
 
-  - BUG FIX: simplify igraph network would sometimes swap edges around.
+  - BUG FIX: `simplify_replace_edges()` would sometimes swap edges in
+    milestone network around, but forget invert percentages.
 
 ### Latest changes in dynwrap 0.3.1.1 (17-12-2018)
 
