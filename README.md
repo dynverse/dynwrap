@@ -48,6 +48,11 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
+### Latest changes in dynwrap 0.3.1.2 (unreleased)
+
+  - BUG FIX: `simplify_replace_edges()` would sometimes swap edges in
+    milestone network around, but forget invert percentages.
+
 ### Latest changes in dynwrap 0.3.1.1 (17-12-2018)
 
   - CLEAN UP: Removed helper functions that are not required any more:
@@ -55,7 +60,3 @@ changes.
 
   - MINOR CHANGE: remove requirement that `milestone_ids` and `cell_ids`
     cannot overlap
-
-### Latest changes in dynwrap 0.3.1 (19-11-2018)
-
-  - HOTFIX: Use `utils::data()` to get access to `priors`.

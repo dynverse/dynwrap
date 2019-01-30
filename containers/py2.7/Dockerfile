@@ -9,4 +9,4 @@ RUN apt-get update && apt-get install -y libhdf5-dev
 
 RUN pip install scipy numpy pandas matplotlib sklearn h5py tables Cython
 
-LABEL version 0.2.0.1
+LABEL version 0.2.0.2
