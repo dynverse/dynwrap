@@ -85,6 +85,7 @@
 
   # retrieve stdout/stderr
   stds <- .method_close_sinks(sink_meta)
+  on.exit({}) # on exit no longer needs to reset the sinks
 
   # stop timings
   timings$execution_stop <- Sys.time()
