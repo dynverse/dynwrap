@@ -3,7 +3,7 @@ Bootstrap: docker
 From: rocker/tidyverse
 
 %labels
-    version 0.2.0.7
+    version 0.2.0.8
 
 %environment
     OPENBLAS_NUM_THREADS=1
@@ -16,7 +16,7 @@ From: rocker/tidyverse
 %post
     apt-get update && apt-get install -y libhdf5-dev libssh-dev
     echo 'utils::setRepositories(ind=1:4)' > ~/.Rprofile
-    R -e 'devtools::install_github("r-lib/remotes")' # remotes 2.0.1 is causing some issues
+    R -e 'devtools::install_cran("Rcpp")'
     R -e 'devtools::install_github("dynverse/dyndimred", dependencies = TRUE)'
     R -e 'devtools::install_github("dynverse/dynwrap", dependencies = TRUE)'
     R -e 'devtools::install_cran(c("RcppEigen", "RSpectra", "RcppArmadillo"))' # preinstall certain rcpp libraries
