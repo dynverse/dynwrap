@@ -30,6 +30,8 @@
   # initialise stdout/stderr files
   sink_meta <- .method_init_sinks(verbose = verbose, return_verbose = return_verbose)
 
+  on.exit(.method_close_sinks(sink_meta))
+
   # print helpful message
   if (verbose) {
     cat(
@@ -83,6 +85,7 @@
 
   # retrieve stdout/stderr
   stds <- .method_close_sinks(sink_meta)
+  on.exit({}) # on exit no longer needs to reset the sinks
 
   # stop timings
   timings$execution_stop <- Sys.time()
