@@ -55,7 +55,7 @@ is_wrapper_with_expression <- function(model) {
 #' @export
 get_expression <- function(model, expression_source = "expression") {
   if (is.character(expression_source)) {
-    if(!expression_source %in% names(model)) {stop("Expression source not in traj, please provide expression or counts matrix to expression_source.")}
+    if(!expression_source %in% names(model)) {stop(glue::glue("No expression found in trajectory, please provide the expression through the {crayon::italic('expression_source')} argument. This can be an expression or counts matrix, or a dataset containing the expression."))}
     expression <- model[[expression_source]]
   } else if (is.matrix(expression_source)) {
     expression <- expression_source
