@@ -1,4 +1,4 @@
-# dynwrap 0.3.1.2 (unreleased)
+# dynwrap 0.3.1.2 (01-02-2019)
 
 * BUG FIX: `simplify_replace_edges()` would sometimes swap edges in milestone network around, but forget
   invert percentages.
