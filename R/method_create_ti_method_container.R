@@ -50,7 +50,7 @@ create_ti_method_container <- function(
   ####          PULL NEW IMAGE (IF NEEDED)          ####
   ######################################################
 
-  if (config$backend != "singularity" || config$use_cache) {
+  if (config$backend != "singularity") {
     if (identical(current_version, NA) || (!is.null(version) && current_version < version)) {
       msg <- ifelse(identical(current_version, NA), "Container is not in cache", "Cache is out of date")
       message("Pulling container: '", container_id, "'. Reason: '", msg, "'. This might take a while.")
