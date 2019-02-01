@@ -3,6 +3,7 @@
 * BUG FIX: `simplify_replace_edges()` would sometimes swap edges in milestone network around, but forget
   invert percentages.
 * BUG FIX: Close sinks when interupting the R process
+* MINOR CHANGE: Work with new babelwhale, which includes support for singularity 3.0
 
 # dynwrap 0.3.1.1 (17-12-2018)
 
