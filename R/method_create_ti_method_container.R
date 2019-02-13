@@ -9,7 +9,7 @@
 #' @param pull_if_needed Pull the container if not yet available.
 #' @param return_function Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.
 #'
-#' @importFrom babelwhale get_default_config pull_container
+#' @importFrom babelwhale get_default_config pull_container test_docker_installation test_singularity_installation list_docker_images
 #'
 #' @export
 create_ti_method_container <- function(
@@ -25,43 +25,30 @@ create_ti_method_container <- function(
   ######################################################
 
   if (config$backend == "docker") {
-    docker_installed <- test_docker_installation()
-    if (!docker_installed) {
-      test_docker_installation(detailed = TRUE)
-    }
+    test_docker_installation()
   } else if (config$backend == "singularity") {
-    # TODO: there should be a test_singularity_installation()
+    test_singularity_installation()
   }
 
   ######################################################
   ####          FETCH CURRENT REPO DIGEST           ####
   ######################################################
 
-  current_version <- .container_get_version(container_id)
-
-  # pull if container can't be found
-  if (pull_if_needed && identical(current_version, NA)) {
-    babelwhale::pull_container(container_id)
-
-    current_version <- .container_get_version(container_id)
-  }
-
   ######################################################
   ####          PULL NEW IMAGE (IF NEEDED)          ####
   ######################################################
 
-  if (config$backend != "singularity") {
-    if (identical(current_version, NA) || (!is.null(version) && current_version < version)) {
-      msg <- ifelse(identical(current_version, NA), "Container is not in cache", "Cache is out of date")
-      message("Pulling container: '", container_id, "'. Reason: '", msg, "'. This might take a while.")
+  # TODO: only pull if container is not available
+  babelwhale::pull_container(container_id)
 
+  if (config$backend == "docker") {
+    tab <- list_docker_images(container_id)
+
+    if (nrow(tab) == 0) {
       babelwhale::pull_container(container_id)
-
-      new_version <- .container_get_version(container_id)
-      if (!is.null(version) && new_version < version) {
-        warning("After pulling '", container_id, "', version number is lower than requested.\nCurrent version: ", new_version, ", expected >= ", version)
-      }
     }
+  } else if (config$backend == "singularity") {
+    babelwhale::pull_container(container_id)
   }
 
   ######################################################
