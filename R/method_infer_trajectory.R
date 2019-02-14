@@ -32,7 +32,7 @@ infer_trajectories <- function(
   method,
   parameters = NULL,
   give_priors = NULL,
-  seed = 1,
+  seed = sample(1:.Machine$integer.max, 1),
   verbose = FALSE,
   return_verbose = FALSE,
   debug = FALSE,
