@@ -173,6 +173,9 @@ infer_trajectory <- dynutils::inherit_default_params(
       error <- design$summary[[1]]$error[[1]]
       cat("Error traceback:\n")
       traceback(error)
+      if (!is.list(error)) { # if no error yet, add a fake one
+        error <- list(message = "")
+      }
       stop("Error during trajectory inference \n", error$message, call. = FALSE)
     } else {
       first(design$model)
