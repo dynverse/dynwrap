@@ -58,7 +58,7 @@ Suggests:
   rmarkdown,
   viridis
 Remotes:
-  dynverse/babelwhale,
+  dynverse/babelwhale@singularity3,
   dynverse/dynutils,
   dynverse/dyndimred
 VignetteBuilder: knitr
