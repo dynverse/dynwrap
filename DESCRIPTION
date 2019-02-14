@@ -70,7 +70,6 @@ Collate:
     'compute_tented_geodesic_distances.R'
     'container_get_definition.R'
     'container_get_example.R'
-    'container_get_version.R'
     'convert_milestone_percentages_to_progressions.R'
     'convert_progressions_to_milestone_percentages.R'
     'data.R'
