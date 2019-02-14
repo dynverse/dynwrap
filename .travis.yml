@@ -16,7 +16,6 @@ before_install:
   - source <(curl -s https://raw.githubusercontent.com/dynverse/travis_scripts/master/hdf5.sh)
 install:
  - sedi () { sed --version >/dev/null 2>&1 && sed -i -- "$@" || sed -i "" "$@" ; }
- - if [ `git branch | grep '* master' | wc -l` == 0 ]; then sedi 's#\(dynverse/[^, ]*\)#\1@devel#' 'DESCRIPTION'; fi
  - R -e 'if ("devtools" %in% rownames(installed.packages())) update.packages(oldPkgs = "devtools", ask = FALSE) else install.packages("devtools")'
  - R -e 'devtools::install_cran("covr")'
  - R -e 'setRepositories(ind = 1:4); devtools::install(dependencies = TRUE, upgrade = TRUE)'
