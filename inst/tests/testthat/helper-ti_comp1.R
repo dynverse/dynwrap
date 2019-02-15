@@ -21,31 +21,23 @@ ti_comp1 <- dynwrap::create_ti_method_r(
   output = c("linear_trajectory", "dimred", "timings"),
 
   # describe tuneable parameters
-  parameters = list(
-    dimred = list(
-      type = "discrete",
+  parameters = as.list(dynparam::parameter_set(
+    dynparam::character_parameter(
+      id = "dimred_method",
       default = "pca",
       values = names(dyndimred::list_dimred_methods())
     ),
-    ndim = list(
-      type = "integer",
-      default = 2,
-      lower = 2,
-      upper = 30
-    ),
-    component = list(
-      type = "integer",
+    dynparam::integer_parameter(
+      id = "component",
       default = 1,
-      lower = 1,
-      upper = 10
+      distribution = dynparam::uniform_distribution(1L, 10L)
     )
-  ),
+  )),
 
   # function to run the method with
   run_fun = function(
     expression,
-    ndim,
-    dimred,
+    dimred_method,
     component,
     seed = NA,
     verbose = FALSE
@@ -55,7 +47,7 @@ ti_comp1 <- dynwrap::create_ti_method_r(
     # TIMING: done with preproc
     tl <- add_timing_checkpoint(NULL, "method_afterpreproc")
 
-    space <- dyndimred::dimred(expression, method = dimred, ndim = ndim)
+    space <- dyndimred::dimred(expression, method = dimred_method, ndim = max(component, 2L))
 
     # TIMING: done with method
     tl <- tl %>% add_timing_checkpoint("method_aftermethod")
