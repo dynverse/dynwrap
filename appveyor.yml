@@ -18,7 +18,7 @@ cache:
 image: Visual Studio 2017
 
 build_script:
-  - R -e "install.packages('curl' ,repos = "http://cran.us.r-project.org")"
+  - R -e "install.packages('curl', repos = 'http://cran.us.r-project.org')"
   - travis-tool.sh install_deps
 
 test_script:
