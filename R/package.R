@@ -3,10 +3,12 @@
 #' @import dplyr
 #' @import tidyr
 #' @import methods
-#' @import tibble
 #' @import dynutils
 #' @import readr
 #' @import purrr
+#' @import assertthat
+#' @import dynparam
+#' @importFrom tibble as_tibble as_data_frame tibble data_frame enframe deframe lst tribble
 #' @importFrom magrittr %<>% %$% set_rownames set_colnames
 #' @importFrom glue glue
 #'

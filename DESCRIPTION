@@ -29,9 +29,11 @@ Encoding: UTF-8
 Depends:
   R (>= 3.0.0)
 Imports:
+  assertthat,
   babelwhale,
   dplyr,
   dynutils,
+  dynparam,
   igraph,
   glue,
   jsonlite,
@@ -60,7 +62,8 @@ Suggests:
 Remotes:
   dynverse/babelwhale@singularity3,
   dynverse/dynutils,
-  dynverse/dyndimred
+  dynverse/dyndimred,
+  dynverse/dynparam
 VignetteBuilder: knitr
 Collate: 
     'calculate_average_by_group.R'
