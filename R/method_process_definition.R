@@ -1,12 +1,32 @@
 .method_process_definition <- function(definition, return_function = TRUE) {
   # check definition
   assert_that(
+    # check description fields
     definition %has_names% c("method_info", "parameters", "input", "output"),
+    names(definition) %all_in% c("method_info", "wrapper_info", "container_info", "manuscript_info", "parameters", "input", "output", "run_info"),
+
+    # check method info fields
     definition$method_info %has_names% c("id", "name"),
+    names(definition$method_info) %all_in% c("id", "name", "implementation_id", "source", "platform", "code_url", "authors"),
+
+    # check wrapper_info
+    names(definition$wrapper_info) %all_in% c("wrapper_type", "topology_inference", "trajectory_types"),
+
+    # check container info
+    names(definition$container_info) %all_in% c("docker_repository", "container_url"),
+
+    # check manuscript info
+    names(definition$manuscript_info) %all_in% c("doi", "google_scholar_cluster_id", "preprint_date", "publication_date"),
+
+    # check inputs
     definition$input %has_names% c("required"),
+    names(definition$input) %all_in% c("format", "required", "optional"),
     definition$input$required %all_in% dynwrap::allowed_inputs$input_id,
     definition$input$optional %all_in% dynwrap::allowed_inputs$input_id,
+
+    # check outputs
     definition$output %has_names% c("outputs"),
+    names(definition$output) %all_in% c("format", "outputs"),
     definition$output$outputs %all_in% dynwrap::allowed_outputs$output_id
   )
 
