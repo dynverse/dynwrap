@@ -63,6 +63,8 @@ infer_trajectories <- function(
   } else {
     stop("Invalid method argument, it is of class ", paste0(class(method), collapse = ", "))
   }
+
+  # turn method(s) into a list of methods (again)
   method <- map(seq_len(nrow(method)), extract_row_to_list, tib = method)
 
   # process parameters ----------------
