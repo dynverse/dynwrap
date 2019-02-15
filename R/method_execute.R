@@ -35,7 +35,7 @@
   # print helpful message
   if (verbose) {
     cat(
-      "Executing '", method$id, "' on '", dataset$id, "'\n",
+      "Executing '", method$method_info$id, "' on '", dataset$id, "'\n",
       "With parameters: ", deparse(parameters), "\n",
       "And inputs: ", paste0(names(inputs), collapse = ", "), "\n",
       sep = ""
@@ -103,8 +103,8 @@
 
   # create a summary tibble
   summary <- tibble(
-    method_name = method$name,
-    method_id = method$id,
+    method_name = method$method_info$name,
+    method_id = method$method_info$id,
     dataset_id = dataset$id,
     stdout = stds$stdout,
     stderr = stds$stderr,
