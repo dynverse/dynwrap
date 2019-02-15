@@ -31,16 +31,10 @@ create_ti_method_container <- function(
   }
 
   ######################################################
-  ####          FETCH CURRENT REPO DIGEST           ####
-  ######################################################
-
-  ######################################################
   ####          PULL NEW IMAGE (IF NEEDED)          ####
   ######################################################
 
   # TODO: only pull if container is not available
-  babelwhale::pull_container(container_id)
-
   if (config$backend == "docker") {
     tab <- list_docker_images(container_id)
 
@@ -57,22 +51,20 @@ create_ti_method_container <- function(
 
   definition <- .container_get_definition(container_id)
 
-  # check input format
-  testthat::expect_true(is.character(definition$input$format))
-  testthat::expect_equal(length(definition$input$format), 1)
-  testthat::expect_true(definition$input$format %in% c("hdf5", "text", "rds"))
+  # check container-specific ti method parameters
+  assert_that(
+    definition %has_names% c("input", "output"),
 
-  # check available inputs
-  testthat::expect_true(all(definition$input$required %in% dynwrap::allowed_inputs$input_id))
-  testthat::expect_true(all(definition$input$optional %in% dynwrap::allowed_inputs$input_id))
+    # check input format
+    definition$input %has_names% c("format"),
+    length(definition$input$format) == 1,
+    definition$input$format %all_in% c("hdf5", "text", "rds"),
 
-  # check output format
-  testthat::expect_true(is.character(definition$output$format))
-  testthat::expect_equal(length(definition$output$format), 1)
-  testthat::expect_true(definition$output$format %in% c("hdf5", "text", "rds", "dynwrap"))
-
-  # check available outputs
-  testthat::expect_true(all(definition$output$outputs %in% dynwrap::allowed_outputs$output_id))
+    # check output format
+    definition$output %has_names% c("format"),
+    length(definition$output$format) == 1,
+    definition$output$format %all_in% c("hdf5", "text", "rds", "dynwrap")
+  )
 
   # save container info
   definition$run_info <- list(

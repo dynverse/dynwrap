@@ -1,15 +1,22 @@
 .method_process_definition <- function(definition, return_function = TRUE) {
   # check definition
-  testthat::expect_true(is.character(definition$id))
-  testthat::expect_true(is.character(definition$name))
+  assert_that(
+    definition %has_names% c("method_info", "parameters", "input", "output"),
+    definition$method_info %has_names% c("id", "name"),
+    definition$input %has_names% c("required"),
+    definition$input$required %all_in% dynwrap::allowed_inputs$input_id,
+    definition$input$optional %all_in% dynwrap::allowed_inputs$input_id,
+    definition$output %has_names% c("outputs"),
+    definition$output$outputs %all_in% dynwrap::allowed_outputs$output_id
+  )
 
-  # check params
-  # TODO: Expand testing of definition, in case 3rd party containers are naughty
+  # parse the parameters
+  definition$parameters <- dynparam::as_parameter_set(definition$parameters)
 
-  # create inputs tibble
+  # parse the inputs
   utils::data("priors", package = "dynwrap", envir = environment()) # TODO: move to sysdata, avoiding loading of priors
   definition$inputs <-
-    data_frame(
+    tibble(
       input_id = c(definition$input$required, definition$input$optional, definition$parameters$id),
       required = input_id %in% definition$input$required,
       type = case_when(
@@ -19,6 +26,7 @@
       )
     )
 
+  # add class to definition
   definition <- definition %>%
     add_class("dynwrap::ti_method")
 
@@ -31,7 +39,7 @@
       # remove previous defaults
       for (param_name in names(new_defaults)) {
         if (param_name %in% names(definition$parameters)) {
-          definition$parameters[[param_name]]$default <- new_defaults[[param_name]]
+          definition$parameters$parameters[[param_name]]$default <- new_defaults[[param_name]]
         } else {
           warning("Unknown parameter: ", param_name, ", skipping.")
         }
@@ -69,8 +77,5 @@ is_ti_method <- function(object) {
 get_default_parameters <- function(definition) {
   testthat::expect_true(is_ti_method(definition))
 
-  params <- definition$parameters
-  params <- params[names(params) != "forbidden"]
-
-  map(params, ~.$default)
+  map(definition$parameters$parameters, ~ .$default)
 }
