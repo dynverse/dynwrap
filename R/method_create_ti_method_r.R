@@ -32,8 +32,9 @@ create_ti_method_r <- function(
   ...
 ) {
   # check that run_fun has the required arguments
-  expected_arguments <- c(input_required, input_optional, names(parameters), "verbose", "seed")
-  testthat::expect_true(all(expected_arguments %in% formalArgs(run_fun)))
+  assert_that(
+    c(input_required, input_optional, names(parameters), "verbose", "seed") %all_in% formalArgs(run_fun)
+  )
 
   # process input and output vectors
   input <- list( # could be derived from the run_fn
@@ -48,8 +49,10 @@ create_ti_method_r <- function(
 
   # create definition list
   definition <- lst(
-    id,
-    name,
+    method_info = lst(
+      id,
+      name
+    ),
     parameters,
     run_info = lst(
       backend = "function",
