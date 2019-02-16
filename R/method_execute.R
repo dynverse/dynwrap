@@ -30,90 +30,94 @@
   # initialise stdout/stderr files
   sink_meta <- .method_init_sinks(verbose = verbose, return_verbose = return_verbose)
 
-  on.exit(.method_close_sinks(sink_meta))
-
-  # print helpful message
-  if (verbose) {
-    cat(
-      "Executing '", method$method_info$id, "' on '", dataset$id, "'\n",
-      "With parameters: ", deparse(parameters), "\n",
-      "And inputs: ", paste0(names(inputs), collapse = ", "), "\n",
-      sep = ""
-    )
-  }
-
-  # run preproc
-  preproc_meta <-
-    if (method$run_info$backend == "function") {
-      .method_execution_preproc_function(method = method)
-    } else {
-      .method_execution_preproc_container(method = method, inputs = inputs, parameters = parameters, verbose = verbose || return_verbose, seed = seed, debug = debug)
+  tryCatch({
+    # print helpful message
+    if (verbose) {
+      cat(
+        "Executing '", method$method$id, "' on '", dataset$id, "'\n",
+        "With parameters: ", deparse(parameters), "\n",
+        "And inputs: ", paste0(names(inputs), collapse = ", "), "\n",
+        sep = ""
+      )
     }
 
-  # initialise output variables
-  model <- NULL
-  timings$method_beforepreproc <- Sys.time()
-
-  error <- tryCatch({
-    # execute method and return model
-    model <-
-      if (method$run_info$backend == "function") {
-        .method_execution_execute_function(method = method, inputs = inputs, parameters = parameters, verbose = verbose || return_verbose, seed = seed, preproc_meta = preproc_meta)
+    # run preproc
+    preproc_meta <-
+      if (method$run$backend == "function") {
+        .method_execution_preproc_function(method = method)
       } else {
-        .method_execution_execute_container(method = method, preproc_meta = preproc_meta)
+        .method_execution_preproc_container(method = method, inputs = inputs, parameters = parameters, verbose = verbose || return_verbose, seed = seed, debug = debug)
       }
 
-    # add model timings and timings stop
-    timings <- c(timings, model$timings)
-    timings$method_afterpostproc <- Sys.time()
+    # initialise output variables
+    model <- NULL
+    timings$method_beforepreproc <- Sys.time()
 
-    # remove timings from model
-    model$timings <- NULL
-    class(model) <- setdiff(class(model), "dynwrap::with_timings")
+    error <- tryCatch({
+      # execute method and return model
+      model <-
+        if (method$run$backend == "function") {
+          .method_execution_execute_function(method = method, inputs = inputs, parameters = parameters, verbose = verbose || return_verbose, seed = seed, preproc_meta = preproc_meta)
+        } else {
+          .method_execution_execute_container(method = method, preproc_meta = preproc_meta)
+        }
 
-    NA_character_
+      # add model timings and timings stop
+      timings <- c(timings, model$timings)
+      timings$method_afterpostproc <- Sys.time()
+
+      # remove timings from model
+      model$timings <- NULL
+      class(model) <- setdiff(class(model), "dynwrap::with_timings")
+
+      NA_character_
+    }, error = function(e) {
+      e$message
+    })
+
+    # run postproc
+    if (method$run$backend == "function") {
+      .method_execution_postproc_function(preproc_meta = preproc_meta)
+    } else {
+      .method_execution_postproc_container(preproc_meta = preproc_meta)
+    }
+
+    # retrieve stdout/stderr
+    stds <- .method_close_sinks(sink_meta)
+
+    # stop timings
+    timings$execution_stop <- Sys.time()
+
+    # if method doesn't return these timings, row with the oars we have
+    if (!"method_afterpreproc" %in% names(timings)) timings$method_afterpreproc <- timings$method_beforepreproc
+    if (!"method_aftermethod" %in% names(timings)) timings$method_aftermethod <- timings$method_afterpostproc
+
+    # make sure timings are numeric
+    timings <- map_dbl(timings, as.numeric)
+
+    # calculate timing differences
+    timings_diff <- diff(timings[c("execution_start", "method_beforepreproc", "method_afterpreproc", "method_aftermethod", "method_afterpostproc", "execution_stop")]) %>%
+      set_names(c("time_sessionsetup", "time_preprocessing", "time_method", "time_postprocessing", "time_sessioncleanup"))
+
+    # create a summary tibble
+    summary <- tibble(
+      method_name = method$method$name,
+      method_id = method$method$id,
+      dataset_id = dataset$id,
+      stdout = stds$stdout,
+      stderr = stds$stderr,
+      error = error,
+      prior_df = list(method$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(inputs)))
+    ) %>%
+      bind_cols(as.data.frame(as.list(timings_diff)))
+
+    lst(model, summary)
+
   }, error = function(e) {
-    e$message
+    stds <- .method_close_sinks(sink_meta)
+
+    stop("Error produced: ", e$message)
   })
-
-  # run postproc
-  if (method$run_info$backend == "function") {
-    .method_execution_postproc_function(preproc_meta = preproc_meta)
-  } else {
-    .method_execution_postproc_container(preproc_meta = preproc_meta)
-  }
-
-  # retrieve stdout/stderr
-  stds <- .method_close_sinks(sink_meta)
-  on.exit({}) # on exit no longer needs to reset the sinks
-
-  # stop timings
-  timings$execution_stop <- Sys.time()
-
-  # if method doesn't return these timings, row with the oars we have
-  if (!"method_afterpreproc" %in% names(timings)) timings$method_afterpreproc <- timings$method_beforepreproc
-  if (!"method_aftermethod" %in% names(timings)) timings$method_aftermethod <- timings$method_afterpostproc
-
-  # make sure timings are numeric
-  timings <- map_dbl(timings, as.numeric)
-
-  # calculate timing differences
-  timings_diff <- diff(timings[c("execution_start", "method_beforepreproc", "method_afterpreproc", "method_aftermethod", "method_afterpostproc", "execution_stop")]) %>%
-    set_names(c("time_sessionsetup", "time_preprocessing", "time_method", "time_postprocessing", "time_sessioncleanup"))
-
-  # create a summary tibble
-  summary <- tibble(
-    method_name = method$method_info$name,
-    method_id = method$method_info$id,
-    dataset_id = dataset$id,
-    stdout = stds$stdout,
-    stderr = stds$stderr,
-    error = error,
-    prior_df = list(method$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(inputs)))
-  ) %>%
-    bind_cols(as.data.frame(as.list(timings_diff)))
-
-  lst(model, summary)
 }
 
 .method_init_sinks <- function(verbose, return_verbose) {
