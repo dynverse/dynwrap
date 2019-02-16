@@ -14,7 +14,7 @@ ti_error <- dynwrap::create_ti_method_r(
   output = NULL,
 
   # describe tuneable parameters
-  parameters = list(),
+  parameters = dynparam::parameter_set(),
 
   # function to run the method with
   run_fun = function(

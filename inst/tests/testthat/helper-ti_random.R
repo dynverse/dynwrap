@@ -16,13 +16,13 @@ ti_random <- dynwrap::create_ti_method_r(
   output = c("trajectory", "timings"),
 
   # describe tuneable parameters
-  parameters = list(
-    dummy_param = list(
-      type = "numeric",
+  parameters = dynparam::parameter_set(
+    dynparam::numeric_parameter(
+      id = "dummy_param",
+      description = "Dummy parameter",
       default = 0.5,
-      upper = 1,
-      lower = 0,
-      description = "Dummy parameter")
+      distribution = dynparam::uniform_distribution(0, 1)
+    )
   ),
 
   # function to run the method with

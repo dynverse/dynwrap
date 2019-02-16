@@ -16,20 +16,12 @@ ti_identity <- dynwrap::create_ti_method_r(
   output = c("trajectory", "timings"),
 
   # describe tuneable parameters
-  parameters = list(
-    dummy_param = list(
-      type = "numeric",
-      default = 0.5,
-      upper = 1,
-      lower = 0,
-      description = "Dummy parameter")
-  ),
+  parameters = dynparam::parameter_set(),
 
   # function to run the method with
   run_fun = function(
     counts,
     dataset,
-    dummy_param = .5,
     seed = NA,
     verbose = FALSE
   ) {

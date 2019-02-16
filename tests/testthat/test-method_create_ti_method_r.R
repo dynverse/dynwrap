@@ -8,8 +8,9 @@ dummy <- create_ti_method_r(
   input_required = c("counts"),
   input_optional = NULL,
   output = "trajectory",
-  parameters = list(
-    param = list(
+  parameters = dynparam::parameter_set(
+    dynparam::character_parameter(
+      id = "param",
       default = "banana",
       values = c("apple", "banana", "cherry")
     )
@@ -34,12 +35,12 @@ dataset <- wrap_data(cell_ids = "a") %>%
   )
 
 test_that("Testing simple create ti function", {
-  expect_equal( dummy_instance$name, "dummy 1" )
-  expect_equal( dummy_instance$id, "dum1" )
-  expect_equal( dummy_instance$run_info$package_loaded, "dynwrap" )
-  expect_equal( dummy_instance$run_info$package_required, "dplyr" )
-  expect_is( dummy_instance$parameters, "list" )
-  expect_is( dummy_instance$run_info$run_fun, "function" )
+  expect_equal( dummy_instance$method$name, "dummy 1" )
+  expect_equal( dummy_instance$method$id, "dum1" )
+  expect_equal( dummy_instance$run$package_loaded, "dynwrap" )
+  expect_equal( dummy_instance$run$package_required, "dplyr" )
+  expect_is( dummy_instance$parameters, "parameter_set" )
+  expect_is( dummy_instance$run$run_fun, "function" )
 
   expect_equal(get_default_parameters(dummy_instance)$param, "banana")
 })
