@@ -2,21 +2,21 @@
   # check definition
   assert_that(
     # check description fields
-    definition %has_names% c("method_info", "parameters", "input", "output"),
-    names(definition) %all_in% c("method_info", "wrapper_info", "container_info", "manuscript_info", "parameters", "input", "output", "run_info"),
+    definition %has_names% c("method", "parameters", "input", "output"),
+    names(definition) %all_in% c("method", "wrapper", "container", "manuscript", "parameters", "input", "output", "run"),
 
     # check method info fields
-    definition$method_info %has_names% c("id", "name"),
-    names(definition$method_info) %all_in% c("id", "name", "implementation_id", "source", "platform", "code_url", "authors"),
+    definition$method %has_names% c("id", "name"),
+    names(definition$method) %all_in% c("id", "name", "tool_id", "source", "platform", "url", "authors"),
 
-    # check wrapper_info
-    names(definition$wrapper_info) %all_in% c("wrapper_type", "topology_inference", "trajectory_types"),
+    # check wrapper
+    names(definition$wrapper) %all_in% c("type", "topology_inference", "trajectory_types"),
 
     # check container info
-    names(definition$container_info) %all_in% c("docker_repository", "container_url"),
+    names(definition$container) %all_in% c("docker", "url"),
 
     # check manuscript info
-    names(definition$manuscript_info) %all_in% c("doi", "google_scholar_cluster_id", "preprint_date", "publication_date"),
+    names(definition$manuscript) %all_in% c("doi", "google_scholar_cluster_id", "preprint_date", "publication_date"),
 
     # check inputs
     definition$input %has_names% c("required"),
@@ -31,7 +31,9 @@
   )
 
   # parse the parameters
-  definition$parameters <- dynparam::as_parameter_set(definition$parameters)
+  if (!dynparam::is_parameter_set(definition$parameters)) {
+    definition$parameters <- dynparam::as_parameter_set(definition$parameters)
+  }
 
   # parse the inputs
   utils::data("priors", package = "dynwrap", envir = environment()) # TODO: move to sysdata, avoiding loading of priors
@@ -51,15 +53,19 @@
     add_class("dynwrap::ti_method")
 
   if (return_function) {
+    defaults <- get_default_parameters(definition)
+
     # create function with which you can instantiate the method with a set of parameters
     param_overrider_fun <- function(...) {
       # get the parameters from this function
       new_defaults <- as.list(environment())[formalArgs(param_overrider_fun)]
 
+      param_names <- map_chr(definition$parameters$parameters, "id")
       # remove previous defaults
       for (param_name in names(new_defaults)) {
-        if (param_name %in% names(definition$parameters)) {
-          definition$parameters$parameters[[param_name]]$default <- new_defaults[[param_name]]
+
+        if (param_name %in% param_names) {
+          definition$parameters$parameters[[which(param_name == param_names)]]$default <- new_defaults[[param_name]]
         } else {
           warning("Unknown parameter: ", param_name, ", skipping.")
         }
@@ -68,7 +74,7 @@
       definition
     }
 
-    formals(param_overrider_fun) <- get_default_parameters(definition)
+    formals(param_overrider_fun) <- defaults
 
     param_overrider_fun
   } else {

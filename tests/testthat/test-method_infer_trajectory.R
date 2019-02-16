@@ -5,7 +5,7 @@ source(paste0(ifelse(file.exists("nothelper-methods.R"), "", "tests/testthat/"),
 # create dataset
 id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
-cell_info <- data_frame(
+cell_info <- tibble(
   cell_id = cell_ids,
   info1 = c("man", "in", "possession", "of", "a", "good"),
   info2 = c("fortune", "must", "be", "in", "want", "of"),
@@ -87,7 +87,7 @@ test_that("Testing infer_trajectory with control methods", {
   models <- infer_trajectories(
     dataset = list(dataset, dataset),
     method = list_as_tibble(list(ti_comp1(), ti_comp1())),
-    parameters = list(list(dimred = "mds"), list(dimred = "pca"))
+    parameters = list(list(dimred_method = "mds"), list(dimred_method = "pca"))
   )
 
   expect_true(is_tibble(models))

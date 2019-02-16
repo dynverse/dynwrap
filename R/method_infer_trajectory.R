@@ -135,8 +135,8 @@ infer_trajectories <- function(
     dataset_ix = design$dataset_ix,
     method_ix = design$method_ix,
     dataset_id = map_chr(dataset, "id")[design$dataset_ix],
-    method_id = map_chr(method, "id")[design$method_ix],
-    method_name = map_chr(method, "name")[design$method_ix],
+    method_id = map_chr(method, function(m) m$method$id)[design$method_ix],
+    method_name = map_chr(method, function(m) m$method$name)[design$method_ix],
     model = map(output, "model"),
     summary = map(output, "summary")
   )

@@ -33,7 +33,7 @@ create_ti_method_r <- function(
 ) {
   # check that run_fun has the required arguments
   assert_that(
-    c(input_required, input_optional, names(parameters), "verbose", "seed") %all_in% formalArgs(run_fun)
+    c(input_required, input_optional, names(parameters$parameters), "verbose", "seed") %all_in% formalArgs(run_fun)
   )
 
   # process input and output vectors
@@ -49,12 +49,12 @@ create_ti_method_r <- function(
 
   # create definition list
   definition <- lst(
-    method_info = lst(
+    method = lst(
       id,
       name
     ),
     parameters,
-    run_info = lst(
+    run = lst(
       backend = "function",
       run_fun,
       package_loaded,
@@ -72,25 +72,25 @@ create_ti_method_r <- function(
 
 
 .method_execution_preproc_function <- function(method) {
-  run_info <- method$run_info
+  run <- method$run
 
   # create a temporary directory to set as working directory,
   # to avoid polluting the working directory if a method starts
   # producing files haphazardly
-  tmp_dir <- tempfile(pattern = method$id)
+  tmp_dir <- tempfile(pattern = method$method$id)
   dir.create(tmp_dir)
   old_wd <- getwd()
   setwd(tmp_dir)
 
   # Load required packages and namespaces
-  if (!is.null(run_info$package_loaded) && !is.na(run_info$package_loaded)) {
-    for (pack in run_info$package_loaded) {
+  if (!is.null(run$package_loaded) && !is.na(run$package_loaded)) {
+    for (pack in run$package_loaded) {
       suppressMessages(do.call(require, list(pack)))
     }
   }
 
-  if (!is.null(run_info$package_required) && !is.na(run_info$package_required)) {
-    for (pack in run_info$package_required) {
+  if (!is.null(run$package_required) && !is.na(run$package_required)) {
+    for (pack in run$package_required) {
       suppressMessages(do.call(requireNamespace, list(pack)))
     }
   }
@@ -110,14 +110,14 @@ create_ti_method_r <- function(
   )
 
   # remove params that are not supposed to be here
-  remove_args <- setdiff(names(args), formalArgs(method$run_info$run_fun))
+  remove_args <- setdiff(names(args), formalArgs(method$run$run_fun))
   if (length(remove_args) > 0) {
     warning("Parameters [", paste(remove_args, collapse = ", "), "] not recognised by method; removing them from the arglist.")
     sel_args <- setdiff(names(args), remove_args)
     args <- args[remove_args]
   }
 
-  model <- do.call(method$run_info$run_fun, args)
+  model <- do.call(method$run$run_fun, args)
 
   model
 }

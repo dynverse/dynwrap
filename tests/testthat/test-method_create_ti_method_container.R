@@ -34,9 +34,9 @@ for (tag in tags) {
     container_id <- paste0("dynverse/dynwrap_tester:", tag, "_v", wanted_version)
     method <- create_ti_method_container(container_id = container_id, return_function = FALSE)
 
-    expect_true(method$method_info$id == paste0("dynwrap_tester_", tag))
-    expect_equal(method$run_info$backend, "container")
-    expect_equal(method$run_info$container_id, container_id)
+    expect_true(method$method$id == paste0("dynwrap_tester_", tag))
+    expect_equal(method$run$backend, "container")
+    expect_equal(method$run$container_id, container_id)
 
     model0 <- infer_trajectory(dataset, method, parameters = list())
     expect_true(is_wrapper_with_trajectory(model0))
@@ -56,3 +56,4 @@ for (tag in tags) {
     )
   })
 }
+

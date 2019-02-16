@@ -3,9 +3,6 @@
 #' These functions create a TI method from a container using `babelwhale`. Supports both docker and singularity as a backend.
 #'
 #' @param container_id The name of the container repository (e.g. `"dynverse/ti_angle"`).
-#' @param version The minimum required version of the TI method container.
-#'   If the required version is higher than the currently installed version,
-#'   the container will be pulled from dockerhub or singularityhub.
 #' @param pull_if_needed Pull the container if not yet available.
 #' @param return_function Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.
 #'
@@ -14,7 +11,6 @@
 #' @export
 create_ti_method_container <- function(
   container_id,
-  version = NULL,
   pull_if_needed = TRUE,
   return_function = TRUE
 ) {
@@ -67,7 +63,7 @@ create_ti_method_container <- function(
   )
 
   # save container info
-  definition$run_info <- list(
+  definition$run <- list(
     backend = "container",
     container_id = container_id
   )
@@ -151,7 +147,7 @@ create_ti_method_container <- function(
 
   # run container
   output <- babelwhale::run(
-    container_id = method$run_info$container_id,
+    container_id = method$run$container_id,
     command = NULL,
     args = NULL,
     volumes = paste0(preproc_meta$dir_dynwrap %>% babelwhale:::fix_windows_path(), ":/ti"),
