@@ -44,12 +44,12 @@ progressions <- convert_milestone_percentages_to_progressions(
 num_genes <- 100
 gene_ids <- paste0("Gene", seq_len(num_genes))
 expression <- matrix(rbinom(num_genes * length(cell_ids), 10000, .01), ncol = num_genes, dimnames = list(cell_ids, gene_ids))
-feature_info <- data_frame(
+feature_info <- tibble(
   feature_id = gene_ids,
   test = 1,
   housekeeping = sample(c(T, F), size = length(gene_ids), replace = TRUE)
 )
-cell_info <- data_frame(
+cell_info <- tibble(
   cell_id = cell_ids,
   test = 2,
   simulationtime = runif(length(cell_ids)),
