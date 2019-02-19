@@ -263,23 +263,41 @@ generate_prior_information <- function(
       features_id <- feature_info %>%
         filter(!housekeeping) %>%
         pull(feature_id)
-    } else if ("scran" %in% rownames(utils::installed.packages())) {
-      findMarkers <- get("findMarkers", asNamespace("scran"))
-      markers <- findMarkers(t(expression), groups_id %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
-
-      features_id <- map(markers, as, "data.frame") %>%
-        map(rownames_to_column, "gene") %>%
-        bind_rows() %>%
-        filter(FDR < marker_fdr) %>%
-        pull("gene") %>%
-        unique()
     } else {
-      warning("scran should be installed to determine marker features, will simply order by standard deviation")
-
-      features_id <- apply(expression, 2, sd) %>%
-        sort() %>%
-        rownames() %>%
-        {utils::head(., round(length(.)*0.1))}
+      requireNamespace("ranger")
+      data <- data.frame(
+        PREDICT = groups_id %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id) %>% as.factor,
+        expression,
+        check.names = FALSE,
+        stringsAsFactors = FALSE
+      )
+      rf <- ranger::ranger(
+        data = data,
+        num.trees = 2000,
+        mtry = min(50, ncol(expression)),
+        sample.fraction = min(250 / nrow(expression), 1),
+        min.node.size = 20,
+        importance = "impurity",
+        write.forest = FALSE,
+        dependent.variable.name = "PREDICT",
+        verbose = FALSE
+      )
+      rfsh <- ranger::ranger(
+        data = data %>% mutate(PREDICT = sample(PREDICT)),
+        num.trees = 2000,
+        mtry = min(50, ncol(expression)),
+        sample.fraction = min(250 / nrow(expression), 1),
+        min.node.size = 20,
+        importance = "impurity",
+        write.forest = FALSE,
+        dependent.variable.name = "PREDICT",
+        verbose = FALSE
+      )
+      features_id <-
+        rf$variable.importance %>%
+        sort(decreasing = TRUE) %>%
+        keep(~ . > quantile(rfsh$variable.importance, .75)) %>%
+        names()
     }
   }
 

@@ -57,6 +57,7 @@ Suggests:
   knitr,
   lhs,
   pkgload,
+  ranger,
   rmarkdown,
   viridis
 Remotes:
