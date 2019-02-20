@@ -23,7 +23,7 @@ BugReports: https://github.com/dynverse/dynwrap/issues
 Description: The common trajectory model for representing trajectories from real and synthetic datasets and method predictions.
 License: GPL-3
 LazyData: TRUE
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 Encoding: UTF-8
 Depends:
