@@ -7,7 +7,7 @@
 
     # check method info fields
     definition$method %has_names% c("id", "name"),
-    names(definition$method) %all_in% c("id", "name", "tool_id", "source", "platform", "url", "authors"),
+    names(definition$method) %all_in% c("id", "name", "tool_id", "source", "platform", "url", "authors", "license"),
 
     # check wrapper
     names(definition$wrapper) %all_in% c("type", "topology_inference", "trajectory_types"),
