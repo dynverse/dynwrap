@@ -69,7 +69,7 @@ parameters <- dynparam::parameter_set(
     id = "component",
     description = "The component to use",
     default = 1L,
-    distribution = uniform_distribution(lower = 1L, upper = 10L)
+    distribution = dynparam::uniform_distribution(lower = 1L, upper = 10L)
   )
 )
 ```
