@@ -59,17 +59,17 @@ pca <- prcomp(expression)
 
 ### Parameters
 
-The main function can accept any additional parameters, which should also be defined in a parameter list. This allows you to specify the type of parameter (integer, numeric, discrete, logical, ...), the possible range of values and the default value.
+The main function can accept any additional parameters, which should also be defined in a parameter set This allows you to specify the type of parameter (integer, numeric, character, logical, ...), the possible range of values and the default value. Check out `?dynparam` for more information on the possible options.
 
 In this example we'll define one parameter, the `component`:
 
 ```{r}
-parameters <- list(
-  component = list(
-    type = "numeric",
-    lower = 1,
-    upper = 10,
-    default = 1
+parameters <- dynparam::parameter_set(
+  dynparam::integer_parameter(
+    id = "component",
+    description = "The component to use",
+    default = 1L,
+    distribution = uniform_distribution(lower = 1L, upper = 10L)
   )
 )
 ```
