@@ -13,15 +13,31 @@ addons:
     packages:
       - libssh-dev  # PRISM > ssh > libssh-dev
 before_install:
-  - source <(curl -s https://raw.githubusercontent.com/dynverse/travis_scripts/master/hdf5.sh)
+  - source <(curl -sSL https://raw.githubusercontent.com/dynverse/travis_scripts/master/helper.sh)
+  - install_hdf5
 install:
- - sedi () { sed --version >/dev/null 2>&1 && sed -i -- "$@" || sed -i "" "$@" ; }
- #- if [ `git branch | grep '* master' | wc -l` == 0 ]; then sedi 's#\(dynverse/[^, @]*\)#\1@devel#' 'DESCRIPTION'; fi
- - R -e 'if ("devtools" %in% rownames(installed.packages())) update.packages(oldPkgs = "devtools", ask = FALSE) else install.packages("devtools")'
- - R -e 'devtools::install_cran("covr")'
+ - # use_dynverse_devel
+ - install_cran devtools
+ - install_cran covr
  - R -e 'setRepositories(ind = 1:4); devtools::install(dependencies = TRUE, upgrade = TRUE)'
 script:
-  - R CMD build .
-  - R CMD check *tar.gz
+ - R CMD build .
+ - R CMD check *tar.gz
 after_success:
  - R -e 'covr::codecov()'
+
+jobs:
+  include:
+    - stage: prepare hdf5
+      install:
+        - echo Skip
+      script:
+        - echo Skip
+      after_success:
+        - echo Skip
+    - stage: prepare cache
+      script:
+        - echo Skip
+      after_success:
+        - echo Skip
+    - stage: test
