@@ -81,6 +81,7 @@ Collate:
     'get_divergence_triangles.R'
     'metawrap_get_output_processor.R'
     'method_create_ti_method_container.R'
+    'method_create_ti_method_definition.R'
     'method_parse_parameter_definition.R'
     'method_create_ti_method_r.R'
     'method_execute.R'

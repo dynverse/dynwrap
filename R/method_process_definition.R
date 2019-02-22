@@ -1,3 +1,9 @@
+#' Process TI method description
+#'
+#' Assert correctness of common parameters and process priors and parameters
+#'
+#' @param definition The description of the TI method, containing meta data and information on how to execute it.
+#' @param return_function Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.
 .method_process_definition <- function(definition, return_function = TRUE) {
   # check definition
   assert_that(
@@ -10,7 +16,7 @@
     names(definition$method) %all_in% c("id", "name", "tool_id", "source", "platform", "url", "authors", "license"),
 
     # check wrapper
-    names(definition$wrapper) %all_in% c("type", "topology_inference", "trajectory_types"),
+    names(definition$wrapper) %all_in% c("type", "topology_inference", "trajectory_types", "command", "example"),
 
     # check container info
     names(definition$container) %all_in% c("docker", "url"),

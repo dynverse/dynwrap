@@ -4,7 +4,7 @@
 #'
 #' @param container_id The name of the container repository (e.g. `"dynverse/ti_angle"`).
 #' @param pull_if_needed Pull the container if not yet available.
-#' @param return_function Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.
+#' @inheritParams .method_process_definition
 #'
 #' @importFrom babelwhale get_default_config pull_container test_docker_installation test_singularity_installation list_docker_images
 #'
@@ -30,7 +30,6 @@ create_ti_method_container <- function(
   ####          PULL NEW IMAGE (IF NEEDED)          ####
   ######################################################
 
-  # TODO: only pull if container is not available
   if (config$backend == "docker") {
     tab <- list_docker_images(container_id)
 
@@ -49,7 +48,11 @@ create_ti_method_container <- function(
 
   # check container-specific ti method parameters
   assert_that(
-    definition %has_names% c("input", "output"),
+    definition %has_names% c("input", "output", "wrapper"),
+
+    # check wrapper format
+    definition$wrapper %has_names% c("command"),
+    is.character(definition$wrapper$command),
 
     # check input format
     definition$input %has_names% c("format"),
