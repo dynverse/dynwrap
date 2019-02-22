@@ -1,5 +1,8 @@
 # dynwrap 0.3.2 (unreleased)
 
+* MAJOR CHANGE: Add support for Singularity 3.0, drop support for previous 
+  releases of Singularity and singularity-hub.
+
 * FEATURE: Add `create_ti_method_definition()` to create a definition from a local script.
 
 # dynwrap 0.3.1.2 (01-02-2019)
