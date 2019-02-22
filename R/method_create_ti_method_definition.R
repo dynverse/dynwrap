@@ -4,7 +4,7 @@
 #'
 #' @param filename The filename of the method definition.
 #' @param definition The definition if already available as a list. Exactly one of `filename` and `definition` must be NULL.
-#' @inheritParams
+#' @inheritParams .method_process_definition
 #'
 #' @importFrom yaml read_yaml
 #'

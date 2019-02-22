@@ -11,6 +11,8 @@ create_ti_method_definition(filename = NULL, definition = NULL,
 \item{filename}{The filename of the method definition.}
 
 \item{definition}{The definition if already available as a list. Exactly one of \code{filename} and \code{definition} must be NULL.}
+
+\item{return_function}{Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.}
 }
 \description{
 The local method definition file describes a method that is runnable on the local system.
