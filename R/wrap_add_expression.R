@@ -19,20 +19,32 @@ add_expression <- function(
 ) {
   testthat::expect_true(is_data_wrapper(model))
 
-  cell_ids <- model$cell_ids
 
-  testthat::expect_is(counts, "matrix")
-  testthat::expect_is(expression, "matrix")
-  testthat::expect_equal(rownames(counts), cell_ids)
-  testthat::expect_equal(rownames(expression), cell_ids)
-  testthat::expect_equal(colnames(expression), colnames(counts))
+  assert_that(!(is.null(counts) && is.null(expression)), msg = "counts and expression can't both be NULL")
+
+  if (!is.null(counts)) {
+    assert_that(
+      is.matrix(counts),
+      identical(rownames(counts), model$cell_ids)
+    )
+  }
+
+  if (!is.null(expression)) {
+    assert_that(
+      is.matrix(expression),
+      identical(rownames(expression), model$cell_ids)
+    )
+  }
 
   if (!is.null(feature_info)) {
-    testthat::expect_is(feature_info, "data.frame")
-    testthat::expect_equal(colnames(counts), feature_info$feature_id)
-    testthat::expect_equal(colnames(expression), feature_info$feature_id)
+    assert_that(
+      is.data.frame(feature_info),
+      "feature_id" %all_in% colnames(feature_info),
+      colnames(expression) %all_in% feature_info$feature_id,
+      colnames(counts) %all_in% feature_info$feature_id
+    )
   } else {
-    feature_info <- tibble(feature_id = colnames(counts))
+    feature_info <- tibble(feature_id = colnames(counts) %||% colnames(expression))
   }
 
   # create output structure
@@ -88,19 +100,22 @@ wrap_expression <- function(
   feature_info = NULL,
   ...
 ) {
-  testthat::expect_equivalent(dim(expression), dim(counts))
-  testthat::expect_equivalent(colnames(expression), colnames(counts))
-  testthat::expect_equivalent(rownames(expression), rownames(counts))
+  cell_ids <- rownames(expression) %||% rownames(counts)
+  feature_ids <- colnames(expression %||% colnames(counts))
+
+  assert_that(!is.null(cell_ids))
+  assert_that(!is.null(feature_ids))
 
   wrap_data(
     id = id,
-    cell_ids = rownames(expression),
+    cell_ids = cell_ids,
     cell_info = cell_info,
     ...
   ) %>%
     add_expression(
       counts = counts,
       expression = expression,
+      feature_ids = feature_ids,
       feature_info = feature_info
     )
 }
