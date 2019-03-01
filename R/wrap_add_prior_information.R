@@ -92,7 +92,7 @@ add_prior_information <- function(
         milestone_percentages = milestone_percentages,
         progressions = progressions,
         divergence_regions = divergence_regions,
-        expression = expression,
+        expression = get_expression(dataset),
         feature_info = feature_info,
         cell_info = cell_info,
         given = prior_information,
@@ -267,7 +267,7 @@ generate_prior_information <- function(
       requireNamespace("ranger")
       data <- data.frame(
         PREDICT = groups_id %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id) %>% as.factor,
-        expression,
+        as.matrix(expression), ## TODO: can this work with a sparse matrix, somehow?
         check.names = FALSE,
         stringsAsFactors = FALSE
       )
