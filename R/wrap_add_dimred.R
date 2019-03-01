@@ -3,19 +3,19 @@
 #' @param model The model to which a dimensionality reduction will be added.
 #' @param dimred The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction
 #' @param dimred_milestones An optional dimensionality reduction of the milestones.
-#' @param dimred_trajectory_segments An optional dimensionality reduction of the trajectory segments.
+#' @param dimred_segment_progressions An optional progression matrix of the trajectory segments. Format: `tibble(from, to, percentage)`
+#' @param dimred_segment_points An optional dimensionality reduction of the trajectory segments. Format: `matrix(Comp1, Comp2, ...)`.
 #' @param ... extra information to be stored in the wrapper
 #'
 #' @inheritParams get_expression
 #'
 #' @export
-#'
-#' @importFrom testthat expect_equal expect_is expect_true
 add_dimred <- function(
   model,
   dimred,
   dimred_milestones = NULL,
-  dimred_trajectory_segments = NULL,
+  dimred_segment_progressions = NULL,
+  dimred_segment_points = NULL,
   expression_source = "expression",
   ...
 ) {
@@ -35,17 +35,18 @@ add_dimred <- function(
     if (is_wrapper_with_trajectory(model)) {
       milestone_ids <- model$milestone_ids
       dimred_milestones <- dimred_milestones[milestone_ids, ]
-      testthat::expect_equal(rownames(dimred_milestones), milestone_ids)
+
+      assert_that(identical(rownames(dimred_milestones), milestone_ids))
     }
   }
 
-  if (!is.null(dimred_trajectory_segments)) {
-    testthat::expect_is(dimred_trajectory_segments, "matrix")
-    expected_colnames <- c(
-      paste0("from_", colnames(dimred)),
-      paste0("to_", colnames(dimred))
+  if (!is.null(dimred_segment_points) || !is.null(dimred_segment_progressions)) {
+    assert_that(
+      is.matrix(dimred_segment_points),
+      is.data.frame(dimred_segment_progressions),
+      identical(colnames(dimred_segment_points), colnames(dimred)),
+      identical(colnames(dimred_segment_progressions), c("from", "to", "percentage"))
     )
-    testthat::expect_equal(colnames(dimred_trajectory_segments), expected_colnames)
   }
 
   # create output structure
@@ -53,7 +54,8 @@ add_dimred <- function(
     "dynwrap::with_dimred",
     dimred = dimred,
     dimred_milestones = dimred_milestones,
-    dimred_trajectory_segments = dimred_trajectory_segments,
+    dimred_segment_progressions = dimred_segment_progressions,
+    dimred_segment_points = dimred_segment_points,
     ...
   )
 }

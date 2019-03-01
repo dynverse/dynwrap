@@ -7,8 +7,8 @@
 \title{Add or create a dimensionality reduction}
 \usage{
 add_dimred(model, dimred, dimred_milestones = NULL,
-  dimred_trajectory_segments = NULL, expression_source = "expression",
-  ...)
+  dimred_segment_progressions = NULL, dimred_segment_points = NULL,
+  expression_source = "expression", ...)
 
 is_wrapper_with_dimred(model)
 
@@ -21,7 +21,9 @@ get_dimred(model, dimred = NULL, expression_source = "expression")
 
 \item{dimred_milestones}{An optional dimensionality reduction of the milestones.}
 
-\item{dimred_trajectory_segments}{An optional dimensionality reduction of the trajectory segments.}
+\item{dimred_segment_progressions}{An optional progression matrix of the trajectory segments. Format: \code{tibble(from, to, percentage)}}
+
+\item{dimred_segment_points}{An optional dimensionality reduction of the trajectory segments. Format: \code{matrix(Comp1, Comp2, ...)}.}
 
 \item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another model which contains expression}
 
