@@ -19,6 +19,9 @@ create_ti_method_definition <- function(
 
   # read definition from file if needed
   if (is.null(definition)) {
+    if (!file.exists(filename)) {
+      stop("Definition could not be found at location: ", filename)
+    }
     definition <- yaml::read_yaml(filename)
   }
 
