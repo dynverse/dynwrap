@@ -9,6 +9,7 @@
 #'
 #' @export
 #'
+#' @importFrom Matrix Matrix
 #' @importFrom testthat expect_equal expect_is
 add_expression <- function(
   model,
@@ -19,19 +20,24 @@ add_expression <- function(
 ) {
   testthat::expect_true(is_data_wrapper(model))
 
-
   assert_that(!(is.null(counts) && is.null(expression)), msg = "counts and expression can't both be NULL")
 
   if (!is.null(counts)) {
+    if (is.matrix(counts)) {
+      counts <- Matrix::Matrix(counts, sparse = TRUE)
+    }
     assert_that(
-      is.matrix(counts),
+      "dgCMatrix" %in% class(counts),
       identical(rownames(counts), model$cell_ids)
     )
   }
 
   if (!is.null(expression)) {
+    if (is.matrix(expression)) {
+      expression <- Matrix::Matrix(expression, sparse = TRUE)
+    }
     assert_that(
-      is.matrix(expression),
+      "dgCMatrix" %in% class(expression),
       identical(rownames(expression), model$cell_ids)
     )
   }

@@ -38,6 +38,7 @@ Imports:
   glue,
   jsonlite,
   magrittr,
+  Matrix,
   methods,
   pdist,
   purrr,
