@@ -26,13 +26,13 @@
 
     # check inputs
     definition$input %has_names% c("required"),
-    names(definition$input) %all_in% c("format", "required", "optional"),
+    names(definition$input) %all_in% c("required", "optional"),
     definition$input$required %all_in% dynwrap::allowed_inputs$input_id,
     definition$input$optional %all_in% dynwrap::allowed_inputs$input_id,
 
     # check outputs
     definition$output %has_names% c("outputs"),
-    names(definition$output) %all_in% c("format", "outputs"),
+    names(definition$output) %all_in% c("outputs"),
     definition$output$outputs %all_in% dynwrap::allowed_outputs$output_id
   )
 
