@@ -41,6 +41,7 @@ add_dimred <- function(
   }
 
   if (!is.null(dimred_segment_points) || !is.null(dimred_segment_progressions)) {
+    dimred_segment_points <- process_dimred(model, dimred_segment_points, "segment_point_id")
     assert_that(
       is.matrix(dimred_segment_points),
       is.data.frame(dimred_segment_progressions),
