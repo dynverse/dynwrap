@@ -46,25 +46,6 @@ create_ti_method_container <- function(
 
   definition <- .container_get_definition(container_id)
 
-  # check container-specific ti method parameters
-  assert_that(
-    definition %has_names% c("input", "output", "wrapper"),
-
-    # check wrapper format
-    definition$wrapper %has_names% c("command"),
-    is.character(definition$wrapper$command),
-
-    # check input format
-    definition$input %has_names% c("format"),
-    length(definition$input$format) == 1,
-    definition$input$format %all_in% c("hdf5", "text", "rds"),
-
-    # check output format
-    definition$output %has_names% c("format"),
-    length(definition$output$format) == 1,
-    definition$output$format %all_in% c("hdf5", "text", "rds", "dynwrap")
-  )
-
   # save container info
   definition$run <- list(
     backend = "container",
