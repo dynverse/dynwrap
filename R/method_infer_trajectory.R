@@ -32,7 +32,7 @@ infer_trajectories <- function(
   method,
   parameters = NULL,
   give_priors = NULL,
-  seed = 1,
+  seed = sample(1:.Machine$integer.max, 1),
   verbose = FALSE,
   return_verbose = FALSE,
   debug = FALSE,
@@ -173,6 +173,9 @@ infer_trajectory <- dynutils::inherit_default_params(
       error <- design$summary[[1]]$error[[1]]
       cat("Error traceback:\n")
       traceback(error)
+      if (!is.list(error)) { # if no error yet, add a fake one
+        error <- list(message = "")
+      }
       stop("Error during trajectory inference \n", error$message, call. = FALSE)
     } else {
       first(design$model)
