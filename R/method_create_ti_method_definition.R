@@ -26,33 +26,6 @@ create_ti_method_definition <- function(
   }
 
   ######################################################
-  ####               CHECK DEFINITION               ####
-  ######################################################
-
-  # todo
-  # find R / python / etc executable
-  # test packages?
-
-  # check container-specific ti method parameters
-  assert_that(
-    definition %has_names% c("input", "output", "wrapper"),
-
-    # check wrapper format
-    definition$wrapper %has_names% c("command"),
-    is.character(definition$wrapper$command),
-
-    # check input format
-    definition$input %has_names% c("format"),
-    length(definition$input$format) == 1,
-    definition$input$format %all_in% c("hdf5", "text", "rds"),
-
-    # check output format
-    definition$output %has_names% c("format"),
-    length(definition$output$format) == 1,
-    definition$output$format %all_in% c("hdf5", "text", "rds", "dynwrap")
-  )
-
-  ######################################################
   ####                 TEST BACKEND                 ####
   ######################################################
 
