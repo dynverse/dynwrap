@@ -93,3 +93,14 @@ add_root_using_expression <- function(trajectory, features_oi, expression_source
 
   trajectory
 }
+
+
+
+#' Is rooted
+#'
+#' @inheritParams add_root
+#'
+#' @export
+is_rooted <- function(trajectory) {
+  is.null(trajectory$root_milestone_id)
+}

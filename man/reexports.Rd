@@ -4,6 +4,7 @@
 \name{reexports}
 \alias{reexports}
 \alias{test_docker_installation}
+\alias{test_singularity_installation}
 \alias{create_config}
 \alias{create_docker_config}
 \alias{create_singularity_config}
@@ -16,6 +17,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{babelwhale}{\code{\link[babelwhale]{test_docker_installation}}, \code{\link[babelwhale]{create_config}}, \code{\link[babelwhale]{create_docker_config}}, \code{\link[babelwhale]{create_singularity_config}}, \code{\link[babelwhale]{get_default_config}}, \code{\link[babelwhale]{set_default_config}}}
+  \item{babelwhale}{\code{\link[babelwhale]{test_docker_installation}}, \code{\link[babelwhale]{test_singularity_installation}}, \code{\link[babelwhale]{create_config}}, \code{\link[babelwhale]{create_docker_config}}, \code{\link[babelwhale]{create_singularity_config}}, \code{\link[babelwhale]{get_default_config}}, \code{\link[babelwhale]{set_default_config}}}
 }}
 
