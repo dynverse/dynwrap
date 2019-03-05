@@ -18,23 +18,15 @@
     # check wrapper
     definition$wrapper %has_names% c("input_required", "output"),
     names(definition$wrapper) %all_in% c("type", "topology_inference", "trajectory_types", "example", "input_required", "input_optional", "output"),
+    definition$wrapper$input_required %all_in% dynwrap::allowed_inputs$input_id,
+    definition$wrapper$input_optional %all_in% dynwrap::allowed_inputs$input_id,
+    definition$wrapper$output %all_in% dynwrap::allowed_outputs$output_id,
 
     # check container info
     names(definition$container) %all_in% c("docker", "url"),
 
     # check manuscript info
-    names(definition$manuscript) %all_in% c("doi", "google_scholar_cluster_id", "preprint_date", "publication_date"),
-
-    # check inputs
-    definition$input %has_names% c("required"),
-    names(definition$input) %all_in% c("required", "optional"),
-    definition$input$required %all_in% dynwrap::allowed_inputs$input_id,
-    definition$input$optional %all_in% dynwrap::allowed_inputs$input_id,
-
-    # check outputs
-    definition$output %has_names% c("outputs"),
-    names(definition$output) %all_in% c("outputs"),
-    definition$output$outputs %all_in% dynwrap::allowed_outputs$output_id
+    names(definition$manuscript) %all_in% c("doi", "google_scholar_cluster_id", "preprint_date", "publication_date")
   )
 
   # parse the parameters
