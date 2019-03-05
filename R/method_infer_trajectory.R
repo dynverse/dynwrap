@@ -176,7 +176,7 @@ infer_trajectory <- dynutils::inherit_default_params(
       if (!is.list(error)) { # if no error yet, add a fake one
         error <- list(message = "")
       }
-      stop("Error during trajectory inference \n", error$message, call. = FALSE)
+      stop("The trajectory inference wrapper errored, see above \U2191\U2191\U2191\U2191 \n", error$message, call. = FALSE)
     } else {
       first(design$model)
     }
