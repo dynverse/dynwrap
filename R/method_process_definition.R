@@ -16,7 +16,7 @@
     names(definition$method) %all_in% c("id", "name", "tool_id", "source", "platform", "url", "authors", "license"),
 
     # check wrapper
-    definition$method %has_names% c("input_required", "output"),
+    definition$wrapper %has_names% c("input_required", "output"),
     names(definition$wrapper) %all_in% c("type", "topology_inference", "trajectory_types", "example", "input_required", "input_optional", "output"),
 
     # check container info
