@@ -16,7 +16,7 @@
     names(definition$method) %all_in% c("id", "name", "tool_id", "source", "platform", "url", "authors", "license"),
 
     # check wrapper
-    definition$wrapper %has_names% c("input_required", "output"),
+    definition$wrapper %has_names% c("input_required"),
     names(definition$wrapper) %all_in% c("type", "topology_inference", "trajectory_types", "example", "input_required", "input_optional"),
     definition$wrapper$input_required %all_in% dynwrap::allowed_inputs$input_id,
     definition$wrapper$input_optional %all_in% dynwrap::allowed_inputs$input_id,
