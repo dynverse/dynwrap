@@ -8,15 +8,16 @@
   # check definition
   assert_that(
     # check description fields
-    definition %has_names% c("method", "parameters", "input", "output"),
-    names(definition) %all_in% c("method", "wrapper", "container", "manuscript", "parameters", "input", "output", "run"),
+    definition %has_names% c("method", "parameters", "wrapper"),
+    names(definition) %all_in% c("method", "wrapper", "container", "manuscript", "parameters", "run"),
 
     # check method info fields
     definition$method %has_names% c("id", "name"),
     names(definition$method) %all_in% c("id", "name", "tool_id", "source", "platform", "url", "authors", "license"),
 
     # check wrapper
-    names(definition$wrapper) %all_in% c("type", "topology_inference", "trajectory_types", "command", "example"),
+    definition$method %has_names% c("input_required", "output"),
+    names(definition$wrapper) %all_in% c("type", "topology_inference", "trajectory_types", "example", "input_required", "input_optional", "output"),
 
     # check container info
     names(definition$container) %all_in% c("docker", "url"),

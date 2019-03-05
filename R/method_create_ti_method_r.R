@@ -36,17 +36,6 @@ create_ti_method_r <- function(
     c(input_required, input_optional, names(parameters$parameters), "verbose", "seed") %all_in% formalArgs(run_fun)
   )
 
-  # process input and output vectors
-  input <- list( # could be derived from the run_fn
-    format = NA,
-    required = input_required,
-    optional = input_optional
-  )
-  output <- list( # this cannot
-    format = NA,
-    outputs = output
-  )
-
   # create definition list
   definition <- lst(
     method = lst(
@@ -61,8 +50,11 @@ create_ti_method_r <- function(
       package_required,
       remotes_package
     ),
-    input,
-    output,
+    wrapper = lst(
+      input_required,
+      input_optional,
+      output
+    ),
     ...
   )
 
