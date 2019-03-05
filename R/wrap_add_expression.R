@@ -26,6 +26,9 @@ add_expression <- function(
     if (is.matrix(counts)) {
       counts <- Matrix::Matrix(counts, sparse = TRUE)
     }
+    if (any(grepl("[di]..Matrix", class(counts))) && !"dgCMatrix" %in% class(counts)) {
+      counts <- as(counts, "dgCMatrix")
+    }
     assert_that(
       "dgCMatrix" %in% class(counts),
       identical(rownames(counts), model$cell_ids)

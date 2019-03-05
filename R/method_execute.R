@@ -19,7 +19,7 @@
   testthat::expect_true(is_ti_method(method))
 
   # extract args from dataset
-  inputs <- .method_extract_args(dataset, method$inputs, give_priors)
+  inputs <- .method_extract_args(dataset, method$input_tib, give_priors)
 
   # extract parameters from method
   params <- get_default_parameters(method)
@@ -107,7 +107,7 @@
       stdout = stds$stdout,
       stderr = stds$stderr,
       error = error,
-      prior_df = list(method$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(inputs)))
+      prior_df = list(method$input_tib %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(inputs)))
     ) %>%
       bind_cols(as.data.frame(as.list(timings_diff)))
 

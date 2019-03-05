@@ -36,7 +36,7 @@
 
   # parse the inputs
   utils::data("priors", package = "dynwrap", envir = environment()) # TODO: move to sysdata, avoiding loading of priors
-  definition$inputs <-
+  definition$input_tib <-
     tibble(
       input_id = c(definition$input$required, definition$input$optional, definition$parameters$id),
       required = input_id %in% definition$input$required,
