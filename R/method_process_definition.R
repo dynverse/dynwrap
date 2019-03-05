@@ -36,10 +36,10 @@
 
   # parse the inputs
   utils::data("priors", package = "dynwrap", envir = environment()) # TODO: move to sysdata, avoiding loading of priors
-  definition$input_tib <-
+  definition$wrapper$inputs <-
     tibble(
-      input_id = c(definition$input$required, definition$input$optional, definition$parameters$id),
-      required = input_id %in% definition$input$required,
+      input_id = c(definition$wrapper$input_required, definition$wrapper$input_optional, definition$parameters$id),
+      required = input_id %in% definition$wrapper$input_required,
       type = case_when(
         input_id %in% c("counts", "expression") ~ "expression",
         input_id %in% priors$prior_id ~ "prior_information",

@@ -1,7 +1,7 @@
 #' @importFrom utils data
 .method_extract_args <- function(
   dataset,
-  input_tib,
+  inputs,
   give_priors = NULL
 ) {
   utils::data("priors", package = "dynwrap", envir = environment()) # TODO: move to sysdata, avoiding loading of priors
@@ -11,7 +11,7 @@
   }
 
   input_ids_dataset <-
-    input_tib %>%
+    inputs %>%
     filter(required, type == "expression") %>%
     pull(input_id)
 
@@ -25,7 +25,7 @@
 
   # required, check if the prior infirm
   required_prior_ids <-
-    input_tib %>%
+    inputs %>%
     filter(required, type == "prior_information") %>%
     pull(input_id)
 
@@ -51,7 +51,7 @@
 
   # optional
   optional_prior_ids <-
-    input_tib %>%
+    inputs %>%
     filter(!required, type == "prior_information", input_id %in% give_priors) %>%
     pull(input_id)
 
