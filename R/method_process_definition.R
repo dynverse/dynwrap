@@ -17,10 +17,9 @@
 
     # check wrapper
     definition$wrapper %has_names% c("input_required", "output"),
-    names(definition$wrapper) %all_in% c("type", "topology_inference", "trajectory_types", "example", "input_required", "input_optional", "output"),
+    names(definition$wrapper) %all_in% c("type", "topology_inference", "trajectory_types", "example", "input_required", "input_optional"),
     definition$wrapper$input_required %all_in% dynwrap::allowed_inputs$input_id,
     definition$wrapper$input_optional %all_in% dynwrap::allowed_inputs$input_id,
-    definition$wrapper$output %all_in% dynwrap::allowed_outputs$output_id,
 
     # check container info
     names(definition$container) %all_in% c("docker", "url"),
