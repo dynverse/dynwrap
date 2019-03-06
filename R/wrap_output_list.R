@@ -4,10 +4,9 @@
 #' @param output_ids The names of the promised dynwrap objects
 #'
 #' @export
-wrap_output_list <- function(output_list, output_ids) {
+wrap_output_list <- function(output, output_ids) {
   testthat::expect_true("cell_ids" %in% names(output))
   cell_ids <- output$cell_ids
-  output$cell_ids <- NULL
   model <- wrap_data(cell_ids = cell_ids)
 
   # iterate over all promised output ids and
