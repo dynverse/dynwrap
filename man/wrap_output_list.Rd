@@ -4,12 +4,12 @@
 \alias{wrap_output_list}
 \title{Transform a list of data objects to a dynwrap trajectory}
 \usage{
-wrap_output_list(output_list, output_ids)
+wrap_output_list(output, output_ids)
 }
 \arguments{
-\item{output_list}{A list containing dynwrap data}
-
 \item{output_ids}{The names of the promised dynwrap objects}
+
+\item{output_list}{A list containing dynwrap data}
 }
 \description{
 Transform a list of data objects to a dynwrap trajectory

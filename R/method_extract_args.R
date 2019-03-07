@@ -1,6 +1,6 @@
 .method_extract_inputs <- function(
   dataset,
-  inputs,
+  inputs
 ) {
   input_ids_dataset <-
     inputs %>%
