@@ -84,6 +84,7 @@ get_dimred <- function(model, dimred = NULL, expression_source = "expression") {
   } else if (is.data.frame(dimred)) {
     # dataframe
     if ("cell_id" %in% colnames(dimred)) {
+      rownames(dimred) <- NULL
       dimred <- dimred %>%
         as.data.frame() %>%
         column_to_rownames("cell_id") %>%
