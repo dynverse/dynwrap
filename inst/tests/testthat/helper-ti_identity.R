@@ -13,7 +13,6 @@ ti_identity <- dynwrap::create_ti_method_r(
   # describe run fun inputs and outputs
   input_required = c("counts", "dataset"),
   input_optional = NULL,
-  output = c("trajectory", "timings"),
 
   # describe tuneable parameters
   parameters = dynparam::parameter_set(),

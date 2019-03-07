@@ -11,7 +11,6 @@ ti_error <- dynwrap::create_ti_method_r(
   # describe run fun inputs and outputs
   input_required = "counts",
   input_optional = NULL,
-  output = NULL,
 
   # describe tuneable parameters
   parameters = dynparam::parameter_set(),

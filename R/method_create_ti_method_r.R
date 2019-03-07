@@ -9,7 +9,6 @@
 #' @param run_fun A function to run the TI, needs to have 'counts' as its first param.
 #' @param input_required The required inputs for this method. See `dynwrap::allowed_inputs()`.
 #' @param input_optional Optional inputs for this method. See `dynwrap::allowed_inputs()`.
-#' @param output The outputs produced by this method. See `dynwrap::allowed_outputs()`.
 #' @param remotes_package Package from which the remote locations of dependencies have to be extracted, eg. `dynmethods`.
 #' @param ... Other information about the wrapper, eg. apt_dependencies.
 #' @inheritParams .method_process_definition
@@ -24,7 +23,6 @@ create_ti_method_r <- function(
   run_fun,
   input_required,
   input_optional = NULL,
-  output,
   package_loaded = c(),
   package_required = c(),
   remotes_package = ifelse("dynmethods" %in% rownames(installed.packages()), "dynmethods", "dynwrap"),
@@ -52,8 +50,7 @@ create_ti_method_r <- function(
     ),
     wrapper = lst(
       input_required,
-      input_optional,
-      output
+      input_optional
     ),
     ...
   )

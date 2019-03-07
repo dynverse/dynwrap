@@ -18,7 +18,6 @@ ti_comp1 <- dynwrap::create_ti_method_r(
   # describe run fun inputs and outputs
   input_required = "expression",
   input_optional = NULL,
-  output = c("linear_trajectory", "dimred", "timings"),
 
   # describe tuneable parameters
   parameters = dynparam::parameter_set(
