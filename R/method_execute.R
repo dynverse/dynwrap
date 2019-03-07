@@ -18,8 +18,11 @@
   # check method
   testthat::expect_true(is_ti_method(method))
 
-  # extract args from dataset
-  inputs <- .method_extract_args(dataset, method$wrapper$inputs, give_priors)
+  # extract inputs from dataset
+  inputs <- .method_extract_priors(dataset, method$wrapper$inputs)
+
+  # extract priors from dataset
+  priors <- .method_extract_priors(dataset, method$wrapper$inputs, give_priors)
 
   # extract parameters from method
   params <- get_default_parameters(method)
@@ -35,8 +38,9 @@
     if (verbose) {
       cat(
         "Executing '", method$method$id, "' on '", dataset$id, "'\n",
-        "With parameters: ", deparse(parameters), "\n",
-        "And inputs: ", paste0(names(inputs), collapse = ", "), "\n",
+        "With parameters: ", deparse(parameters), ",\n",
+        "inputs: ", paste0(names(inputs), collapse = ", "), ", and\n",
+        "priors : ", paste0(names(priors), collapse = ", "), "\n",
         sep = ""
       )
     }
@@ -46,7 +50,7 @@
       if (method$run$backend == "function") {
         .method_execution_preproc_function(method = method)
       } else {
-        .method_execution_preproc_container(method = method, inputs = inputs, parameters = parameters, verbose = verbose || return_verbose, seed = seed, debug = debug)
+        .method_execution_preproc_container(method = method, inputs = inputs, priors = priors, parameters = parameters, verbose = verbose || return_verbose, seed = seed, debug = debug)
       }
 
     # initialise output variables
@@ -57,7 +61,7 @@
       # execute method and return model
       model <-
         if (method$run$backend == "function") {
-          .method_execution_execute_function(method = method, inputs = inputs, parameters = parameters, verbose = verbose || return_verbose, seed = seed, preproc_meta = preproc_meta)
+          .method_execution_execute_function(method = method, inputs = inputs, priors = priors, parameters = parameters, verbose = verbose || return_verbose, seed = seed, preproc_meta = preproc_meta)
         } else {
           .method_execution_execute_container(method = method, preproc_meta = preproc_meta)
         }

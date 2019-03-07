@@ -93,10 +93,11 @@ create_ti_method_r <- function(
   )
 }
 
-.method_execution_execute_function <- function(method, inputs, parameters, verbose, seed, preproc_meta) {
+.method_execution_execute_function <- function(method, inputs, priors, parameters, verbose, seed, preproc_meta) {
   # combine inputs and parameters
   args <- c(
     inputs,
+    priors,
     parameters,
     lst(verbose, seed)
   )
