@@ -63,7 +63,7 @@ Suggests:
   viridis
 Remotes:
   dynverse/babelwhale@singularity3,
-  dynverse/dynutils,
+  dynverse/dynutils@devel,
   dynverse/dyndimred,
   dynverse/dynparam
 VignetteBuilder: knitr
