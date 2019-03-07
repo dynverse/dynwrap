@@ -7,7 +7,6 @@ dummy <- create_ti_method_r(
   package_required = c("dplyr"),
   input_required = c("counts"),
   input_optional = NULL,
-  output = "trajectory",
   parameters = dynparam::parameter_set(
     dynparam::character_parameter(
       id = "param",
@@ -27,11 +26,12 @@ dummy <- create_ti_method_r(
 
 dummy_instance <- dummy()
 
-dataset <- wrap_data(cell_ids = "a") %>%
+dataset <-
+  wrap_data(cell_ids = "a") %>%
   add_linear_trajectory(pseudotime = c(a = 1)) %>%
   add_expression(
-    counts = matrix(0, dimnames = list("a", "b")),
-    expression = matrix(0, dimnames = list("a", "b"))
+    counts = matrix(0:1, ncol = 2, dimnames = list("a", c("A", "B"))),
+    expression = matrix(0:1, ncol = 2, dimnames = list("a", c("A", "B")))
   )
 
 test_that("Testing simple create ti function", {
