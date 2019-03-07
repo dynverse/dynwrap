@@ -4,22 +4,7 @@ skip_on_appveyor()
 skip_on_os("mac")
 skip_on_cran()
 
-# only run all tags on maintainer platforms
-maintainer_usernames <- c("rcannood", "wouters")
-
-# if (Sys.info()[["user"]] %in% maintainer_usernames) {
-#   tags <- c("R_text", "R_hdf5", "R_rds", "R_dynwrap", "python_hdf5", "python_text")
-# } else {
-  tags <- "python_hdf5"
-# }
-
-# specific dynwrap tester versions to test
-# Obtained with:
-
-#' @examples
-#' map_chr(tags, ~ dynwrap:::.container_get_version(paste0("dynverse/dynwrap_tester:", .))) %>% set_names(tags) %>% deparse() %>% paste(collapse = "") %>% cat()
-
-tester_versions <- c(R_text = "0.3.0", R_hdf5 = "0.3.0", R_rds = "0.3.0", R_dynwrap = "0.3.0", python_hdf5 = "0.3.0", python_text = "0.3.0")
+tags <- c("dynwrapr_tester:v0.1.0") # "dynwrappy3_tester:v0.1.0"
 
 # get example dataset
 data("example_dataset")
@@ -31,10 +16,9 @@ for (tag in tags) {
   test_that(paste0("Testing create_ti_method_container and infer_trajectory with ", tag), {
     wanted_version <- tester_versions[[tag]]
 
-    container_id <- paste0("dynverse/dynwrap_tester:", tag, "_v", wanted_version)
+    container_id <- paste0("dynverse/", tag)
     method <- create_ti_method_container(container_id = container_id, return_function = FALSE)
 
-    expect_true(method$method$id == paste0("dynwrap_tester_", tag))
     expect_equal(method$run$backend, "container")
     expect_equal(method$run$container_id, container_id)
 
