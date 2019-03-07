@@ -19,7 +19,7 @@
   testthat::expect_true(is_ti_method(method))
 
   # extract inputs from dataset
-  inputs <- .method_extract_priors(dataset, method$wrapper$inputs)
+  inputs <- .method_extract_inputs(dataset, method$wrapper$inputs)
 
   # extract priors from dataset
   priors <- .method_extract_priors(dataset, method$wrapper$inputs, give_priors)
