@@ -58,57 +58,27 @@ create_ti_method_container <- function(
 
 
 
-.method_execution_preproc_container <- function(method, inputs, parameters, verbose, seed, debug) {
+.method_execution_preproc_container <- function(method, inputs, priors, parameters, verbose, seed, debug) {
   dir_dynwrap <- dynutils::safe_tempdir("ti")
 
   # construct paths
   paths <- lst(
     dir_dynwrap,
-    dir_input = file.path(dir_dynwrap, "input"),
-    dir_output = file.path(dir_dynwrap, "output"),
     dir_workspace = file.path(dir_dynwrap, "workspace"),
     dir_tmp = file.path(dir_dynwrap, "tmp")
   )
-  dir_input <- paths$dir_input
 
   # create all subdirectories
   walk(paths, dir.create, showWarnings = FALSE)
 
-  # get formats
-  input_format <- method$input$format
-  output_format <- method$output$format
+  task <- inputs
+  task$priors <- priors
+  task$parameters <- parameters
+  task$verbose <- verbose
+  task$seed <- seed
 
-  # save data depending on the input_format
-  if (input_format == "text") {
-    walk2(inputs, names(inputs), function(input, input_id) {
-      write_text_infer(input, glue::glue("{dir_input}/{input_id}"))
-    })
-  } else if (input_format == "rds") {
-    write_rds(inputs, file.path(dir_input, "data.rds"))
-  } else if (input_format == "hdf5") {
-    # install hdf5r if not available
-    dynutils::install_packages("hdf5r", "dynwrap", prompt = TRUE)
-    requireNamespace("hdf5r")
-
-    file <- hdf5r::H5File$new(file.path(dir_input, "data.h5"), "w")
-    walk2(inputs, names(inputs), function(x, name) {
-      file$create_dataset(name, x)
-
-      if (is.matrix(x)) {
-        file$create_dataset(paste0(name, "_rows"), rownames(x))
-        file$create_dataset(paste0(name, "_cols"), colnames(x))
-      }
-    })
-    file$close_all() # important to do a close_all here, otherwise some parts of the data can still be open, resulting in invalid h5 files
-  }
-
-  # save params as json
-  parameters$verbose <- verbose
-  parameters$seed <- seed
-  parameters$input_format <- input_format
-  parameters$output_format <- output_format
-
-  jsonlite::write_json(parameters, file.path(dir_input, "params.json"), auto_unbox = TRUE)
+  # save data to file
+  dynutils::write_h5(task, file.path(paths$dir_dynwrap, "input.h5"))
 
   # return path information
   paths$debug <- debug
@@ -133,52 +103,20 @@ create_ti_method_container <- function(
   output <- babelwhale::run(
     container_id = method$run$container_id,
     command = NULL,
-    args = NULL,
+    args = c("--dataset", "/ti/input.h5", "--output", "/ti/output.h5"),
     volumes = paste0(preproc_meta$dir_dynwrap %>% babelwhale:::fix_windows_path(), ":/ti"),
     workspace = "/ti/workspace",
     verbose = preproc_meta$verbose,
     debug = preproc_meta$debug
   )
 
-  if (preproc_meta$verbose) {
-    cat(
-      "Output found in ", preproc_meta$dir_output, ": \n\t",
-      paste(list.files(preproc_meta$dir_output), collapse = "\n\t"),
-      "\n",
-      sep = ""
-    )
-  }
-
-  # wrap output
-  model <-
-    wrap_output(
-      output_ids = method$output$outputs,
-      dir_output = preproc_meta$dir_output,
-      output_format =  method$output$format
-    )
-
   # return output
-  model
+  dynutils::read_h5(file.path(preproc_meta$dir_dynwrap, "output.h5"))
 }
-
-
 
 
 .method_execution_postproc_container <- function(preproc_meta) {
   if (!preproc_meta$debug) {
     unlink(preproc_meta$dir_dynwrap, recursive = TRUE)
-  }
-}
-
-
-
-#' @importFrom utils write.csv
-write_text_infer <- function(x, path) {
-  if(is.matrix(x)) {
-    utils::write.csv(x, paste0(path, ".csv"))
-  } else if (is.data.frame(x)) {
-    readr::write_csv(x, paste0(path, ".csv"))
-  } else {
-    jsonlite::write_json(x, paste0(path, ".json"))
   }
 }
