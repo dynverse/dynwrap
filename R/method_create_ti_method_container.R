@@ -91,12 +91,7 @@ create_ti_method_container <- function(
 .method_execution_execute_container <- function(method, preproc_meta) {
   # print information if desired
   if (preproc_meta$verbose) {
-    cat(
-      "Input saved to ", preproc_meta$dir_input, ": \n\t",
-      paste(list.files(preproc_meta$dir_input), collapse = "\n\t"),
-      "\n",
-      sep = ""
-    )
+    cat("Input saved to ", preproc_meta$dir_dynwrap, "\n", sep = "")
   }
 
   # run container
