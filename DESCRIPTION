@@ -32,7 +32,7 @@ Imports:
   assertthat,
   babelwhale,
   dplyr,
-  dynutils,
+  dynutils (>= 1.0.1.9000),
   dynparam,
   igraph,
   glue,
