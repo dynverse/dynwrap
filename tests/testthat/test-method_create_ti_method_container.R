@@ -14,8 +14,6 @@ dataset_na$counts <- dataset_na$expression <- dataset$expression * NA
 
 for (tag in tags) {
   test_that(paste0("Testing create_ti_method_container and infer_trajectory with ", tag), {
-    wanted_version <- tester_versions[[tag]]
-
     container_id <- paste0("dynverse/", tag)
     method <- create_ti_method_container(container_id = container_id, return_function = FALSE)
 
