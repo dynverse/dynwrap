@@ -126,6 +126,7 @@ process_dimred <- function(model, dimred, identifier = "cell_id") {
     # dataframe
     if (identifier %in% colnames(dimred)) {
       dimred[[identifier]] <- as.character(dimred[[identifier]])
+      rownames(dimred) <- NULL
       dimred <- dimred %>%
         as.data.frame() %>%
         column_to_rownames(identifier) %>%
