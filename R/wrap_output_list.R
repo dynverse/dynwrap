@@ -7,7 +7,11 @@
 wrap_output_list <- function(output, output_ids) {
   testthat::expect_true("cell_ids" %in% names(output))
   cell_ids <- output$cell_ids
-  model <- wrap_data(cell_ids = cell_ids)
+
+  model <- wrap_data(
+    id = output$id,
+    cell_ids = cell_ids
+  )
 
   # iterate over all promised output ids and
   # append the values to the model
