@@ -7,9 +7,9 @@
 wrap_output_list(output, output_ids)
 }
 \arguments{
-\item{output_ids}{The names of the promised dynwrap objects}
+\item{output}{A list containing dynwrap data}
 
-\item{output_list}{A list containing dynwrap data}
+\item{output_ids}{The names of the promised dynwrap objects}
 }
 \description{
 Transform a list of data objects to a dynwrap trajectory
