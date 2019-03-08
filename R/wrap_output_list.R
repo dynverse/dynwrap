@@ -1,6 +1,6 @@
 #' Transform a list of data objects to a dynwrap trajectory
 #'
-#' @param output_list A list containing dynwrap data
+#' @param output A list containing dynwrap data
 #' @param output_ids The names of the promised dynwrap objects
 #'
 #' @export
