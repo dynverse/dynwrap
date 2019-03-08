@@ -106,17 +106,19 @@ add_dimred_projection <- function(
       bind_rows(data_frame(from = missing_gids, to = missing_gids, length = 0, directed = FALSE))
   }
 
-  # collect information on clusters
-  dimred_milestones_df <-
-    dimred_milestones %>%
-    data.frame(stringsAsFactors = FALSE) %>%
-    rownames_to_column("milestone_id")
-  dimred_trajectory_segments <- milestone_network %>%
-    left_join(dimred_milestones_df %>% rename(from = milestone_id) %>% rename_if(is.numeric, ~ paste0("from_", .)), by = "from") %>%
-    left_join(dimred_milestones_df %>% rename(to = milestone_id) %>% rename_if(is.numeric, ~ paste0("to_", .)), by = "to") %>%
-    select(starts_with("from_"), starts_with("to_")) %>%
-    magrittr::set_rownames(NULL) %>%
-    as.matrix
+  dimred_segment_progressions <-
+    milestone_network %>%
+    select(from, to) %>%
+    mutate(zero = from, one = to) %>%
+    gather(percentage, milestone_id, zero, one) %>%
+    mutate(percentage = c(zero = 0, one = 1)[percentage])
+
+  dimred_segment_points <-
+    dimred_milestones[dimred_segment_progressions$milestone_id]
+
+  dimred_segment_progressions <-
+    dimred_segment_progressions
+    select(from, to, percentage)
 
   # construct output
   out <- add_trajectory(
@@ -129,7 +131,8 @@ add_dimred_projection <- function(
   ) %>% add_dimred(
     dimred = dimred,
     dimred_milestones = dimred_milestones,
-    dimred_trajectory_segments = dimred_trajectory_segments
+    dimred_segment_points = dimred_segment_points,
+    dimred_segment_progressions = dimred_segment_progressions
   )
 
   # add cell grouping of a milestone_assignment was given
