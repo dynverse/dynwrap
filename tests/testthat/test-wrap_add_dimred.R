@@ -82,8 +82,9 @@ dimred <- matrix(runif(num_dims * length(cell_ids), 0, 1), nrow = length(cell_id
 
 dimred_milestones <- matrix(runif(num_dims * length(milestone_ids), 0, 1), nrow = length(milestone_ids), dimnames = list(milestone_ids, dim_names))
 
-dimred_segment_points <- dimred
-dimred_segment_progressions <- progressions %>% select(-cell_id)
+dimred_segment_points <- matrix(runif(num_dims * 10), ncol = num_dims)
+colnames(dimred_segment_points) <- dim_names
+dimred_segment_progressions <- tibble(from = "man", to = "in", percentage = seq(0, 1, length.out = nrow(dimred_segment_points)))
 
 # clustering data
 grouping <- sample(milestone_ids, length(cell_ids), replace = TRUE) %>% set_names(cell_ids)
