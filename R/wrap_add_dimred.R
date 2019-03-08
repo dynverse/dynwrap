@@ -46,7 +46,8 @@ add_dimred <- function(
       is.matrix(dimred_segment_points),
       is.data.frame(dimred_segment_progressions),
       identical(colnames(dimred_segment_points), colnames(dimred)),
-      identical(colnames(dimred_segment_progressions), c("from", "to", "percentage"))
+      identical(colnames(dimred_segment_progressions), c("from", "to", "percentage")),
+      nrow(dimred_segment_points) == nrow(dimred_segment_progressions)
     )
   }
 
