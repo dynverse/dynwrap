@@ -5,7 +5,7 @@
 \title{Create a TI method wrapper}
 \usage{
 create_ti_method_r(id, name = id, parameters = NULL, run_fun,
-  input_required, input_optional = NULL, output, package_loaded = c(),
+  input_required, input_optional = NULL, package_loaded = c(),
   package_required = c(), remotes_package = ifelse("dynmethods" \%in\%
   rownames(installed.packages()), "dynmethods", "dynwrap"),
   return_function = TRUE, ...)
@@ -22,8 +22,6 @@ create_ti_method_r(id, name = id, parameters = NULL, run_fun,
 \item{input_required}{The required inputs for this method. See \code{dynwrap::allowed_inputs()}.}
 
 \item{input_optional}{Optional inputs for this method. See \code{dynwrap::allowed_inputs()}.}
-
-\item{output}{The outputs produced by this method. See \code{dynwrap::allowed_outputs()}.}
 
 \item{package_loaded}{The packages that need to be loaded before executing the method.}
 
