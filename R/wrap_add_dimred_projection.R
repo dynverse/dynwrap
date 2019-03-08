@@ -117,7 +117,7 @@ add_dimred_projection <- function(
     dimred_milestones[dimred_segment_progressions$milestone_id]
 
   dimred_segment_progressions <-
-    dimred_segment_progressions
+    dimred_segment_progressions %>%
     select(from, to, percentage)
 
   # construct output
