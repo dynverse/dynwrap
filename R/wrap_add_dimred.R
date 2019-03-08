@@ -41,7 +41,7 @@ add_dimred <- function(
   }
 
   if (!is.null(dimred_segment_points) || !is.null(dimred_segment_progressions)) {
-    dimred_segment_points <- process_dimred(model, dimred_segment_points, "segment_point_id")
+    dimred_segment_points <- process_dimred(model, dimred_segment_points, "segment_point_id", has_rownames = FALSE)
     assert_that(
       is.matrix(dimred_segment_points),
       is.data.frame(dimred_segment_progressions),
@@ -77,9 +77,10 @@ get_dimred <- function(model, dimred = NULL, expression_source = "expression") {
     dimred <- dimred(expression)
   } else if (is.matrix(dimred)) {
     # matrix
-    testthat::expect_true(is.numeric(dimred))
-    testthat::expect_true(length(rownames(dimred)) == nrow(dimred))
-    testthat::expect_true(all(model$cell_ids %in% rownames(dimred)))
+    assert_that(is.numeric(dimred))
+    assert_that(length(rownames(dimred)) == nrow(dimred))
+    assert_that(model$cell_ids %all_in% rownames(dimred))
+    assert_that(rownames(dimred) %all_in% model$cell_ids)
 
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   } else if (is.data.frame(dimred)) {
@@ -91,15 +92,16 @@ get_dimred <- function(model, dimred = NULL, expression_source = "expression") {
         column_to_rownames("cell_id") %>%
         as.matrix()
     }
-    testthat::expect_true(is.numeric(dimred))
-    testthat::expect_true(length(rownames(dimred)) == nrow(dimred))
-    testthat::expect_setequal(model$cell_ids, rownames(dimred))
+    assert_that(is.numeric(dimred))
+    assert_that(length(rownames(dimred)) == nrow(dimred))
+    assert_that(model$cell_ids %all_in% rownames(dimred))
+    assert_that(rownames(dimred) %all_in% model$cell_ids)
 
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   } else if (is_wrapper_with_dimred(model)) {
     # dimred within wrapper
-    if(is.list(model$dimred)) {
-      testthat::expect_true(dimred %in% names(model$dimred))
+    if (is.list(model$dimred)) {
+      assert_that(dimred %all_in% names(model$dimred))
       dimred <- model$dimred[[dimred]]
     } else {
       dimred <- model$dimred
@@ -116,25 +118,31 @@ get_dimred <- function(model, dimred = NULL, expression_source = "expression") {
 }
 
 
-process_dimred <- function(model, dimred, identifier = "cell_id") {
+process_dimred <- function(model, dimred, identifier = "cell_id", has_rownames = TRUE) {
   if (is.matrix(dimred)) {
     # matrix
-    testthat::expect_true(is.numeric(dimred))
-    testthat::expect_true(length(rownames(dimred)) == nrow(dimred))
+    assert_that(is.numeric(dimred))
+    if (has_rownames) assert_that(length(rownames(dimred)) == nrow(dimred))
 
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   } else if (is.data.frame(dimred)) {
     # dataframe
-    if (identifier %in% colnames(dimred)) {
-      dimred[[identifier]] <- as.character(dimred[[identifier]])
-      rownames(dimred) <- NULL
-      dimred <- dimred %>%
-        as.data.frame() %>%
-        column_to_rownames(identifier) %>%
-        as.matrix()
+    if (has_rownames) {
+      if (identifier %in% colnames(dimred)) {
+        dimred[[identifier]] <- as.character(dimred[[identifier]])
+        rownames(dimred) <- NULL
+        dimred <-
+          dimred %>%
+          as.data.frame() %>%
+          column_to_rownames(identifier) %>%
+          as.matrix()
+      }
+      assert_that(length(rownames(dimred)) == nrow(dimred))
+    } else {
+      dimred <- dimred %>% as.matrix()
     }
-    testthat::expect_true(is.numeric(dimred))
-    testthat::expect_true(length(rownames(dimred)) == nrow(dimred))
+
+    assert_that(is.numeric(dimred))
 
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   }
