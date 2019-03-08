@@ -13,7 +13,8 @@ counts <- matrix(
 )
 expression <- log2(counts + 1)
 
-wr_orig <- wrap_data(id = id, cell_ids = cell_ids) %>% add_expression(counts=counts, expression=expression)
+wr_orig <- wrap_data(id = id, cell_ids = cell_ids) %>%
+  add_expression(counts = counts, expression = expression)
 
 # trajectory data
 milestone_ids <-  c("man", "in", "possession", "of", "good", "fortune", "must")
@@ -81,10 +82,8 @@ dimred <- matrix(runif(num_dims * length(cell_ids), 0, 1), nrow = length(cell_id
 
 dimred_milestones <- matrix(runif(num_dims * length(milestone_ids), 0, 1), nrow = length(milestone_ids), dimnames = list(milestone_ids, dim_names))
 
-dimred_trajectory_segments <- cbind(
-  (dimred_milestones - .05) %>% magrittr::set_colnames(paste0("from_", dim_names)),
-  (dimred_milestones + .05) %>% magrittr::set_colnames(paste0("to_", dim_names))
-)
+dimred_segment_points <- dimred
+dimred_segment_progressions <- progressions %>% select(-cell_id)
 
 # clustering data
 grouping <- sample(milestone_ids, length(cell_ids), replace = TRUE) %>% set_names(cell_ids)
@@ -93,6 +92,7 @@ test_that("Testing add_dimred", {
   wr <- wr_orig %>%
     add_dimred(
       dimred = dimred
+
     )
 
   # testing is_ti_data_wrapper
@@ -122,7 +122,8 @@ test_that("Testing add_dimred with traj dimred", {
     add_dimred(
       dimred = dimred,
       dimred_milestones = dimred_milestones,
-      dimred_trajectory_segments = dimred_trajectory_segments
+      dimred_segment_progressions = dimred_segment_progressions,
+      dimred_segment_points = dimred_segment_points
     )
 
   # testing is_ti_data_wrapper
@@ -130,7 +131,8 @@ test_that("Testing add_dimred with traj dimred", {
   expect_true(is_wrapper_with_trajectory(wr))
 
   expect_equivalent(wr$dimred_milestones, dimred_milestones)
-  expect_equivalent(wr$dimred_trajectory_segments, dimred_trajectory_segments)
+  expect_equivalent(wr$dimred_segment_progressions, dimred_segment_progressions)
+  expect_equivalent(wr$dimred_segment_points, dimred_segment_points)
 })
 
 test_that("Testing add_dimred with cell group", {
@@ -194,12 +196,58 @@ test_that("Expect failure on wrong dimred_milestones parameter", {
 })
 
 
-test_that("Expect failure on wrong dimred_trajectory_segments parameter", {
+test_that("Expect failure on wrong dimred_segment_progressions parameter", {
   expect_error(
     wr_withtraj %>%
       add_dimred(
         dimred = dimred,
-        dimred_trajectory_segments = "hdcoew"
+        dimred_segment_progressions = "hdcoew",
+        dimred_segment_points = "hufiwe"
+      )
+  )
+
+  expect_error(
+    wr_withtraj %>%
+      add_dimred(
+        dimred = dimred,
+        dimred_segment_progressions = dimred_segment_progressions,
+        dimred_segment_points = "hufiwe"
+      )
+  )
+
+  expect_error(
+    wr_withtraj %>%
+      add_dimred(
+        dimred = dimred,
+        dimred_segment_progressions = dimred_segment_progressions,
+        dimred_segment_points = dimred_segment_points[-1,]
+      )
+  )
+
+  expect_error(
+    wr_withtraj %>%
+      add_dimred(
+        dimred = dimred,
+        dimred_segment_progressions = dimred_segment_progressions,
+        dimred_segment_points = dimred_segment_points[,-1]
+      )
+  )
+
+  expect_error(
+    wr_withtraj %>%
+      add_dimred(
+        dimred = dimred,
+        dimred_segment_progressions = dimred_segment_progressions[-1,],
+        dimred_segment_points = dimred_segment_points
+      )
+  )
+
+  expect_error(
+    wr_withtraj %>%
+      add_dimred(
+        dimred = dimred,
+        dimred_segment_progressions = dimred_segment_progressions[,-1],
+        dimred_segment_points = dimred_segment_points
       )
   )
 })
