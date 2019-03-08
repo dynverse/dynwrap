@@ -10,7 +10,8 @@ wrap_output_list <- function(output, output_ids) {
 
   model <- wrap_data(
     id = output$id,
-    cell_ids = cell_ids
+    cell_ids = cell_ids,
+    cell_info = output$cell_info
   )
 
   # iterate over all promised output ids and
