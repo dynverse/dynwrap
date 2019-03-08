@@ -7,11 +7,11 @@ add_tde_overall <- function(trajectory, tde_overall) {
   feature_ids <- colnames(get_expression(trajectory))
 
   # check format of diffexp_overall
-  testthat::expect_named(tde_overall)
-  testthat::expect_true(is_tibble(tde_overall))
-  testthat::expect_is(tde_overall$differentially_expressed, "logical")
-  testthat::expect_is(tde_overall$feature_id, "character")
-  testthat::expect_setequal(tde_overall$feature_id, feature_ids)
+  assert_that(!is.null(names(tde_overall)))
+  assert_that(is_tibble(tde_overall))
+  assert_that(is.logical(tde_overall$differentially_expressed))
+  assert_that(is.character(tde_overall$feature_id))
+  assert_that(setequal(tde_overall$feature_id, feature_ids))
 
   trajectory$tde_overall <- tde_overall
   trajectory
