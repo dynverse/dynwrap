@@ -56,6 +56,10 @@ calculate_trajectory_dimred <- function(
   structure <- structure %>%
     mutate(weight = pmax(length, 1e-5))
 
+  # round weights to some closest value
+  # workaround for issue with igraph https://github.com/igraph/rigraph/issues/326
+  structure$weight <- round(structure$weight, - log10(structure$weight) + 5)
+
   # reduce dimensionality on milestone_network
   gr <- igraph::graph_from_data_frame(structure, vertices = milestone_ids)
   layout <-
