@@ -5,6 +5,7 @@
 #' @param dimred_milestones An optional dimensionality reduction of the milestones.
 #' @param dimred_segment_progressions An optional progression matrix of the trajectory segments. Format: `tibble(from, to, percentage)`
 #' @param dimred_segment_points An optional dimensionality reduction of the trajectory segments. Format: `matrix(Comp1, Comp2, ...)`.
+#' @param connect_segments Whether to connect segments between edges
 #' @param ... extra information to be stored in the wrapper
 #'
 #' @inheritParams get_expression
@@ -16,6 +17,7 @@ add_dimred <- function(
   dimred_milestones = NULL,
   dimred_segment_progressions = NULL,
   dimred_segment_points = NULL,
+  connect_segments = FALSE,
   expression_source = "expression",
   ...
 ) {
@@ -49,6 +51,17 @@ add_dimred <- function(
       identical(colnames(dimred_segment_progressions), c("from", "to", "percentage")),
       nrow(dimred_segment_points) == nrow(dimred_segment_progressions)
     )
+  }
+
+  # TODO: add tests for connecting segments!
+  if (isTRUE(connect_segments)) {
+    connected <- connect_dimred_segments(
+      dimred_segment_progressions,
+      dimred_segment_points,
+      model$milestone_network
+    )
+    dimred_segment_progressions <- connected$dimred_segment_progressions
+    dimred_segment_points <- connected$dimred_segment_points
   }
 
   # create output structure
@@ -148,4 +161,49 @@ process_dimred <- function(model, dimred, identifier = "cell_id", has_rownames =
   }
 
   dimred
+}
+
+
+
+
+
+connect_dimred_segments <- function(dimred_segment_progressions, dimred_segment_points, milestone_network) {
+  milestone_ids <- unique(c(milestone_network$from, milestone_network$to))
+  connections <- milestone_ids %>% map(function(milestone_id) {
+    # find the indices of the segment points that are closest to the milestone
+    ixs <- dimred_segment_progressions %>%
+      mutate(ix = row_number()) %>%
+      group_by(from, to) %>%
+      arrange(percentage) %>%
+      filter(
+        xor(
+          (row_number() == 1) & (from == !!milestone_id),
+          (row_number() == n()) & (to == !!milestone_id)
+        )
+      ) %>%
+      pull(ix)
+
+    # we'll create a new point for each edge in the milestone network that contains this milestone
+
+    # create progressions for each new point
+    progressions <- bind_rows(
+      milestone_network %>% filter(from == !!milestone_id) %>% select(from, to) %>% mutate(percentage = 0),
+      milestone_network %>% filter(to == !!milestone_id) %>% select(from, to) %>% mutate(percentage = 1)
+    )
+
+    points <- dimred_segment_points[ixs, ] %>% colMeans() %>% rep(nrow(progressions)) %>% matrix(nrow = nrow(progressions), byrow = TRUE)
+
+    list(
+      progressions = progressions,
+      points = points
+    )
+  })
+
+  connecting_progressions <- connections %>% map_dfr("progressions")
+  connecting_points <- connections %>% map("points") %>% do.call(rbind, .)
+
+  list(
+    dimred_segment_progressions = bind_rows(dimred_segment_progressions, connecting_progressions),
+    connecting_points = rbind(dimred_segment_points, connecting_points)
+  )
 }
