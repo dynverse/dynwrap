@@ -183,7 +183,7 @@ connect_dimred_segments <- function(dimred_segment_progressions, dimred_segment_
       ) %>%
       pull(ix)
 
-    if (length(ix) > 0) {
+    if (length(ixs) > 0) {
       # we'll create a new point for each edge in the milestone network that contains this milestone
 
       # create progressions for each new point
