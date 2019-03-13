@@ -192,7 +192,7 @@ connect_dimred_segments <- function(dimred_segment_progressions, dimred_segment_
         milestone_network %>% filter(to == !!milestone_id) %>% select(from, to) %>% mutate(percentage = 1)
       )
 
-      points <- dimred_segment_points[ixs, ] %>% colMeans() %>% rep(nrow(progressions)) %>% matrix(nrow = nrow(progressions), byrow = TRUE)
+      points <- dimred_segment_points[ixs, , drop = FALSE] %>% colMeans() %>% rep(nrow(progressions)) %>% matrix(nrow = nrow(progressions), byrow = TRUE)
 
       list(
         progressions = progressions,
