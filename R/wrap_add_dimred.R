@@ -183,20 +183,27 @@ connect_dimred_segments <- function(dimred_segment_progressions, dimred_segment_
       ) %>%
       pull(ix)
 
-    # we'll create a new point for each edge in the milestone network that contains this milestone
+    if (length(ix) > 0) {
+      # we'll create a new point for each edge in the milestone network that contains this milestone
 
-    # create progressions for each new point
-    progressions <- bind_rows(
-      milestone_network %>% filter(from == !!milestone_id) %>% select(from, to) %>% mutate(percentage = 0),
-      milestone_network %>% filter(to == !!milestone_id) %>% select(from, to) %>% mutate(percentage = 1)
-    )
+      # create progressions for each new point
+      progressions <- bind_rows(
+        milestone_network %>% filter(from == !!milestone_id) %>% select(from, to) %>% mutate(percentage = 0),
+        milestone_network %>% filter(to == !!milestone_id) %>% select(from, to) %>% mutate(percentage = 1)
+      )
 
-    points <- dimred_segment_points[ixs, ] %>% colMeans() %>% rep(nrow(progressions)) %>% matrix(nrow = nrow(progressions), byrow = TRUE)
+      points <- dimred_segment_points[ixs, ] %>% colMeans() %>% rep(nrow(progressions)) %>% matrix(nrow = nrow(progressions), byrow = TRUE)
 
-    list(
-      progressions = progressions,
-      points = points
-    )
+      list(
+        progressions = progressions,
+        points = points
+      )
+    } else {
+      list(
+        progressions = tibble(from = character(), to = character(), percentage = numeric()),
+        points = dimred_segment_points[0, ]
+      )
+    }
   })
 
   connecting_progressions <- connections %>% map_dfr("progressions")
