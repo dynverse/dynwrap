@@ -4,30 +4,15 @@
 #'
 #' @param dummy_param This parameter does not do anything.
 ti_random <- dynwrap::create_ti_method_r(
-  id = "random",
+  definition = definition(def_method("random"), def_wrapper("counts")),
 
   # describe packages needed by method
   package_loaded = c("dplyr", "tidyr", "purrr", "dynwrap", "dynutils"),
   package_required = c("dyndimred"),
 
-  # describe run fun inputs and outputs
-  input_required = "counts",
-  input_optional = NULL,
-
-  # describe tuneable parameters
-  parameters = dynparam::parameter_set(
-    dynparam::numeric_parameter(
-      id = "dummy_param",
-      description = "Dummy parameter",
-      default = 0.5,
-      distribution = dynparam::uniform_distribution(0, 1)
-    )
-  ),
-
   # function to run the method with
   run_fun = function(
     counts,
-    dummy_param = .5,
     seed = NA,
     verbose = FALSE
   ) {

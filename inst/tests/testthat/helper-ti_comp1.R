@@ -9,35 +9,39 @@
 #'
 #' @include method_create_ti_method.R
 ti_comp1 <- dynwrap::create_ti_method_r(
-  id = "comp1",
-
-  # describe packages needed by method
-  package_loaded = c("dplyr", "tidyr", "purrr", "dynwrap", "dynutils"),
-  package_required = c("dyndimred"),
-
-  # describe run fun inputs and outputs
-  input_required = "expression",
-  input_optional = NULL,
-
-  # describe tuneable parameters
-  parameters = dynparam::parameter_set(
-    dynparam::character_parameter(
-      id = "dimred_method",
-      default = "pca",
-      values = names(dyndimred::list_dimred_methods())
+  definition = dynwrap::definition(
+    # describe method
+    dynwrap::def_method(
+      id = "comp1",
     ),
-    dynparam::integer_parameter(
-      id = "component",
-      default = 1,
-      distribution = dynparam::uniform_distribution(1L, 10L)
+
+    # describe tuneable parameters
+    parameters = dynparam::parameter_set(
+      dynparam::character_parameter(
+        id = "dimred_method",
+        default = "pca",
+        values = names(dyndimred::list_dimred_methods())
+      ),
+      dynparam::integer_parameter(
+        id = "component",
+        default = 1,
+        distribution = dynparam::uniform_distribution(1L, 10L)
+      )
+    ),
+
+    # describe wrapper
+    wrapper = dynwrap::def_wrapper(
+      # describe run fun inputs and outputs
+      input_required = "expression",
+      input_optional = NULL
     )
+
   ),
 
   # function to run the method with
   run_fun = function(
     expression,
-    dimred_method,
-    component,
+    params,
     seed = NA,
     verbose = FALSE
   ) {
@@ -46,7 +50,7 @@ ti_comp1 <- dynwrap::create_ti_method_r(
     # TIMING: done with preproc
     tl <- add_timing_checkpoint(NULL, "method_afterpreproc")
 
-    dimred <- dyndimred::dimred(expression, method = dimred_method, ndim = max(component, 2L))
+    dimred <- dyndimred::dimred(expression, method = params$dimred_method, ndim = max(params$component, 2L))
 
     # TIMING: done with method
     tl <- tl %>% add_timing_checkpoint("method_aftermethod")
@@ -55,11 +59,15 @@ ti_comp1 <- dynwrap::create_ti_method_r(
     wrap_data(
       cell_ids = rownames(expression)
     ) %>% add_linear_trajectory(
-      pseudotime = dimred[,component] %>% set_names(rownames(expression))
+      pseudotime = dimred[,params$component] %>% set_names(rownames(expression))
     ) %>% add_dimred(
       dimred = dimred
     ) %>% add_timings(
       timings = tl %>% add_timing_checkpoint("method_afterpostproc")
     )
-  }
+  },
+
+  # describe packages needed by method
+  package_loaded = c("dplyr", "tidyr", "purrr", "dynwrap", "dynutils"),
+  package_required = c("dyndimred")
 )

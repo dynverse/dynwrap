@@ -1,58 +1,31 @@
 
 #' Create a TI method wrapper
 #'
-#' @param id A short name for the method, only lowercase characters allowed.
-#' @param name The name of the TI method.
+#' @param run_fun A function to infer a trajectory, with parameters counts/expression, params, priors, verbose and seed
 #' @param package_loaded The packages that need to be loaded before executing the method.
 #' @param package_required The packages that need to be installed before executing the method.
-#' @param parameters A list of parameters.
-#' @param run_fun A function to run the TI, needs to have 'counts' as its first param.
-#' @param input_required The required inputs for this method. See `dynwrap::allowed_inputs()`.
-#' @param input_optional Optional inputs for this method. See `dynwrap::allowed_inputs()`.
 #' @param remotes_package Package from which the remote locations of dependencies have to be extracted, eg. `dynmethods`.
-#' @param ... Other information about the wrapper, eg. apt_dependencies.
 #' @inheritParams .method_process_definition
 #'
 #' @export
 #'
 #' @include method_parse_parameter_definition.R
 create_ti_method_r <- function(
-  id,
-  name = id,
-  parameters = NULL,
+  definition,
   run_fun,
-  input_required,
-  input_optional = NULL,
-  package_loaded = c(),
-  package_required = c(),
-  remotes_package = ifelse("dynmethods" %in% rownames(installed.packages()), "dynmethods", "dynwrap"),
-  return_function = TRUE,
-  ...
+  package_required = character(),
+  package_loaded = character(),
+  remotes_package = character(),
+  return_function = FALSE
 ) {
-  # check that run_fun has the required arguments
-  assert_that(
-    c(input_required, input_optional, names(parameters$parameters), "verbose", "seed") %all_in% formalArgs(run_fun)
-  )
+  definition <- .method_load_definition(definition)
 
-  # create definition list
-  definition <- lst(
-    method = lst(
-      id,
-      name
-    ),
-    parameters,
-    run = lst(
-      backend = "function",
-      run_fun,
-      package_loaded,
-      package_required,
-      remotes_package
-    ),
-    wrapper = lst(
-      input_required,
-      input_optional
-    ),
-    ...
+  definition$run <- lst(
+    backend = "function",
+    run_fun,
+    package_required,
+    package_loaded,
+    remotes_package
   )
 
   # further process the definition
@@ -72,13 +45,13 @@ create_ti_method_r <- function(
   setwd(tmp_dir)
 
   # Load required packages and namespaces
-  if (!is.null(run$package_loaded) && !is.na(run$package_loaded)) {
+  if (!is.null(run$package_loaded) && !is.na(run$package_loaded) && length(run$package_loaded)) {
     for (pack in run$package_loaded) {
       suppressMessages(do.call(require, list(pack)))
     }
   }
 
-  if (!is.null(run$package_required) && !is.na(run$package_required)) {
+  if (!is.null(run$package_required) && !is.na(run$package_required) && length(run$package_required)) {
     for (pack in run$package_required) {
       suppressMessages(do.call(requireNamespace, list(pack)))
     }
@@ -94,18 +67,16 @@ create_ti_method_r <- function(
   # combine inputs and parameters
   args <- c(
     inputs,
-    priors,
-    parameters,
-    lst(verbose, seed)
+    lst(
+      priors,
+      params = parameters,
+      verbose,
+      seed
+    )
   )
 
-  # remove params that are not supposed to be here
-  remove_args <- setdiff(names(args), formalArgs(method$run$run_fun))
-  if (length(remove_args) > 0) {
-    warning("Parameters [", paste(remove_args, collapse = ", "), "] not recognised by method; removing them from the arglist.")
-    sel_args <- setdiff(names(args), remove_args)
-    args <- args[remove_args]
-  }
+  # only give args that are requested by the function
+  args <- args[intersect(names(args), names(formals(method$run$run_fun)))]
 
   model <- do.call(method$run$run_fun, args)
 

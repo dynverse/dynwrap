@@ -4,34 +4,22 @@
 \alias{create_ti_method_r}
 \title{Create a TI method wrapper}
 \usage{
-create_ti_method_r(id, name = id, parameters = NULL, run_fun,
-  input_required, input_optional = NULL, package_loaded = c(),
-  package_required = c(), remotes_package = ifelse("dynmethods" \%in\%
-  rownames(installed.packages()), "dynmethods", "dynwrap"),
-  return_function = TRUE, ...)
+create_ti_method_r(definition, run_fun, package_required = character(),
+  package_loaded = character(), remotes_package = character(),
+  return_function = FALSE)
 }
 \arguments{
-\item{id}{A short name for the method, only lowercase characters allowed.}
+\item{definition}{A definition, see \code{\link[=definition]{definition()}}}
 
-\item{name}{The name of the TI method.}
-
-\item{parameters}{A list of parameters.}
-
-\item{run_fun}{A function to run the TI, needs to have 'counts' as its first param.}
-
-\item{input_required}{The required inputs for this method. See \code{dynwrap::allowed_inputs()}.}
-
-\item{input_optional}{Optional inputs for this method. See \code{dynwrap::allowed_inputs()}.}
-
-\item{package_loaded}{The packages that need to be loaded before executing the method.}
+\item{run_fun}{A function to infer a trajectory, with parameters counts/expression, params, priors, verbose and seed}
 
 \item{package_required}{The packages that need to be installed before executing the method.}
+
+\item{package_loaded}{The packages that need to be loaded before executing the method.}
 
 \item{remotes_package}{Package from which the remote locations of dependencies have to be extracted, eg. \code{dynmethods}.}
 
 \item{return_function}{Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.}
-
-\item{...}{Other information about the wrapper, eg. apt_dependencies.}
 }
 \description{
 Create a TI method wrapper

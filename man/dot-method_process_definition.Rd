@@ -2,15 +2,15 @@
 % Please edit documentation in R/method_process_definition.R
 \name{.method_process_definition}
 \alias{.method_process_definition}
-\title{Process TI method description}
+\title{Method process definition}
 \usage{
-.method_process_definition(definition, return_function = TRUE)
+.method_process_definition(definition, return_function)
 }
 \arguments{
-\item{definition}{The description of the TI method, containing meta data and information on how to execute it.}
+\item{definition}{A definition, see \code{\link[=definition]{definition()}}}
 
 \item{return_function}{Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.}
 }
 \description{
-Assert correctness of common parameters and process priors and parameters
+Method process definition
 }

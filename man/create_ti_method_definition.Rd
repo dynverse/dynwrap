@@ -4,13 +4,12 @@
 \alias{create_ti_method_definition}
 \title{Create a TI method from a local method definition file}
 \usage{
-create_ti_method_definition(filename = NULL, definition = NULL,
-  return_function = TRUE)
+create_ti_method_definition(definition, script, return_function = TRUE)
 }
 \arguments{
-\item{filename}{The filename of the method definition.}
+\item{definition}{A definition, see \code{\link[=definition]{definition()}}}
 
-\item{definition}{The definition if already available as a list. Exactly one of \code{filename} and \code{definition} must be NULL.}
+\item{script}{Location of the script that will be executed. Has to contain a #!}
 
 \item{return_function}{Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.}
 }

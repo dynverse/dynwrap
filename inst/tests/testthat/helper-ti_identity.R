@@ -4,26 +4,20 @@
 #'
 #' @param dummy_param This parameter does not do anything.
 ti_identity <- dynwrap::create_ti_method_r(
-  id = "identity",
+  definition = definition(def_method("identity"), def_wrapper(c("counts", "dataset"))),
 
   # describe packages needed by method
   package_loaded = c("dplyr", "tidyr", "purrr", "dynwrap", "dynutils"),
-  package_required = c("dyndimred"),
-
-  # describe run fun inputs and outputs
-  input_required = c("counts", "dataset"),
-  input_optional = NULL,
-
-  # describe tuneable parameters
-  parameters = dynparam::parameter_set(),
 
   # function to run the method with
   run_fun = function(
     counts,
-    dataset,
+    priors,
     seed = NA,
     verbose = FALSE
   ) {
+    dataset <- priors$dataset
+
     if (length(seed) > 0 && is.finite(seed)) set.seed(seed)
 
     # TIMING: done with preproc

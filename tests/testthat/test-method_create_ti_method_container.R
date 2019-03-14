@@ -4,7 +4,7 @@ skip_on_appveyor()
 skip_on_os("mac")
 skip_on_cran()
 
-tags <- c("dynwrapr_tester:v0.1.0") # "dynwrappy3_tester:v0.1.0"
+tags <- c("dynwrapr_tester:v0.1.0") # "dynwrappy_tester:v0.1.0"
 
 # get example dataset
 data("example_dataset")
@@ -28,13 +28,11 @@ for (tag in tags) {
       expect_true(is_wrapper_with_trajectory(model1))
     })
 
-    expect_output(expect_error(infer_trajectory(dataset, method, debug = TRUE)), regexp = "Error traceback")
+    expect_error(infer_trajectory(dataset, method, debug = TRUE), regexp = "Error during trajectory inference")
 
-    expect_output(
-      expect_error(
-        infer_trajectory(dataset_na, method)
-      ),
-      regexp = "missing values in|contains NaN"
+    expect_error(
+      infer_trajectory(dataset_na, method),
+      regexp = "Error during trajectory inference"
     )
   })
 }

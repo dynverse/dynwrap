@@ -5,34 +5,21 @@
 #'
 #' @param dummy_param This parameter does not do anything.
 ti_shuffle <- dynwrap::create_ti_method_r(
-  id = "shuffle",
+  definition = definition(def_method("shuffle"), def_wrapper(c("counts", "dataset"))),
 
   # describe packages needed by method
   package_loaded = c("dplyr", "tidyr", "purrr", "dynwrap", "dynutils"),
   package_required = c("dyndimred"),
 
-  # describe run fun inputs and outputs
-  input_required = c("counts", "dataset"),
-  input_optional = NULL,
-
-  # describe tuneable parameters
-  parameters = dynparam::parameter_set(
-    dynparam::numeric_parameter(
-      id = "dummy_param",
-      description = "Dummy parameter",
-      default = 0.5,
-      distribution = dynparam::uniform_distribution(0, 1)
-    )
-  ),
-
   # function to run the method with
   run_fun = function(
     counts,
-    dataset,
-    dummy_param = .5,
+    priors,
     seed = NA,
     verbose = FALSE
   ) {
+    dataset <- priors$dataset
+
     if (length(seed) > 0 && is.finite(seed)) set.seed(seed)
 
     # TIMING: done with preproc
