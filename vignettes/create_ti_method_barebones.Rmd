@@ -1,0 +1,308 @@
+---
+title: "Creating a TI method: Bare-bones"
+date: "`r Sys.Date()`"
+author:
+- Wouter Saelens
+- Robrecht Cannoodt
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Creating a TI method: Bare-bones}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup}
+library(dynwrap)
+```
+
+
+This vignette describes how to include your own method into the dynverse workflow. We'll illustrate this with a very basic method: using one of the components of a PCA as the pseudotime.
+
+```{r}
+definition <- definition(
+  method = def_method(
+    id = "comp1"
+  ),
+  parameters = def_parameters(
+    dynparam::integer_parameter(
+      id = "component",
+      default = 1,
+      distribution = dynparam::uniform_distribution(1, 10)
+    )
+  ),
+  wrapper = def_wrapper(
+    input_required = "expression",
+    input_optional = "start_id"
+  )
+)
+
+run_fun <- function(expression, priors, params, seed, verbose) {
+  pca <- prcomp(expression)
+
+  pseudotime <- pca$x[, params$component]
+
+  # flip pseudotimes using start_id
+  if (!is.null(priors$start_id)) {
+    if(mean(pseudotime[start_id]) > 0.5) {
+      pseudotime <- 1-pseudotime
+    }
+  }
+
+  dynwrap::wrap_data(cell_ids = rownames(expression)) %>%
+    dynwrap::add_linear_trajectory(pseudotime = pseudotime)
+}
+
+
+dataset <- dynwrap::example_dataset
+method <- create_ti_method_r(definition, run_fun, package_loaded = "dplyr")
+model <- infer_trajectory(dataset, method, verbose = 3)
+```
+
+
+<!-- There are two main ways to add a new method: -->
+
+<!-- * **Directly within R**. In this case you create an R function or R packages. The user will have to install all dependencies. This is the use case described here. -->
+<!-- * **Using a docker**. In this case you create a docker which uses some input files (eg. a file containing the expression) and returns some output files. This use case is described in a separate vignette. -->
+
+<!-- The main function to create a new ti method is `create_ti_method_r`. This wraps: -->
+
+<!-- * The name of the method -->
+<!-- * The main function to run a method on a dataset -->
+<!-- * The parameters required by a method, and their ranges -->
+
+<!-- ## Input -->
+
+<!-- To test our method, we will use a very simple toy data example. -->
+
+<!-- ```{r, message=FALSE} -->
+<!-- library(dynwrap) -->
+<!-- library(dplyr) -->
+<!-- ``` -->
+
+<!-- The main function will receive three different types of input parameters: the expression data, extra parameters and prior information. -->
+
+<!-- ### Expression data -->
+
+<!-- The raw `counts` or normalised `expression`. This is a matrix with in the columns different features (genes) and in the rows different cells. -->
+
+<!-- ```{r} -->
+<!-- ncells <- 1000 -->
+<!-- pseudotime <- runif(ncells) -->
+
+<!-- expression <- matrix( -->
+<!--   c( -->
+<!--     (pseudotime - 0.5) ** 2, -->
+<!--     sqrt(pseudotime + 20), -->
+<!--     pseudotime -->
+<!--   ), -->
+<!--   ncol = 3, -->
+<!--   dimnames = list(as.character(rep(seq_len(ncells))), as.character(c("A", "B", "C"))) -->
+<!-- ) -->
+<!-- expression <- expression + rnorm(length(expression), sd = 0.02) -->
+<!-- ``` -->
+
+<!-- In this example, we'll use the expression data as follows: -->
+<!-- ```{r} -->
+<!-- pca <- prcomp(expression) -->
+<!-- ``` -->
+
+<!-- ### Parameters -->
+
+<!-- The main function can accept any additional parameters, which should also be defined in a parameter set This allows you to specify the type of parameter (integer, numeric, character, logical, ...), the possible range of values and the default value. Check out `?dynparam` for more information on the possible options. -->
+
+<!-- In this example we'll define one parameter, the `component`: -->
+
+<!-- ```{r} -->
+<!-- parameters <- dynparam::parameter_set( -->
+<!--   dynparam::integer_parameter( -->
+<!--     id = "component", -->
+<!--     description = "The component to use", -->
+<!--     default = 1L, -->
+<!--     distribution = dynparam::uniform_distribution(lower = 1L, upper = 10L) -->
+<!--   ) -->
+<!-- ) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- component <- 1 -->
+<!-- pseudotime <- pca$x[, component] -->
+<!-- pseudotime <- (pseudotime - min(pseudotime)) / (max(pseudotime) - min(pseudotime)) -->
+<!-- ``` -->
+
+<!-- ### Prior information -->
+
+<!-- Prior information can be required (no default) or optional (default is `NULL`).  -->
+
+<!-- Following prior information requests are possible: -->
+
+<!-- ```{r, echo=FALSE} -->
+<!-- data("priors", package = "dynwrap") -->
+<!-- priors %>%  -->
+<!--   select(`Name of parameter`=prior_id, `Description`=description) %>%  -->
+<!--   knitr::kable("markdown") -->
+<!-- ``` -->
+
+<!-- In this example we will use the `start_id`... -->
+<!-- ```{r} -->
+<!-- start_id <- as.character(which.min(pseudotime)) -->
+<!-- ``` -->
+
+<!-- as follows -->
+
+<!-- ```{r} -->
+<!-- if (!is.null(start_id)) { -->
+<!--   if(mean(pseudotime[start_id]) > 0.5) { -->
+<!--     pseudotime <- 1-pseudotime -->
+<!--   } -->
+<!-- } -->
+<!-- ``` -->
+<!-- ## Output -->
+
+<!-- In the end, the output of the method should be transformed into the common trajectory format: -->
+
+<!-- ![](../man/figures/overview_wrapping_v2.png) -->
+
+<!-- The topology of the trajectory requires: -->
+
+<!-- * `milestone_ids` The ids of the milestones in the trajectory. Type: Character vector. -->
+<!-- * `milestone_network` The network of the milestones. Is a dataframe with columns from, to, length and whether it is directed -->
+<!-- * `divergence_regions` A data frame specifying the divergence regions between milestones (e.g. a bifurcation). Is a dataframe containing a divergence_id, milestone_id, and is_start (TRUE when this milestone is the start of this divergence -->
+
+<!-- ```{r} -->
+<!-- milestone_ids <- c("A", "B") -->
+<!-- milestone_network <- tibble(from = "A", to = "B", length = 1, directed = TRUE) -->
+<!-- divergence_regions <- tibble() -->
+<!-- ``` -->
+
+<!-- The location of the cells can be provided in two ways: -->
+
+<!-- * `milestone_percentages` A data frame specifying what percentage milestone each cell consists of. Is a dataframe with columns cell_id, milestone_id, and percentage -->
+<!-- * `progressions` Specifies the progression of a cell along a transition in the milestone_network. Is a dataframe with columns cell_id, from, to, and percentage -->
+
+<!-- Example of `milestone_percentages`: -->
+<!-- ```{r} -->
+<!-- milestone_percentages <- bind_rows( -->
+<!--   tibble( -->
+<!--     milestone_id = "A", -->
+<!--     cell_id = names(pseudotime), -->
+<!--     percentage = 1-pseudotime -->
+<!--   ), -->
+<!--   tibble( -->
+<!--     milestone_id = "B", -->
+<!--     cell_id = names(pseudotime), -->
+<!--     percentage = pseudotime -->
+<!--   ) -->
+<!-- ) -->
+<!-- ``` -->
+
+<!-- Example of `progressions`: -->
+<!-- ```{r} -->
+<!-- progressions <- tibble( -->
+<!--   cell_id = names(pseudotime), -->
+<!--   from = "A", -->
+<!--   to = "B", -->
+<!--   percentage = pseudotime -->
+<!-- ) -->
+<!-- ``` -->
+
+<!-- We can now wrap this information up: -->
+<!-- ```{r} -->
+<!-- trajectory <-  -->
+<!--   wrap_data( -->
+<!--     cell_id = names(pseudotime) -->
+<!--   ) %>%  -->
+<!--   add_trajectory( -->
+<!--     milestone_ids = milestone_ids, -->
+<!--     milestone_network = milestone_network, -->
+<!--     divergence_regions = divergence_regions, -->
+<!--     progressions = progressions # either milestone_percentages or progressions have to be provided -->
+<!--   ) -->
+<!-- ``` -->
+
+<!-- In some cases, we already provide functions which do the calculation of milestone_percentages or progressions. For example, when a method returns only a linear trajectory with pseudotime: -->
+
+<!-- ```{r} -->
+<!-- trajectory <-  -->
+<!--   wrap_data( -->
+<!--     cell_ids = names(pseudotime) -->
+<!--   ) %>%  -->
+<!--   add_linear_trajectory(pseudotime) -->
+<!-- ``` -->
+
+<!-- We can plot this output using the plotting functions provided by the `dynplot` package: -->
+
+<!-- ```{r} -->
+<!-- if ("dynplot" %in% rownames(installed.packages())) { -->
+<!--   dynplot::plot_dimred(trajectory, "pseudotime", expression_source = expression) -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- ## Creating the method object -->
+
+<!-- Combining everything in a function: -->
+
+<!-- ```{r} -->
+<!-- run_fun <- function(expression, component, start_id = NULL, seed = NA, verbose = FALSE) { -->
+<!--   if (length(seed) == 1 && is.finite(seed)) set.seed(seed) -->
+
+<!--   # do pca and extract pseudotime -->
+<!--   pca <- prcomp(expression) -->
+
+<!--   pseudotime <- pca$x[, component] -->
+
+<!--   # flip pseudotime using start_id -->
+<!--   if (!is.null(start_id)) { -->
+<!--     if(mean(pseudotime[start_id]) > 0.5) { -->
+<!--       pseudotime <- 1-pseudotime -->
+<!--     } -->
+<!--   } -->
+
+<!--   # convert to common format -->
+<!--   wrap_data( -->
+<!--     cell_ids = names(pseudotime) -->
+<!--   ) %>%  -->
+<!--   add_linear_trajectory(pseudotime) -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- We can now create the TI object -->
+
+<!-- ```{r} -->
+<!-- ti_dummy <- create_ti_method_r( -->
+<!--   id = "dummy",  -->
+<!--   name = "Dummy", -->
+<!--   parameters = parameters, -->
+<!--   run_fun = run_fun, -->
+<!--   input_required = "expression", -->
+<!--   input_optional = NULL, -->
+<!--   output = "linear_trajectory" -->
+<!-- ) -->
+<!-- ``` -->
+
+<!-- This function also has several optional parameters, among which: -->
+
+<!-- * R packages which have to be installed, and R packages which have to be installed and loaded -->
+<!-- * The function to plot the output of a method, default is `dynplot::plot_default` -->
+<!-- * A short name of the method -->
+
+<!-- ## Running the method -->
+
+<!-- Running the method is easy given a dataset. -->
+
+<!-- ```{r} -->
+<!-- dataset <- wrap_data("", rownames(expression)) %>% add_expression(expression, expression) -->
+
+<!-- model <- infer_trajectory(dataset, ti_dummy()) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- if ("dynplot" %in% rownames(installed.packages())) { -->
+<!--   dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = dataset$expression) -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- ## Making your method available for other users -->
+
+<!-- The easiest way to make your method available to other users is by creating an [R package which exports the `ti_*` function](http://r-pkgs.had.co.nz/). -->
+
+<!-- We also strongly encourage you to include within our collection of TI methods available in the [dynmethods R package](https://github.com/dynverse/dynmethods). Feel free to [create an issue](https://github.com/dynverse/dynmethods/labels/new%20method) or [send us a pull request](https://github.com/dynverse/dynmethods/pulls). -->
