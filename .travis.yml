@@ -16,13 +16,10 @@ before_install:
   - source <(curl -sSL https://raw.githubusercontent.com/dynverse/travis_scripts/master/helper.sh)
   - install_hdf5
 install:
- - # use_dynverse_devel
- - install_cran devtools
+ - use_dynverse_devel
+ - install_cran devtools covr
  - install_cran covr
- - R -e 'setRepositories(ind = 1:4); devtools::install(dependencies = TRUE, upgrade = TRUE)'
-script:
- - R CMD build .
- - R CMD check *tar.gz
+ - install_withdeps
 after_success:
  - R -e 'covr::codecov()'
 
