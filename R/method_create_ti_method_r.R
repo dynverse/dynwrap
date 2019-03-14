@@ -16,7 +16,7 @@ create_ti_method_r <- function(
   package_required = character(),
   package_loaded = character(),
   remotes_package = character(),
-  return_function = FALSE
+  return_function = TRUE
 ) {
   definition <- .method_load_definition(definition)
 
