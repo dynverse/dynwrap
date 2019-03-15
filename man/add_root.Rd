@@ -2,10 +2,17 @@
 % Please edit documentation in R/wrap_add_root.R
 \name{add_root}
 \alias{add_root}
+\alias{add_root_using_expression}
+\alias{is_rooted}
 \title{Root the trajectory}
 \usage{
 add_root(trajectory, root_cell_id = trajectory$root_cell_id,
   root_milestone_id = trajectory$root_milestone_id, flip_edges = TRUE)
+
+add_root_using_expression(trajectory, features_oi,
+  expression_source = "expression")
+
+is_rooted(trajectory)
 }
 \arguments{
 \item{trajectory}{the trajectory object}
@@ -15,6 +22,10 @@ add_root(trajectory, root_cell_id = trajectory$root_cell_id,
 \item{root_milestone_id}{The root milestone id, not required if root_cell_id is given}
 
 \item{flip_edges}{Whether to flip edges which are going in the other direction compared to the root}
+
+\item{features_oi}{The feature ids which will be used to root}
+
+\item{expression_source}{Source of the expression, either a string or a matrix}
 }
 \description{
 Roots the trajectory by changing the directionality of all edges given a root cell

@@ -2,9 +2,12 @@
 % Please edit documentation in R/wrap_add_timings.R
 \name{add_timings}
 \alias{add_timings}
+\alias{is_wrapper_with_timings}
 \title{Add count and normalised expression values to a model}
 \usage{
 add_timings(model, timings)
+
+is_wrapper_with_timings(model)
 }
 \arguments{
 \item{model}{The model to which timings will be added}

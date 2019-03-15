@@ -2,11 +2,14 @@
 % Please edit documentation in R/wrap_add_trajectory.R
 \name{add_trajectory}
 \alias{add_trajectory}
+\alias{is_wrapper_with_trajectory}
 \title{Define a trajectory model given its milestone network and milestone percentages or progressions}
 \usage{
 add_trajectory(model, milestone_ids = NULL, milestone_network,
   divergence_regions = NULL, milestone_percentages = NULL,
   progressions = NULL, allow_self_loops = FALSE, ...)
+
+is_wrapper_with_trajectory(model)
 }
 \arguments{
 \item{model}{The model to which the trajectory will be added.}

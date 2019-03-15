@@ -29,13 +29,12 @@ add_timings <- function(
   )
 }
 
-#' Test whether an object is a model and has timings information
-#'
-#' @param object The object to be tested.
+#' @inheritParams add_timings
+#' @rdname add_timings
 #'
 #' @export
-is_wrapper_with_timings <- function(object) {
-  is_data_wrapper(object) && "dynwrap::with_timings" %in% class(object)
+is_wrapper_with_timings <- function(model) {
+  is_data_wrapper(model) && "dynwrap::with_timings" %in% class(model)
 }
 
 #' Helper function for storing timings information.
