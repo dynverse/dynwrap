@@ -107,13 +107,12 @@ add_prior_information <- function(
 }
 
 
-#' Test whether an object is a dataset and contains prior information
-#'
-#' @param object The object to be tested.
+#' @inheritParams add_prior_information
+#' @rdname add_prior_information
 #'
 #' @export
-is_wrapper_with_prior_information <- function(object) {
-  is_data_wrapper(object) && "dynwrap::with_prior" %in% class(object)
+is_wrapper_with_prior_information <- function(dataset) {
+  is_data_wrapper(dataset) && "dynwrap::with_prior" %in% class(dataset)
 }
 
 #' Extract the prior information from the milestone network

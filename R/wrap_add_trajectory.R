@@ -120,13 +120,12 @@ add_trajectory <- function(
   )
 }
 
-#' Test whether an object is a model and has a trajectory
-#'
-#' @param object The object to be tested.
+#' @inheritParams add_trajectory
+#' @rdname add_trajectory
 #'
 #' @export
-is_wrapper_with_trajectory <- function(object) {
-  is_data_wrapper(object) && "dynwrap::with_trajectory" %in% class(object)
+is_wrapper_with_trajectory <- function(model) {
+  is_data_wrapper(model) && "dynwrap::with_trajectory" %in% class(model)
 }
 
 
