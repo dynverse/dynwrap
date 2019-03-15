@@ -6,11 +6,11 @@
 \title{Infer trajectories}
 \usage{
 infer_trajectories(dataset, method, parameters = NULL,
-  give_priors = NULL, seed = 1, verbose = FALSE,
+  give_priors = NULL, seed = random_seed(), verbose = FALSE,
   return_verbose = FALSE, debug = FALSE, map_fun = map)
 
 infer_trajectory(dataset, method, parameters = NULL,
-  give_priors = NULL, seed = 1, verbose = FALSE,
+  give_priors = NULL, seed = random_seed(), verbose = FALSE,
   return_verbose = FALSE, debug = FALSE, ...)
 }
 \arguments{
@@ -32,7 +32,7 @@ If multiple methods were provided in the \code{method} parameter,
 \item{give_priors}{All the priors a method is allowed to receive.
 Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).}
 
-\item{seed}{A seed to be set, if the method allows for it.}
+\item{seed}{A seed to be passed to the TI method.}
 
 \item{verbose}{Whether or not to print information output.}
 
