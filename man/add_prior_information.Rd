@@ -2,6 +2,7 @@
 % Please edit documentation in R/wrap_add_prior_information.R
 \name{add_prior_information}
 \alias{add_prior_information}
+\alias{is_wrapper_with_prior_information}
 \title{Add prior information to a data wrapper}
 \usage{
 add_prior_information(dataset, start_id = NULL, end_id = NULL,
@@ -9,6 +10,8 @@ add_prior_information(dataset, start_id = NULL, end_id = NULL,
   groups_n = NULL, start_n = NULL, end_n = NULL,
   timecourse_continuous = NULL, timecourse_discrete = NULL,
   verbose = TRUE)
+
+is_wrapper_with_prior_information(dataset)
 }
 \arguments{
 \item{dataset}{A data wrapper to extend upon.}

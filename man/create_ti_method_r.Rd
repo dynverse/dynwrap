@@ -6,7 +6,7 @@
 \usage{
 create_ti_method_r(definition, run_fun, package_required = character(),
   package_loaded = character(), remotes_package = character(),
-  return_function = FALSE)
+  return_function = TRUE)
 }
 \arguments{
 \item{definition}{A definition, see \code{\link[=definition]{definition()}}}

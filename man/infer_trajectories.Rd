@@ -6,12 +6,13 @@
 \title{Infer trajectories}
 \usage{
 infer_trajectories(dataset, method, parameters = NULL,
-  give_priors = NULL, seed = 1, verbose = FALSE,
-  return_verbose = FALSE, debug = FALSE, map_fun = map)
+  give_priors = NULL, seed = sample(1:.Machine$integer.max, 1),
+  verbose = FALSE, return_verbose = FALSE, debug = FALSE,
+  map_fun = map)
 
 infer_trajectory(dataset, method, parameters = NULL,
-  give_priors = NULL, seed = 1, verbose = FALSE,
-  return_verbose = FALSE, debug = FALSE, ...)
+  give_priors = NULL, seed = sample(1:.Machine$integer.max, 1),
+  verbose = FALSE, return_verbose = FALSE, debug = FALSE, ...)
 }
 \arguments{
 \item{dataset}{One or more datasets, as created using dynwrap.}
