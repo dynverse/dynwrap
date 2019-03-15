@@ -116,6 +116,8 @@ def_method <- function(
 #'   github = "bobdylan",
 #'   orcid = "0000-0003-1234-5678"
 #' )
+#'
+#' @export
 def_author <- function(
   given,
   family,
