@@ -60,11 +60,14 @@ test_that("Testing add_expression and get_expression", {
     expect_equivalent(wr$extras1, extras1)
     expect_equivalent(wr$extras2, extras2)
 
-    expect_equivalent(get_expression(wr, "counts"), counts)
-    expect_equivalent(get_expression(wr), expression)
-    expect_equivalent(get_expression("whatever", wr), expression)
-    expect_equivalent(get_expression(wr, expression), expression)
-    expect_equivalent(get_expression(wr, counts), counts)
+    expect_is(get_expression(wr, "counts"), "dgCMatrix")
+    expect_is(get_expression(wr, "expression"), "dgCMatrix")
+
+    expect_equivalent(get_expression(wr, "counts") %>% as.matrix, counts)
+    expect_equivalent(get_expression(wr) %>% as.matrix, expression)
+    expect_equivalent(get_expression("whatever", wr) %>% as.matrix, expression)
+    expect_equivalent(get_expression(wr, expression) %>% as.matrix, expression)
+    expect_equivalent(get_expression(wr, counts) %>% as.matrix, counts)
     expect_error(get_expression(wr, "say what"))
     expect_error(get_expression("you don't say"))
   }

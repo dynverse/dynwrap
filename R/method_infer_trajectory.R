@@ -1,3 +1,12 @@
+#' Generate a random seed
+#'
+#' ... From the current seed.
+#'
+#' @export
+random_seed <- function() {
+  sample.int(.Machine$integer.max, 1)
+}
+
 #' Infer trajectories
 #'
 #' @param dataset One or more datasets, as created using dynwrap.
@@ -14,7 +23,7 @@
 #'    `parameters` must be an unnamed list of the same length.
 #' @param give_priors All the priors a method is allowed to receive.
 #'   Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).
-#' @param seed A seed to be set, if the method allows for it.
+#' @param seed A seed to be passed to the TI method.
 #' @param map_fun A mao function to use when inferring trajectories with multiple datasets or methods.
 #'   Allows to parallellise the execution in an arbitrary way.
 #' @param verbose Whether or not to print information output.
@@ -32,7 +41,7 @@ infer_trajectories <- function(
   method,
   parameters = NULL,
   give_priors = NULL,
-  seed = sample(1:.Machine$integer.max, 1),
+  seed = random_seed(),
   verbose = FALSE,
   return_verbose = FALSE,
   debug = FALSE,
@@ -63,6 +72,8 @@ infer_trajectories <- function(
   } else {
     stop("Invalid method argument, it is of class ", paste0(class(method), collapse = ", "))
   }
+
+  # turn method(s) into a list of methods (again)
   method <- map(seq_len(nrow(method)), extract_row_to_list, tib = method)
 
   # process parameters ----------------
@@ -133,8 +144,8 @@ infer_trajectories <- function(
     dataset_ix = design$dataset_ix,
     method_ix = design$method_ix,
     dataset_id = map_chr(dataset, "id")[design$dataset_ix],
-    method_id = map_chr(method, "id")[design$method_ix],
-    method_name = map_chr(method, "name")[design$method_ix],
+    method_id = map_chr(method, function(m) m$method$id)[design$method_ix],
+    method_name = map_chr(method, function(m) m$method$name)[design$method_ix],
     model = map(output, "model"),
     summary = map(output, "summary")
   )
@@ -171,12 +182,7 @@ infer_trajectory <- dynutils::inherit_default_params(
 
     if (is.null(design$model[[1]])) {
       error <- design$summary[[1]]$error[[1]]
-      cat("Error traceback:\n")
-      traceback(error)
-      if (!is.list(error)) { # if no error yet, add a fake one
-        error <- list(message = "")
-      }
-      stop("The trajectory inference wrapper errored, see above \U2191\U2191\U2191\U2191 \n", error$message, call. = FALSE)
+      stop("Error during trajectory inference \n", crayon::bold(error), call. = FALSE)
     } else {
       first(design$model)
     }

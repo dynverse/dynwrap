@@ -1,7 +1,7 @@
 Package: dynwrap
 Type: Package
 Title: Common trajectory model for representing trajectories from all sources
-Version: 0.3.1.1.9000
+Version: 0.9.9
 Authors@R: c(
     person(
       "Robrecht", 
@@ -23,19 +23,22 @@ BugReports: https://github.com/dynverse/dynwrap/issues
 Description: The common trajectory model for representing trajectories from real and synthetic datasets and method predictions.
 License: GPL-3
 LazyData: TRUE
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 Encoding: UTF-8
 Depends:
   R (>= 3.0.0)
 Imports:
+  assertthat,
   babelwhale,
   dplyr,
-  dynutils,
+  dynutils (>= 1.0.1.9000),
+  dynparam,
   igraph,
   glue,
   jsonlite,
   magrittr,
+  Matrix,
   methods,
   pdist,
   purrr,
@@ -55,12 +58,14 @@ Suggests:
   knitr,
   lhs,
   pkgload,
+  ranger,
   rmarkdown,
   viridis
 Remotes:
-  dynverse/babelwhale,
+  dynverse/babelwhale@singularity3,
   dynverse/dynutils,
-  dynverse/dyndimred
+  dynverse/dyndimred,
+  dynverse/dynparam
 VignetteBuilder: knitr
 Collate: 
     'calculate_average_by_group.R'
@@ -70,7 +75,6 @@ Collate:
     'compute_tented_geodesic_distances.R'
     'container_get_definition.R'
     'container_get_example.R'
-    'container_get_version.R'
     'convert_milestone_percentages_to_progressions.R'
     'convert_progressions_to_milestone_percentages.R'
     'data.R'
@@ -78,6 +82,7 @@ Collate:
     'get_divergence_triangles.R'
     'metawrap_get_output_processor.R'
     'method_create_ti_method_container.R'
+    'method_create_ti_method_definition.R'
     'method_parse_parameter_definition.R'
     'method_create_ti_method_r.R'
     'method_execute.R'
@@ -110,7 +115,4 @@ Collate:
     'wrap_data.R'
     'wrap_gather_cells_at_milestones.R'
     'wrap_label_milestones.R'
-    'wrap_output.R'
-    'wrap_output_dynwrap.R'
-    'wrap_output_rds.R'
-    'wrap_output_text.R'
+    'wrap_output_list.R'
