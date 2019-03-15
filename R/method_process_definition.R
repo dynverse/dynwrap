@@ -272,10 +272,10 @@ get_default_parameters <- function(definition) {
 .method_convert_definition <- function(definition_raw) {
   definition(
     method = purrr::invoke(def_method, definition_raw$method %||% list()),
-    parameters = purrr::invoke(def_method, definition_raw$parameters %||% list()),
-    manuscript = purrr::invoke(def_manuscript, definition_raw$manuscript %||% list()),
     wrapper = purrr::invoke(def_wrapper, definition_raw$wrapper %||% list()),
-    container = purrr::invoke(def_container, definition_raw$container %||% list())
+    container = purrr::invoke(def_container, definition_raw$container %||% list()),
+    manuscript = purrr::invoke(def_manuscript, definition_raw$manuscript %||% list()),
+    parameters = dynparam::as_parameter_set(definition_raw$parameters %||% list())
   )
 }
 
