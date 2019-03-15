@@ -49,6 +49,7 @@ def_method <- function(
   id,
   name = id,
   source = "tool",
+  tool_id = NULL,
   platform = "R",
   url = NULL,
   license = NULL,
