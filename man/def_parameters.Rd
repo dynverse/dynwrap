@@ -2,13 +2,25 @@
 % Please edit documentation in R/method_process_definition.R
 \name{def_parameters}
 \alias{def_parameters}
-\title{Define the parameters}
+\title{Meta information on the parameters of the TI method}
 \usage{
-def_parameters(...)
+def_parameters(..., parameters = NULL, forbidden = NULL)
 }
 \arguments{
-\item{...}{The parameters! :-)}
+\item{...}{Parameters to wrap in a parameter set.}
+
+\item{parameters}{A list of parameters to wrap in a parameter set.}
+
+\item{forbidden}{States forbidden region of parameter via a character vector, which will be turned into an expression.}
 }
 \description{
-Define the parameters
+Parameters can be defined using \code{\link[dynparam:dynparam]{dynparam}}.
+}
+\examples{
+library(dynparam)
+def_parameters(
+  character_parameter(id = "method", default = "one", values = c("one", "two", "three")),
+  integer_parameter(id = "ndim", default = 3L, distribution = uniform_distribution(lower = 2L, upper = 20L)),
+  numeric_parameter(id = "beta", default = 0.005, distribution = expuniform_distribution(lower = 1e-10, upper = 1))
+)
 }

@@ -1,11 +1,26 @@
 #' Create a definition
-#' @param method See [def_method()]
-#' @param wrapper See [def_wrapper()]
-#' @param manuscript See [def_manuscript()]
-#' @param container See [def_container()]
-#' @param parameters See [def_parameters()]
+#'
+#' A definition contains meta information on a TI method and various aspects thereof.
+#' For brevity, the example only contains a minimum example, check the documentation
+#' of the `def_*` helper functions for more extensive examples.
+#'
+#' @param method Meta information on the TI method (see [def_method()]).
+#' @param wrapper Meta information on the wrapper itself (see [def_wrapper()]).
+#' @param manuscript Meta information on the manuscript, if applicable (see [def_manuscript()]).
+#' @param container Meta information on the container in which the wrapper resides, if applicable (see [def_container()]).
+#' @param parameters Meta information on the parameters of the TI method (see [def_parameters()]).
 #'
 #' @export
+#'
+#' @examples
+#' library(dynparam)
+#' definition(
+#'   method = def_method(id = "some_method"),
+#'   wrapper = def_wrapper(input_required = "expression"),
+#'   parameters = parameter_set(
+#'     integer_parameter(id = "k", default = 5L, distribution = uniform_distribution(3L, 20L))
+#'   )
+#' )
 definition <- function(
   method,
   wrapper,
@@ -34,23 +49,50 @@ definition <- function(
 
 
 
-#' Define the method
+#' Define meta information on the TI method.
 #'
-#' @param id id
-#' @param name name
-#' @param source source
-#' @param platform platform
-#' @param url url
-#' @param license license
-#' @param authors authors
+#' @param id An id by which to identify a method. Should only contain lowercase letters or underscores.
+#' @param name The name of the method.
+#' @param source The type of TI method. Options are :
+#'
+#'  * `"tool"`: a published TI method (peer-reviewed or preprint) (default),
+#'  * `"adaptation"`: an adaptation of a published method,
+#'  * `"offtheshelf"`: a method constructed from off-the-shelf algorithms,
+#'  * `"control"`: a control TI method (so not actually a TI method).
+#'
+#' @param tool_id If there are multiple TI methods from the same toolkit, the name of the toolkit can be specified here.
+#' @param platform The platform the TI method uses (e.g. R, Python, C++, ...).
+#' @param url An URL to the codebase of the method.
+#' @param license The software license the method uses (e.g. GPL-3, BSD-3, Artistic-2.0, MIT).
+#' @param authors A list of authors (see example).
 #'
 #' @export
+#'
+#' @examples
+#' def_method(
+#'   id = "some_method",
+#'   name = "Some method <3",
+#'   source = "tool",
+#'   tool_id = "bobstoolkit",
+#'   platform = "VBA",
+#'   url = "https://github.com/bobdylan/singlecellvba",
+#'   license = "GPL-3",
+#'   authors = list(
+#'     def_author(
+#'       given = "Bob",
+#'       family = "Dylan",
+#'       email = "bob@dylan.com",
+#'       github = "bobdylan",
+#'       orcid = "0000-0003-1234-5678"
+#'     )
+#'   )
+#' )
 def_method <- function(
   id,
   name = id,
   source = "tool",
   tool_id = NULL,
-  platform = "R",
+  platform = NULL,
   url = NULL,
   license = NULL,
   authors = list()
@@ -58,14 +100,50 @@ def_method <- function(
   as.list(environment())
 }
 
-#' Define the manuscript
+#' Meta information on an author
 #'
-#' @param doi doi
-#' @param google_scholar_cluster_id google_scholar_cluster_id
-#' @param preprint_date preprint_data
-#' @param publication_date publication_date
+#' @param given The given name
+#' @param family The family name
+#' @param email The email address
+#' @param github The github handle
+#' @param orcid The orcid id
+#'
+#' @examples
+#' def_author(
+#'   given = "Bob",
+#'   family = "Dylan",
+#'   email = "bob@dylan.com",
+#'   github = "bobdylan",
+#'   orcid = "0000-0003-1234-5678"
+#' )
+def_author <- function(
+  given,
+  family,
+  email = NULL,
+  github = NULL,
+  orcid = NULL
+) {
+  as.list(environment())
+}
+
+#' Meta information on the manuscript
+#'
+#' @param doi A doi identifier (not an url)
+#' @param google_scholar_cluster_id The google cluster id. Finding this id is a bit tricky;
+#'   you need to find the manuscript on one of the author pages, and hover over the 'All X versions' button.
+#'   Example: [google scholar page](https://goo.gl/Y9uLFs), [screenshot](https://i.imgur.com/03eLCaO.png).
+#' @param preprint_date Date of publication of the preprint (format: YYYY-MM-DD).
+#' @param publication_date Date of publication of the peer-reviewed manuscript (format: YYYY-MM-DD).
 #'
 #' @export
+#'
+#' @examples
+#' def_manuscript(
+#'   doi = "101010101/1101010101",
+#'   google_scholar_cluster_id = "1010001010101111211",
+#'   preprint_date = "1970-01-30",
+#'   publication_date = "1970-01-31"
+#' )
 def_manuscript <- function(
   doi = NULL,
   google_scholar_cluster_id = NULL,
@@ -75,12 +153,18 @@ def_manuscript <- function(
   as.list(environment())
 }
 
-#' Define the container
+#' Meta information on the container in which the wrapper resides
 #'
-#' @param docker docker
-#' @param url url
+#' @param docker The handle of the docker container
+#' @param url An url of where the docker codebase resides (containing definition.yml, Dockerfile, ...)
 #'
 #' @export
+#'
+#' @examples
+#' def_container(
+#'   docker = "bobdylan/ti_some_method",
+#'   url = "https://github.com/bobdylan/ti_some_method"
+#' )
 def_container <- function(
   docker,
   url = NULL
@@ -89,15 +173,28 @@ def_container <- function(
 }
 
 
-#' Define the wrapper
+#' Meta information on the wrapper
 #'
 #' @param input_required The required inputs for this method. See `dynwrap::allowed_inputs()`.
 #' @param input_optional Optional inputs for this method. See `dynwrap::allowed_inputs()`.
-#' @param type type
-#' @param topology_inference topology_inference
-#' @param trajectory_types trajectory_types
+#' @param type Which type of trajectory post-processing is used. Possible values:
+#'   `"trajectory"` (default), `"linear_trajectory"`, `"cyclic_trajectory"`, `"branch_trajectory"`,
+#'   `"cluster_graph"`, `"dimred_projection"`, `"end_state_probabilities"`, `"cell_graph"`.
+#' @param topology_inference Whether the topology is fixed (`"fixed"`), free (`"free"`),
+#'   or fixed by a parameter provided to the algorithm (`"param"`).
+#' @param trajectory_types The possible trajectory types this method can return. Must be a subset of
+#'   `c("cyclic", "linear", "bifurcation", "convergence", "multifurcation", "tree", "graph", "acyclic_graph", "disconnected_graph")`
 #'
 #' @export
+#'
+#' @examples
+#' def_wrapper(
+#'   input_required = c("expression", "start_id"),
+#'   input_optional = "groups_n",
+#'   type = "dimred_projection",
+#'   trajectory_types = c("linear", "cyclic"),
+#'   topology_inference = "free"
+#' )
 def_wrapper <- function(
   input_required,
   input_optional = character(),
@@ -117,18 +214,22 @@ def_wrapper <- function(
 }
 
 
-#' Define the parameters
+#' Meta information on the parameters of the TI method
 #'
-#' @param ... The parameters! :-)
+#' Parameters can be defined using \code{\link[dynparam:dynparam]{dynparam}}.
+#'
+#' @inheritParams dynparam::parameter_set
 #'
 #' @export
-def_parameters <- function(
-  ...
-) {
-  dynparam::parameter_set(...)
-}
-
-
+#'
+#' @examples
+#' library(dynparam)
+#' def_parameters(
+#'   character_parameter(id = "method", default = "one", values = c("one", "two", "three")),
+#'   integer_parameter(id = "ndim", default = 3L, distribution = uniform_distribution(lower = 2L, upper = 20L)),
+#'   numeric_parameter(id = "beta", default = 0.005, distribution = expuniform_distribution(lower = 1e-10, upper = 1))
+#' )
+def_parameters <- dynparam::parameter_set
 
 
 #' Tests whether an object is a TI method description

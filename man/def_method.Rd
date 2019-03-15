@@ -2,26 +2,54 @@
 % Please edit documentation in R/method_process_definition.R
 \name{def_method}
 \alias{def_method}
-\title{Define the method}
+\title{Define meta information on the TI method.}
 \usage{
-def_method(id, name = id, source = "tool", platform = "R",
-  url = NULL, license = NULL, authors = list())
+def_method(id, name = id, source = "tool", tool_id = NULL,
+  platform = NULL, url = NULL, license = NULL, authors = list())
 }
 \arguments{
-\item{id}{id}
+\item{id}{An id by which to identify a method. Should only contain lowercase letters or underscores.}
 
-\item{name}{name}
+\item{name}{The name of the method.}
 
-\item{source}{source}
+\item{source}{The type of TI method. Options are :
+\itemize{
+\item \code{"tool"}: a published TI method (peer-reviewed or preprint) (default),
+\item \code{"adaptation"}: an adaptation of a published method,
+\item \code{"offtheshelf"}: a method constructed from off-the-shelf algorithms,
+\item \code{"control"}: a control TI method (so not actually a TI method).
+}}
 
-\item{platform}{platform}
+\item{tool_id}{If there are multiple TI methods from the same toolkit, the name of the toolkit can be specified here.}
 
-\item{url}{url}
+\item{platform}{The platform the TI method uses (e.g. R, Python, C++, ...).}
 
-\item{license}{license}
+\item{url}{An URL to the codebase of the method.}
 
-\item{authors}{authors}
+\item{license}{The software license the method uses (e.g. GPL-3, BSD-3, Artistic-2.0, MIT).}
+
+\item{authors}{A list of authors (see example).}
 }
 \description{
-Define the method
+Define meta information on the TI method.
+}
+\examples{
+def_method(
+  id = "some_method",
+  name = "Some method <3",
+  source = "tool",
+  tool_id = "bobstoolkit",
+  platform = "VBA",
+  url = "https://github.com/bobdylan/singlecellvba",
+  license = "GPL-3",
+  authors = list(
+    def_author(
+      given = "Bob",
+      family = "Dylan",
+      email = "bob@dylan.com",
+      github = "bobdylan",
+      orcid = "0000-0003-1234-5678"
+    )
+  )
+)
 }

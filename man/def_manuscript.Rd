@@ -2,20 +2,30 @@
 % Please edit documentation in R/method_process_definition.R
 \name{def_manuscript}
 \alias{def_manuscript}
-\title{Define the manuscript}
+\title{Meta information on the manuscript}
 \usage{
 def_manuscript(doi = NULL, google_scholar_cluster_id = NULL,
   preprint_date = NULL, publication_date = NULL)
 }
 \arguments{
-\item{doi}{doi}
+\item{doi}{A doi identifier (not an url)}
 
-\item{google_scholar_cluster_id}{google_scholar_cluster_id}
+\item{google_scholar_cluster_id}{The google cluster id. Finding this id is a bit tricky;
+you need to find the manuscript on one of the author pages, and hover over the 'All X versions' button.
+Example: \href{https://goo.gl/Y9uLFs}{google scholar page}, \href{https://i.imgur.com/03eLCaO.png}{screenshot}.}
 
-\item{preprint_date}{preprint_data}
+\item{preprint_date}{Date of publication of the preprint (format: YYYY-MM-DD).}
 
-\item{publication_date}{publication_date}
+\item{publication_date}{Date of publication of the peer-reviewed manuscript (format: YYYY-MM-DD).}
 }
 \description{
-Define the manuscript
+Meta information on the manuscript
+}
+\examples{
+def_manuscript(
+  doi = "101010101/1101010101",
+  google_scholar_cluster_id = "1010001010101111211",
+  preprint_date = "1970-01-30",
+  publication_date = "1970-01-31"
+)
 }

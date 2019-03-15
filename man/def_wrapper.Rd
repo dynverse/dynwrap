@@ -2,7 +2,7 @@
 % Please edit documentation in R/method_process_definition.R
 \name{def_wrapper}
 \alias{def_wrapper}
-\title{Define the wrapper}
+\title{Meta information on the wrapper}
 \usage{
 def_wrapper(input_required, input_optional = character(),
   type = "trajectory", topology_inference = NULL,
@@ -13,12 +13,25 @@ def_wrapper(input_required, input_optional = character(),
 
 \item{input_optional}{Optional inputs for this method. See \code{dynwrap::allowed_inputs()}.}
 
-\item{type}{type}
+\item{type}{Which type of trajectory post-processing is used. Possible values:
+\code{"trajectory"} (default), \code{"linear_trajectory"}, \code{"cyclic_trajectory"}, \code{"branch_trajectory"},
+\code{"cluster_graph"}, \code{"dimred_projection"}, \code{"end_state_probabilities"}, \code{"cell_graph"}.}
 
-\item{topology_inference}{topology_inference}
+\item{topology_inference}{Whether the topology is fixed (\code{"fixed"}), free (\code{"free"}),
+or fixed by a parameter provided to the algorithm (\code{"param"}).}
 
-\item{trajectory_types}{trajectory_types}
+\item{trajectory_types}{The possible trajectory types this method can return. Must be a subset of
+\code{c("cyclic", "linear", "bifurcation", "convergence", "multifurcation", "tree", "graph", "acyclic_graph", "disconnected_graph")}}
 }
 \description{
-Define the wrapper
+Meta information on the wrapper
+}
+\examples{
+def_wrapper(
+  input_required = c("expression", "start_id"),
+  input_optional = "groups_n",
+  type = "dimred_projection",
+  trajectory_types = c("linear", "cyclic"),
+  topology_inference = "free"
+)
 }

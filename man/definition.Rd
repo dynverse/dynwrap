@@ -8,16 +8,28 @@ definition(method, wrapper, manuscript = NULL, container = NULL,
   parameters = parameter_set())
 }
 \arguments{
-\item{method}{See \code{\link[=def_method]{def_method()}}}
+\item{method}{Meta information on the TI method (see \code{\link[=def_method]{def_method()}}).}
 
-\item{wrapper}{See \code{\link[=def_wrapper]{def_wrapper()}}}
+\item{wrapper}{Meta information on the wrapper itself (see \code{\link[=def_wrapper]{def_wrapper()}}).}
 
-\item{manuscript}{See \code{\link[=def_manuscript]{def_manuscript()}}}
+\item{manuscript}{Meta information on the manuscript, if applicable (see \code{\link[=def_manuscript]{def_manuscript()}}).}
 
-\item{container}{See \code{\link[=def_container]{def_container()}}}
+\item{container}{Meta information on the container in which the wrapper resides, if applicable (see \code{\link[=def_container]{def_container()}}).}
 
-\item{parameters}{See \code{\link[=def_parameters]{def_parameters()}}}
+\item{parameters}{Meta information on the parameters of the TI method (see \code{\link[=def_parameters]{def_parameters()}}).}
 }
 \description{
-Create a definition
+A definition contains meta information on a TI method and various aspects thereof.
+For brevity, the example only contains a minimum example, check the documentation
+of the \code{def_*} helper functions for more extensive examples.
+}
+\examples{
+library(dynparam)
+definition(
+  method = def_method(id = "some_method"),
+  wrapper = def_wrapper(input_required = "expression"),
+  parameters = parameter_set(
+    integer_parameter(id = "k", default = 5L, distribution = uniform_distribution(3L, 20L))
+  )
+)
 }
