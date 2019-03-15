@@ -83,6 +83,7 @@ add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_mi
 #' @param expression_source Source of the expression, either a string or a matrix
 #'
 #' @inheritParams add_root
+#' @rdname add_root
 #'
 #' @export
 add_root_using_expression <- function(trajectory, features_oi, expression_source = "expression") {
@@ -96,9 +97,8 @@ add_root_using_expression <- function(trajectory, features_oi, expression_source
 
 
 
-#' Is rooted
-#'
 #' @inheritParams add_root
+#' @rdname add_root
 #'
 #' @export
 is_rooted <- function(trajectory) {
