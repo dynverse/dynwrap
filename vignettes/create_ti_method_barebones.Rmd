@@ -55,7 +55,7 @@ run_fun <- function(expression, priors, params, seed, verbose) {
 
 dataset <- dynwrap::example_dataset
 method <- create_ti_method_r(definition, run_fun, package_loaded = "dplyr")
-model <- infer_trajectory(dataset, method, verbose = 3)
+model <- infer_trajectory(dataset, method(), verbose = 3)
 ```
 
 
