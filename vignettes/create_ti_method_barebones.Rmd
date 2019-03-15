@@ -1,12 +1,12 @@
 ---
-title: "Creating a TI method: Container"
+title: "Creating a TI method: Bare-bones"
 date: "`r Sys.Date()`"
 author:
 - Wouter Saelens
 - Robrecht Cannoodt
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Creating a TI method: Container}
+  %\VignetteIndexEntry{Creating a TI method: Bare-bones}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---

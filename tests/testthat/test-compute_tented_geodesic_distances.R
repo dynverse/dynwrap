@@ -192,10 +192,12 @@ test_that("Testing compute_tented_geodesic_distances with filtered cells", {
 
 
 test_that("Testing compute_geodesic_distances with zero length self loops", {
-  traj <- wrap_data(cell_ids = c("A", "B", "C")) %>%
+  traj <-
+    wrap_data(cell_ids = c("A", "B", "C")) %>%
     add_trajectory(
       milestone_network = tibble(from = "a", to = "a", length = 0, directed = TRUE),
-      progressions = tibble(from = "a", to = "a", cell_id = c("A", "B", "C"), percentage = 1)
+      progressions = tibble(from = "a", to = "a", cell_id = c("A", "B", "C"), percentage = 1),
+      allow_self_loops = TRUE
     )
 
   geodesic_distances <- compute_tented_geodesic_distances(traj)

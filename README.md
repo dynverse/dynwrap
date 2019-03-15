@@ -48,15 +48,18 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
-### Latest changes in dynwrap 0.3.1.2 (unreleased)
+### Latest changes in dynwrap 0.3.2 (unreleased)
+
+  - MAJOR CHANGE: Add support for Singularity 3.0, drop support for
+    previous releases of Singularity and singularity-hub.
+
+  - FEATURE: Add `create_ti_method_definition()` to create a definition
+    from a local script.
+
+### Latest changes in dynwrap 0.3.1.2 (01-02-2019)
 
   - BUG FIX: `simplify_replace_edges()` would sometimes swap edges in
     milestone network around, but forget invert percentages.
-
-### Latest changes in dynwrap 0.3.1.1 (17-12-2018)
-
-  - CLEAN UP: Removed helper functions that are not required any more:
-    `get_env_or_null()`, `read_rds_or_null()` and `print_processx()`.
-
-  - MINOR CHANGE: remove requirement that `milestone_ids` and `cell_ids`
-    cannot overlap
+  - BUG FIX: Close sinks when interupting the R process
+  - MINOR CHANGE: Work with new babelwhale, which includes support for
+    singularity 3.0

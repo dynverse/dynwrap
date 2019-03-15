@@ -3,7 +3,7 @@
 #' @param trajectory The trajectory
 #' @export
 gather_cells_at_milestones <- function(trajectory) {
-  testthat::expect_true(is_wrapper_with_trajectory(trajectory))
+  assert_that(is_wrapper_with_trajectory(trajectory))
 
   milestone_percentages <-
     trajectory$milestone_percentages %>%

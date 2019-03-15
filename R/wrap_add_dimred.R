@@ -3,19 +3,21 @@
 #' @param model The model to which a dimensionality reduction will be added.
 #' @param dimred The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction
 #' @param dimred_milestones An optional dimensionality reduction of the milestones.
-#' @param dimred_trajectory_segments An optional dimensionality reduction of the trajectory segments.
+#' @param dimred_segment_progressions An optional progression matrix of the trajectory segments. Format: `tibble(from, to, percentage)`
+#' @param dimred_segment_points An optional dimensionality reduction of the trajectory segments. Format: `matrix(Comp1, Comp2, ...)`.
+#' @param connect_segments Whether to connect segments between edges
 #' @param ... extra information to be stored in the wrapper
 #'
 #' @inheritParams get_expression
 #'
 #' @export
-#'
-#' @importFrom testthat expect_equal expect_is expect_true
 add_dimred <- function(
   model,
   dimred,
   dimred_milestones = NULL,
-  dimred_trajectory_segments = NULL,
+  dimred_segment_progressions = NULL,
+  dimred_segment_points = NULL,
+  connect_segments = FALSE,
   expression_source = "expression",
   ...
 ) {
@@ -35,17 +37,31 @@ add_dimred <- function(
     if (is_wrapper_with_trajectory(model)) {
       milestone_ids <- model$milestone_ids
       dimred_milestones <- dimred_milestones[milestone_ids, ]
-      testthat::expect_equal(rownames(dimred_milestones), milestone_ids)
+
+      assert_that(identical(rownames(dimred_milestones), milestone_ids))
     }
   }
 
-  if (!is.null(dimred_trajectory_segments)) {
-    testthat::expect_is(dimred_trajectory_segments, "matrix")
-    expected_colnames <- c(
-      paste0("from_", colnames(dimred)),
-      paste0("to_", colnames(dimred))
+  if (!is.null(dimred_segment_points) || !is.null(dimred_segment_progressions)) {
+    dimred_segment_points <- process_dimred(model, dimred_segment_points, "segment_point_id", has_rownames = FALSE)
+    assert_that(
+      is.matrix(dimred_segment_points),
+      is.data.frame(dimred_segment_progressions),
+      identical(colnames(dimred_segment_points), colnames(dimred)),
+      identical(colnames(dimred_segment_progressions), c("from", "to", "percentage")),
+      nrow(dimred_segment_points) == nrow(dimred_segment_progressions)
     )
-    testthat::expect_equal(colnames(dimred_trajectory_segments), expected_colnames)
+  }
+
+  # TODO: add tests for connecting segments!
+  if (isTRUE(connect_segments)) {
+    connected <- connect_dimred_segments(
+      dimred_segment_progressions,
+      dimred_segment_points,
+      model$milestone_network
+    )
+    dimred_segment_progressions <- connected$dimred_segment_progressions
+    dimred_segment_points <- connected$dimred_segment_points
   }
 
   # create output structure
@@ -53,7 +69,8 @@ add_dimred <- function(
     "dynwrap::with_dimred",
     dimred = dimred,
     dimred_milestones = dimred_milestones,
-    dimred_trajectory_segments = dimred_trajectory_segments,
+    dimred_segment_progressions = dimred_segment_progressions,
+    dimred_segment_points = dimred_segment_points,
     ...
   )
 }
@@ -73,28 +90,31 @@ get_dimred <- function(model, dimred = NULL, expression_source = "expression") {
     dimred <- dimred(expression)
   } else if (is.matrix(dimred)) {
     # matrix
-    testthat::expect_true(is.numeric(dimred))
-    testthat::expect_true(length(rownames(dimred)) == nrow(dimred))
-    testthat::expect_true(all(model$cell_ids %in% rownames(dimred)))
+    assert_that(is.numeric(dimred))
+    assert_that(length(rownames(dimred)) == nrow(dimred))
+    assert_that(model$cell_ids %all_in% rownames(dimred))
+    assert_that(rownames(dimred) %all_in% model$cell_ids)
 
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   } else if (is.data.frame(dimred)) {
     # dataframe
     if ("cell_id" %in% colnames(dimred)) {
+      rownames(dimred) <- NULL
       dimred <- dimred %>%
         as.data.frame() %>%
         column_to_rownames("cell_id") %>%
         as.matrix()
     }
-    testthat::expect_true(is.numeric(dimred))
-    testthat::expect_true(length(rownames(dimred)) == nrow(dimred))
-    testthat::expect_setequal(model$cell_ids, rownames(dimred))
+    assert_that(is.numeric(dimred))
+    assert_that(length(rownames(dimred)) == nrow(dimred))
+    assert_that(model$cell_ids %all_in% rownames(dimred))
+    assert_that(rownames(dimred) %all_in% model$cell_ids)
 
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   } else if (is_wrapper_with_dimred(model)) {
     # dimred within wrapper
-    if(is.list(model$dimred)) {
-      testthat::expect_true(dimred %in% names(model$dimred))
+    if (is.list(model$dimred)) {
+      assert_that(dimred %all_in% names(model$dimred))
       dimred <- model$dimred[[dimred]]
     } else {
       dimred <- model$dimred
@@ -111,27 +131,86 @@ get_dimred <- function(model, dimred = NULL, expression_source = "expression") {
 }
 
 
-process_dimred <- function(model, dimred, identifier = "cell_id") {
+process_dimred <- function(model, dimred, identifier = "cell_id", has_rownames = TRUE) {
   if (is.matrix(dimred)) {
     # matrix
-    testthat::expect_true(is.numeric(dimred))
-    testthat::expect_true(length(rownames(dimred)) == nrow(dimred))
+    assert_that(is.numeric(dimred))
+    if (has_rownames) assert_that(length(rownames(dimred)) == nrow(dimred))
 
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   } else if (is.data.frame(dimred)) {
     # dataframe
-    if (identifier %in% colnames(dimred)) {
-      dimred[[identifier]] <- as.character(dimred[[identifier]])
-      dimred <- dimred %>%
-        as.data.frame() %>%
-        column_to_rownames(identifier) %>%
-        as.matrix()
+    if (has_rownames) {
+      if (identifier %in% colnames(dimred)) {
+        dimred[[identifier]] <- as.character(dimred[[identifier]])
+        rownames(dimred) <- NULL
+        dimred <-
+          dimred %>%
+          as.data.frame() %>%
+          column_to_rownames(identifier) %>%
+          as.matrix()
+      }
+      assert_that(length(rownames(dimred)) == nrow(dimred))
+    } else {
+      dimred <- dimred %>% as.matrix()
     }
-    testthat::expect_true(is.numeric(dimred))
-    testthat::expect_true(length(rownames(dimred)) == nrow(dimred))
+
+    assert_that(is.numeric(dimred))
 
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   }
 
   dimred
+}
+
+
+
+
+
+connect_dimred_segments <- function(dimred_segment_progressions, dimred_segment_points, milestone_network) {
+  milestone_ids <- unique(c(milestone_network$from, milestone_network$to))
+  connections <- milestone_ids %>% map(function(milestone_id) {
+    # find the indices of the segment points that are closest to the milestone
+    ixs <- dimred_segment_progressions %>%
+      mutate(ix = row_number()) %>%
+      group_by(from, to) %>%
+      arrange(percentage) %>%
+      filter(
+        xor(
+          (row_number() == 1) & (from == !!milestone_id),
+          (row_number() == n()) & (to == !!milestone_id)
+        )
+      ) %>%
+      pull(ix)
+
+    if (length(ixs) > 0) {
+      # we'll create a new point for each edge in the milestone network that contains this milestone
+
+      # create progressions for each new point
+      progressions <- bind_rows(
+        milestone_network %>% filter(from == !!milestone_id) %>% select(from, to) %>% mutate(percentage = 0),
+        milestone_network %>% filter(to == !!milestone_id) %>% select(from, to) %>% mutate(percentage = 1)
+      )
+
+      points <- dimred_segment_points[ixs, , drop = FALSE] %>% colMeans() %>% rep(nrow(progressions)) %>% matrix(nrow = nrow(progressions), byrow = TRUE)
+
+      list(
+        progressions = progressions,
+        points = points
+      )
+    } else {
+      list(
+        progressions = tibble(from = character(), to = character(), percentage = numeric()),
+        points = dimred_segment_points[0, ]
+      )
+    }
+  })
+
+  connecting_progressions <- connections %>% map_dfr("progressions")
+  connecting_points <- connections %>% map("points") %>% do.call(rbind, .)
+
+  list(
+    dimred_segment_progressions = bind_rows(dimred_segment_progressions, connecting_progressions),
+    connecting_points = rbind(dimred_segment_points, connecting_points)
+  )
 }
