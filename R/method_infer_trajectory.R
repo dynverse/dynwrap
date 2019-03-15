@@ -1,3 +1,12 @@
+#' Generate a random seed
+#'
+#' ... From the current seed.
+#'
+#' @export
+random_seed <- function() {
+  sample.int(.Machine$integer.max, 1)
+}
+
 #' Infer trajectories
 #'
 #' @param dataset One or more datasets, as created using dynwrap.
@@ -14,7 +23,7 @@
 #'    `parameters` must be an unnamed list of the same length.
 #' @param give_priors All the priors a method is allowed to receive.
 #'   Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).
-#' @param seed A seed to be set, if the method allows for it.
+#' @param seed A seed to be passed to the TI method.
 #' @param map_fun A mao function to use when inferring trajectories with multiple datasets or methods.
 #'   Allows to parallellise the execution in an arbitrary way.
 #' @param verbose Whether or not to print information output.
@@ -32,7 +41,7 @@ infer_trajectories <- function(
   method,
   parameters = NULL,
   give_priors = NULL,
-  seed = sample(1:.Machine$integer.max, 1),
+  seed = random_seed(),
   verbose = FALSE,
   return_verbose = FALSE,
   debug = FALSE,
