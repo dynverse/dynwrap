@@ -136,21 +136,25 @@ NULL
 #' @export
 group_onto_trajectory_edges <- function(trajectory, group_template = "{from}->{to}") {
   # first map cells to largest percentage (in case of divergence regions)
-  progressions <- trajectory$progressions %>%
+  progressions <-
+    trajectory$progressions %>%
     group_by(cell_id) %>%
     arrange(-percentage) %>%
     slice(1) %>%
     ungroup()
 
   # do the actual grouping
-  grouping <- progressions %>%
+  grouping <-
+    progressions %>%
     group_by(from, to) %>%
     mutate(group_id = as.character(glue::glue(group_template))) %>%
     ungroup() %>%
     select(cell_id, group_id) %>%
     deframe()
 
-  grouping[trajectory$cell_ids]
+  cell_ids <- trajectory$cell_ids
+  ifelse(cell_ids %in% names(grouping), grouping[cell_ids], NA) %>%
+    set_names(cell_ids)
 }
 
 
@@ -166,6 +170,8 @@ group_onto_nearest_milestones <- function(trajectory) {
     select(cell_id, milestone_id) %>%
     deframe()
 
-  grouping[trajectory$cell_ids]
+  cell_ids <- trajectory$cell_ids
+  ifelse(cell_ids %in% names(grouping), grouping[cell_ids], NA) %>%
+    set_names(cell_ids)
 }
 

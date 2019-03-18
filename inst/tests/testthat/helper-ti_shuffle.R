@@ -5,7 +5,10 @@
 #'
 #' @param dummy_param This parameter does not do anything.
 ti_shuffle <- dynwrap::create_ti_method_r(
-  definition = definition(def_method("shuffle"), def_wrapper(c("counts", "dataset"))),
+  dynwrap::definition(
+    method = dynwrap::def_method(id = "shuffle"),
+    wrapper = dynwrap::def_wrapper(input_required = c("counts", "dataset"))
+  ),
 
   # describe packages needed by method
   package_loaded = c("dplyr", "tidyr", "purrr", "dynwrap", "dynutils"),

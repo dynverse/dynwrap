@@ -276,9 +276,7 @@ is_ti_method <- function(object) {
 .method_load_definition <- function(definition) {
   if (is.character(definition)) {
     assert_that(length(definition) == 1)
-    definition_raw <- yaml::read_yaml(filename)
-
-    definition
+    .method_convert_definition(yaml::read_yaml(definition))
   } else {
     definition
   }

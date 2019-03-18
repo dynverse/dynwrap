@@ -10,8 +10,6 @@
 #' @keywords create_ti_method
 #'
 #' @export
-#'
-#' @include method_parse_parameter_definition.R
 create_ti_method_r <- function(
   definition,
   run_fun,
