@@ -2,7 +2,7 @@
 % Please edit documentation in R/simplify_trajectory.R
 \name{simplify_trajectory}
 \alias{simplify_trajectory}
-\title{Simplify a trajectory}
+\title{Simplify a trajectory by removing transient milestones}
 \usage{
 simplify_trajectory(traj, allow_self_loops = FALSE)
 }
@@ -12,5 +12,6 @@ simplify_trajectory(traj, allow_self_loops = FALSE)
 \item{allow_self_loops}{Whether or not to allow self loops.}
 }
 \description{
-Simplify a trajectory
+Simplify a trajectory by removing transient milestones
 }
+\keyword{adapt_trajectory}

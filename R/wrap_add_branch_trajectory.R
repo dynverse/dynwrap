@@ -11,6 +11,8 @@
 #'
 #' @return The trajectory model
 #'
+#' @keywords create_trajectory
+#'
 #' @export
 add_branch_trajectory <- function(
   model,

@@ -24,3 +24,4 @@ get_grouping(model, grouping = NULL)
 \description{
 Add a cell grouping to a data wrapper
 }
+\keyword{adapt_trajectory}

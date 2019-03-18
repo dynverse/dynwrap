@@ -9,6 +9,8 @@
 #'   Otherwise, will assume the values are already within that range.
 #' @param ... extra information to be stored in the wrapper.
 #'
+#' @keywords create_trajectory
+#'
 #' @export
 #'
 #' @return The trajectory model

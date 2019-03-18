@@ -35,3 +35,4 @@ def_wrapper(
   topology_inference = "free"
 )
 }
+\keyword{create_ti_method}

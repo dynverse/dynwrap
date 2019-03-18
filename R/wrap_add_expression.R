@@ -7,6 +7,8 @@
 #' @param ... extra information to be stored in the model
 #' @param expression_source The source of expression, can be "counts", "expression", an expression matrix, or another model which contains expression
 #'
+#' @keywords adapt_trajectory
+#'
 #' @export
 #'
 #' @importFrom Matrix Matrix
@@ -26,7 +28,7 @@ add_expression <- function(
     if (is.matrix(counts)) {
       counts <- Matrix::Matrix(counts, sparse = TRUE)
     }
-    if (any(grepl("[di]..Matrix", class(counts))) && !"dgCMatrix" %in% class(counts)) {
+    if (is_sparse(counts) && !"dgCMatrix" %in% class(counts)) {
       counts <- as(counts, "dgCMatrix")
     }
     assert_that(
@@ -83,7 +85,7 @@ get_expression <- function(model, expression_source = "expression") {
       ))
     }
     expression <- model[[expression_source]]
-  } else if (is.matrix(expression_source)) {
+  } else if (is.matrix(expression_source) || dynutils::is_sparse(expression_source)) {
     expression <- expression_source
   } else if (is_wrapper_with_expression(expression_source)) {
     expression <- get_expression(expression_source)
@@ -104,6 +106,8 @@ get_expression <- function(model, expression_source = "expression") {
 #'
 #' @inheritParams add_expression
 #' @inheritParams wrap_data
+#'
+#' @keywords infer_trajectory
 #'
 #' @export
 wrap_expression <- function(

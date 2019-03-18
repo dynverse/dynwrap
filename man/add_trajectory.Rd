@@ -41,3 +41,4 @@ The trajectory model
 \description{
 Define a trajectory model given its milestone network and milestone percentages or progressions
 }
+\keyword{create_trajectory}

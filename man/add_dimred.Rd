@@ -34,3 +34,4 @@ get_dimred(model, dimred = NULL, expression_source = "expression")
 \description{
 Add or create a dimensionality reduction
 }
+\keyword{adapt_trajectory}

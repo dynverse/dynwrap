@@ -50,7 +50,7 @@ Imports:
   tidyr,
   yaml,
   crayon
-Suggests:
+Suggests: 
   devtools,
   dyndimred,
   hdf5r,

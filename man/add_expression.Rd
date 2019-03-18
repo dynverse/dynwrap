@@ -28,3 +28,4 @@ get_expression(model, expression_source = "expression")
 \description{
 Add count and normalised expression values to a model
 }
+\keyword{adapt_trajectory}

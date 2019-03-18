@@ -7,6 +7,8 @@
 #' @param remotes_package Package from which the remote locations of dependencies have to be extracted, eg. `dynmethods`.
 #' @inheritParams .method_process_definition
 #'
+#' @keywords create_ti_method
+#'
 #' @export
 create_ti_method_r <- function(
   definition,

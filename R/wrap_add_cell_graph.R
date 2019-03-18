@@ -13,6 +13,8 @@
 #'
 #' @return The trajectory model
 #'
+#' @keywords create_trajectory
+#'
 #' @importFrom testthat expect_is expect_true expect_equal
 add_cell_graph <- function(
   model,

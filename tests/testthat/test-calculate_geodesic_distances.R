@@ -1,6 +1,6 @@
-context("Testing compute_tented_geodesic_distances")
+context("Testing calculate_geodesic_distances")
 
-test_that("Testing compute_tented_geodesic_distances", {
+test_that("Testing calculate_geodesic_distances", {
   cell_ids <- c("a", "b", "c", "d", "e", "f")
   milestone_ids <- c("W", "X", "Y", "Z", "A")
 
@@ -47,7 +47,7 @@ test_that("Testing compute_tented_geodesic_distances", {
     divergence_regions = divergence_regions
   )
 
-  geodist <- compute_tented_geodesic_distances(trajectory)
+  geodist <- calculate_geodesic_distances(trajectory)
 
   # a,b = 2 * (0.9 - 0.2) = 1.4
   # a,c = 2 * 0.9 + 4 * 0.2 = 2.6
@@ -83,7 +83,7 @@ test_that("Testing compute_tented_geodesic_distances", {
     "Z", "test2", 0.4
   )
 
-  geodist <- compute_tented_geodesic_distances(
+  geodist <- calculate_geodesic_distances(
     trajectory,
     waypoint_milestone_percentages = waypoint_milestone_percentages
   )
@@ -94,7 +94,7 @@ test_that("Testing compute_tented_geodesic_distances", {
 })
 
 
-test_that("Testing compute_tented_geodesic_distances with a gap in the middle", {
+test_that("Testing calculate_geodesic_distances with a gap in the middle", {
   cell_ids <- c("a", "b", "f")
   milestone_ids <- c("W", "X", "Y", "Z", "A")
 
@@ -133,7 +133,7 @@ test_that("Testing compute_tented_geodesic_distances with a gap in the middle", 
     divergence_regions = divergence_regions
   )
 
-  geodist <- compute_tented_geodesic_distances(trajectory)
+  geodist <- calculate_geodesic_distances(trajectory)
 
   expected_dists <- c(1.4, 6.8, 5.4)
   expect_true(all(abs(geodist[upper.tri(geodist)] - expected_dists) < 1e-10))
@@ -144,7 +144,7 @@ test_that("Testing compute_tented_geodesic_distances with a gap in the middle", 
 
 
 
-test_that("Testing compute_tented_geodesic_distances with filtered cells", {
+test_that("Testing calculate_geodesic_distances with filtered cells", {
   cell_ids <- c("a", "b", "f")
   milestone_ids <- c("W", "X", "Y", "Z", "A")
 
@@ -181,7 +181,7 @@ test_that("Testing compute_tented_geodesic_distances with filtered cells", {
     divergence_regions = divergence_regions
   )
 
-  geodist <- compute_tented_geodesic_distances(trajectory)
+  geodist <- calculate_geodesic_distances(trajectory)
 
   expected_dists <- c(1.4, 14, 14)
   expect_true(all(abs(geodist[upper.tri(geodist)] - expected_dists) < 1e-10))
@@ -191,7 +191,7 @@ test_that("Testing compute_tented_geodesic_distances with filtered cells", {
 
 
 
-test_that("Testing compute_geodesic_distances with zero length self loops", {
+test_that("Testing calculate_geodesic_distances with zero length self loops", {
   traj <-
     wrap_data(cell_ids = c("A", "B", "C")) %>%
     add_trajectory(
@@ -200,7 +200,7 @@ test_that("Testing compute_geodesic_distances with zero length self loops", {
       allow_self_loops = TRUE
     )
 
-  geodesic_distances <- compute_tented_geodesic_distances(traj)
+  geodesic_distances <- calculate_geodesic_distances(traj)
 
   testthat::expect_true(all(geodesic_distances == 0))
 })

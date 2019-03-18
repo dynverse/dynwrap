@@ -3,17 +3,25 @@
 \name{add_timings}
 \alias{add_timings}
 \alias{is_wrapper_with_timings}
-\title{Add count and normalised expression values to a model}
+\alias{add_timing_checkpoint}
+\title{Add timings checkpoints}
 \usage{
 add_timings(model, timings)
 
 is_wrapper_with_timings(model)
+
+add_timing_checkpoint(timings, name)
 }
 \arguments{
 \item{model}{The model to which timings will be added}
 
 \item{timings}{A list of timings.}
+
+\item{name}{The name of the timings checkpoint.}
 }
 \description{
-Add count and normalised expression values to a model
+Add timings checkpoints
+
+Helper function for storing timings information.
 }
+\keyword{adapt_trajectory}

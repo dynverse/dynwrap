@@ -30,3 +30,4 @@ is_rooted(trajectory)
 \description{
 Roots the trajectory by changing the directionality of all edges given a root cell
 }
+\keyword{adapt_trajectory}

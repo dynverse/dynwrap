@@ -17,3 +17,4 @@ Calculate a dimensionality reduction on a trajectory and its cells
 \seealso{
 wrap_data
 }
+\keyword{derive_trajectory}

@@ -8,12 +8,14 @@
 #' @inheritParams add_grouping
 #' @param ... extra information to be stored in the wrapper.
 #'
-#' @export
-#'
 #' @return The trajectory model
+#'
+#' @keywords create_trajectory
 #'
 #' @importFrom testthat expect_is expect_true expect_equal
 #' @importFrom pdist pdist
+#'
+#' @export
 add_cluster_graph <- function(
   model,
   milestone_network,

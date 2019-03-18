@@ -1,7 +1,9 @@
-#' Add count and normalised expression values to a model
+#' Add timings checkpoints
 #'
 #' @param model The model to which timings will be added
 #' @param timings A list of timings.
+#'
+#' @keywords adapt_trajectory
 #'
 #' @export
 #'
@@ -39,8 +41,9 @@ is_wrapper_with_timings <- function(model) {
 
 #' Helper function for storing timings information.
 #'
-#' @param timings The timings list of previous checkpoints.
 #' @param name The name of the timings checkpoint.
+#'
+#' @rdname add_timings
 #'
 #' @export
 add_timing_checkpoint <- function(timings, name) {

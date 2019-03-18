@@ -24,3 +24,4 @@ create_ti_method_r(definition, run_fun, package_required = character(),
 \description{
 Create a TI method wrapper
 }
+\keyword{create_ti_method}

@@ -24,3 +24,4 @@ The trajectory model
 \description{
 This function will generate the milestone_network and progressions.
 }
+\keyword{create_trajectory}

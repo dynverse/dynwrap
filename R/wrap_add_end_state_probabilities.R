@@ -12,6 +12,8 @@
 #'   Otherwise, will assume the values are already within that range.
 #' @param ... Extras to be added to the model
 #'
+#' @keywords create_trajectory
+#'
 #' @return The trajectory model
 #'
 #' @export

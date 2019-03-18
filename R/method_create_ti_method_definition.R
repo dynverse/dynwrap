@@ -5,6 +5,8 @@
 #' @param script Location of the script that will be executed. Has to contain a #!
 #' @inheritParams .method_process_definition
 #'
+#' @keywords create_ti_method
+#'
 #' @importFrom yaml read_yaml
 #'
 #' @export

@@ -6,6 +6,8 @@
 #' @importFrom igraph graph_from_data_frame layout_with_fr
 #' @importFrom testthat expect_true
 #'
+#' @keywords derive_trajectory
+#'
 #' @export
 #'
 #' @seealso wrap_data

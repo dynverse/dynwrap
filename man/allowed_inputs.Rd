@@ -11,4 +11,4 @@ allowed_inputs
 \description{
 All allowed inputs
 }
-\keyword{datasets}
+\keyword{create_ti_method}

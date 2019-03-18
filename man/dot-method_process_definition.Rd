@@ -14,3 +14,4 @@
 \description{
 Method process definition
 }
+\keyword{create_ti_method}

@@ -24,3 +24,4 @@ def_parameters(
   numeric_parameter(id = "beta", default = 0.005, distribution = expuniform_distribution(lower = 1e-10, upper = 1))
 )
 }
+\keyword{create_ti_method}

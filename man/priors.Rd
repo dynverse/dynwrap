@@ -11,4 +11,4 @@ priors
 \description{
 Metadata on priors
 }
-\keyword{datasets}
+\keyword{create_ti_method}

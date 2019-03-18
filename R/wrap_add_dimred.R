@@ -8,6 +8,8 @@
 #' @param connect_segments Whether to connect segments between edges
 #' @param ... extra information to be stored in the wrapper
 #'
+#' @keywords adapt_trajectory
+#'
 #' @inheritParams get_expression
 #'
 #' @export

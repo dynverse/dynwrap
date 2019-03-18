@@ -1,6 +1,9 @@
 #' "Gather" cells to their closest milestones
 #'
 #' @param trajectory The trajectory
+#'
+#' @keywords adapt_trajectory
+#'
 #' @export
 gather_cells_at_milestones <- function(trajectory) {
   assert_that(is_wrapper_with_trajectory(trajectory))

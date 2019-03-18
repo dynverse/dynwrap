@@ -11,4 +11,4 @@ wrapper_types
 \description{
 Metadata on wrapper types
 }
-\keyword{datasets}
+\keyword{create_ti_method}

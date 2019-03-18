@@ -14,3 +14,4 @@ add_tde_overall(trajectory, tde_overall)
 \description{
 Add information on overall differentially expressed features
 }
+\keyword{adapt_trajectory}

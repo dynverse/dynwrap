@@ -16,3 +16,4 @@ create_ti_method_definition(definition, script, return_function = TRUE)
 \description{
 The local method definition file describes a method that is runnable on the local system.
 }
+\keyword{create_ti_method}

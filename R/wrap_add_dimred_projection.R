@@ -8,6 +8,8 @@
 #'
 #' @param ... extra information to be stored in the wrapper.
 #'
+#' @keywords create_trajectory
+#'
 #' @export
 #'
 #' @return The trajectory model

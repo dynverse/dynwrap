@@ -12,3 +12,4 @@ gather_cells_at_milestones(trajectory)
 \description{
 "Gather" cells to their closest milestones
 }
+\keyword{adapt_trajectory}

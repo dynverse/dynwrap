@@ -48,3 +48,4 @@ Allows to parallellise the execution in an arbitrary way.}
 \description{
 Infer trajectories
 }
+\keyword{infer_trajectory}
