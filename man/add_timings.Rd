@@ -18,8 +18,6 @@ add_timing_checkpoint(timings, name)
 \item{timings}{A list of timings.}
 
 \item{name}{The name of the timings checkpoint.}
-
-\item{timings}{The timings list of previous checkpoints.}
 }
 \description{
 Add count and normalised expression values to a model

@@ -71,8 +71,6 @@ Type: Data frame(divergence_id = character, milestone_id = character, is_start =
 \item{marker_fdr}{Maximal FDR value for a gene to be considered a marker}
 
 \item{given}{Prior information already calculated}
-
-\item{verbose}{Whether or not to print informative messages}
 }
 \description{
 Note that the given data wrapper requires a trajectory and expression values

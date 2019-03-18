@@ -41,7 +41,6 @@ is_wrapper_with_timings <- function(model) {
 
 #' Helper function for storing timings information.
 #'
-#' @param timings The timings list of previous checkpoints.
 #' @param name The name of the timings checkpoint.
 #'
 #' @rdname add_timings

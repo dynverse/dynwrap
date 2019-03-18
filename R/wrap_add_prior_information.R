@@ -128,7 +128,6 @@ is_wrapper_with_prior_information <- function(dataset) {
 #' @inheritParams add_expression
 #' @param marker_fdr Maximal FDR value for a gene to be considered a marker
 #' @param given Prior information already calculated
-#' @param verbose Whether or not to print informative messages
 #'
 #' @rdname add_prior_information
 #'
