@@ -6,13 +6,11 @@
 #'   See [dyndimred::dimred] for the list of available dimensionality reduction methods.
 #' @param component The component to use
 #' @inheritParams dyndimred::dimred
-#'
-#' @include method_create_ti_method.R
 ti_comp1 <- dynwrap::create_ti_method_r(
   definition = dynwrap::definition(
     # describe method
     dynwrap::def_method(
-      id = "comp1",
+      id = "comp1"
     ),
 
     # describe tuneable parameters
