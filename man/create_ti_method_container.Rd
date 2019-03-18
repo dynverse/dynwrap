@@ -17,3 +17,4 @@ create_ti_method_container(container_id, pull_if_needed = TRUE,
 \description{
 These functions create a TI method from a container using \code{babelwhale}. Supports both docker and singularity as a backend.
 }
+\keyword{create_ti_method}

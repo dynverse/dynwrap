@@ -7,6 +7,8 @@
 #' @param root_milestone_id The root milestone id, not required if root_cell_id is given
 #' @param flip_edges Whether to flip edges which are going in the other direction compared to the root
 #'
+#' @keywords adapt_trajectory
+#'
 #' @importFrom purrr map2_int
 #'
 #' @export

@@ -32,3 +32,4 @@ get_milestone_labelling(trajectory, label_milestones = NULL)
 \description{
 Label milestones either manually (\code{label_milestones}) or using marker genes (\code{label_milestones_markers})
 }
+\keyword{adapt_trajectory}

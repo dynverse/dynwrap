@@ -30,6 +30,8 @@ random_seed <- function() {
 #' @param return_verbose Whether to store and return messages printed by the method.
 #' @param debug Used for debugging containers methods.
 #'
+#' @keywords infer_trajectory
+#'
 #' @importFrom utils capture.output adist installed.packages
 #' @importFrom readr read_file
 #' @importFrom stringr str_length

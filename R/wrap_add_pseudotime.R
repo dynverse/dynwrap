@@ -23,6 +23,9 @@ calculate_pseudotime <- function(trajectory) {
 #'
 #' @param trajectory The trajectory
 #' @param pseudotime Named vector containing the pseudotime for every cell
+#'
+#' @keywords derive_trajectory
+#'
 #' @export
 add_pseudotime <- function(trajectory, pseudotime = NULL) {
   if (is.null(pseudotime)) {

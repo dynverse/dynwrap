@@ -12,3 +12,4 @@ get_default_parameters(definition)
 \description{
 Get the default parameters of a method
 }
+\keyword{create_ti_method}

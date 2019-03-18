@@ -11,4 +11,4 @@ trajectory_types
 \description{
 Metadata on the trajectory types
 }
-\keyword{datasets}
+\keyword{create_ti_method}

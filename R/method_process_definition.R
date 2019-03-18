@@ -10,6 +10,8 @@
 #' @param container Meta information on the container in which the wrapper resides, if applicable (see [def_container()]).
 #' @param parameters Meta information on the parameters of the TI method (see [def_parameters()]).
 #'
+#' @keywords create_ti_method
+#'
 #' @export
 #'
 #' @examples
@@ -66,6 +68,8 @@ definition <- function(
 #' @param license The software license the method uses (e.g. GPL-3, BSD-3, Artistic-2.0, MIT).
 #' @param authors A list of authors (see example).
 #'
+#' @keywords create_ti_method
+#'
 #' @export
 #'
 #' @examples
@@ -108,6 +112,8 @@ def_method <- function(
 #' @param github The github handle
 #' @param orcid The orcid id
 #'
+#' @keywords create_ti_method
+#'
 #' @examples
 #' def_author(
 #'   given = "Bob",
@@ -135,6 +141,8 @@ def_author <- function(
 #' @param preprint_date Date of publication of the preprint (format: YYYY-MM-DD).
 #' @param publication_date Date of publication of the peer-reviewed manuscript (format: YYYY-MM-DD).
 #'
+#' @keywords create_ti_method
+#'
 #' @export
 #'
 #' @examples
@@ -157,6 +165,8 @@ def_manuscript <- function(
 #'
 #' @param docker The handle of the docker container
 #' @param url An url of where the docker codebase resides (containing definition.yml, Dockerfile, ...)
+#'
+#' @keywords create_ti_method
 #'
 #' @export
 #'
@@ -184,6 +194,8 @@ def_container <- function(
 #'   or fixed by a parameter provided to the algorithm (`"param"`).
 #' @param trajectory_types The possible trajectory types this method can return. Must be a subset of
 #'   `c("cyclic", "linear", "bifurcation", "convergence", "multifurcation", "tree", "graph", "acyclic_graph", "disconnected_graph")`
+#'
+#' @keywords create_ti_method
 #'
 #' @export
 #'
@@ -220,6 +232,8 @@ def_wrapper <- function(
 #'
 #' @inheritParams dynparam::parameter_set
 #'
+#' @keywords create_ti_method
+#'
 #' @export
 #'
 #' @examples
@@ -231,19 +245,11 @@ def_wrapper <- function(
 #' )
 def_parameters <- dynparam::parameter_set
 
-
-#' Tests whether an object is a TI method description
-#'
-#' @param object The object to be tested
-#'
-#' @export
-is_ti_method <- function(object) {
-  ("dynwrap::ti_method" %in% class(object)) || ("dynmethod::ti_method" %in% class(object))
-}
-
 #' Get the default parameters of a method
 #'
 #' @param definition A TI method description
+#'
+#' @keywords create_ti_method
 #'
 #' @export
 #'
@@ -253,6 +259,14 @@ get_default_parameters <- function(definition) {
 
   map(definition$parameters$parameters, ~ .$default)
 }
+
+
+#' @param object The object to be tested
+#' @rdname definition
+is_ti_method <- function(object) {
+  ("dynwrap::ti_method" %in% class(object)) || ("dynmethod::ti_method" %in% class(object))
+}
+
 
 
 # definition is character -> load in definition from file and process as definition
@@ -283,6 +297,8 @@ get_default_parameters <- function(definition) {
 #' Method process definition
 #' @param definition A definition, see [definition()]
 #' @param return_function Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.
+#'
+#' @keywords create_ti_method
 .method_process_definition <- function(definition, return_function) {
   # return function if requested
   if (!return_function) {

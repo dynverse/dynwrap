@@ -7,6 +7,8 @@
 #' @param ... extra information to be stored in the model
 #' @param expression_source The source of expression, can be "counts", "expression", an expression matrix, or another model which contains expression
 #'
+#' @keywords adapt_trajectory
+#'
 #' @export
 #'
 #' @importFrom Matrix Matrix
@@ -104,6 +106,8 @@ get_expression <- function(model, expression_source = "expression") {
 #'
 #' @inheritParams add_expression
 #' @inheritParams wrap_data
+#'
+#' @keywords infer_trajectory
 #'
 #' @export
 wrap_expression <- function(

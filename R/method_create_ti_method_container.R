@@ -6,6 +6,8 @@
 #' @param pull_if_needed Pull the container if not yet available.
 #' @inheritParams .method_process_definition
 #'
+#' @keywords create_ti_method
+#'
 #' @importFrom babelwhale get_default_config pull_container test_docker_installation test_singularity_installation list_docker_images
 #'
 #' @export

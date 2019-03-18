@@ -29,3 +29,4 @@ If pseudotime values are not given, will use pseudotime already present in the m
 \details{
 This function will generate the milestone_network and progressions.
 }
+\keyword{create_trajectory}

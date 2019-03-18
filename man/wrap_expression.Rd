@@ -23,3 +23,4 @@ wrap_expression(id = NULL, expression, counts, cell_info = NULL,
 \description{
 Create a wrapper object with expression and counts
 }
+\keyword{infer_trajectory}

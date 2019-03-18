@@ -21,3 +21,4 @@ get_ti_methods(method_ids = NULL, as_tibble = TRUE,
 \description{
 Return all TI ti_methods
 }
+\keyword{infer_trajectory}

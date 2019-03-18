@@ -1,25 +1,16 @@
 reference:
-  - title: "Creating a trajectory"
+  - id: "create_trajectory"
+    title: "Creating a trajectory"
     desc: "Methods to create a trajectory"
-    contents:
-      - add_branch_trajectory
-      - add_cell_graph
-      - add_cluster_graph
-      - add_cyclic_trajectory
-      - add_dimred_projection
-      - add_end_state_probabilities
-      - add_linear_trajectory
-      - add_trajectory
-  - title: "Creating and adapting a trajectory model"
+  - id: "adapt_trajectory"
+    title: "Adapting a trajectory model"
     desc: "Methods to adapt a trajectory"
-    contents:
-      - matches("add_*")
-  - title: "Creating a TI method"
+  - id: "derive_trajectory"
+    title: "Calculations from a trajectory"
+    desc: "Deriving features from a trajectory model"
+  - id: "create_ti_method"
+    title: "Creating a TI method"
     desc: "Methods to create a TI method wrapper"
-    contents:
-      - matches("create_*")
-      - matches("def*")
-  - title: "Running a TI method"
+  - id: "infer_trajectory"
+    title: "Running a TI method"
     desc  : "Methods to run one or more TI methods"
-    contents:
-      - matches("infer_*")

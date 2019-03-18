@@ -4,6 +4,8 @@
 #' @param waypoint_cells A vector of waypoint cells. Only the geodesic distances between waypoint cells and all other cells will be calculated.
 #' @param waypoint_milestone_percentages The milestone percentages of non-cell waypoints, containing waypoint_id, milestone_id and percentage columns
 #'
+#' @keywords derive_trajectory
+#'
 #' @importFrom igraph graph_from_data_frame neighborhood E distances
 #' @importFrom reshape2 acast melt
 #' @export

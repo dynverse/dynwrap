@@ -2,9 +2,12 @@
 % Please edit documentation in R/wrap_data.R
 \name{wrap_data}
 \alias{wrap_data}
+\alias{is_data_wrapper}
 \title{A data wrapper for datasets and trajectories}
 \usage{
 wrap_data(id = NULL, cell_ids, cell_info = NULL, ...)
+
+is_data_wrapper(object)
 }
 \arguments{
 \item{id}{A unique identifier for the data. If \code{NULL}, a random string will be generated.}
@@ -14,7 +17,10 @@ wrap_data(id = NULL, cell_ids, cell_info = NULL, ...)
 \item{cell_info}{Optional meta-information pertaining the cells.}
 
 \item{...}{Extra information to be stored in the wrapper.}
+
+\item{object}{The object to be tested.}
 }
 \description{
 A data wrapper for datasets and trajectories
 }
+\keyword{create_trajectory}

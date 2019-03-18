@@ -3,6 +3,8 @@
 #' @param model The model to which timings will be added
 #' @param timings A list of timings.
 #'
+#' @keywords adapt_trajectory
+#'
 #' @export
 #'
 #' @importFrom testthat expect_equal
@@ -41,6 +43,8 @@ is_wrapper_with_timings <- function(model) {
 #'
 #' @param timings The timings list of previous checkpoints.
 #' @param name The name of the timings checkpoint.
+#'
+#' @rdname add_timings
 #'
 #' @export
 add_timing_checkpoint <- function(timings, name) {

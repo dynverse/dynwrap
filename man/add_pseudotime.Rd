@@ -17,3 +17,4 @@ add_pseudotime(trajectory, pseudotime = NULL)
 \description{
 Add or calculate pseudotime as distance from the root
 }
+\keyword{derive_trajectory}

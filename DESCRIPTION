@@ -68,8 +68,7 @@ Remotes:
   dynverse/dynparam
 VignetteBuilder: knitr
 Collate: 
-    'calculate_average_by_group.R'
-    'calculate_average_by_milestone_percentages.R'
+    'calculate_average.R'
     'calculate_trajectory_dimred.R'
     'classify_milestone_network.R'
     'compute_tented_geodesic_distances.R'
@@ -78,7 +77,6 @@ Collate:
     'convert_milestone_percentages_to_progressions.R'
     'convert_progressions_to_milestone_percentages.R'
     'data.R'
-    'get_cell_grouping.R'
     'get_divergence_triangles.R'
     'metawrap_get_output_processor.R'
     'method_create_ti_method_container.R'

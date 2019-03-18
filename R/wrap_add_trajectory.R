@@ -16,6 +16,8 @@
 #'   Type: Logical
 #' @param ... extra information to be stored in the model
 #'
+#' @keywords create_trajectory
+#'
 #' @return The trajectory model
 #'
 #' @export

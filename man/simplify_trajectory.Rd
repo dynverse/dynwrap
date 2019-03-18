@@ -14,3 +14,4 @@ simplify_trajectory(traj, allow_self_loops = FALSE)
 \description{
 Simplify a trajectory
 }
+\keyword{adapt_trajectory}

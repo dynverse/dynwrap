@@ -37,3 +37,4 @@ Type: Data frame(divergence_id = character, milestone_id = character, is_start =
 \description{
 Calculate geodesic distances between cells in a trajectory, taking into account tents
 }
+\keyword{derive_trajectory}

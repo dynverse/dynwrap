@@ -2,10 +2,13 @@
 % Please edit documentation in R/method_process_definition.R
 \name{definition}
 \alias{definition}
+\alias{is_ti_method}
 \title{Create a definition}
 \usage{
 definition(method, wrapper, manuscript = NULL, container = NULL,
   parameters = parameter_set())
+
+is_ti_method(object)
 }
 \arguments{
 \item{method}{Meta information on the TI method (see \code{\link[=def_method]{def_method()}}).}
@@ -17,6 +20,8 @@ definition(method, wrapper, manuscript = NULL, container = NULL,
 \item{container}{Meta information on the container in which the wrapper resides, if applicable (see \code{\link[=def_container]{def_container()}}).}
 
 \item{parameters}{Meta information on the parameters of the TI method (see \code{\link[=def_parameters]{def_parameters()}}).}
+
+\item{object}{The object to be tested}
 }
 \description{
 A definition contains meta information on a TI method and various aspects thereof.
@@ -33,3 +38,4 @@ definition(
   )
 )
 }
+\keyword{create_ti_method}

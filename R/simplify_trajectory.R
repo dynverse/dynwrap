@@ -3,6 +3,8 @@
 #' @param traj A trajectory to simplify
 #' @inheritParams simplify_igraph_network
 #'
+#' @keywords adapt_trajectory
+#'
 #' @export
 simplify_trajectory <- function(traj, allow_self_loops = FALSE) {
   gr <- igraph::graph_from_data_frame(

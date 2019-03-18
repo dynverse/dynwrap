@@ -1,6 +1,9 @@
 #' Add or create waypoints to a trajectory
 #'
 #' @inheritParams select_waypoints
+#'
+#' @keywords adapt_trajectory
+#'
 #' @importFrom testthat expect_true
 #'
 #' @export
@@ -24,22 +27,20 @@ add_waypoints <- function(
   )
 }
 
-#' Test whether an trajectory is a data_wrapper and waypoints
-#'
-#' @param trajectory The trajectory to be tested.
+#' @rdname add_waypoints
 #'
 #' @export
 is_wrapper_with_waypoints <- function(trajectory) {
   is_wrapper_with_trajectory(trajectory) && "dynwrap::with_waypoints" %in% class(trajectory)
 }
 
-#' Select the waypoints
-#'
 #' Waypoints are spread equally over the whole trajectory
 #'
 #' @param trajectory Wrapper with trajectory
 #' @param n_waypoints The number of waypoints
 #' @param resolution The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges, will be automatically computed using n_waypoints
+#'
+#' @rdname add_waypoints
 #'
 #' @export
 select_waypoints <- function(

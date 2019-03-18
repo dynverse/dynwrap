@@ -16,6 +16,8 @@
 #' @param timecourse_discrete The time for every cell in groups
 #' @param verbose Whether or not to print informative messages
 #'
+#' @keywords infer_trajectory
+#'
 #' @export
 #'
 #' @importFrom testthat expect_true
@@ -115,9 +117,11 @@ is_wrapper_with_prior_information <- function(dataset) {
   is_data_wrapper(dataset) && "dynwrap::with_prior" %in% class(dataset)
 }
 
-#' Extract the prior information from the milestone network
+#' Extract the prior information from the trajectory
 #'
-#' For example, what are the start cells, the end cells, to which milestone does each cell belong to.
+#' For example, what are the start cells, the end cells, to which milestone does each cell belong to, ...
+#'
+#' The dataset has to contain a trajectory for this to work
 #'
 #' @inheritParams wrap_data
 #' @inheritParams add_trajectory
@@ -125,6 +129,8 @@ is_wrapper_with_prior_information <- function(dataset) {
 #' @param marker_fdr Maximal FDR value for a gene to be considered a marker
 #' @param given Prior information already calculated
 #' @param verbose Whether or not to print informative messages
+#'
+#' @rdname add_prior_information
 #'
 #' @importFrom utils installed.packages head
 #'

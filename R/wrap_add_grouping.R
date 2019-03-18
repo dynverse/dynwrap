@@ -5,6 +5,8 @@
 #' @param group_ids All group_ids, optional
 #' @param ... Extra information to be stored in the wrapper.
 #'
+#' @keywords adapt_trajectory
+#'
 #' @export
 #'
 #' @importFrom testthat expect_equal expect_is expect_true
@@ -118,11 +120,19 @@ process_grouping <- function(model, grouping) {
 }
 
 
-#' Grouping the cells onto their edges
+#' Create a grouping from a trajectory
+#'
+#' Grouping cells onto their edges, or grouping cells onto their nearest milestones
 #'
 #' @param trajectory The trajectory object
 #' @param group_template Processed by glue::glue to name the group
 #'
+#' @name group_from_trajectory
+#'
+#' @keywords derive_trajectory
+NULL
+
+#' @rdname group_from_trajectory
 #' @export
 group_onto_trajectory_edges <- function(trajectory, group_template = "{from}->{to}") {
   # first map cells to largest percentage (in case of divergence regions)
@@ -144,10 +154,7 @@ group_onto_trajectory_edges <- function(trajectory, group_template = "{from}->{t
 }
 
 
-#' Grouping the cells onto the closest milestones
-#'
-#' @param trajectory The trajectory object
-#'
+#' @rdname group_from_trajectory
 #' @export
 group_onto_nearest_milestones <- function(trajectory) {
   grouping <- trajectory$milestone_percentages %>%

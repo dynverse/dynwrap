@@ -27,3 +27,4 @@ The trajectory model
 \description{
 Define a trajectory model given its branch network and the pseudotime of the cells on one of the branches
 }
+\keyword{create_trajectory}
