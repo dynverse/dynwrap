@@ -91,7 +91,7 @@ add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_mi
 add_root_using_expression <- function(trajectory, features_oi, expression_source = "expression") {
   expression <- get_expression(trajectory, expression_source)
 
-  root_cell_id <- rownames(expression)[expression[, features_oi, drop = F] %>% rowMeans() %>% which.max()]
+  root_cell_id <- rownames(expression)[expression[, features_oi, drop = F] %>% Matrix::rowMeans() %>% which.max()]
   trajectory <- add_root(trajectory, root_cell_id)
 
   trajectory

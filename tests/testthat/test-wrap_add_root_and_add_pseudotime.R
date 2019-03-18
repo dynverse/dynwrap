@@ -61,6 +61,16 @@ test_that("Testing add_root", {
 })
 
 
+
+test_that("Testing add_root_using_expression",{
+  rooted <- add_root_using_expression(dynwrap::example_dataset, "A")
+  expect_equal(
+    rooted$root_milestone_id,
+    "milestone_begin"
+  )
+})
+
+
 test_that("Testing calculate_pseudotime", {
   traj <- add_pseudotime(traj)
   expect_equal(traj$pseudotime, c("a" = 0, "b" = 1.4, "c" = 2.6, "d" = 4.3, "e" = 4.4, "f" = 6.8))
