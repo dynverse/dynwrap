@@ -12,10 +12,9 @@
 #'
 #' @importFrom igraph graph_from_data_frame neighborhood E distances
 #' @importFrom reshape2 acast melt
-#' @export
 #'
-#' @rdname compute_tented_geodesic_distances
-compute_geodesic_distances <- function(
+#' @export
+calculate_geodesic_distances <- function(
   trajectory,
   waypoint_cells = NULL,
   waypoint_milestone_percentages = NULL
@@ -26,7 +25,7 @@ compute_geodesic_distances <- function(
     waypoint_cells <- trajectory$waypoint_cells
   }
 
-  compute_tented_geodesic_distances_(
+  calculate_geodesic_distances_(
     cell_ids = trajectory$cell_ids,
     milestone_ids = trajectory$milestone_ids,
     milestone_network = trajectory$milestone_network,
@@ -37,7 +36,7 @@ compute_geodesic_distances <- function(
   )
 }
 
-compute_geodesic_distances_ <- function(
+calculate_geodesic_distances_ <- function(
   cell_ids,
   milestone_ids,
   milestone_network,
@@ -182,6 +181,6 @@ compute_tented_geodesic_distances <- function(
   waypoint_cells = NULL,
   waypoint_milestone_percentages = NULL
 ) {
-  warning("compute_tented_geodesic_distances in deprecated and will be removed in future releases. Use compute_geodesic_distances instead.")
-  compute_geodesic_distances(trajectory, waypoint_cells, waypoint_milestone_percentages)
+  warning("compute_tented_geodesic_distances in deprecated and will be removed in future releases. Use calculate_geodesic_distances instead.")
+  calculate_geodesic_distances(trajectory, waypoint_cells, waypoint_milestone_percentages)
 }

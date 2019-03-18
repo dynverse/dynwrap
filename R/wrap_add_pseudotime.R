@@ -13,7 +13,7 @@ calculate_pseudotime <- function(trajectory) {
 
   if(is.na(root_cell_id)) {stop("Could not find rooting cell for pseudotime calculation")}
 
-  pseudotime <- compute_tented_geodesic_distances(trajectory, root_cell_id)[1, ]
+  pseudotime <- calculate_geodesic_distances(trajectory, root_cell_id)[1, ]
 
   pseudotime
 }

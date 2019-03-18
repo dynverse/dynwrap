@@ -209,7 +209,7 @@ generate_prior_information <- function(
           data_frame(cell_id = pseudocell, milestone_id = mids, percentage = 1)
         )
       )
-    geo <- compute_tented_geodesic_distances(tmp, waypoint_cells = pseudocell)[,cell_ids,drop = FALSE]
+    geo <- calculate_geodesic_distances(tmp, waypoint_cells = pseudocell)[,cell_ids,drop = FALSE]
     unique(unlist(apply(geo, 1, function(x) {
       sample(names(which(x == min(x))), 1)
     })))
@@ -338,7 +338,7 @@ generate_prior_information <- function(
       if (!is.null(cell_info) && "simulationtime" %in% colnames(cell_info)) {
         set_names(cell_info$simulationtime, cell_info$cell_id)
       } else {
-        geo <- compute_tented_geodesic_distances_(
+        geo <- calculate_geodesic_distances_(
           cell_ids = cell_ids,
           milestone_ids = milestone_ids,
           milestone_network = milestone_network,
