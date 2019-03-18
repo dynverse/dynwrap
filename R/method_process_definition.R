@@ -262,9 +262,7 @@ get_default_parameters <- function(definition) {
 .method_load_definition <- function(definition) {
   if (is.character(definition)) {
     assert_that(length(definition) == 1)
-    definition_raw <- yaml::read_yaml(filename)
-
-    definition
+    yaml::read_yaml(definition)
   } else {
     definition
   }
