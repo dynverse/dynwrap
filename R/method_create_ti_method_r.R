@@ -8,8 +8,6 @@
 #' @inheritParams .method_process_definition
 #'
 #' @export
-#'
-#' @include method_parse_parameter_definition.R
 create_ti_method_r <- function(
   definition,
   run_fun,
