@@ -16,6 +16,11 @@
 #' @export
 #'
 #' @importFrom testthat expect_is expect_true expect_named
+#'
+#' @examples
+#' dataset <- dynwrap::example_dataset
+#' pseudotime <- data.frame(cell_id = dataset$cell_ids, pseudotime = runif(length(dataset$cell_ids)))
+#' add_linear_trajectory(dataset, pseudotime)
 add_linear_trajectory <- function(
   model,
   pseudotime,
