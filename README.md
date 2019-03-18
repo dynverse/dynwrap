@@ -48,7 +48,7 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
-### Latest changes in dynwrap 0.3.2 (unreleased)
+### Recent changes in dynwrap 1.0.0 (unreleased)
 
   - MAJOR CHANGE: Add support for Singularity 3.0, drop support for
     previous releases of Singularity and singularity-hub.
@@ -56,7 +56,13 @@ changes.
   - FEATURE: Add `create_ti_method_definition()` to create a definition
     from a local script.
 
-### Latest changes in dynwrap 0.3.1.2 (01-02-2019)
+  - DOCUMENTATION: Major update of all documentation for release of
+    dynwrap v2
+
+  - MINOR CHANGE: Rename `compute_tented_geodesic_distances()` to
+    `compute_geodesic_distances()`
+
+### Recent changes in dynwrap 0.3.1.2 (01-02-2019)
 
   - BUG FIX: `simplify_replace_edges()` would sometimes swap edges in
     milestone network around, but forget invert percentages.
