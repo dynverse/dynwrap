@@ -1,4 +1,4 @@
-#' Simplify a trajectory
+#' Simplify a trajectory by removing transient milestones
 #'
 #' @param traj A trajectory to simplify
 #' @inheritParams simplify_igraph_network

@@ -1,4 +1,4 @@
-#' Add count and normalised expression values to a model
+#' Add timings checkpoints
 #'
 #' @param model The model to which timings will be added
 #' @param timings A list of timings.

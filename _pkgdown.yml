@@ -13,4 +13,4 @@ reference:
     desc: "Methods to create a TI method wrapper"
   - id: "infer_trajectory"
     title: "Running a TI method"
-    desc  : "Methods to run one or more TI methods"
+    desc: "Methods to run one or more TI methods"
