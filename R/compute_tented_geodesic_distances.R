@@ -1,4 +1,8 @@
-#' Calculate geodesic distances between cells in a trajectory, taking into account tents
+#' Calculate geodesic distances between cells in a trajectory
+#'
+#' Will calculate geodesic distances along a trajectory. To speed things up, only the distances with a set of waypoint cells are calculated.
+#'
+#' The geodesic distance takes into acount regions of delayed commitment.
 #'
 #' @param trajectory The trajectory
 #' @param waypoint_cells A vector of waypoint cells. Only the geodesic distances between waypoint cells and all other cells will be calculated.
@@ -11,7 +15,7 @@
 #' @export
 #'
 #' @rdname compute_tented_geodesic_distances
-compute_tented_geodesic_distances <- function(
+compute_geodesic_distances <- function(
   trajectory,
   waypoint_cells = NULL,
   waypoint_milestone_percentages = NULL
@@ -33,13 +37,7 @@ compute_tented_geodesic_distances <- function(
   )
 }
 
-
-#' @inheritParams add_trajectory
-#' @inheritParams wrap_data
-#'
-#' @rdname compute_tented_geodesic_distances
-#' @export
-compute_tented_geodesic_distances_ <- function(
+compute_geodesic_distances_ <- function(
   cell_ids,
   milestone_ids,
   milestone_network,
@@ -177,4 +175,13 @@ compute_tented_geodesic_distances_ <- function(
 
   # put the cells in the right order
   out[waypoint_ids, cell_ids, drop = F]
+}
+
+compute_tented_geodesic_distances <- function(
+  trajectory,
+  waypoint_cells = NULL,
+  waypoint_milestone_percentages = NULL
+) {
+  warning("compute_tented_geodesic_distances in deprecated and will be removed in future releases. Use compute_geodesic_distances instead.")
+  compute_geodesic_distances(trajectory, waypoint_cells, waypoint_milestone_percentages)
 }
