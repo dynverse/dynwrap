@@ -129,12 +129,14 @@ infer_trajectories <- function(
   output <- map_fun(
     seq_len(nrow(design)),
     function(ri) {
+      seed_ <- if (is.function(seed)) seed() else seed
+
       .method_execute(
         dataset = dataset[[design$dataset_ix[[ri]]]],
         method = method[[design$method_ix[[ri]]]],
         parameters = parameters[[design$method_ix[[ri]]]],
         give_priors = give_priors,
-        seed = seed,
+        seed = seed_,
         verbose = verbose,
         return_verbose = return_verbose,
         debug = debug
