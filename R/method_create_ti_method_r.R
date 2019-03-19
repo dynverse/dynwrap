@@ -78,7 +78,9 @@ create_ti_method_r <- function(
   # only give args that are requested by the function
   args <- args[intersect(names(args), names(formals(method$run$run_fun)))]
 
-  model <- do.call(method$run$run_fun, args)
+  model <- callr::r(
+    method$run$run_fun, args
+  )
 
   model
 }
