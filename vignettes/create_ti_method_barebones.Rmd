@@ -54,15 +54,15 @@ The actual inference of the trajectory is done in the run function. This functio
 
 * **expression or counts**
 * **priors** A list containing the requested priors
-* **params** A list containing the parameters
+* **parameters** A list containing the parameters
 * **seed** The seed provided by the user. In R this seed is already automatically set
 * **verbose** Integer of the level of verbosity that will be shown to the user. Based on this message, you can print out different info/warning/error messages.
 
 ```{r}
-run_fun <- function(expression, priors, params, seed, verbose) {
+run_fun <- function(expression, priors, parameters, seed, verbose) {
   pca <- prcomp(expression)
 
-  pseudotime <- pca$x[, params$component]
+  pseudotime <- pca$x[, parameters$component]
 
   # flip pseudotimes using start_id
   if (!is.null(priors$start_id)) {

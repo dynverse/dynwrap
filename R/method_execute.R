@@ -25,10 +25,10 @@
   priors <- .method_extract_priors(dataset, method$wrapper$inputs, give_priors)
 
   # extract parameters from method
-  params <- get_default_parameters(method)
-  params[names(parameters)] <- parameters
-  parameters <- params
-  rm(params)
+  parameters_ <- get_default_parameters(method)
+  parameters_[names(parameters)] <- parameters
+  parameters <- parameters_
+  rm(parameters_)
 
   # initialise stdout/stderr files
   sink_meta <- .method_init_sinks(verbose = verbose, return_verbose = return_verbose)

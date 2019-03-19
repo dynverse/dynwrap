@@ -39,7 +39,7 @@ ti_comp1 <- dynwrap::create_ti_method_r(
   # function to run the method with
   run_fun = function(
     expression,
-    params,
+    parameters,
     seed = NA,
     verbose = FALSE
   ) {
@@ -48,7 +48,7 @@ ti_comp1 <- dynwrap::create_ti_method_r(
     # TIMING: done with preproc
     tl <- add_timing_checkpoint(NULL, "method_afterpreproc")
 
-    dimred <- dyndimred::dimred(expression, method = params$dimred_method, ndim = max(params$component, 2L))
+    dimred <- dyndimred::dimred(expression, method = parameters$dimred_method, ndim = max(parameters$component, 2L))
 
     # TIMING: done with method
     tl <- tl %>% add_timing_checkpoint("method_aftermethod")
@@ -57,7 +57,7 @@ ti_comp1 <- dynwrap::create_ti_method_r(
     wrap_data(
       cell_ids = rownames(expression)
     ) %>% add_linear_trajectory(
-      pseudotime = dimred[,params$component] %>% set_names(rownames(expression))
+      pseudotime = dimred[,parameters$component] %>% set_names(rownames(expression))
     ) %>% add_dimred(
       dimred = dimred
     ) %>% add_timings(

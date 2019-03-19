@@ -1,7 +1,7 @@
 
 #' Create a TI method wrapper
 #'
-#' @param run_fun A function to infer a trajectory, with parameters counts/expression, params, priors, verbose and seed
+#' @param run_fun A function to infer a trajectory, with parameters counts/expression, parameters, priors, verbose and seed
 #' @param package_loaded The packages that need to be loaded before executing the method.
 #' @param package_required The packages that need to be installed before executing the method.
 #' @param remotes_package Package from which the remote locations of dependencies have to be extracted, eg. `dynmethods`.
@@ -69,7 +69,7 @@ create_ti_method_r <- function(
     inputs,
     lst(
       priors,
-      params = parameters,
+      parameters,
       verbose,
       seed
     )

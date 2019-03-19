@@ -178,7 +178,7 @@ infer_trajectory <- dynutils::inherit_default_params(
       give_priors = give_priors,
       seed = seed,
       verbose = verbose,
-      return_verbose = FALSE,
+      return_verbose = return_verbose,
       debug = debug
     )
 

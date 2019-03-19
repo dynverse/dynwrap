@@ -17,12 +17,12 @@ dummy_definition <- definition(
   )
 )
 
-dummy_run_fun = function(counts, params) {
+dummy_run_fun = function(counts, parameters) {
   wrap_data(
-    cell_ids = params$fruit
+    cell_ids = parameters$fruit
   ) %>%
     add_linear_trajectory(
-      pseudotime = set_names(0, params$fruit)
+      pseudotime = set_names(0, parameters$fruit)
     )
 }
 

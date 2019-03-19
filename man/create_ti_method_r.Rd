@@ -11,7 +11,7 @@ create_ti_method_r(definition, run_fun, package_required = character(),
 \arguments{
 \item{definition}{A definition, see \code{\link[=definition]{definition()}}}
 
-\item{run_fun}{A function to infer a trajectory, with parameters counts/expression, params, priors, verbose and seed}
+\item{run_fun}{A function to infer a trajectory, with parameters counts/expression, parameters, priors, verbose and seed}
 
 \item{package_required}{The packages that need to be installed before executing the method.}
 
