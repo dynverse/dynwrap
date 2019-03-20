@@ -13,7 +13,6 @@ vignette: >
 
 ```{r setup}
 library(dynwrap)
-library(tidyverse)
 ```
 
 This vignette describes how to include your own method into the dynverse workflow. We'll illustrate this with a very basic method: using one of the components of a PCA as the pseudotime.
