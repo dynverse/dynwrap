@@ -112,7 +112,7 @@ The easiest way to make this method available to others is to put it in an[R pac
 #' @examples
 #' dataset <- dynwrap::example_dataset
 #' model <- dynwrap::infer_trajectory(dataset, ti_comp1()¸)
-ti_comp1 <- create_ti_method_r(definition, run_fun, package_loaded = "dplyr")
+ti_comp1 <- create_ti_method_r(definition, run_fun)
 ```
 
 The parameter documentation will look like follows:
