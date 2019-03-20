@@ -38,7 +38,8 @@ definition <- definition(
     dynparam::integer_parameter(
       id = "component",
       default = 1,
-      distribution = dynparam::uniform_distribution(1, 10)
+      distribution = dynparam::uniform_distribution(1, 10),
+      description = "The nth component to use"
     )
   ),
   wrapper = def_wrapper(
@@ -80,7 +81,7 @@ run_fun <- function(expression, priors, parameters, seed, verbose) {
 
 To create the method, call `create_ti_method_r`. At this stage you can also define some R packages that have to be installed or loaded.
 ```{r}
-method <- create_ti_method_r(definition, run_fun, package_loaded = "dplyr")
+ti_comp1 <- create_ti_method_r(definition, run_fun, package_loaded = "dplyr")
 ```
 
 This function will return another function that can be used to change any parameters when running the method. This function is also useful to document any parameters when included in an R package.
@@ -88,7 +89,7 @@ This function will return another function that can be used to change any parame
 That's it, let's try it out:
 ```{r}
 dataset <- dynwrap::example_dataset
-model <- infer_trajectory(dataset, method())
+model <- infer_trajectory(dataset, ti_comp1())
 ```
 
 ```{r}
@@ -99,6 +100,25 @@ if ("dynplot" %in% rownames(installed.packages())) {
 
 ## Making your method available for other users
 
-The easiest way to make your method available to other users is by creating an [R package which exports the `ti_*` function](http://r-pkgs.had.co.nz/).
+The easiest way to make this method available to others is to put it in an[R package which exports the `ti_*` function](http://r-pkgs.had.co.nz/). Here you can also provide documentation using roxygen2. The parameters can be automatically documented from the information provided in the description using `@eval dynwrap::generate_parameter_documentation(definition)` (adapt the name of definition if necessary).
+```{r}
+#' Infer a trajectory from the first principal component
+#' 
+#' @eval dynwrap::generate_parameter_documentation(definition)
+#' 
+#' @import dplyr
+#' @export
+#' 
+#' @examples
+#' dataset <- dynwrap::example_dataset
+#' model <- dynwrap::infer_trajectory(dataset, ti_comp1()¸)
+ti_comp1 <- create_ti_method_r(definition, run_fun, package_loaded = "dplyr")
+```
+
+The parameter documentation will look like follows:
+```{r}
+generate_parameter_documentation(definition)
+```
+
 
 We also strongly encourage you to include within our collection of TI methods available in the [dynmethods R package](https://github.com/dynverse/dynmethods). Feel free to [create an issue](https://github.com/dynverse/dynmethods/labels/new%20method) or [send us a pull request](https://github.com/dynverse/dynmethods/pulls).

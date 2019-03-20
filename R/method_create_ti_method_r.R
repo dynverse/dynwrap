@@ -91,3 +91,26 @@ create_ti_method_r <- function(
   # Remove temporary folder
   unlink(preproc_meta$tmp_dir, recursive = TRUE, force = TRUE)
 }
+
+
+#' Generate the parameter documentation of a method, use with `@eval`
+#'
+#' @param definition The definition which contain the parameters
+#'
+#' @return A character vector containing the roxygen tags
+#'
+#' @export
+generate_parameter_documentation <- function(definition) {
+  parameter_ids <-
+    names(definition$parameters$parameters)
+
+  # generate documentation per parameter separately
+  map_chr(
+    parameter_ids,
+    function(parameter_id) {
+      parameter <- definition$parameters$parameters[[parameter_id]]
+
+      dynparam::as_roxygen(parameter)
+    }
+  )
+}
