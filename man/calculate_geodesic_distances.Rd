@@ -2,9 +2,13 @@
 % Please edit documentation in R/calculate_geodesic_distances.R
 \name{calculate_geodesic_distances}
 \alias{calculate_geodesic_distances}
+\alias{compute_tented_geodesic_distances}
 \title{Calculate geodesic distances between cells in a trajectory}
 \usage{
 calculate_geodesic_distances(trajectory, waypoint_cells = NULL,
+  waypoint_milestone_percentages = NULL)
+
+compute_tented_geodesic_distances(trajectory, waypoint_cells = NULL,
   waypoint_milestone_percentages = NULL)
 }
 \arguments{

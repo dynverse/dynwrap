@@ -176,6 +176,8 @@ calculate_geodesic_distances_ <- function(
   out[waypoint_ids, cell_ids, drop = F]
 }
 
+#' @rdname calculate_geodesic_distances
+#' @export
 compute_tented_geodesic_distances <- function(
   trajectory,
   waypoint_cells = NULL,
