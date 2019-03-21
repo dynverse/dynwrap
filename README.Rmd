@@ -22,7 +22,7 @@ library(tidyverse)
 * Wrap the output of a trajectory inference method, such as the pseudotime, a clustering or a branch network, and convert it into a common trajectory model
 * Further postprocess the trajectory model, such as labelling the milestones and rooting the trajectory
 
-![common trajectory model](man/figures/trajectory_model.png)
+![](man/figures/trajectory_model.png)
 
 dynwrap was used to wrap 50+ trajectory inference method within docker containers in [dynmethods](https://github.com/dynverse/dynmethods).
 

@@ -5,7 +5,7 @@
 
 * FEATURE: Add `create_ti_method_definition()` to create a definition from a local script.
 
-* DOCUMENTATION: Major update of all documentation for release of dynwrap v2
+* DOCUMENTATION: Major update of all documentation for release of dynwrap 1.0.0
 
 * MINOR CHANGE: Rename `compute_tented_geodesic_distances()` to `calculate_geodesic_distances()`
 
