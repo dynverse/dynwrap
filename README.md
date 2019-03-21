@@ -60,12 +60,14 @@ changes.
     dynwrap v2
 
   - MINOR CHANGE: Rename `compute_tented_geodesic_distances()` to
-    `compute_geodesic_distances()`
+    `calculate_geodesic_distances()`
 
 ### Recent changes in dynwrap 0.3.1.2 (01-02-2019)
 
   - BUG FIX: `simplify_replace_edges()` would sometimes swap edges in
     milestone network around, but forget invert percentages.
+
   - BUG FIX: Close sinks when interupting the R process
+
   - MINOR CHANGE: Work with new babelwhale, which includes support for
     singularity 3.0
