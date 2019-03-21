@@ -3,5 +3,5 @@
   lines <- babelwhale::read_file(container_id, "/code/definition.yml")
   definition_raw <- yaml::read_yaml(text = lines)
 
-  .method_convert_definition(definition_raw)
+  convert_definition(definition_raw)
 }

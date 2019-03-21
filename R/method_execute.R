@@ -88,6 +88,7 @@
 
     # retrieve stdout/stderr
     stds <- .method_close_sinks(sink_meta)
+    sink_meta$closed <- TRUE
 
     # stop timings
     timings$execution_stop <- Sys.time()
@@ -151,7 +152,7 @@
   if (!sink_meta$verbose || sink_meta$return_verbose) {
     sink(type = "output")
     sink(type = "message")
-    close(sink_meta$stderr_con)
+    if (!is.null(sink_meta$stderr_con) && !isTRUE(sink_meta$closed)) close(sink_meta$stderr_con)
   }
 
   if (sink_meta$return_verbose) {

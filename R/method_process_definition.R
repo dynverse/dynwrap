@@ -273,19 +273,14 @@ is_ti_method <- function(object) {
 
 
 
-# definition is character -> load in definition from file and process as definition
-# else, assume this is already a correct definition and just return
-.method_load_definition <- function(definition) {
-  if (is.character(definition)) {
-    assert_that(length(definition) == 1)
-    .method_convert_definition(yaml::read_yaml(definition))
-  } else {
-    definition
-  }
-}
-
-# convert a definition loaded from a yaml
-.method_convert_definition <- function(definition_raw) {
+#' Convert a definition loaded in from a yaml
+#'
+#' @param definition_raw The raw definition loaded from the yaml
+#'
+#' @keywords create_ti_method
+#'
+#' @export
+convert_definition <- function(definition_raw) {
   definition(
     method = purrr::invoke(def_method, definition_raw$method %||% list()),
     wrapper = purrr::invoke(def_wrapper, definition_raw$wrapper %||% list()),
@@ -293,6 +288,19 @@ is_ti_method <- function(object) {
     manuscript = purrr::invoke(def_manuscript, definition_raw$manuscript %||% list()),
     parameters = dynparam::as_parameter_set(definition_raw$parameters %||% list())
   )
+}
+
+
+
+# definition is character -> load in definition from file and process as definition
+# else, assume this is already a correct definition and just return
+.method_load_definition <- function(definition) {
+  if (is.character(definition)) {
+    assert_that(length(definition) == 1)
+    convert_definition(yaml::read_yaml(definition))
+  } else {
+    definition
+  }
 }
 
 
