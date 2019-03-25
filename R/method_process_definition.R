@@ -271,12 +271,12 @@ get_default_parameters <- function(definition) {
 }
 
 
-#' @param object The object to be tested
+#' @param method The method to be tested
 #' @rdname definition
 #'
 #' @export
-is_ti_method <- function(object) {
-  ("dynwrap::ti_method" %in% class(object)) || ("dynmethod::ti_method" %in% class(object))
+is_ti_method <- function(method) {
+  ("dynwrap::ti_method" %in% class(method)) || ("dynmethod::ti_method" %in% class(method))
 }
 
 

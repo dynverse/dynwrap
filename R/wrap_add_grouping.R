@@ -27,7 +27,7 @@ add_grouping <- function(
     names(grouping) <- dataset$cell_ids
   }
 
-  # check whether object is a data wrapper
+  # check whether dataset is a data wrapper
   testthat::expect_true(is_data_wrapper(dataset))
 
   # check group ids
