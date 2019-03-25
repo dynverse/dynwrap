@@ -4,14 +4,23 @@
 \alias{simplify_trajectory}
 \title{Simplify a trajectory by removing transient milestones}
 \usage{
-simplify_trajectory(traj, allow_self_loops = FALSE)
+simplify_trajectory(trajectory, allow_self_loops = FALSE)
 }
 \arguments{
-\item{traj}{A trajectory to simplify}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{allow_self_loops}{Whether or not to allow self loops.}
 }
 \description{
-Simplify a trajectory by removing transient milestones
+Transient milestones are milestones with a degree of two (if undirected) or with an indegree of one and outdegree of one (if directed)
+}
+\details{
+The positions of the cells within the trajectory remain the same
+
+A → B → C is simplified to A → C.
+
+A — B — C is simplified to A — C.
+
+A → B → C → D → A is simplified to A → B → D.
 }
 \keyword{adapt_trajectory}

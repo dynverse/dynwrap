@@ -126,7 +126,7 @@ test_that("Testing generate_prior_information", {
 
 
 test_that("Testing add_prior_information", {
-  traj <-
+  trajectory <-
     wrap_data(
       id = "test",
       cell_ids = cell_ids,
@@ -142,12 +142,12 @@ test_that("Testing add_prior_information", {
       feature_info = feature_info
     )
 
-  traj2 <- add_prior_information(traj, verbose = FALSE)
+  trajectory2 <- add_prior_information(trajectory, verbose = FALSE)
 
-  prior_info <- traj2$prior_information
+  prior_info <- trajectory2$prior_information
 
-  expect_false(is_wrapper_with_prior_information(traj))
-  expect_true(is_wrapper_with_prior_information(traj2))
+  expect_false(is_wrapper_with_prior_information(trajectory))
+  expect_true(is_wrapper_with_prior_information(trajectory2))
 
   # copy paste tests
   expected_prior <- c(
@@ -299,7 +299,7 @@ test_that("Testing generate_prior_information", {
 
 
 test_that("Testing add_prior_information", {
-  traj <-
+  trajectory <-
     wrap_data(
       id = "test",
       cell_ids = cell_ids
@@ -316,13 +316,13 @@ test_that("Testing add_prior_information", {
   tmp <- tempfile()
   on.exit(file.remove(tmp))
   sink(tmp)
-  traj2 <- add_prior_information(traj, verbose = TRUE)
+  trajectory2 <- add_prior_information(trajectory, verbose = TRUE)
   sink()
 
-  prior_info <- traj2$prior_information
+  prior_info <- trajectory2$prior_information
 
-  expect_false(is_wrapper_with_prior_information(traj))
-  expect_true(is_wrapper_with_prior_information(traj2))
+  expect_false(is_wrapper_with_prior_information(trajectory))
+  expect_true(is_wrapper_with_prior_information(trajectory2))
 
   # copy paste tests
   expected_prior <- c(

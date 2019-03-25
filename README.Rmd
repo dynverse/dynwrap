@@ -20,9 +20,11 @@ library(tidyverse)
 * Wrap the input data of a trajectory inference method, such as expression and prior information
 * Run a trajectory inference method in R, in a docker container or a singularity container
 * Wrap the output of a trajectory inference method, such as the pseudotime, a clustering or a branch network, and convert it into a common trajectory model
-* Further postprocess the trajectory model, such as labelling the milestones and rooting the trajectory
+* Further postprocess and adapt the trajectory model, such as labelling the milestones and rooting the trajectory
 
 ![](man/figures/trajectory_model.png)
+
+Documentation and the API reference for dynwrap can be found at the dyvnerse documentation website: https://dynverse.org/ .
 
 dynwrap was used to wrap 50+ trajectory inference method within docker containers in [dynmethods](https://github.com/dynverse/dynmethods).
 

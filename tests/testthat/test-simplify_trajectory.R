@@ -22,7 +22,7 @@ test_that("Simple test", {
     "single",       "want",  "must", 0.4
   )
 
-  traj <-
+  trajectory<-
     wrap_data(
       id = id,
       cell_ids = cell_ids
@@ -32,7 +32,7 @@ test_that("Simple test", {
       milestone_network = milestone_network,
       progressions = progressions
     )
-  simp <- simplify_trajectory(traj)
+  simp <- simplify_trajectory(trajectory)
 
   # TODO: Add more tests! for more trajectory types! and more parameters!
 
@@ -60,7 +60,7 @@ test_that("Test whether simplify is able to correctly simplify an undirected", {
     "single",       "A",   "C", 0.4
   )
 
-  traj <-
+  trajectory<-
     wrap_data(
       id = id,
       cell_ids = cell_ids
@@ -70,7 +70,7 @@ test_that("Test whether simplify is able to correctly simplify an undirected", {
       milestone_network = milestone_network,
       progressions = progressions
     )
-  simp <- simplify_trajectory(traj)
+  simp <- simplify_trajectory(trajectory)
 
   expect_true(all(cell_ids %in% simp$cell_ids))
   expect_true(all(simp$milestone_network$from == "B"))
@@ -102,7 +102,7 @@ test_that("Test whether simplify is able to correctly simplify an undirected cyc
     "single",       "A",   "B", 0.4
   )
 
-  traj <-
+  trajectory<-
     wrap_data(
       id = id,
       cell_ids = cell_ids
@@ -112,7 +112,7 @@ test_that("Test whether simplify is able to correctly simplify an undirected cyc
       milestone_network = milestone_network,
       progressions = progressions
     )
-  simp <- simplify_trajectory(traj)
+  simp <- simplify_trajectory(trajectory)
 
   expect_true(all(cell_ids %in% simp$cell_ids))
   expect_true(all(simp$milestone_network$from == c("A", "B", "A")))
@@ -150,7 +150,7 @@ test_that("Test whether simplify is able to correctly simplify a graph", {
     "12","B", "F", 0.4
   )
 
-  traj <-
+  trajectory<-
     wrap_data(
       id = id,
       cell_ids = cell_ids
@@ -160,7 +160,7 @@ test_that("Test whether simplify is able to correctly simplify a graph", {
       milestone_network = milestone_network,
       progressions = progressions
     )
-  simp <- simplify_trajectory(traj)
+  simp <- simplify_trajectory(trajectory)
 
   expect_true(all(cell_ids %in% simp$cell_ids))
   expect_true(all(simp$milestone_network$from == c("A", "B", "A", "B", "A")))

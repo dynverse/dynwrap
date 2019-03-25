@@ -5,6 +5,9 @@
 \alias{dynwrap}
 \alias{dynwrap-package}
 \title{This R package contains the code for a common model of single-cell trajectories.}
+\arguments{
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
+}
 \description{
 This R package contains the code for a common model of single-cell trajectories.
 }

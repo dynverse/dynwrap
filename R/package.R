@@ -12,6 +12,8 @@
 #' @importFrom magrittr %<>% %$% set_rownames set_colnames
 #' @importFrom glue glue
 #'
+#' @param trajectory The trajectory as created by [infer_trajectory()] or [add_trajectory()]
+#'
 #' @docType package
 #' @name dynwrap
 NULL
