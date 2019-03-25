@@ -2,7 +2,7 @@
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @inheritParams dataset
+#' @inheritParams dynwrap
 #' @param pseudotime A named vector of pseudo times.
 #' @param directed Whether or not the directionality of the pseudotime is predicted.
 #' @param do_scale_minmax Whether or not to scale the pseudotime between 0 and 1.

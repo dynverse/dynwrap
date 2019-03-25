@@ -4,11 +4,11 @@
 \alias{add_cell_graph}
 \title{Constructs a trajectory using a graph between cells, by mapping cells onto a set of backbone cells.}
 \usage{
-add_cell_graph(model, cell_graph, to_keep,
+add_cell_graph(dataset, cell_graph, to_keep,
   milestone_prefix = "milestone_", ...)
 }
 \arguments{
-\item{model}{The model to extend}
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
 \item{cell_graph}{The edges between cells. Format: Data frame(from = character, to = character, length(optional) = numeric, directed(optional) = logical)}
 
@@ -20,7 +20,7 @@ whether or not a cell is part of the backbone. Or, alternatively a character vec
 \item{...}{extra information to be stored in the wrapper.}
 }
 \value{
-The trajectory model
+The trajectory
 }
 \description{
 This function will generate the milestone_network and progressions.

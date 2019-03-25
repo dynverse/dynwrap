@@ -18,7 +18,7 @@ wrap_expression(id = NULL, expression, counts, cell_info = NULL,
 
 \item{feature_info}{Optional meta-information of the features, a data.frame with at least feature_id as column}
 
-\item{...}{extra information to be stored in the model}
+\item{...}{extra information to be stored in the dataset}
 }
 \description{
 Create a wrapper object with expression and counts

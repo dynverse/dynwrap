@@ -4,16 +4,16 @@
 \alias{add_expression}
 \alias{is_wrapper_with_expression}
 \alias{get_expression}
-\title{Add count and normalised expression values to a model}
+\title{Add count and normalised expression values to a dataset}
 \usage{
-add_expression(model, counts, expression, feature_info = NULL, ...)
+add_expression(dataset, counts, expression, feature_info = NULL, ...)
 
-is_wrapper_with_expression(model)
+is_wrapper_with_expression(dataset)
 
-get_expression(model, expression_source = "expression")
+get_expression(dataset, expression_source = "expression")
 }
 \arguments{
-\item{model}{The model to which expression will be added}
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
 \item{counts}{The counts with genes in columns and cells in rows}
 
@@ -21,11 +21,11 @@ get_expression(model, expression_source = "expression")
 
 \item{feature_info}{Optional meta-information of the features, a data.frame with at least feature_id as column}
 
-\item{...}{extra information to be stored in the model}
+\item{...}{extra information to be stored in the dataset}
 
-\item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another model which contains expression}
+\item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another dataset which contains expression}
 }
 \description{
-Add count and normalised expression values to a model
+Add count and normalised expression values to a dataset
 }
 \keyword{adapt_trajectory}

@@ -7,6 +7,8 @@
 \title{This R package contains the code for a common model of single-cell trajectories.}
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
+
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 }
 \description{
 This R package contains the code for a common model of single-cell trajectories.

@@ -4,11 +4,11 @@
 \alias{add_dimred_projection}
 \title{Constructs a trajectory by projecting cells within a dimensionality reduction onto a backbone formed by a milestone network. Optionally, a cell grouping can be given which will restrict the edges on which a cell can be projected.}
 \usage{
-add_dimred_projection(model, milestone_ids = NULL, milestone_network,
+add_dimred_projection(dataset, milestone_ids = NULL, milestone_network,
   dimred, dimred_milestones, grouping = NULL, ...)
 }
 \arguments{
-\item{model}{The model to which the trajectory will be added.}
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
 \item{milestone_ids}{The ids of the milestones in the trajectory. Type: Character vector.}
 
@@ -24,7 +24,7 @@ Type: Data frame(from = character, to = character, length = numeric, directed = 
 \item{...}{extra information to be stored in the wrapper.}
 }
 \value{
-The trajectory model
+The trajectory
 }
 \description{
 This function will generate the milestone_network and progressions.

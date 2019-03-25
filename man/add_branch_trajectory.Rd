@@ -2,13 +2,13 @@
 % Please edit documentation in R/wrap_add_branch_trajectory.R
 \name{add_branch_trajectory}
 \alias{add_branch_trajectory}
-\title{Define a trajectory model given its branch network and the pseudotime of the cells on one of the branches}
+\title{Create a trajectory given its branch network and the pseudotime of the cells on one of the branches}
 \usage{
-add_branch_trajectory(model, branch_network, branches, branch_progressions,
-  ...)
+add_branch_trajectory(dataset, branch_network, branches,
+  branch_progressions, ...)
 }
 \arguments{
-\item{model}{The model to which the trajectory will be added.}
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
 \item{branch_network}{The network between branches
 Type: Data frame(from = charactor, to = character)}
@@ -19,12 +19,12 @@ Type: Data frame(branch_id = character, length = numeric, directed = logical)}
 \item{branch_progressions}{Specifies the progression of a cell along a transition in the branch network.
 Type: Data frame(cell_id = character, branch_id = character, percentage = numeric).}
 
-\item{...}{extra information to be stored in the model}
+\item{...}{extra information to be stored in the trajectory}
 }
 \value{
-The trajectory model
+The trajectory
 }
 \description{
-Define a trajectory model given its branch network and the pseudotime of the cells on one of the branches
+Create a trajectory given its branch network and the pseudotime of the cells on one of the branches
 }
 \keyword{create_trajectory}

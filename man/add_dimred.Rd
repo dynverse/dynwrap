@@ -6,16 +6,16 @@
 \alias{get_dimred}
 \title{Add or create a dimensionality reduction}
 \usage{
-add_dimred(model, dimred, dimred_milestones = NULL,
+add_dimred(dataset, dimred, dimred_milestones = NULL,
   dimred_segment_progressions = NULL, dimred_segment_points = NULL,
   connect_segments = FALSE, expression_source = "expression", ...)
 
-is_wrapper_with_dimred(model)
+is_wrapper_with_dimred(dataset)
 
-get_dimred(model, dimred = NULL, expression_source = "expression")
+get_dimred(dataset, dimred = NULL, expression_source = "expression")
 }
 \arguments{
-\item{model}{The model to which a dimensionality reduction will be added.}
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
 \item{dimred}{The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction}
 
@@ -27,7 +27,7 @@ get_dimred(model, dimred = NULL, expression_source = "expression")
 
 \item{connect_segments}{Whether to connect segments between edges}
 
-\item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another model which contains expression}
+\item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another dataset which contains expression}
 
 \item{...}{extra information to be stored in the wrapper}
 }
