@@ -1,6 +1,6 @@
 #' Label milestones either manually (`label_milestones`) or using marker genes (`label_milestones_markers`)
 #'
-#' @param trajectory The trajectory
+#' @inheritParams common_param
 #' @param labelling Named character vector containing for a milestone a new label
 #' @param markers List containing for each label a list of marker genes
 #' @param expression_source The expression source

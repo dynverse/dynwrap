@@ -15,7 +15,7 @@ select_waypoints(trajectory, n_waypoints = 100,
   resolution = sum(trajectory$milestone_network$length)/n_waypoints)
 }
 \arguments{
-\item{trajectory}{Wrapper with trajectory}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{n_waypoints}{The number of waypoints}
 

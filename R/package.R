@@ -15,3 +15,13 @@
 #' @docType package
 #' @name dynwrap
 NULL
+
+
+
+#' Common param
+#' @param trajectory The trajectory as created by [infer_trajectory()] or [add_trajectory()]
+#' @param dataset A dataset created by [wrap_data()] or [wrap_expression()]
+#'
+#' @keywords internal
+#' @name common_param
+NULL

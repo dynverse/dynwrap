@@ -6,14 +6,14 @@
 \alias{add_timing_checkpoint}
 \title{Add timings checkpoints}
 \usage{
-add_timings(model, timings)
+add_timings(trajectory, timings)
 
-is_wrapper_with_timings(model)
+is_wrapper_with_timings(trajectory)
 
 add_timing_checkpoint(timings, name)
 }
 \arguments{
-\item{model}{The model to which timings will be added}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{timings}{A list of timings.}
 

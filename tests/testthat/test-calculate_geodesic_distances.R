@@ -192,7 +192,7 @@ test_that("Testing calculate_geodesic_distances with filtered cells", {
 
 
 test_that("Testing calculate_geodesic_distances with zero length self loops", {
-  traj <-
+  trajectory <-
     wrap_data(cell_ids = c("A", "B", "C")) %>%
     add_trajectory(
       milestone_network = tibble(from = "a", to = "a", length = 0, directed = TRUE),
@@ -200,7 +200,7 @@ test_that("Testing calculate_geodesic_distances with zero length self loops", {
       allow_self_loops = TRUE
     )
 
-  geodesic_distances <- calculate_geodesic_distances(traj)
+  geodesic_distances <- calculate_geodesic_distances(trajectory)
 
   testthat::expect_true(all(geodesic_distances == 0))
 })

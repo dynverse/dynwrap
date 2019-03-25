@@ -12,16 +12,21 @@ compute_tented_geodesic_distances(trajectory, waypoint_cells = NULL,
   waypoint_milestone_percentages = NULL)
 }
 \arguments{
-\item{trajectory}{The trajectory}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{waypoint_cells}{A vector of waypoint cells. Only the geodesic distances between waypoint cells and all other cells will be calculated.}
 
 \item{waypoint_milestone_percentages}{The milestone percentages of non-cell waypoints, containing waypoint_id, milestone_id and percentage columns}
 }
 \description{
-Will calculate geodesic distances along a trajectory. To speed things up, only the distances with a set of waypoint cells are calculated.
+Will calculate geodesic distances between cells within a trajectory. To speed things up, only the distances with a set of waypoint cells are calculated.
 }
 \details{
-The geodesic distance takes into acount regions of delayed commitment.
+The geodesic distance takes into account the length of an edge regions of delayed commitment.
+}
+\examples{
+data(example_dataset)
+geodesic_distances <- calculate_geodesic_distances(example_dataset)
+
 }
 \keyword{derive_trajectory}

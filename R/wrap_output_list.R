@@ -8,14 +8,14 @@ wrap_output_list <- function(output, output_ids) {
   testthat::expect_true("cell_ids" %in% names(output))
   cell_ids <- output$cell_ids
 
-  model <- wrap_data(
+  trajectory <- wrap_data(
     id = output$id,
     cell_ids = cell_ids,
     cell_info = output$cell_info
   )
 
   # iterate over all promised output ids and
-  # append the values to the model
+  # append the values to the trajectory
   for (output_id in output_ids) {
     processor <- get_output_processor(output_id)
 
@@ -32,8 +32,8 @@ wrap_output_list <- function(output, output_ids) {
 
     output_list <- output_list[intersect(processor$args, names(output_list))]
 
-    model <- invoke(processor$processor, c(list(model), output_list))
+    trajectory <- invoke(processor$processor, c(list(trajectory), output_list))
   }
 
-  model
+  trajectory
 }

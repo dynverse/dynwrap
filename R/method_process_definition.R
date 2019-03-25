@@ -230,7 +230,7 @@ def_wrapper <- function(
 
 #' Meta information on the parameters of the TI method
 #'
-#' Parameters can be defined using \code{\link[dynparam:dynparam]{dynparam}}.
+#' Parameters can be defined using [dynparam::dynparam()].
 #'
 #' @inheritParams dynparam::parameter_set
 #'
@@ -242,8 +242,16 @@ def_wrapper <- function(
 #' library(dynparam)
 #' def_parameters(
 #'   character_parameter(id = "method", default = "one", values = c("one", "two", "three")),
-#'   integer_parameter(id = "ndim", default = 3L, distribution = uniform_distribution(lower = 2L, upper = 20L)),
-#'   numeric_parameter(id = "beta", default = 0.005, distribution = expuniform_distribution(lower = 1e-10, upper = 1))
+#'   integer_parameter(
+#'     id = "ndim",
+#'     default = 3L,
+#'     distribution = uniform_distribution(lower = 2L, upper = 20L)
+#'   ),
+#'   numeric_parameter(
+#'     id = "beta",
+#'     default = 0.005,
+#'     distribution = expuniform_distribution(lower = 1e-10, upper = 1)
+#'   )
 #' )
 def_parameters <- dynparam::parameter_set
 
@@ -263,12 +271,11 @@ get_default_parameters <- function(definition) {
 }
 
 
-#' @param object The object to be tested
 #' @rdname definition
 #'
 #' @export
-is_ti_method <- function(object) {
-  ("dynwrap::ti_method" %in% class(object)) || ("dynmethod::ti_method" %in% class(object))
+is_ti_method <- function(method) {
+  ("dynwrap::ti_method" %in% class(method)) || ("dynmethod::ti_method" %in% class(method))
 }
 
 

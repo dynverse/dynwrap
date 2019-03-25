@@ -20,7 +20,7 @@ generate_prior_information(cell_ids, milestone_ids, milestone_network,
   given = NULL, verbose = FALSE)
 }
 \arguments{
-\item{dataset}{A data wrapper to extend upon.}
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
 \item{start_id}{The start cells}
 

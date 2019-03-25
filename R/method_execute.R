@@ -54,25 +54,25 @@
       }
 
     # initialise output variables
-    model <- NULL
+    trajectory <- NULL
     timings$method_beforepreproc <- Sys.time()
 
     error <- tryCatch({
-      # execute method and return model
-      model <-
+      # execute method and return trajectory
+      trajectory <-
         if (method$run$backend == "function") {
           .method_execution_execute_function(method = method, inputs = inputs, priors = priors, parameters = parameters, verbose = verbose || return_verbose, seed = seed, preproc_meta = preproc_meta)
         } else {
           .method_execution_execute_container(method = method, preproc_meta = preproc_meta)
         }
 
-      # add model timings and timings stop
-      timings <- c(timings, model$timings)
+      # add trajectory timings and timings stop
+      timings <- c(timings, trajectory$timings)
       timings$method_afterpostproc <- Sys.time()
 
-      # remove timings from model
-      model$timings <- NULL
-      class(model) <- setdiff(class(model), "dynwrap::with_timings")
+      # remove timings from trajectory
+      trajectory$timings <- NULL
+      class(trajectory) <- setdiff(class(trajectory), "dynwrap::with_timings")
 
       NA_character_
     }, error = function(e) {
@@ -116,7 +116,7 @@
     ) %>%
       bind_cols(as.data.frame(as.list(timings_diff)))
 
-    lst(model, summary)
+    lst(trajectory, summary)
 
   }, error = function(e) {
     stds <- .method_close_sinks(sink_meta)

@@ -1,6 +1,6 @@
 #' Add or create a dimensionality reduction
 #'
-#' @param model The model to which a dimensionality reduction will be added.
+#' @inheritParams common_param
 #' @param dimred The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction
 #' @param dimred_milestones An optional dimensionality reduction of the milestones.
 #' @param dimred_segment_progressions An optional progression matrix of the trajectory segments. Format: `tibble(from, to, percentage)`
@@ -14,7 +14,7 @@
 #'
 #' @export
 add_dimred <- function(
-  model,
+  dataset,
   dimred,
   dimred_milestones = NULL,
   dimred_segment_progressions = NULL,
@@ -23,21 +23,21 @@ add_dimred <- function(
   expression_source = "expression",
   ...
 ) {
-  testthat::expect_true(is_data_wrapper(model))
+  testthat::expect_true(is_data_wrapper(dataset))
 
   # run or process dimred
-  cell_ids <- model$cell_ids
+  cell_ids <- dataset$cell_ids
   if (is.matrix(dimred) || is.data.frame(dimred)) {
-    dimred <- process_dimred(model, dimred)
-    testthat::expect_setequal(model$cell_id, rownames(dimred))
+    dimred <- process_dimred(dataset, dimred)
+    testthat::expect_setequal(dataset$cell_id, rownames(dimred))
   } else {
-    dimred <- get_dimred(model, dimred, expression_source)
+    dimred <- get_dimred(dataset, dimred, expression_source)
   }
 
   if (!is.null(dimred_milestones)) {
-    dimred_milestones <- process_dimred(model, dimred_milestones, "milestone_id")
-    if (is_wrapper_with_trajectory(model)) {
-      milestone_ids <- model$milestone_ids
+    dimred_milestones <- process_dimred(dataset, dimred_milestones, "milestone_id")
+    if (is_wrapper_with_trajectory(dataset)) {
+      milestone_ids <- dataset$milestone_ids
       dimred_milestones <- dimred_milestones[milestone_ids, ]
 
       assert_that(identical(rownames(dimred_milestones), milestone_ids))
@@ -45,7 +45,7 @@ add_dimred <- function(
   }
 
   if (!is.null(dimred_segment_points) || !is.null(dimred_segment_progressions)) {
-    dimred_segment_points <- process_dimred(model, dimred_segment_points, "segment_point_id", has_rownames = FALSE)
+    dimred_segment_points <- process_dimred(dataset, dimred_segment_points, "segment_point_id", has_rownames = FALSE)
     assert_that(
       is.matrix(dimred_segment_points),
       is.data.frame(dimred_segment_progressions),
@@ -60,14 +60,14 @@ add_dimred <- function(
     connected <- connect_dimred_segments(
       dimred_segment_progressions,
       dimred_segment_points,
-      model$milestone_network
+      dataset$milestone_network
     )
     dimred_segment_progressions <- connected$dimred_segment_progressions
     dimred_segment_points <- connected$dimred_segment_points
   }
 
   # create output structure
-  model %>% extend_with(
+  dataset %>% extend_with(
     "dynwrap::with_dimred",
     dimred = dimred,
     dimred_milestones = dimred_milestones,
@@ -79,23 +79,23 @@ add_dimred <- function(
 
 #' @rdname add_dimred
 #' @export
-is_wrapper_with_dimred <- function(model) {
-  is_data_wrapper(model) && "dynwrap::with_dimred" %in% class(model)
+is_wrapper_with_dimred <- function(dataset) {
+  is_data_wrapper(dataset) && "dynwrap::with_dimred" %in% class(dataset)
 }
 
 #' @rdname add_dimred
 #' @export
-get_dimred <- function(model, dimred = NULL, expression_source = "expression") {
+get_dimred <- function(dataset, dimred = NULL, expression_source = "expression") {
   if(is.function(dimred)) {
     # function
-    expression <- get_expression(model, expression_source)
+    expression <- get_expression(dataset, expression_source)
     dimred <- dimred(expression)
   } else if (is.matrix(dimred)) {
     # matrix
     assert_that(is.numeric(dimred))
     assert_that(length(rownames(dimred)) == nrow(dimred))
-    assert_that(model$cell_ids %all_in% rownames(dimred))
-    assert_that(rownames(dimred) %all_in% model$cell_ids)
+    assert_that(dataset$cell_ids %all_in% rownames(dimred))
+    assert_that(rownames(dimred) %all_in% dataset$cell_ids)
 
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   } else if (is.data.frame(dimred)) {
@@ -109,17 +109,17 @@ get_dimred <- function(model, dimred = NULL, expression_source = "expression") {
     }
     assert_that(is.numeric(dimred))
     assert_that(length(rownames(dimred)) == nrow(dimred))
-    assert_that(model$cell_ids %all_in% rownames(dimred))
-    assert_that(rownames(dimred) %all_in% model$cell_ids)
+    assert_that(dataset$cell_ids %all_in% rownames(dimred))
+    assert_that(rownames(dimred) %all_in% dataset$cell_ids)
 
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
-  } else if (is_wrapper_with_dimred(model)) {
+  } else if (is_wrapper_with_dimred(dataset)) {
     # dimred within wrapper
-    if (is.list(model$dimred)) {
-      assert_that(dimred %all_in% names(model$dimred))
-      dimred <- model$dimred[[dimred]]
+    if (is.list(dataset$dimred)) {
+      assert_that(dimred %all_in% names(dataset$dimred))
+      dimred <- dataset$dimred[[dimred]]
     } else {
-      dimred <- model$dimred
+      dimred <- dataset$dimred
     }
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   } else {
@@ -127,13 +127,13 @@ get_dimred <- function(model, dimred = NULL, expression_source = "expression") {
   }
 
   # make sure the rownames are in the correct order
-  dimred <- dimred[model$cell_ids, ]
+  dimred <- dimred[dataset$cell_ids, ]
 
   dimred
 }
 
 
-process_dimred <- function(model, dimred, identifier = "cell_id", has_rownames = TRUE) {
+process_dimred <- function(dataset, dimred, identifier = "cell_id", has_rownames = TRUE) {
   if (is.matrix(dimred)) {
     # matrix
     assert_that(is.numeric(dimred))

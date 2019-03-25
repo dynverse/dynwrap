@@ -1,6 +1,6 @@
 #' Add timings checkpoints
 #'
-#' @param model The model to which timings will be added
+#' @inheritParams common_param
 #' @param timings A list of timings.
 #'
 #' @keywords adapt_trajectory
@@ -9,10 +9,10 @@
 #'
 #' @importFrom testthat expect_equal
 add_timings <- function(
-  model,
+  trajectory,
   timings
 ) {
-  testthat::expect_true(is_data_wrapper(model))
+  testthat::expect_true(is_data_wrapper(trajectory))
 
   if (is.data.frame(timings)) {
     timings <- tibble::deframe(timings)
@@ -25,7 +25,7 @@ add_timings <- function(
   testthat::expect_is(timings, "list")
 
   # create output structure
-  model %>% extend_with(
+  trajectory %>% extend_with(
     "dynwrap::with_timings",
     timings = timings
   )
@@ -35,8 +35,8 @@ add_timings <- function(
 #' @rdname add_timings
 #'
 #' @export
-is_wrapper_with_timings <- function(model) {
-  is_data_wrapper(model) && "dynwrap::with_timings" %in% class(model)
+is_wrapper_with_timings <- function(trajectory) {
+  is_data_wrapper(trajectory) && "dynwrap::with_timings" %in% class(trajectory)
 }
 
 #' Helper function for storing timings information.

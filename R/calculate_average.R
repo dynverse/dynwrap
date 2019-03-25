@@ -2,9 +2,9 @@
 #'
 #' @param x A matrix. One row for every cell; one column for every feature. The rows must be named.
 #' @param cell_grouping A data frame denoting the grouping of the cells.
-  #'  Format: `data_frame(cell_id = character(), group_id = character())`.
-  #'
-  #' @keywords derive_trajectory
+#'  Format: `data_frame(cell_id = character(), group_id = character())`.
+#'
+#' @keywords derive_trajectory
 #'
 #' @export
 #'

@@ -9,6 +9,8 @@
 
 * MINOR CHANGE: Rename `compute_tented_geodesic_distances()` to `calculate_geodesic_distances()`
 
+* MINOR CHANGE: Harmonisation of function arguments to either `dataset` or `trajectory`
+
 # dynwrap 0.3.1.2 (01-02-2019)
 
 * BUG FIX: `simplify_replace_edges()` would sometimes swap edges in milestone network around, but forget

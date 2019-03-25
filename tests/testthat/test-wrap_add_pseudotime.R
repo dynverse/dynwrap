@@ -12,9 +12,9 @@ wr_orig <- wrap_data(
 )
 
 test_that("add_pseudotime works as expected", {
-  model <- wr_orig %>% add_pseudotime(pseudotime = pseudotime)
+  trajectory <- wr_orig %>% add_pseudotime(pseudotime = pseudotime)
 
-  expect_equal(model$pseudotime, pseudotime)
+  expect_equal(trajectory$pseudotime, pseudotime)
 
   expect_error(add_pseudotime(wr_orig, pseudotime = "whatever"))
 })

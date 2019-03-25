@@ -44,11 +44,10 @@ wrap_data <- function(
   )
 }
 
-#' @param object The object to be tested.
-#'
 #' @rdname wrap_data
+#' @inheritParams common_param
 #'
 #' @export
-is_data_wrapper <- function(object) {
-  "dynwrap::data_wrapper" %in% class(object)
+is_data_wrapper <- function(dataset) {
+  "dynwrap::data_wrapper" %in% class(dataset)
 }

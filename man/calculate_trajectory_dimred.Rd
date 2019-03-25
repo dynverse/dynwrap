@@ -2,17 +2,17 @@
 % Please edit documentation in R/calculate_trajectory_dimred.R
 \name{calculate_trajectory_dimred}
 \alias{calculate_trajectory_dimred}
-\title{Calculate a dimensionality reduction on a trajectory and its cells}
+\title{Layout the trajectory and its cells in 2 dimensions}
 \usage{
 calculate_trajectory_dimred(trajectory, adjust_weights = FALSE)
 }
 \arguments{
-\item{trajectory}{A dynwrap trajectory}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{adjust_weights}{Whether or not to rescale the milestone network weights}
 }
 \description{
-Calculate a dimensionality reduction on a trajectory and its cells
+Layout the trajectory and its cells in 2 dimensions
 }
 \seealso{
 wrap_data

@@ -257,7 +257,7 @@ test_that("Expect failure on wrong dimred_segment_progressions parameter", {
 test_that("Test get_dimred", {
   wr_withdimred <- wr_withtraj %>% add_dimred(dimred)
 
-  # from model
+  # from trajectory
   expect_error(get_dimred(wr_orig))
   dimred2 <- get_dimred(wr_withdimred)
   expect_equivalent(dimred, dimred2)

@@ -89,12 +89,12 @@ This function will return another function that can be used to change any parame
 That's it, let's try it out:
 ```{r}
 dataset <- dynwrap::example_dataset
-model <- infer_trajectory(dataset, ti_comp1())
+trajectory <- infer_trajectory(dataset, ti_comp1())
 ```
 
 ```{r}
 if ("dynplot" %in% rownames(installed.packages())) {
-  dynplot::plot_dimred(model, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
+  dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
 }
 ```
 

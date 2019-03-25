@@ -7,7 +7,7 @@
 \usage{
 wrap_data(id = NULL, cell_ids, cell_info = NULL, ...)
 
-is_data_wrapper(object)
+is_data_wrapper(dataset)
 }
 \arguments{
 \item{id}{A unique identifier for the data. If \code{NULL}, a random string will be generated.}
@@ -18,7 +18,7 @@ is_data_wrapper(object)
 
 \item{...}{Extra information to be stored in the wrapper.}
 
-\item{object}{The object to be tested.}
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 }
 \description{
 A data wrapper for datasets and trajectories

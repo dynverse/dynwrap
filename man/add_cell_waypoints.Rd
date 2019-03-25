@@ -5,12 +5,12 @@
 \alias{is_wrapper_with_waypoint_cells}
 \title{Add cell waypoints to a wrapped trajectory}
 \usage{
-add_cell_waypoints(traj, num_cells_selected = 100)
+add_cell_waypoints(trajectory, num_cells_selected = 100)
 
-is_wrapper_with_waypoint_cells(traj)
+is_wrapper_with_waypoint_cells(trajectory)
 }
 \arguments{
-\item{traj}{Trajectory object}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{num_cells_selected}{About the number of cells selected as waypoints}
 }

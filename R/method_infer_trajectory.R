@@ -9,10 +9,10 @@ random_seed <- function() {
 
 #' Infer trajectories
 #'
-#' @param dataset One or more datasets, as created using dynwrap.
+#' @param dataset One or more datasets as created by [infer_trajectory()] or [add_trajectory()]. Prior information can be added using [add_prior_information()].
 #' @param method One or more methods. Must be one of:
 #' \itemize{
-#'   \item{an object or list of ti_... objects (eg. \code{dynmethods::ti_comp1()}),}
+#'   \item{an object or list of ti_... objects (eg. `dynmethods::ti_comp1()`),}
 #'   \item{a character vector containing the names of methods to execute (e.g. `"scorpius"`),}
 #'   \item{a character vector containing dockerhub repositories (e.g. `dynverse/paga`), or}
 #'   \item{a dynguidelines data frame.}
@@ -22,9 +22,9 @@ random_seed <- function() {
 #'   If multiple methods were provided in the `method` parameter,
 #'    `parameters` must be an unnamed list of the same length.
 #' @param give_priors All the priors a method is allowed to receive.
-#'   Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).
+#'   Must be a subset of all available priors ([dynwrap::priors]).
 #' @param seed A seed to be passed to the TI method.
-#' @param map_fun A mao function to use when inferring trajectories with multiple datasets or methods.
+#' @param map_fun A map function to use when inferring trajectories with multiple datasets or methods.
 #'   Allows to parallellise the execution in an arbitrary way.
 #' @param verbose Whether or not to print information output.
 #' @param return_verbose Whether to store and return messages printed by the method.
@@ -36,6 +36,11 @@ random_seed <- function() {
 #' @importFrom readr read_file
 #' @importFrom stringr str_length
 #' @importFrom testthat expect_true
+#'
+#' @return
+#'   infer_trajectory: A trajectory
+#'
+#'   infer_trajectories: A tibble containing the dataset and method identifiers, the trajectory `model` and a summary containing the execution times, output and errors if appropriate
 #'
 #' @export
 infer_trajectories <- function(
@@ -150,7 +155,7 @@ infer_trajectories <- function(
     dataset_id = map_chr(dataset, "id")[design$dataset_ix],
     method_id = map_chr(method, function(m) m$method$id)[design$method_ix],
     method_name = map_chr(method, function(m) m$method$name)[design$method_ix],
-    model = map(output, "model"),
+    model = map(output, "trajectory"),
     summary = map(output, "summary")
   )
 }

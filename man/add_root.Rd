@@ -15,7 +15,7 @@ add_root_using_expression(trajectory, features_oi,
 is_rooted(trajectory)
 }
 \arguments{
-\item{trajectory}{the trajectory object}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{root_cell_id}{The root cell id, not required if root_milestone_id is given}
 

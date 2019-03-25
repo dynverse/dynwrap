@@ -14,14 +14,22 @@ def_parameters(..., parameters = NULL, forbidden = NULL)
 \item{forbidden}{States forbidden region of parameter via a character vector, which will be turned into an expression.}
 }
 \description{
-Parameters can be defined using \code{\link[dynparam:dynparam]{dynparam}}.
+Parameters can be defined using \code{\link[dynparam:dynparam]{dynparam::dynparam()}}.
 }
 \examples{
 library(dynparam)
 def_parameters(
   character_parameter(id = "method", default = "one", values = c("one", "two", "three")),
-  integer_parameter(id = "ndim", default = 3L, distribution = uniform_distribution(lower = 2L, upper = 20L)),
-  numeric_parameter(id = "beta", default = 0.005, distribution = expuniform_distribution(lower = 1e-10, upper = 1))
+  integer_parameter(
+    id = "ndim",
+    default = 3L,
+    distribution = uniform_distribution(lower = 2L, upper = 20L)
+  ),
+  numeric_parameter(
+    id = "beta",
+    default = 0.005,
+    distribution = expuniform_distribution(lower = 1e-10, upper = 1)
+  )
 )
 }
 \keyword{create_ti_method}

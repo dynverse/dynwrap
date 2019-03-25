@@ -10,7 +10,7 @@ calculate_pseudotime(trajectory)
 add_pseudotime(trajectory, pseudotime = NULL)
 }
 \arguments{
-\item{trajectory}{The trajectory}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{pseudotime}{Named vector containing the pseudotime for every cell}
 }

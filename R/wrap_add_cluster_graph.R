@@ -1,14 +1,14 @@
-#' Constructs a trajectory using a cell grouping and a network between groups. Will use an existing grouping if it is present in the model.
+#' Constructs a trajectory using a cell grouping and a network between groups. Will use an existing grouping if it is present in the dataset.
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @param model The model to which a cluster graph will be added. Needs to have a cell grouping created by [add_grouping()].
+#' @inheritParams common_param
 #' @param milestone_network A network of milestones.
 #' @param explicit_splits Whether to make splits specific by adding a starting node. For example: A->B, A->C becomes A->X, X->B, X->C
 #' @inheritParams add_grouping
 #' @param ... extra information to be stored in the wrapper.
 #'
-#' @return The trajectory model
+#' @return The trajectory
 #'
 #' @keywords create_trajectory
 #'
@@ -17,22 +17,22 @@
 #'
 #' @export
 add_cluster_graph <- function(
-  model,
+  dataset,
   milestone_network,
   grouping = NULL,
   explicit_splits = FALSE,
   ...
 ) {
   # check data wrapper
-  testthat::expect_true(is_data_wrapper(model))
+  testthat::expect_true(is_data_wrapper(dataset))
 
-  # get grouping from model if not provided
+  # get grouping from dataset if not provided
   if (is.null(grouping)) {
-    testthat::expect_true(is_wrapper_with_grouping(model))
+    testthat::expect_true(is_wrapper_with_grouping(dataset))
   } else {
-    model <- model %>% add_grouping(grouping)
+    dataset <- dataset %>% add_grouping(grouping)
   }
-  grouping <- get_grouping(model)
+  grouping <- get_grouping(dataset)
   grouping <- grouping[!is.na(grouping)]
 
   milestone_ids <- unique(c(milestone_network$to, milestone_network$from))
@@ -66,7 +66,7 @@ add_cluster_graph <- function(
 
   # return output
   add_trajectory(
-    model = model,
+    dataset = dataset,
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
     divergence_regions = NULL,

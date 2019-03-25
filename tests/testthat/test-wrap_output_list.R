@@ -38,7 +38,7 @@ dimred_milestones <- matrix(runif(num_dims * length(milestone_ids), 0, 1), nrow 
 
 
 test_that("wrap_output_list transforms correctly", {
-  traj <-
+  trajectory <-
     wrap_data(
       id = id,
       cell_ids = cell_ids,
@@ -52,7 +52,7 @@ test_that("wrap_output_list transforms correctly", {
       grouping = grouping
     )
 
-  trajl <- list(
+  trajectoryl <- list(
     id = id,
     cell_ids = cell_ids,
     cell_info = cell_info,
@@ -63,11 +63,11 @@ test_that("wrap_output_list transforms correctly", {
     dimred_milestones = dimred_milestones
   )
 
-  traj2 <- wrap_output_list(trajl, c("grouping", "dimred_projection"))
+  trajectory2 <- wrap_output_list(trajectoryl, c("grouping", "dimred_projection"))
 
-  expect_equal(sort(names(traj2)), sort(names(traj)))
-  for (n in names(traj2)) {
-    expect_equal(traj2[[n]], traj[[n]], info = n)
+  expect_equal(sort(names(trajectory2)), sort(names(trajectory)))
+  for (n in names(trajectory2)) {
+    expect_equal(trajectory2[[n]], trajectory[[n]], info = n)
   }
 })
 

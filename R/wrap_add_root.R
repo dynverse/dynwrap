@@ -2,7 +2,7 @@
 #'
 #' Roots the trajectory by changing the directionality of all edges given a root cell
 #'
-#' @param trajectory the trajectory object
+#' @inheritParams common_param
 #' @param root_cell_id The root cell id, not required if root_milestone_id is given
 #' @param root_milestone_id The root milestone id, not required if root_cell_id is given
 #' @param flip_edges Whether to flip edges which are going in the other direction compared to the root

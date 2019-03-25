@@ -1,6 +1,6 @@
 #' Add cell waypoints to a wrapped trajectory
 #'
-#' @param traj Trajectory object
+#' @inheritParams common_param
 #' @inheritParams select_waypoint_cells
 #'
 #' @keywords adapt_trajectory
@@ -8,10 +8,10 @@
 #' @importFrom testthat expect_true
 #'
 #' @export
-add_cell_waypoints <- function(traj, num_cells_selected = 100) {
-  testthat::expect_true(is_wrapper_with_trajectory(traj))
+add_cell_waypoints <- function(trajectory, num_cells_selected = 100) {
+  testthat::expect_true(is_wrapper_with_trajectory(trajectory))
 
-  waypoint_cells <- with(traj, select_waypoint_cells(
+  waypoint_cells <- with(trajectory, select_waypoint_cells(
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
     milestone_percentages = milestone_percentages,
@@ -21,7 +21,7 @@ add_cell_waypoints <- function(traj, num_cells_selected = 100) {
   ))
 
   # create output structure
-  traj %>% extend_with(
+  trajectory %>% extend_with(
     "dynwrap::with_cell_waypoints",
     waypoint_cells = waypoint_cells
   )
@@ -30,8 +30,8 @@ add_cell_waypoints <- function(traj, num_cells_selected = 100) {
 #' @rdname add_cell_waypoints
 #'
 #' @export
-is_wrapper_with_waypoint_cells <- function(traj) {
-  is_wrapper_with_trajectory(traj) && "dynwrap::with_cell_waypoints" %in% class(traj)
+is_wrapper_with_waypoint_cells <- function(trajectory) {
+  is_wrapper_with_trajectory(trajectory) && "dynwrap::with_cell_waypoints" %in% class(trajectory)
 }
 
 #' Determine the positions of all cells in the trajectory
