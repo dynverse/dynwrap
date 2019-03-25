@@ -4,11 +4,11 @@
 #'
 #' The positions of the cells within the trajectory remain the same
 #'
-#' A → B → C is simplified to A → C.
+#' A -> B -> C is simplified to A -> C.
 #'
 #' A — B — C is simplified to A — C.
 #'
-#' A → B → C → D → A is simplified to A → B → D.
+#' A -> B -> C -> D -> A is simplified to A -> B -> D.
 #'
 #' @inheritParams dynwrap
 #' @inheritParams simplify_igraph_network
