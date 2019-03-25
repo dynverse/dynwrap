@@ -20,8 +20,6 @@ is_ti_method(method)
 \item{container}{Meta information on the container in which the wrapper resides, if applicable (see \code{\link[=def_container]{def_container()}}).}
 
 \item{parameters}{Meta information on the parameters of the TI method (see \code{\link[=def_parameters]{def_parameters()}}).}
-
-\item{method}{The method to be tested}
 }
 \description{
 A definition contains meta information on a TI method and various aspects thereof.
