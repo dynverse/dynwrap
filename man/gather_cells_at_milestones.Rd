@@ -7,7 +7,7 @@
 gather_cells_at_milestones(trajectory)
 }
 \arguments{
-\item{trajectory}{The trajectory}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 }
 \description{
 "Gather" cells to their closest milestones

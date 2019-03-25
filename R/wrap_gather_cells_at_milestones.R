@@ -1,6 +1,6 @@
 #' "Gather" cells to their closest milestones
 #'
-#' @param trajectory The trajectory
+#' @inheritParams dynwrap
 #'
 #' @keywords adapt_trajectory
 #'

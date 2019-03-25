@@ -1,6 +1,6 @@
 #' Add cell waypoints to a wrapped trajectory
 #'
-#' @param trajectory The trajectory as created by [infer_trajectory()] or [add_trajectory()]
+#' @inheritParams dynwrap
 #' @inheritParams select_waypoint_cells
 #'
 #' @keywords adapt_trajectory

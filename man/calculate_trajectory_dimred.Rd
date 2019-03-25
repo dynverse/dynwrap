@@ -7,7 +7,7 @@
 calculate_trajectory_dimred(trajectory, adjust_weights = FALSE)
 }
 \arguments{
-\item{trajectory}{A trajectory model}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{adjust_weights}{Whether or not to rescale the milestone network weights}
 }

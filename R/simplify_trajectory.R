@@ -10,7 +10,7 @@
 #'
 #' A → B → C → D → A is simplified to A → B → D.
 #'
-#' @param trajectory The trajectory as created by [infer_trajectory()] or [add_trajectory()]
+#' @inheritParams dynwrap
 #' @inheritParams simplify_igraph_network
 #'
 #' @keywords adapt_trajectory

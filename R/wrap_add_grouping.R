@@ -124,7 +124,7 @@ process_grouping <- function(model, grouping) {
 #'
 #' Grouping cells onto their edges, or grouping cells onto their nearest milestones
 #'
-#' @param trajectory The trajectory object
+#' @inheritParams dynwrap
 #' @param group_template Processed by glue::glue to name the group
 #'
 #' @name group_from_trajectory

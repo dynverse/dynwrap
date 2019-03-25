@@ -1,6 +1,6 @@
 #' Layout the trajectory and its cells in 2 dimensions
 #'
-#' @param trajectory A trajectory model
+#' @inheritParams dynwrap
 #' @param adjust_weights Whether or not to rescale the milestone network weights
 #'
 #' @importFrom igraph graph_from_data_frame layout_with_fr

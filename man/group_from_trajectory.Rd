@@ -11,7 +11,7 @@ group_onto_trajectory_edges(trajectory, group_template = "{from}->{to}")
 group_onto_nearest_milestones(trajectory)
 }
 \arguments{
-\item{trajectory}{The trajectory object}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{group_template}{Processed by glue::glue to name the group}
 }

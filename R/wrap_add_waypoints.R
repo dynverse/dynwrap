@@ -36,7 +36,7 @@ is_wrapper_with_waypoints <- function(trajectory) {
 
 #' Waypoints are spread equally over the whole trajectory
 #'
-#' @param trajectory Wrapper with trajectory
+#' @inheritParams dynwrap
 #' @param n_waypoints The number of waypoints
 #' @param resolution The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges, will be automatically computed using n_waypoints
 #'

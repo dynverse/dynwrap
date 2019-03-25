@@ -21,7 +21,7 @@ calculate_pseudotime <- function(trajectory) {
 
 #' Add or calculate pseudotime as distance from the root
 #'
-#' @param trajectory The trajectory
+#' @inheritParams dynwrap
 #' @param pseudotime Named vector containing the pseudotime for every cell
 #'
 #' @keywords derive_trajectory
