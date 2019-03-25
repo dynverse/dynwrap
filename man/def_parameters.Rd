@@ -14,7 +14,7 @@ def_parameters(..., parameters = NULL, forbidden = NULL)
 \item{forbidden}{States forbidden region of parameter via a character vector, which will be turned into an expression.}
 }
 \description{
-Parameters can be defined using \code{\link[dynparam:dynparam]{dynparam}}.
+Parameters can be defined using \code{\link[dynparam:dynparam:dynparam]{dynparam:dynparam::dynparam()}}.
 }
 \examples{
 library(dynparam)
