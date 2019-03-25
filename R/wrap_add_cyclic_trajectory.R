@@ -2,7 +2,7 @@
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @param model The model to which a cyclic trajectory will be added.
+#' @inheritParams dynwrap
 #' @param pseudotime A named vector of pseudo times.
 #' @param directed Whether or not the directionality of the pseudotime is predicted.
 #' @param do_scale_minmax Whether or not to scale the pseudotime between 0 and 1.
@@ -13,20 +13,20 @@
 #'
 #' @export
 #'
-#' @return The trajectory model
+#' @return The trajectory
 #'
 #' @importFrom testthat expect_is expect_true expect_named
 add_cyclic_trajectory <- function(
-  model,
+  dataset,
   pseudotime,
   directed = FALSE,
   do_scale_minmax = TRUE,
   ...
 ) {
   # check data wrapper
-  testthat::expect_true(is_data_wrapper(model))
+  testthat::expect_true(is_data_wrapper(dataset))
 
-  pseudotime <- process_pseudotime(model, pseudotime)
+  pseudotime <- process_pseudotime(dataset, pseudotime)
 
   # scale pseudotime
   if (do_scale_minmax) {
@@ -62,7 +62,7 @@ add_cyclic_trajectory <- function(
 
   # return output
   add_trajectory(
-    model = model,
+    dataset = dataset,
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
     divergence_regions = NULL,

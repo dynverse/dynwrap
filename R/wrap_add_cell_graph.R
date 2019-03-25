@@ -2,7 +2,7 @@
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @param model The model to extend
+#' @inheritParams dynwrap
 #' @param cell_graph The edges between cells. Format: Data frame(from = character, to = character, length(optional) = numeric, directed(optional) = logical)
 #' @param to_keep A named vector containing booleans containing
 #'   whether or not a cell is part of the backbone. Or, alternatively a character vector containing the backbone cells
@@ -11,13 +11,13 @@
 #'
 #' @export
 #'
-#' @return The trajectory model
+#' @return The trajectory
 #'
 #' @keywords create_trajectory
 #'
 #' @importFrom testthat expect_is expect_true expect_equal
 add_cell_graph <- function(
-  model,
+  dataset,
   cell_graph,
   to_keep,
   milestone_prefix = "milestone_",
@@ -26,7 +26,7 @@ add_cell_graph <- function(
   requireNamespace("igraph")
 
   # check data wrapper
-  testthat::expect_true(is_data_wrapper(model))
+  testthat::expect_true(is_data_wrapper(dataset))
 
   # optionally add length and directed if not specified
   if (!"length" %in% colnames(cell_graph)) {
@@ -44,7 +44,7 @@ add_cell_graph <- function(
     cell_ids <- names(to_keep)
   }
   testthat::expect_is(to_keep, "logical")
-  testthat::expect_true(all(cell_ids %in% model$cell_ids))
+  testthat::expect_true(all(cell_ids %in% dataset$cell_ids))
   testthat::expect_equal(sort(unique(c(cell_graph$from, cell_graph$to))), sort(names(to_keep)))
 
   # check cell_graph
@@ -119,7 +119,7 @@ add_cell_graph <- function(
 
   # return output
   add_trajectory(
-    model = model,
+    dataset = dataset,
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
     divergence_regions = NULL,

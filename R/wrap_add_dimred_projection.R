@@ -2,6 +2,7 @@
 #'
 #' This function will generate the milestone_network and progressions.
 #'
+#' @inheritParams dynwrap
 #' @inheritParams add_trajectory
 #' @inheritParams add_dimred
 #' @inheritParams add_grouping
@@ -12,12 +13,12 @@
 #'
 #' @export
 #'
-#' @return The trajectory model
+#' @return The trajectory
 #'
 #' @importFrom testthat expect_is expect_true expect_equal expect_false
 #' @importFrom pdist pdist
 add_dimred_projection <- function(
-  model,
+  dataset,
   milestone_ids = NULL,
   milestone_network,
   dimred,
@@ -26,9 +27,9 @@ add_dimred_projection <- function(
   ...
 ) {
   # check data wrapper
-  testthat::expect_true(is_data_wrapper(model))
+  testthat::expect_true(is_data_wrapper(dataset))
 
-  cell_ids <- model$cell_ids
+  cell_ids <- dataset$cell_ids
 
   # process milestone_ids
   if(is.null(milestone_ids)) {
@@ -37,12 +38,12 @@ add_dimred_projection <- function(
 
   # process grouping
   if(!is.null(grouping)) {
-    grouping <- process_grouping(model, grouping)
+    grouping <- process_grouping(dataset, grouping)
   }
 
   # add dimred and dimred_milestones
-  dimred <- process_dimred(model, dimred)
-  dimred_milestones <- process_dimred(model, dimred_milestones, "milestone_id")
+  dimred <- process_dimred(dataset, dimred)
+  dimred_milestones <- process_dimred(dataset, dimred_milestones, "milestone_id")
   testthat::expect_setequal(milestone_ids, rownames(dimred_milestones))
 
   # check milestone_network
@@ -124,7 +125,7 @@ add_dimred_projection <- function(
 
   # construct output
   out <- add_trajectory(
-    model = model,
+    dataset = dataset,
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
     divergence_regions = NULL,

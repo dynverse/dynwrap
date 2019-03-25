@@ -7,7 +7,7 @@
     filter(required, type == "expression") %>%
     pull(input_id)
 
-  map(input_ids_dataset, get_expression, model = dataset) %>%
+  map(input_ids_dataset, get_expression, dataset = dataset) %>%
     set_names(input_ids_dataset)
 }
 

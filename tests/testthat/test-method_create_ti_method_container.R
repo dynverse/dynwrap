@@ -20,12 +20,12 @@ for (tag in tags) {
     expect_equal(method$run$backend, "container")
     expect_equal(method$run$container_id, container_id)
 
-    model0 <- infer_trajectory(dataset, method, parameters = list())
-    expect_true(is_wrapper_with_trajectory(model0))
+    trajectory0 <- infer_trajectory(dataset, method, parameters = list())
+    expect_true(is_wrapper_with_trajectory(trajectory0))
 
     expect_output({
-      model1 <- infer_trajectory(dataset, method, parameters = list(verbose = TRUE), verbose = TRUE)
-      expect_true(is_wrapper_with_trajectory(model1))
+      trajectory1 <- infer_trajectory(dataset, method, parameters = list(verbose = TRUE), verbose = TRUE)
+      expect_true(is_wrapper_with_trajectory(trajectory1))
     })
 
     expect_error(infer_trajectory(dataset, method, debug = TRUE), regexp = "Error during trajectory inference")

@@ -39,69 +39,69 @@ if ("dynmethods" %in% rownames(utils::installed.packages())) remove.packages("dy
 test_that("Testing infer_trajectory with control methods", {
   method <- ti_comp1()
 
-  model <- infer_trajectory(dataset, method)
-  expect_s3_class(model, "dynwrap::with_trajectory")
+  trajectory <- infer_trajectory(dataset, method)
+  expect_s3_class(trajectory, "dynwrap::with_trajectory")
 
   # test priors
-  model <- infer_trajectory(dataset, method, give_priors = c("start_id"))
-  expect_s3_class(model, "dynwrap::with_trajectory")
+  trajectory <- infer_trajectory(dataset, method, give_priors = c("start_id"))
+  expect_s3_class(trajectory, "dynwrap::with_trajectory")
 
   expect_error(infer_trajectory(dataset, method, give_priors = c("to be or not to be")))
 
   # run with multiple datasets and one method
-  models <- infer_trajectories(list(dataset, dataset), method)
-  expect_true(is_tibble(models))
-  expect_equal(nrow(models), 2)
-  expect_setequal(c("dataset_ix", "method_ix", "model", "method_name", "method_id", "dataset_id", "summary"), names(models))
+  trajectories <- infer_trajectories(list(dataset, dataset), method)
+  expect_true(is_tibble(trajectories))
+  expect_equal(nrow(trajectories), 2)
+  expect_setequal(c("dataset_ix", "method_ix", "model", "method_name", "method_id", "dataset_id", "summary"), names(trajectories))
 
-  models <- infer_trajectories(list_as_tibble(list(dataset, dataset)), method)
-  expect_true(is_tibble(models))
-  expect_equal(nrow(models), 2)
+  trajectories <- infer_trajectories(list_as_tibble(list(dataset, dataset)), method)
+  expect_true(is_tibble(trajectories))
+  expect_equal(nrow(trajectories), 2)
 
   # run with multiple methods
-  models <- infer_trajectories(dataset, list(method, method))
-  expect_true(is_tibble(models))
-  expect_equal(nrow(models), 2)
+  trajectories <- infer_trajectories(dataset, list(method, method))
+  expect_true(is_tibble(trajectories))
+  expect_equal(nrow(trajectories), 2)
 
-  models <- infer_trajectories(dataset, list_as_tibble(list(method, method)))
-  expect_true(is_tibble(models))
-  expect_equal(nrow(models), 2)
+  trajectories <- infer_trajectories(dataset, list_as_tibble(list(method, method)))
+  expect_true(is_tibble(trajectories))
+  expect_equal(nrow(trajectories), 2)
 
-  # models <- infer_trajectories(dataset, c("comp1", "comp1"))
-  # expect_true(is_tibble(models))
-  # expect_equal(nrow(models), 2)
+  # trajectories <- infer_trajectories(dataset, c("comp1", "comp1"))
+  # expect_true(is_tibble(trajectories))
+  # expect_equal(nrow(trajectories), 2)
 
   expect_error(infer_trajectories(dataset, c(1,2,3)))
   expect_error(infer_trajectories(c(1,2,3), c(1,2,3)))
 
   # run with multiple datasets and multiple methods
-  models <- infer_trajectories(
+  trajectories <- infer_trajectories(
     dataset = list(dataset, dataset, dataset),
     method = list(method, method)
   )
 
-  expect_true(is_tibble(models))
-  expect_equal(nrow(models), 6)
+  expect_true(is_tibble(trajectories))
+  expect_equal(nrow(trajectories), 6)
 
   # run with multiple datasets and multiple methods with specified parameters
-  models <- infer_trajectories(
+  trajectories <- infer_trajectories(
     dataset = list(dataset, dataset),
     method = list_as_tibble(list(method, method)),
     parameters = list(list(dimred_method = "mds"), list(dimred_method = "pca"))
   )
 
-  expect_true(is_tibble(models))
-  expect_equal(nrow(models), 4)
+  expect_true(is_tibble(trajectories))
+  expect_equal(nrow(trajectories), 4)
 
   # capture the output
-  models <- infer_trajectories(
+  trajectories <- infer_trajectories(
     dataset = dataset,
     method = method,
     parameters = list(),
     return_verbose = TRUE
   )
-  expect_equal(models$summary[[1]]$stdout, "")
-  expect_equal(models$summary[[1]]$stderr, "")
+  expect_equal(trajectories$summary[[1]]$stdout, "")
+  expect_equal(trajectories$summary[[1]]$stderr, "")
 })
 
 

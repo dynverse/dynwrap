@@ -1,6 +1,6 @@
-#' Define a trajectory model given its milestone network and milestone percentages or progressions
+#' Define a trajectory dataset given its milestone network and milestone percentages or progressions
 #'
-#' @param model The model to which the trajectory will be added.
+#' @inheritParams dynwrap
 #' @param milestone_ids The ids of the milestones in the trajectory. Type: Character vector.
 #' @param milestone_network The network of the milestones.
 #'   Type: Data frame(from = character, to = character, length = numeric, directed = logical).
@@ -14,15 +14,15 @@
 #'   Type: Data frame(cell_id = character, from = character, to = character, percentage = numeric).
 #' @param allow_self_loops Whether to allow self loops
 #'   Type: Logical
-#' @param ... extra information to be stored in the model
+#' @param ... extra information to be stored in the dataset
 #'
 #' @keywords create_trajectory
 #'
-#' @return The trajectory model
+#' @return The trajectory
 #'
 #' @export
 add_trajectory <- function(
-  model,
+  dataset,
   milestone_ids = NULL,
   milestone_network,
   divergence_regions = NULL,
@@ -32,8 +32,8 @@ add_trajectory <- function(
   ...
 ) {
   # check whether object is a data wrapper
-  assert_that(is_data_wrapper(model))
-  cell_ids <- model$cell_ids
+  assert_that(is_data_wrapper(dataset))
+  cell_ids <- dataset$cell_ids
 
   # infer milestone_ids if not given
   if(is.null(milestone_ids)) {
@@ -109,7 +109,7 @@ add_trajectory <- function(
   directed <- classification$directed
 
   # create output structure
-  model %>% extend_with(
+  dataset %>% extend_with(
     "dynwrap::with_trajectory",
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
@@ -126,8 +126,8 @@ add_trajectory <- function(
 #' @rdname add_trajectory
 #'
 #' @export
-is_wrapper_with_trajectory <- function(model) {
-  is_data_wrapper(model) && "dynwrap::with_trajectory" %in% class(model)
+is_wrapper_with_trajectory <- function(trajectory) {
+  is_data_wrapper(trajectory) && "dynwrap::with_trajectory" %in% class(trajectory)
 }
 
 

@@ -1,29 +1,29 @@
-#' Define a trajectory model given its branch network and the pseudotime of the cells on one of the branches
+#' Create a trajectory given its branch network and the pseudotime of the cells on one of the branches
 #'
-#' @param model The model to which the trajectory will be added.
+#' @inheritParams dynwrap
 #' @param branch_network The network between branches
 #'   Type: Data frame(from = charactor, to = character)
 #' @param branches The length and directedness of the branches
 #'   Type: Data frame(branch_id = character, length = numeric, directed = logical)
 #' @param branch_progressions Specifies the progression of a cell along a transition in the branch network.
 #'   Type: Data frame(cell_id = character, branch_id = character, percentage = numeric).
-#' @param ... extra information to be stored in the model
+#' @param ... extra information to be stored in the trajectory
 #'
-#' @return The trajectory model
+#' @return The trajectory
 #'
 #' @keywords create_trajectory
 #'
 #' @export
 add_branch_trajectory <- function(
-  model,
+  dataset,
   branch_network,
   branches,
   branch_progressions,
   ...
 ) {
   # check whether object is a data wrapper
-  assert_that(is_data_wrapper(model))
-  cell_ids <- model$cell_ids
+  assert_that(is_data_wrapper(dataset))
+  cell_ids <- dataset$cell_ids
 
   branch_ids <- branches$branch_id
 
@@ -93,7 +93,7 @@ add_branch_trajectory <- function(
     select(from, to, length, directed)
 
   # create trajectory
-  model %>%
+  dataset %>%
     add_trajectory(
       milestone_network = milestone_network,
       progressions = progressions

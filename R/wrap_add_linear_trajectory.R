@@ -2,16 +2,16 @@
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @param model The model to which a linear trajectory will be added.
+#' @inheritParams dataset
 #' @param pseudotime A named vector of pseudo times.
 #' @param directed Whether or not the directionality of the pseudotime is predicted.
 #' @param do_scale_minmax Whether or not to scale the pseudotime between 0 and 1.
 #'   Otherwise, will assume the values are already within that range.
-#' @param ... extra information to be stored in the wrapper.
+#' @param ... extra information to be stored in the trajectory
 #'
 #' @keywords create_trajectory
 #'
-#' @return The trajectory model
+#' @return The trajectory
 #'
 #' @export
 #'
@@ -22,16 +22,16 @@
 #' pseudotime <- data.frame(cell_id = dataset$cell_ids, pseudotime = runif(length(dataset$cell_ids)))
 #' add_linear_trajectory(dataset, pseudotime)
 add_linear_trajectory <- function(
-  model,
+  dataset,
   pseudotime,
   directed = FALSE,
   do_scale_minmax = TRUE,
   ...
 ) {
   # check data wrapper
-  testthat::expect_true(is_data_wrapper(model))
+  testthat::expect_true(is_data_wrapper(dataset))
 
-  pseudotime <- process_pseudotime(model, pseudotime)
+  pseudotime <- process_pseudotime(dataset, pseudotime)
 
   # scale pseudotime
   if (do_scale_minmax) {
@@ -61,7 +61,7 @@ add_linear_trajectory <- function(
 
   # return output
   add_trajectory(
-    model = model,
+    dataset = dataset,
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
     divergence_regions = NULL,

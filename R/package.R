@@ -13,6 +13,7 @@
 #' @importFrom glue glue
 #'
 #' @param trajectory The trajectory as created by [infer_trajectory()] or [add_trajectory()]
+#' @param dataset A dataset created by [wrap_data()] or [wrap_expression()]
 #'
 #' @docType package
 #' @name dynwrap

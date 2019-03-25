@@ -1,11 +1,11 @@
-#' Add count and normalised expression values to a model
+#' Add count and normalised expression values to a dataset
 #'
-#' @param model The model to which expression will be added
+#' @inheritParams dynwrap
 #' @param counts The counts with genes in columns and cells in rows
 #' @param expression The normalised expression values with genes in columns and cells in rows
 #' @param feature_info Optional meta-information of the features, a data.frame with at least feature_id as column
-#' @param ... extra information to be stored in the model
-#' @param expression_source The source of expression, can be "counts", "expression", an expression matrix, or another model which contains expression
+#' @param ... extra information to be stored in the dataset
+#' @param expression_source The source of expression, can be "counts", "expression", an expression matrix, or another dataset which contains expression
 #'
 #' @keywords adapt_trajectory
 #'
@@ -14,13 +14,13 @@
 #' @importFrom Matrix Matrix
 #' @importFrom testthat expect_equal expect_is
 add_expression <- function(
-  model,
+  dataset,
   counts,
   expression,
   feature_info = NULL,
   ...
 ) {
-  testthat::expect_true(is_data_wrapper(model))
+  testthat::expect_true(is_data_wrapper(dataset))
 
   assert_that(!(is.null(counts) && is.null(expression)), msg = "counts and expression can't both be NULL")
 
@@ -33,7 +33,7 @@ add_expression <- function(
     }
     assert_that(
       "dgCMatrix" %in% class(counts),
-      identical(rownames(counts), model$cell_ids)
+      identical(rownames(counts), dataset$cell_ids)
     )
   }
 
@@ -43,7 +43,7 @@ add_expression <- function(
     }
     assert_that(
       "dgCMatrix" %in% class(expression),
-      identical(rownames(expression), model$cell_ids)
+      identical(rownames(expression), dataset$cell_ids)
     )
   }
 
@@ -59,7 +59,7 @@ add_expression <- function(
   }
 
   # create output structure
-  model %>% extend_with(
+  dataset %>% extend_with(
     "dynwrap::with_expression",
     counts = counts,
     expression = expression,
@@ -70,21 +70,21 @@ add_expression <- function(
 
 #' @rdname add_expression
 #' @export
-is_wrapper_with_expression <- function(model) {
-  is_data_wrapper(model) && "dynwrap::with_expression" %in% class(model)
+is_wrapper_with_expression <- function(dataset) {
+  is_data_wrapper(dataset) && "dynwrap::with_expression" %in% class(dataset)
 }
 
 #' @rdname add_expression
 #' @export
-get_expression <- function(model, expression_source = "expression") {
+get_expression <- function(dataset, expression_source = "expression") {
   if (is.character(expression_source)) {
-    if(!expression_source %in% names(model)) {
+    if(!expression_source %in% names(dataset)) {
       stop(glue::glue(
         "No expression found in trajectory, please provide the expression through the {crayon::italic('expression_source')} argument. ",
         "This can be an expression or counts matrix, or a dataset containing the expression."
       ))
     }
-    expression <- model[[expression_source]]
+    expression <- dataset[[expression_source]]
   } else if (is.matrix(expression_source) || dynutils::is_sparse(expression_source)) {
     expression <- expression_source
   } else if (is_wrapper_with_expression(expression_source)) {
