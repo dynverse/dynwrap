@@ -10,7 +10,7 @@
 #'
 #' A -> B -> C -> D -> A is simplified to A -> B -> D.
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @inheritParams simplify_igraph_network
 #'
 #' @keywords adapt_trajectory

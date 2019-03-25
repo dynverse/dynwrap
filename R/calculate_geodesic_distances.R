@@ -4,7 +4,7 @@
 #'
 #' The geodesic distance takes into account the length of an edge regions of delayed commitment.
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @param waypoint_cells A vector of waypoint cells. Only the geodesic distances between waypoint cells and all other cells will be calculated.
 #' @param waypoint_milestone_percentages The milestone percentages of non-cell waypoints, containing waypoint_id, milestone_id and percentage columns
 #'

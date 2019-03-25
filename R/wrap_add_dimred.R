@@ -1,6 +1,6 @@
 #' Add or create a dimensionality reduction
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @param dimred The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction
 #' @param dimred_milestones An optional dimensionality reduction of the milestones.
 #' @param dimred_segment_progressions An optional progression matrix of the trajectory segments. Format: `tibble(from, to, percentage)`

@@ -1,6 +1,6 @@
 #' Define a trajectory dataset given its milestone network and milestone percentages or progressions
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @param milestone_ids The ids of the milestones in the trajectory. Type: Character vector.
 #' @param milestone_network The network of the milestones.
 #'   Type: Data frame(from = character, to = character, length = numeric, directed = logical).

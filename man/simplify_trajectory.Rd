@@ -17,10 +17,10 @@ Transient milestones are milestones with a degree of two (if undirected) or with
 \details{
 The positions of the cells within the trajectory remain the same
 
-A → B → C is simplified to A → C.
+A -> B -> C is simplified to A -> C.
 
 A — B — C is simplified to A — C.
 
-A → B → C → D → A is simplified to A → B → D.
+A -> B -> C -> D -> A is simplified to A -> B -> D.
 }
 \keyword{adapt_trajectory}

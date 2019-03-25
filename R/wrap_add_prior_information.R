@@ -3,7 +3,7 @@
 #' Note that the given data wrapper requires a trajectory and expression values
 #' to have been added already.
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @param start_id The start cells
 #' @param end_id The end cells
 #' @param groups_id The grouping of cells, a dataframe with cell_id and group_id

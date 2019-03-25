@@ -1,6 +1,6 @@
 #' Add cell waypoints to a wrapped trajectory
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @inheritParams select_waypoint_cells
 #'
 #' @keywords adapt_trajectory

@@ -230,7 +230,7 @@ def_wrapper <- function(
 
 #' Meta information on the parameters of the TI method
 #'
-#' Parameters can be defined using [dynparam:dynparam::dynparam()].
+#' Parameters can be defined using [dynparam::dynparam()].
 #'
 #' @inheritParams dynparam::parameter_set
 #'

@@ -1,6 +1,6 @@
 #' Add timings checkpoints
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @param timings A list of timings.
 #'
 #' @keywords adapt_trajectory

@@ -5,7 +5,7 @@
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @param pseudotime A named vector of pseudo times.
 #' @param end_state_probabilities A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone. If the data_frame contains only a cell_id column, the data will be processed using `add_linear_trajectory`
 #' @param do_scale_minmax Whether or not to scale the pseudotime between 0 and 1.

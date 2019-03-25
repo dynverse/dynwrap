@@ -1,6 +1,6 @@
 #' Add information on overall differentially expressed features
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @param tde_overall A tibble containing a feature_id (character) and differentially_expressed (logical). Can also contain other columns, such as the p-value, q-value, log fold-change, etc
 #'
 #' @keywords adapt_trajectory

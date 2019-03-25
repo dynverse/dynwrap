@@ -1,6 +1,6 @@
 #' Add a cell grouping to a dataset
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @param grouping A grouping of the cells, can be a named vector or a dataframe with group_id (character) and cell_id (character)
 #' @param group_ids All group_ids, optional
 #' @param ... Extra information to be stored in the dataset
@@ -124,7 +124,7 @@ process_grouping <- function(dataset, grouping) {
 #'
 #' Grouping cells onto their edges, or grouping cells onto their nearest milestones
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @param group_template Processed by glue::glue to name the group
 #'
 #' @name group_from_trajectory

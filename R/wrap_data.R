@@ -45,7 +45,7 @@ wrap_data <- function(
 }
 
 #' @rdname wrap_data
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #'
 #' @export
 is_data_wrapper <- function(dataset) {

@@ -2,7 +2,7 @@
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @param milestone_network A network of milestones.
 #' @param explicit_splits Whether to make splits specific by adding a starting node. For example: A->B, A->C becomes A->X, X->B, X->C
 #' @inheritParams add_grouping

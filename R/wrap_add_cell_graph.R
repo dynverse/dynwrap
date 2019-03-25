@@ -2,7 +2,7 @@
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @param cell_graph The edges between cells. Format: Data frame(from = character, to = character, length(optional) = numeric, directed(optional) = logical)
 #' @param to_keep A named vector containing booleans containing
 #'   whether or not a cell is part of the backbone. Or, alternatively a character vector containing the backbone cells

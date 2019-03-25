@@ -1,6 +1,6 @@
 #' Create a trajectory given its branch network and the pseudotime of the cells on one of the branches
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @param branch_network The network between branches
 #'   Type: Data frame(from = charactor, to = character)
 #' @param branches The length and directedness of the branches

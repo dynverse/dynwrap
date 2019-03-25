@@ -2,7 +2,7 @@
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @inheritParams add_trajectory
 #' @inheritParams add_dimred
 #' @inheritParams add_grouping

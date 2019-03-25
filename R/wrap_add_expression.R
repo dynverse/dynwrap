@@ -1,6 +1,6 @@
 #' Add count and normalised expression values to a dataset
 #'
-#' @inheritParams dynwrap
+#' @inheritParams common_param
 #' @param counts The counts with genes in columns and cells in rows
 #' @param expression The normalised expression values with genes in columns and cells in rows
 #' @param feature_info Optional meta-information of the features, a data.frame with at least feature_id as column
