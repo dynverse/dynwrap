@@ -271,7 +271,6 @@ get_default_parameters <- function(definition) {
 }
 
 
-#' @param method The method to be tested
 #' @rdname definition
 #'
 #' @export

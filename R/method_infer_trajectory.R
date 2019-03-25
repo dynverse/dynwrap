@@ -22,7 +22,7 @@ random_seed <- function() {
 #'   If multiple methods were provided in the `method` parameter,
 #'    `parameters` must be an unnamed list of the same length.
 #' @param give_priors All the priors a method is allowed to receive.
-#'   Must be a subset of all available priors ([dynwrap:priors::priors()]).
+#'   Must be a subset of all available priors ([dynwrap::priors]).
 #' @param seed A seed to be passed to the TI method.
 #' @param map_fun A map function to use when inferring trajectories with multiple datasets or methods.
 #'   Allows to parallellise the execution in an arbitrary way.
