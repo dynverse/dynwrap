@@ -31,7 +31,7 @@ dyvnerse documentation website: <https://dynverse.org/> .
 dynwrap was used to wrap 50+ trajectory inference method within docker
 containers in [dynmethods](https://github.com/dynverse/dynmethods).
 
-![](man/figures/overview_wrapping_v2.png)
+![](man/figures/overview_wrapping_v3.png)
 
 The advantage of using a common model is that it allows:
 

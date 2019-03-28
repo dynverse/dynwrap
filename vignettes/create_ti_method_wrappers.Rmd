@@ -11,8 +11,39 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-```{r setup}
+```{r setup, echo = FALSE, message = FALSE}
+library(tidyverse)
 library(dynwrap)
 ```
 
-To write
+dynwrap always represents trajectories in the same way, as illustrated here with a tree trajectory
+
+- Milestone network, contains information of connections between milestones
+
+```{r, echo = FALSE}
+tribble(
+  ~from, ~to, ~length, ~directed,
+  "A", "B", 1, FALSE,
+  "B", "C", 2, FALSE,
+  "B", "D", 1, FALSE,
+  "C", "E", 1, FALSE,
+  "C", "F", 1.5, FALSE
+)
+```
+
+- Milestone percentages, contains the positions of cells between milestones. For each cell, the percentages sum to one
+```{r}
+cell_ids <- letters
+progressions <- 
+```
+
+- Progressions, an alternative to milestone percentages, also contains the positions of each cell but now based on its progression through an edge
+```{r}
+head(dynwrap::example_dataset$progressions)
+```
+
+- Divergence regions, contain the information on milestones
+
+```{r}
+head(dynwrap::example_dataset$divergence_regions)
+```
