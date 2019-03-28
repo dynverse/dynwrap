@@ -1,11 +1,11 @@
-# dynwrap 1.0.0 (unreleased)
+# dynwrap 1.0.0 (28-03-2019)
 
 * MAJOR CHANGE: Add support for Singularity 3.0, drop support for previous 
   releases of Singularity and singularity-hub.
 
 * FEATURE: Add `create_ti_method_definition()` to create a definition from a local script.
 
-* DOCUMENTATION: Major update of all documentation for release of dynwrap 1.0.0
+* DOCUMENTATION: Major update of all documentation for dynbenchmark publication
 
 * MINOR CHANGE: Rename `compute_tented_geodesic_distances()` to `calculate_geodesic_distances()`
 
