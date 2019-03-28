@@ -4,6 +4,8 @@
 <a href="https://travis-ci.org/dynverse/dynwrap"><img src="https://travis-ci.org/dynverse/dynwrap.svg" align="left"></a>
 <a href="https://codecov.io/gh/dynverse/dynwrap">
 <img src="https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg" align="left" /></a><br><img src="man/figures/logo.png" align="right" />
+[**ℹ️ Tutorials**](https://dynverse.org) | [**ℹ️ Reference
+documentation**](https://dynverse.org/reference/dynwrap)
 
 # Tools for inferring and wrapping single-cell trajectories
 
@@ -19,10 +21,6 @@ trajectories. The package can:
     common trajectory model
   - Further postprocess and adapt the trajectory model, such as
     labelling the milestones and rooting the trajectory
-
-dynwrap is documented together with other dynverse package at
-[dynverse.org](https://dynverse.org). Reference of all dynwrap functions
-is at [dynverse.org/reference/dynwrap](https://dynverse.org/)
 
 ![](man/figures/trajectory_model.png)
 
