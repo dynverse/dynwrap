@@ -51,8 +51,8 @@ data("priors", package = "dynwrap")
 
 allowed_inputs <- tribble(
   ~input_id, ~description,
-  "expression", "Expression matrix",
-  "counts", "Raw counts matrix"
+  "expression", "Expression matrix (sparse)",
+  "counts", "Raw counts matrix (sparse)"
 ) %>% bind_rows(
   priors %>% select(input_id = prior_id, description = description)
 )
