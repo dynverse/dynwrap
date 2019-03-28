@@ -4,7 +4,7 @@
 <a href="https://travis-ci.org/dynverse/dynwrap"><img src="https://travis-ci.org/dynverse/dynwrap.svg" align="left"></a>
 <a href="https://codecov.io/gh/dynverse/dynwrap">
 <img src="https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg" align="left" /></a>
-  | [**ℹ️ Tutorials**](https://dynverse.org) | [**ℹ️ Reference
+[**ℹ️ Tutorials**](https://dynverse.org)     [**ℹ️ Reference
 documentation**](https://dynverse.org/reference/dynwrap)
 <br><img src="man/figures/logo.png" align="right" />
 
