@@ -2,15 +2,19 @@
 % Please edit documentation in R/wrap_add_cell_waypoints.R
 \name{add_cell_waypoints}
 \alias{add_cell_waypoints}
-\title{Add cell waypoints to a wrapped object with trajectory}
+\alias{is_wrapper_with_waypoint_cells}
+\title{Add cell waypoints to a wrapped trajectory}
 \usage{
-add_cell_waypoints(object, num_cells_selected = 100)
+add_cell_waypoints(trajectory, num_cells_selected = 100)
+
+is_wrapper_with_waypoint_cells(trajectory)
 }
 \arguments{
-\item{object}{Wrapper with trajectory}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{num_cells_selected}{About the number of cells selected as waypoints}
 }
 \description{
-Add cell waypoints to a wrapped object with trajectory
+Add cell waypoints to a wrapped trajectory
 }
+\keyword{adapt_trajectory}

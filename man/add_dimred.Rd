@@ -6,27 +6,32 @@
 \alias{get_dimred}
 \title{Add or create a dimensionality reduction}
 \usage{
-add_dimred(model, dimred, dimred_milestones = NULL,
-  dimred_trajectory_segments = NULL, expression_source = "expression",
-  ...)
+add_dimred(dataset, dimred, dimred_milestones = NULL,
+  dimred_segment_progressions = NULL, dimred_segment_points = NULL,
+  connect_segments = FALSE, expression_source = "expression", ...)
 
-is_wrapper_with_dimred(model)
+is_wrapper_with_dimred(dataset)
 
-get_dimred(model, dimred = NULL, expression_source = "expression")
+get_dimred(dataset, dimred = NULL, expression_source = "expression")
 }
 \arguments{
-\item{model}{The model to which a dimensionality reduction will be added.}
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
 \item{dimred}{The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction}
 
 \item{dimred_milestones}{An optional dimensionality reduction of the milestones.}
 
-\item{dimred_trajectory_segments}{An optional dimensionality reduction of the trajectory segments.}
+\item{dimred_segment_progressions}{An optional progression matrix of the trajectory segments. Format: \code{tibble(from, to, percentage)}}
 
-\item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another model which contains expression}
+\item{dimred_segment_points}{An optional dimensionality reduction of the trajectory segments. Format: \code{matrix(Comp1, Comp2, ...)}.}
+
+\item{connect_segments}{Whether to connect segments between edges}
+
+\item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another dataset which contains expression}
 
 \item{...}{extra information to be stored in the wrapper}
 }
 \description{
 Add or create a dimensionality reduction
 }
+\keyword{adapt_trajectory}

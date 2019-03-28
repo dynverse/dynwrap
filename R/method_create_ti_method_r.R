@@ -1,66 +1,31 @@
 
 #' Create a TI method wrapper
 #'
-#' @param id A short name for the method, only lowercase characters allowed.
-#' @param name The name of the TI method.
+#' @param run_fun A function to infer a trajectory, with parameters counts/expression, parameters, priors, verbose and seed
 #' @param package_loaded The packages that need to be loaded before executing the method.
 #' @param package_required The packages that need to be installed before executing the method.
-#' @param parameters A list of parameters.
-#' @param run_fun A function to run the TI, needs to have 'counts' as its first param.
-#' @param input_required The required inputs for this method. See `dynwrap::allowed_inputs()`.
-#' @param input_optional Optional inputs for this method. See `dynwrap::allowed_inputs()`.
-#' @param output The outputs produced by this method. See `dynwrap::allowed_outputs()`.
 #' @param remotes_package Package from which the remote locations of dependencies have to be extracted, eg. `dynmethods`.
-#' @param return_function Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.
-#' @param ... Other information about the wrapper, eg. apt_dependencies.
+#' @inheritParams .method_process_definition
+#'
+#' @keywords create_ti_method
 #'
 #' @export
-#'
-#' @include method_parse_parameter_definition.R
 create_ti_method_r <- function(
-  id,
-  name = id,
-  parameters = NULL,
+  definition,
   run_fun,
-  input_required,
-  input_optional = NULL,
-  output,
-  package_loaded = c(),
-  package_required = c(),
-  remotes_package = ifelse("dynmethods" %in% rownames(installed.packages()), "dynmethods", "dynwrap"),
-  return_function = TRUE,
-  ...
+  package_required = character(),
+  package_loaded = character(),
+  remotes_package = character(),
+  return_function = TRUE
 ) {
-  # check that run_fun has the required arguments
-  expected_arguments <- c(input_required, input_optional, names(parameters), "verbose", "seed")
-  testthat::expect_true(all(expected_arguments %in% formalArgs(run_fun)))
+  definition <- .method_load_definition(definition)
 
-  # process input and output vectors
-  input <- list( # could be derived from the run_fn
-    format = NA,
-    required = input_required,
-    optional = input_optional
-  )
-  output <- list( # this cannot
-    format = NA,
-    outputs = output
-  )
-
-  # create definition list
-  definition <- lst(
-    id,
-    name,
-    parameters,
-    run_info = lst(
-      backend = "function",
-      run_fun,
-      package_loaded,
-      package_required,
-      remotes_package
-    ),
-    input,
-    output,
-    ...
+  definition$run <- lst(
+    backend = "function",
+    run_fun,
+    package_required,
+    package_loaded,
+    remotes_package
   )
 
   # further process the definition
@@ -69,25 +34,25 @@ create_ti_method_r <- function(
 
 
 .method_execution_preproc_function <- function(method) {
-  run_info <- method$run_info
+  run <- method$run
 
   # create a temporary directory to set as working directory,
   # to avoid polluting the working directory if a method starts
   # producing files haphazardly
-  tmp_dir <- tempfile(pattern = method$id)
+  tmp_dir <- tempfile(pattern = method$method$id)
   dir.create(tmp_dir)
   old_wd <- getwd()
   setwd(tmp_dir)
 
   # Load required packages and namespaces
-  if (!is.null(run_info$package_loaded) && !is.na(run_info$package_loaded)) {
-    for (pack in run_info$package_loaded) {
+  if (!is.null(run$package_loaded) && !is.na(run$package_loaded) && length(run$package_loaded)) {
+    for (pack in run$package_loaded) {
       suppressMessages(do.call(require, list(pack)))
     }
   }
 
-  if (!is.null(run_info$package_required) && !is.na(run_info$package_required)) {
-    for (pack in run_info$package_required) {
+  if (!is.null(run$package_required) && !is.na(run$package_required) && length(run$package_required)) {
+    for (pack in run$package_required) {
       suppressMessages(do.call(requireNamespace, list(pack)))
     }
   }
@@ -98,25 +63,24 @@ create_ti_method_r <- function(
   )
 }
 
-.method_execution_execute_function <- function(method, inputs, parameters, verbose, seed, preproc_meta) {
+.method_execution_execute_function <- function(method, inputs, priors, parameters, verbose, seed, preproc_meta) {
   # combine inputs and parameters
   args <- c(
     inputs,
-    parameters,
-    lst(verbose, seed)
+    lst(
+      priors,
+      parameters,
+      verbose,
+      seed
+    )
   )
 
-  # remove params that are not supposed to be here
-  remove_args <- setdiff(names(args), formalArgs(method$run_info$run_fun))
-  if (length(remove_args) > 0) {
-    warning("Parameters [", paste(remove_args, collapse = ", "), "] not recognised by method; removing them from the arglist.")
-    sel_args <- setdiff(names(args), remove_args)
-    args <- args[remove_args]
-  }
+  # only give args that are requested by the function
+  args <- args[intersect(names(args), names(formals(method$run$run_fun)))]
 
-  model <- do.call(method$run_info$run_fun, args)
+  trajectory <- do.call(method$run$run_fun, args)
 
-  model
+  trajectory
 }
 
 
@@ -126,4 +90,27 @@ create_ti_method_r <- function(
 
   # Remove temporary folder
   unlink(preproc_meta$tmp_dir, recursive = TRUE, force = TRUE)
+}
+
+
+#' Generate the parameter documentation of a method, use with `@eval`
+#'
+#' @param definition The definition which contain the parameters
+#'
+#' @return A character vector containing the roxygen tags
+#'
+#' @export
+generate_parameter_documentation <- function(definition) {
+  parameter_ids <-
+    names(definition$parameters$parameters)
+
+  # generate documentation per parameter separately
+  map_chr(
+    parameter_ids,
+    function(parameter_id) {
+      parameter <- definition$parameters$parameters[[parameter_id]]
+
+      dynparam::as_roxygen(parameter)
+    }
+  )
 }

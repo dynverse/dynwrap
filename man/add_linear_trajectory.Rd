@@ -4,11 +4,11 @@
 \alias{add_linear_trajectory}
 \title{Constructs a linear trajectory using the pseudotime values of each cell.}
 \usage{
-add_linear_trajectory(model, pseudotime, directed = FALSE,
+add_linear_trajectory(dataset, pseudotime, directed = FALSE,
   do_scale_minmax = TRUE, ...)
 }
 \arguments{
-\item{model}{The model to which a linear trajectory will be added.}
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
 \item{pseudotime}{A named vector of pseudo times.}
 
@@ -17,11 +17,17 @@ add_linear_trajectory(model, pseudotime, directed = FALSE,
 \item{do_scale_minmax}{Whether or not to scale the pseudotime between 0 and 1.
 Otherwise, will assume the values are already within that range.}
 
-\item{...}{extra information to be stored in the wrapper.}
+\item{...}{extra information to be stored in the trajectory}
 }
 \value{
-The trajectory model
+The trajectory
 }
 \description{
 This function will generate the milestone_network and progressions.
 }
+\examples{
+dataset <- dynwrap::example_dataset
+pseudotime <- data.frame(cell_id = dataset$cell_ids, pseudotime = runif(length(dataset$cell_ids)))
+trajectory <- add_linear_trajectory(dataset, pseudotime)
+}
+\keyword{create_trajectory}

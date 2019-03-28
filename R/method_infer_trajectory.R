@@ -1,9 +1,18 @@
+#' Generate a random seed
+#'
+#' ... From the current seed.
+#'
+#' @export
+random_seed <- function() {
+  sample.int(.Machine$integer.max, 1)
+}
+
 #' Infer trajectories
 #'
-#' @param dataset One or more datasets, as created using dynwrap.
+#' @param dataset One or more datasets as created by [infer_trajectory()] or [add_trajectory()]. Prior information can be added using [add_prior_information()].
 #' @param method One or more methods. Must be one of:
 #' \itemize{
-#'   \item{an object or list of ti_... objects (eg. \code{dynmethods::ti_comp1()}),}
+#'   \item{an object or list of ti_... objects (eg. `dynmethods::ti_comp1()`),}
 #'   \item{a character vector containing the names of methods to execute (e.g. `"scorpius"`),}
 #'   \item{a character vector containing dockerhub repositories (e.g. `dynverse/paga`), or}
 #'   \item{a dynguidelines data frame.}
@@ -13,18 +22,25 @@
 #'   If multiple methods were provided in the `method` parameter,
 #'    `parameters` must be an unnamed list of the same length.
 #' @param give_priors All the priors a method is allowed to receive.
-#'   Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).
-#' @param seed A seed to be set, if the method allows for it.
-#' @param map_fun A mao function to use when inferring trajectories with multiple datasets or methods.
+#'   Must be a subset of all available priors ([dynwrap::priors]).
+#' @param seed A seed to be passed to the TI method.
+#' @param map_fun A map function to use when inferring trajectories with multiple datasets or methods.
 #'   Allows to parallellise the execution in an arbitrary way.
 #' @param verbose Whether or not to print information output.
 #' @param return_verbose Whether to store and return messages printed by the method.
 #' @param debug Used for debugging containers methods.
 #'
+#' @keywords infer_trajectory
+#'
 #' @importFrom utils capture.output adist installed.packages
 #' @importFrom readr read_file
 #' @importFrom stringr str_length
 #' @importFrom testthat expect_true
+#'
+#' @return
+#'   infer_trajectory: A trajectory
+#'
+#'   infer_trajectories: A tibble containing the dataset and method identifiers, the trajectory `model` and a summary containing the execution times, output and errors if appropriate
 #'
 #' @export
 infer_trajectories <- function(
@@ -32,7 +48,7 @@ infer_trajectories <- function(
   method,
   parameters = NULL,
   give_priors = NULL,
-  seed = sample(1:.Machine$integer.max, 1),
+  seed = random_seed(),
   verbose = FALSE,
   return_verbose = FALSE,
   debug = FALSE,
@@ -63,6 +79,8 @@ infer_trajectories <- function(
   } else {
     stop("Invalid method argument, it is of class ", paste0(class(method), collapse = ", "))
   }
+
+  # turn method(s) into a list of methods (again)
   method <- map(seq_len(nrow(method)), extract_row_to_list, tib = method)
 
   # process parameters ----------------
@@ -116,12 +134,14 @@ infer_trajectories <- function(
   output <- map_fun(
     seq_len(nrow(design)),
     function(ri) {
+      seed_ <- if (is.function(seed)) seed() else seed
+
       .method_execute(
         dataset = dataset[[design$dataset_ix[[ri]]]],
         method = method[[design$method_ix[[ri]]]],
         parameters = parameters[[design$method_ix[[ri]]]],
         give_priors = give_priors,
-        seed = seed,
+        seed = seed_,
         verbose = verbose,
         return_verbose = return_verbose,
         debug = debug
@@ -133,9 +153,9 @@ infer_trajectories <- function(
     dataset_ix = design$dataset_ix,
     method_ix = design$method_ix,
     dataset_id = map_chr(dataset, "id")[design$dataset_ix],
-    method_id = map_chr(method, "id")[design$method_ix],
-    method_name = map_chr(method, "name")[design$method_ix],
-    model = map(output, "model"),
+    method_id = map_chr(method, function(m) m$method$id)[design$method_ix],
+    method_name = map_chr(method, function(m) m$method$name)[design$method_ix],
+    model = map(output, "trajectory"),
     summary = map(output, "summary")
   )
 }
@@ -165,18 +185,13 @@ infer_trajectory <- dynutils::inherit_default_params(
       give_priors = give_priors,
       seed = seed,
       verbose = verbose,
-      return_verbose = FALSE,
+      return_verbose = return_verbose,
       debug = debug
     )
 
     if (is.null(design$model[[1]])) {
       error <- design$summary[[1]]$error[[1]]
-      cat("Error traceback:\n")
-      traceback(error)
-      if (!is.list(error)) { # if no error yet, add a fake one
-        error <- list(message = "")
-      }
-      stop("Error during trajectory inference \n", error$message, call. = FALSE)
+      stop("Error during trajectory inference \n", crayon::bold(error), call. = FALSE)
     } else {
       first(design$model)
     }

@@ -36,7 +36,7 @@ milestone_percentages <- tribble(
   "f", "A", .2
 )
 
-traj <- wrap_data(
+trajectory <- wrap_data(
   id = "test",
   cell_ids = cell_ids
 ) %>% add_trajectory(
@@ -47,21 +47,31 @@ traj <- wrap_data(
 )
 
 test_that("Testing add_root", {
-  rooted <- add_root(traj, root_cell_id = "a")
+  rooted <- add_root(trajectory, root_cell_id = "a")
 
   expect_true(rooted$root_milestone_id == "W")
   expect_true(rooted$milestone_network$from[[1]] == "W")
   expect_true(all(rooted$milestone_network$from == c("W", "X", "Z", "X")))
   expect_true(all(rooted$milestone_network$to == c("X", "Z", "A", "Y")))
 
-  rooted <- add_root(traj)
+  rooted <- add_root(trajectory)
 
-  expect_error(add_root(traj, root_cell_id = "trajectories are cool"))
-  expect_error(add_root(traj, root_milestone_id = "trajectories are cool"))
+  expect_error(add_root(trajectory, root_cell_id = "trajectories are cool"))
+  expect_error(add_root(trajectory, root_milestone_id = "trajectories are cool"))
+})
+
+
+
+test_that("Testing add_root_using_expression",{
+  rooted <- add_root_using_expression(dynwrap::example_dataset, "A")
+  expect_equal(
+    rooted$root_milestone_id,
+    "milestone_begin"
+  )
 })
 
 
 test_that("Testing calculate_pseudotime", {
-  traj <- add_pseudotime(traj)
-  expect_equal(traj$pseudotime, c("a" = 0, "b" = 1.4, "c" = 2.6, "d" = 4.3, "e" = 4.4, "f" = 6.8))
+  trajectory <- add_pseudotime(trajectory)
+  expect_equal(trajectory$pseudotime, c("a" = 0, "b" = 1.4, "c" = 2.6, "d" = 4.3, "e" = 4.4, "f" = 6.8))
 })

@@ -4,15 +4,11 @@
 \alias{create_ti_method_container}
 \title{Create a TI method from a docker / singularity container}
 \usage{
-create_ti_method_container(container_id, version = NULL,
-  pull_if_needed = TRUE, return_function = TRUE)
+create_ti_method_container(container_id, pull_if_needed = TRUE,
+  return_function = TRUE)
 }
 \arguments{
 \item{container_id}{The name of the container repository (e.g. \code{"dynverse/ti_angle"}).}
-
-\item{version}{The minimum required version of the TI method container.
-If the required version is higher than the currently installed version,
-the container will be pulled from dockerhub or singularityhub.}
 
 \item{pull_if_needed}{Pull the container if not yet available.}
 
@@ -21,3 +17,4 @@ the container will be pulled from dockerhub or singularityhub.}
 \description{
 These functions create a TI method from a container using \code{babelwhale}. Supports both docker and singularity as a backend.
 }
+\keyword{create_ti_method}

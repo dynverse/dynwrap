@@ -11,4 +11,4 @@ trajectory_type_dag
 \description{
 A DAG of trajectory types
 }
-\keyword{datasets}
+\keyword{create_ti_method}

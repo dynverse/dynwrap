@@ -2,10 +2,12 @@
 #'
 #' Roots the trajectory by changing the directionality of all edges given a root cell
 #'
-#' @param trajectory the trajectory object
+#' @inheritParams common_param
 #' @param root_cell_id The root cell id, not required if root_milestone_id is given
 #' @param root_milestone_id The root milestone id, not required if root_cell_id is given
 #' @param flip_edges Whether to flip edges which are going in the other direction compared to the root
+#'
+#' @keywords adapt_trajectory
 #'
 #' @importFrom purrr map2_int
 #'
@@ -83,13 +85,24 @@ add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_mi
 #' @param expression_source Source of the expression, either a string or a matrix
 #'
 #' @inheritParams add_root
+#' @rdname add_root
 #'
 #' @export
 add_root_using_expression <- function(trajectory, features_oi, expression_source = "expression") {
   expression <- get_expression(trajectory, expression_source)
 
-  root_cell_id <- rownames(expression)[expression[, features_oi, drop = F] %>% rowMeans() %>% which.max()]
+  root_cell_id <- rownames(expression)[expression[, features_oi, drop = F] %>% Matrix::rowMeans() %>% which.max()]
   trajectory <- add_root(trajectory, root_cell_id)
 
   trajectory
+}
+
+
+
+#' @inheritParams add_root
+#' @rdname add_root
+#'
+#' @export
+is_rooted <- function(trajectory) {
+  is.null(trajectory$root_milestone_id)
 }

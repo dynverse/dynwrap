@@ -2,13 +2,13 @@
 % Please edit documentation in R/wrap_add_cluster_graph.R
 \name{add_cluster_graph}
 \alias{add_cluster_graph}
-\title{Constructs a trajectory using a cell grouping and a network between groups. Will use an existing grouping if it is present in the model.}
+\title{Constructs a trajectory using a cell grouping and a network between groups. Will use an existing grouping if it is present in the dataset.}
 \usage{
-add_cluster_graph(model, milestone_network, grouping = NULL,
+add_cluster_graph(dataset, milestone_network, grouping = NULL,
   explicit_splits = FALSE, ...)
 }
 \arguments{
-\item{model}{The model to which a cluster graph will be added. Needs to have a cell grouping created by \code{\link[=add_grouping]{add_grouping()}}.}
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
 \item{milestone_network}{A network of milestones.}
 
@@ -19,8 +19,9 @@ add_cluster_graph(model, milestone_network, grouping = NULL,
 \item{...}{extra information to be stored in the wrapper.}
 }
 \value{
-The trajectory model
+The trajectory
 }
 \description{
 This function will generate the milestone_network and progressions.
 }
+\keyword{create_trajectory}

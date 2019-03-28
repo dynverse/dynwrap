@@ -6,15 +6,15 @@
 \title{Infer trajectories}
 \usage{
 infer_trajectories(dataset, method, parameters = NULL,
-  give_priors = NULL, seed = 1, verbose = FALSE,
+  give_priors = NULL, seed = random_seed(), verbose = FALSE,
   return_verbose = FALSE, debug = FALSE, map_fun = map)
 
 infer_trajectory(dataset, method, parameters = NULL,
-  give_priors = NULL, seed = 1, verbose = FALSE,
+  give_priors = NULL, seed = random_seed(), verbose = FALSE,
   return_verbose = FALSE, debug = FALSE, ...)
 }
 \arguments{
-\item{dataset}{One or more datasets, as created using dynwrap.}
+\item{dataset}{One or more datasets as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}. Prior information can be added using \code{\link[=add_prior_information]{add_prior_information()}}.}
 
 \item{method}{One or more methods. Must be one of:
 \itemize{
@@ -30,9 +30,9 @@ If multiple methods were provided in the \code{method} parameter,
 \code{parameters} must be an unnamed list of the same length.}
 
 \item{give_priors}{All the priors a method is allowed to receive.
-Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).}
+Must be a subset of all available priors (\link[dynwrap:priors]{dynwrap::priors}).}
 
-\item{seed}{A seed to be set, if the method allows for it.}
+\item{seed}{A seed to be passed to the TI method.}
 
 \item{verbose}{Whether or not to print information output.}
 
@@ -40,11 +40,17 @@ Must be a subset of all available priors (\code{\link[dynwrap:priors]{priors}}).
 
 \item{debug}{Used for debugging containers methods.}
 
-\item{map_fun}{A mao function to use when inferring trajectories with multiple datasets or methods.
+\item{map_fun}{A map function to use when inferring trajectories with multiple datasets or methods.
 Allows to parallellise the execution in an arbitrary way.}
 
 \item{...}{Any additional parameters given to the method, will be concatednated to the parameters argument}
 }
+\value{
+infer_trajectory: A trajectory
+
+infer_trajectories: A tibble containing the dataset and method identifiers, the trajectory \code{model} and a summary containing the execution times, output and errors if appropriate
+}
 \description{
 Infer trajectories
 }
+\keyword{infer_trajectory}

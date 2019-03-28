@@ -1,19 +1,21 @@
 #' Label milestones either manually (`label_milestones`) or using marker genes (`label_milestones_markers`)
 #'
-#' @param trajectory The trajectory
+#' @inheritParams common_param
 #' @param labelling Named character vector containing for a milestone a new label
 #' @param markers List containing for each label a list of marker genes
 #' @param expression_source The expression source
 #' @param n_nearest_cells The number of nearest cells to use for extracting milestone expression
 #' @param label_milestones How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE
 #'
+#' @keywords adapt_trajectory
+#'
 #' @export
 label_milestones <- function(trajectory, labelling) {
   milestone_ids <- trajectory$milestone_ids
 
-  testthat::expect_true(is.character(labelling))
-  testthat::expect_true(length(names(labelling)) == length(labelling))
-  testthat::expect_true(all(names(labelling) %in% milestone_ids))
+  assert_that(is.character(labelling))
+  assert_that(length(names(labelling)) == length(labelling))
+  assert_that(names(labelling) %all_in% milestone_ids)
 
   # now overwrite the existing labelling if present
   if (!is.null(trajectory$milestone_labelling)) {
@@ -105,7 +107,7 @@ is_wrapper_with_milestone_labelling <- function(trajectory) {
 #' @export
 get_milestone_labelling <- function(trajectory, label_milestones = NULL) {
   if(is.character(label_milestones) && length(names(label_milestones)) == length(label_milestones)) {
-    testthat::expect_true(all(names(label_milestones) %in% trajectory$milestone_ids))
+    assert_that(names(label_milestones) %all_in% trajectory$milestone_ids)
     labels <- label_milestones
   } else if (is.null(label_milestones) || label_milestones == TRUE) {
     if (is_wrapper_with_milestone_labelling(trajectory)) {

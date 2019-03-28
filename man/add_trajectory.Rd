@@ -2,14 +2,17 @@
 % Please edit documentation in R/wrap_add_trajectory.R
 \name{add_trajectory}
 \alias{add_trajectory}
-\title{Define a trajectory model given its milestone network and milestone percentages or progressions}
+\alias{is_wrapper_with_trajectory}
+\title{Define a trajectory dataset given its milestone network and milestone percentages or progressions}
 \usage{
-add_trajectory(model, milestone_ids = NULL, milestone_network,
+add_trajectory(dataset, milestone_ids = NULL, milestone_network,
   divergence_regions = NULL, milestone_percentages = NULL,
   progressions = NULL, allow_self_loops = FALSE, ...)
+
+is_wrapper_with_trajectory(trajectory)
 }
 \arguments{
-\item{model}{The model to which the trajectory will be added.}
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
 \item{milestone_ids}{The ids of the milestones in the trajectory. Type: Character vector.}
 
@@ -30,11 +33,14 @@ Type: Data frame(cell_id = character, from = character, to = character, percenta
 \item{allow_self_loops}{Whether to allow self loops
 Type: Logical}
 
-\item{...}{extra information to be stored in the model}
+\item{...}{extra information to be stored in the dataset}
+
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 }
 \value{
-The trajectory model
+The trajectory
 }
 \description{
-Define a trajectory model given its milestone network and milestone percentages or progressions
+Define a trajectory dataset given its milestone network and milestone percentages or progressions
 }
+\keyword{create_trajectory}

@@ -66,7 +66,7 @@ test_that("Testing select_waypoint_cells", {
 
 
 test_that("Testing add_cell_waypoints", {
-  traj <-
+  trajectory <-
     wrap_data(
       id = "test",
       cell_ids = cell_ids
@@ -77,12 +77,12 @@ test_that("Testing add_cell_waypoints", {
       divergence_regions = divergence_regions
     )
 
-  traj2 <- add_cell_waypoints(
-    traj,
+  trajectory2 <- add_cell_waypoints(
+    trajectory,
     num_cells_selected = length(orig_cell_ids) * num_samp
   )
   waypoint_cells <-
-    traj2$waypoint_cells
+    trajectory2$waypoint_cells
 
   waypoint_cells_table <-
     waypoint_cells %>%
@@ -92,6 +92,6 @@ test_that("Testing add_cell_waypoints", {
   expect_equal(names(waypoint_cells_table), orig_cell_ids)
   expect_true(all(waypoint_cells_table == num_samp))
 
-  expect_false(is_wrapper_with_waypoint_cells(traj))
-  expect_true(is_wrapper_with_waypoint_cells(traj2))
+  expect_false(is_wrapper_with_waypoint_cells(trajectory))
+  expect_true(is_wrapper_with_waypoint_cells(trajectory2))
 })

@@ -2,13 +2,20 @@
 % Please edit documentation in R/wrap_add_waypoints.R
 \name{add_waypoints}
 \alias{add_waypoints}
+\alias{is_wrapper_with_waypoints}
+\alias{select_waypoints}
 \title{Add or create waypoints to a trajectory}
 \usage{
 add_waypoints(trajectory, n_waypoints = 100,
   resolution = sum(trajectory$milestone_network$length)/n_waypoints)
+
+is_wrapper_with_waypoints(trajectory)
+
+select_waypoints(trajectory, n_waypoints = 100,
+  resolution = sum(trajectory$milestone_network$length)/n_waypoints)
 }
 \arguments{
-\item{trajectory}{Wrapper with trajectory}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{n_waypoints}{The number of waypoints}
 
@@ -16,4 +23,7 @@ add_waypoints(trajectory, n_waypoints = 100,
 }
 \description{
 Add or create waypoints to a trajectory
+
+Waypoints are spread equally over the whole trajectory
 }
+\keyword{adapt_trajectory}

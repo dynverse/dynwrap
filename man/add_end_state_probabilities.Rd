@@ -4,11 +4,11 @@
 \alias{add_end_state_probabilities}
 \title{Multifurcating trajectory with end state probabilities}
 \usage{
-add_end_state_probabilities(model, end_state_probabilities,
+add_end_state_probabilities(dataset, end_state_probabilities,
   pseudotime = NULL, do_scale_minmax = TRUE, ...)
 }
 \arguments{
-\item{model}{The model to which a multifurcating trajectory will be added.}
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
 \item{end_state_probabilities}{A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone. If the data_frame contains only a cell_id column, the data will be processed using \code{add_linear_trajectory}}
 
@@ -17,15 +17,16 @@ add_end_state_probabilities(model, end_state_probabilities,
 \item{do_scale_minmax}{Whether or not to scale the pseudotime between 0 and 1.
 Otherwise, will assume the values are already within that range.}
 
-\item{...}{Extras to be added to the model}
+\item{...}{Extras to be added to the trajectory}
 }
 \value{
-The trajectory model
+The trajectory
 }
 \description{
 Constructs a multifurcating trajectory using the pseudotime values of each cell and their end state probabilities.
-If pseudotime values are not given, will use pseudotime already present in the model.
+If pseudotime values are not given, will use pseudotime already present in the dataset.
 }
 \details{
 This function will generate the milestone_network and progressions.
 }
+\keyword{create_trajectory}

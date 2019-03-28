@@ -17,7 +17,7 @@ is_wrapper_with_milestone_labelling(trajectory)
 get_milestone_labelling(trajectory, label_milestones = NULL)
 }
 \arguments{
-\item{trajectory}{The trajectory}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{labelling}{Named character vector containing for a milestone a new label}
 
@@ -32,3 +32,4 @@ get_milestone_labelling(trajectory, label_milestones = NULL)
 \description{
 Label milestones either manually (\code{label_milestones}) or using marker genes (\code{label_milestones_markers})
 }
+\keyword{adapt_trajectory}

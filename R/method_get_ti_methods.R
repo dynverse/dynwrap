@@ -7,6 +7,8 @@
 #'
 #' @inheritParams create_ti_method_container
 #'
+#' @keywords infer_trajectory
+#'
 #' @importFrom utils lsf.str installed.packages
 #' @importFrom stringr str_replace
 #' @export

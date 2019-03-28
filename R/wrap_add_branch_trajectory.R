@@ -1,34 +1,34 @@
-#' Define a trajectory model given its branch network and the pseudotime of the cells on one of the branches
+#' Create a trajectory given its branch network and the pseudotime of the cells on one of the branches
 #'
-#' @param model The model to which the trajectory will be added.
+#' @inheritParams common_param
 #' @param branch_network The network between branches
 #'   Type: Data frame(from = charactor, to = character)
 #' @param branches The length and directedness of the branches
 #'   Type: Data frame(branch_id = character, length = numeric, directed = logical)
 #' @param branch_progressions Specifies the progression of a cell along a transition in the branch network.
 #'   Type: Data frame(cell_id = character, branch_id = character, percentage = numeric).
-#' @param ... extra information to be stored in the model
+#' @param ... extra information to be stored in the trajectory
 #'
-#' @return The trajectory model
+#' @return The trajectory
+#'
+#' @keywords create_trajectory
 #'
 #' @export
-#'
-#' @importFrom testthat expect_is expect_equal expect_true expect_false
 add_branch_trajectory <- function(
-  model,
+  dataset,
   branch_network,
   branches,
   branch_progressions,
   ...
 ) {
   # check whether object is a data wrapper
-  testthat::expect_true(is_data_wrapper(model))
-  cell_ids <- model$cell_ids
+  assert_that(is_data_wrapper(dataset))
+  cell_ids <- dataset$cell_ids
 
   branch_ids <- branches$branch_id
 
   # check branch ids, branch network network and branches
-  testthat::expect_is(branch_ids, "character")
+  assert_that(is.character(branch_ids))
   branch_network <- check_branch_network(branch_ids, branch_network)
   branches <- check_branches(branch_ids, branches)
 
@@ -93,7 +93,7 @@ add_branch_trajectory <- function(
     select(from, to, length, directed)
 
   # create trajectory
-  model %>%
+  dataset %>%
     add_trajectory(
       milestone_network = milestone_network,
       progressions = progressions
@@ -101,43 +101,54 @@ add_branch_trajectory <- function(
 }
 
 # Check given trajectory input ----------------------------------------
-#' @importFrom testthat expect_is expect_equal expect_true
 check_branch_network <- function(branch_ids, branch_network) {
-  testthat::expect_is(branch_network, "data.frame")
-  testthat::expect_equal(ncol(branch_network), 2)
-  testthat::expect_setequal(colnames(branch_network), c("from", "to"))
+  assert_that(is.data.frame(branch_network))
+  assert_that(ncol(branch_network) == 2)
+  assert_that(setequal(colnames(branch_network), c("from", "to")))
+
   branch_network <- branch_network %>% select(from, to)
-  testthat::expect_equal(sapply(branch_network, class), c(from = "character", to = "character"))
-  testthat::expect_true(all(branch_network$from %in% branch_ids))
-  testthat::expect_true(all(branch_network$to %in% branch_ids))
-  testthat::expect_false(any(duplicated(branch_network %>% select(from, to))))
+
+  assert_that(is.character(branch_network$from))
+  assert_that(is.character(branch_network$to))
+  assert_that(branch_network$from %all_in% branch_ids)
+  assert_that(branch_network$to %all_in% branch_ids)
+  assert_that(!any(duplicated(branch_network %>% select(from, to))))
 
   branch_network
 }
 
 check_branches <- function(branch_ids, branches) {
-  testthat::expect_is(branches, "data.frame")
-  testthat::expect_equal(ncol(branches), 3)
-  testthat::expect_setequal(colnames(branches), c("branch_id", "length", "directed"))
+  assert_that(is.data.frame(branches))
+  assert_that(ncol(branches) == 3)
+  assert_that(setequal(colnames(branches), c("branch_id", "length", "directed")))
+
   branches <- branches %>% select(branch_id, length, directed)
-  testthat::expect_equal(sapply(branches, class), c(branch_id = "character", length = "numeric", directed = "logical"))
-  testthat::expect_true(all(branches$branch_id %in% branch_ids))
-  testthat::expect_false(any(duplicated(branches %>% select(branch_id))))
-  testthat::expect_false(any(is.na(branches$length)))
-  testthat::expect_false(any(is.na(branches$directed)))
+
+  assert_that(is.character(branches$branch_id))
+  assert_that(is.numeric(branches$length))
+  assert_that(is.logical(branches$directed))
+  assert_that(branches$branch_id %all_in% branch_ids)
+
+  assert_that(!any(duplicated(branches %>% select(branch_id))))
+  assert_that(!any(is.na(branches$length)))
+  assert_that(!any(is.na(branches$directed)))
 
   branches
 }
 
-#' @importFrom testthat expect_is expect_equal expect_true
 check_branch_progressions <- function(cell_ids, branch_ids, branch_progressions) {
-  testthat::expect_is(branch_progressions, "data.frame")
-  testthat::expect_equal(ncol(branch_progressions), 3)
-  testthat::expect_setequal(colnames(branch_progressions), c("cell_id", "branch_id", "percentage"))
+  assert_that(is.data.frame(branch_progressions))
+  assert_that(ncol(branch_progressions) == 3)
+  assert_that(setequal(colnames(branch_progressions), c("cell_id", "branch_id", "percentage")))
+
   branch_progressions <- branch_progressions %>% select(cell_id, branch_id, percentage)
-  testthat::expect_equal(sapply(branch_progressions, class), c(cell_id = "character", branch_id = "character", percentage = "numeric"))
-  testthat::expect_true(all(branch_progressions$cell_id %in% cell_ids))
-  testthat::expect_true(all(branch_progressions$branch_id %in% branch_ids))
+
+  assert_that(is.character(branch_progressions$cell_id))
+  assert_that(is.character(branch_progressions$branch_id))
+  assert_that(is.numeric(branch_progressions$percentage))
+
+  assert_that(branch_progressions$cell_id %all_in% cell_ids)
+  assert_that(branch_progressions$branch_id %all_in% branch_ids)
 
   branch_progressions
 }

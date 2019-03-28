@@ -7,10 +7,11 @@
 add_tde_overall(trajectory, tde_overall)
 }
 \arguments{
-\item{trajectory}{The trajectory}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{tde_overall}{A tibble containing a feature_id (character) and differentially_expressed (logical). Can also contain other columns, such as the p-value, q-value, log fold-change, etc}
 }
 \description{
 Add information on overall differentially expressed features
 }
+\keyword{adapt_trajectory}

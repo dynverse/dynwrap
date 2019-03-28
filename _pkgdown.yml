@@ -1,14 +1,16 @@
 reference:
-  - title: "Creating and adapting a trajectory model"
-    contents:
-      - matches("add_*")
-  - title: "Creating a TI method"
-    contents:
-      - matches("create_*")
-  - title: "Running a TI method"
-    contents:
-      - matches("infer_*")
-articles:
-  - title: "Creating a TI method"
-    contents:
-      - matches("create_*")
+  - id: "create_trajectory"
+    title: "Creating a trajectory"
+    desc: "Methods to create a trajectory"
+  - id: "adapt_trajectory"
+    title: "Adapting a trajectory model"
+    desc: "Methods to adapt a trajectory"
+  - id: "derive_trajectory"
+    title: "Calculations from a trajectory"
+    desc: "Deriving features from a trajectory model"
+  - id: "create_ti_method"
+    title: "Creating a TI method"
+    desc: "Methods to create a TI method wrapper"
+  - id: "infer_trajectory"
+    title: "Running a TI method"
+    desc: "Methods to run one or more TI methods"

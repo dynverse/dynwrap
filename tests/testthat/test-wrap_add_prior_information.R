@@ -44,12 +44,12 @@ progressions <- convert_milestone_percentages_to_progressions(
 num_genes <- 100
 gene_ids <- paste0("Gene", seq_len(num_genes))
 expression <- matrix(rbinom(num_genes * length(cell_ids), 10000, .01), ncol = num_genes, dimnames = list(cell_ids, gene_ids))
-feature_info <- data_frame(
+feature_info <- tibble(
   feature_id = gene_ids,
   test = 1,
   housekeeping = sample(c(T, F), size = length(gene_ids), replace = TRUE)
 )
-cell_info <- data_frame(
+cell_info <- tibble(
   cell_id = cell_ids,
   test = 2,
   simulationtime = runif(length(cell_ids)),
@@ -126,7 +126,7 @@ test_that("Testing generate_prior_information", {
 
 
 test_that("Testing add_prior_information", {
-  traj <-
+  trajectory <-
     wrap_data(
       id = "test",
       cell_ids = cell_ids,
@@ -142,12 +142,12 @@ test_that("Testing add_prior_information", {
       feature_info = feature_info
     )
 
-  traj2 <- add_prior_information(traj, verbose = FALSE)
+  trajectory2 <- add_prior_information(trajectory, verbose = FALSE)
 
-  prior_info <- traj2$prior_information
+  prior_info <- trajectory2$prior_information
 
-  expect_false(is_wrapper_with_prior_information(traj))
-  expect_true(is_wrapper_with_prior_information(traj2))
+  expect_false(is_wrapper_with_prior_information(trajectory))
+  expect_true(is_wrapper_with_prior_information(trajectory2))
 
   # copy paste tests
   expected_prior <- c(
@@ -299,7 +299,7 @@ test_that("Testing generate_prior_information", {
 
 
 test_that("Testing add_prior_information", {
-  traj <-
+  trajectory <-
     wrap_data(
       id = "test",
       cell_ids = cell_ids
@@ -316,13 +316,13 @@ test_that("Testing add_prior_information", {
   tmp <- tempfile()
   on.exit(file.remove(tmp))
   sink(tmp)
-  traj2 <- add_prior_information(traj, verbose = TRUE)
+  trajectory2 <- add_prior_information(trajectory, verbose = TRUE)
   sink()
 
-  prior_info <- traj2$prior_information
+  prior_info <- trajectory2$prior_information
 
-  expect_false(is_wrapper_with_prior_information(traj))
-  expect_true(is_wrapper_with_prior_information(traj2))
+  expect_false(is_wrapper_with_prior_information(trajectory))
+  expect_true(is_wrapper_with_prior_information(trajectory2))
 
   # copy paste tests
   expected_prior <- c(

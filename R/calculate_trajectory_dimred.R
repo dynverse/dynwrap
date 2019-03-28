@@ -1,10 +1,12 @@
-#' Calculate a dimensionality reduction on a trajectory and its cells
+#' Layout the trajectory and its cells in 2 dimensions
 #'
-#' @param trajectory A dynwrap trajectory
+#' @inheritParams common_param
 #' @param adjust_weights Whether or not to rescale the milestone network weights
 #'
 #' @importFrom igraph graph_from_data_frame layout_with_fr
 #' @importFrom testthat expect_true
+#'
+#' @keywords derive_trajectory
 #'
 #' @export
 #'
@@ -55,6 +57,10 @@ calculate_trajectory_dimred <- function(
   # add weights as length
   structure <- structure %>%
     mutate(weight = pmax(length, 1e-5))
+
+  # round weights to some closest value
+  # workaround for issue with igraph https://github.com/igraph/rigraph/issues/326
+  structure$weight <- round(structure$weight, - log10(structure$weight) + 5)
 
   # reduce dimensionality on milestone_network
   gr <- igraph::graph_from_data_frame(structure, vertices = milestone_ids)

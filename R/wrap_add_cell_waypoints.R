@@ -1,15 +1,17 @@
-#' Add cell waypoints to a wrapped object with trajectory
+#' Add cell waypoints to a wrapped trajectory
 #'
-#' @param object Wrapper with trajectory
+#' @inheritParams common_param
 #' @inheritParams select_waypoint_cells
+#'
+#' @keywords adapt_trajectory
 #'
 #' @importFrom testthat expect_true
 #'
 #' @export
-add_cell_waypoints <- function(object, num_cells_selected = 100) {
-  testthat::expect_true(is_wrapper_with_trajectory(object))
+add_cell_waypoints <- function(trajectory, num_cells_selected = 100) {
+  testthat::expect_true(is_wrapper_with_trajectory(trajectory))
 
-  waypoint_cells <- with(object, select_waypoint_cells(
+  waypoint_cells <- with(trajectory, select_waypoint_cells(
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
     milestone_percentages = milestone_percentages,
@@ -19,19 +21,17 @@ add_cell_waypoints <- function(object, num_cells_selected = 100) {
   ))
 
   # create output structure
-  object %>% extend_with(
+  trajectory %>% extend_with(
     "dynwrap::with_cell_waypoints",
     waypoint_cells = waypoint_cells
   )
 }
 
-#' Test whether an object is a data_wrapper and cell waypoints
-#'
-#' @param object The object to be tested.
+#' @rdname add_cell_waypoints
 #'
 #' @export
-is_wrapper_with_waypoint_cells <- function(object) {
-  is_wrapper_with_trajectory(object) && "dynwrap::with_cell_waypoints" %in% class(object)
+is_wrapper_with_waypoint_cells <- function(trajectory) {
+  is_wrapper_with_trajectory(trajectory) && "dynwrap::with_cell_waypoints" %in% class(trajectory)
 }
 
 #' Determine the positions of all cells in the trajectory

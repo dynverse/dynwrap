@@ -1,0 +1,19 @@
+---
+title: "Creating a TI method: Script"
+date: "`r Sys.Date()`"
+author:
+- Wouter Saelens
+- Robrecht Cannoodt
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Creating a TI method: Script}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup}
+library(dynwrap)
+```
+
+
+To write

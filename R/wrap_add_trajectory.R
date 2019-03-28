@@ -1,6 +1,6 @@
-#' Define a trajectory model given its milestone network and milestone percentages or progressions
+#' Define a trajectory dataset given its milestone network and milestone percentages or progressions
 #'
-#' @param model The model to which the trajectory will be added.
+#' @inheritParams common_param
 #' @param milestone_ids The ids of the milestones in the trajectory. Type: Character vector.
 #' @param milestone_network The network of the milestones.
 #'   Type: Data frame(from = character, to = character, length = numeric, directed = logical).
@@ -14,15 +14,15 @@
 #'   Type: Data frame(cell_id = character, from = character, to = character, percentage = numeric).
 #' @param allow_self_loops Whether to allow self loops
 #'   Type: Logical
-#' @param ... extra information to be stored in the model
+#' @param ... extra information to be stored in the dataset
 #'
-#' @return The trajectory model
+#' @keywords create_trajectory
+#'
+#' @return The trajectory
 #'
 #' @export
-#'
-#' @importFrom testthat expect_is expect_equal expect_true expect_false
 add_trajectory <- function(
-  model,
+  dataset,
   milestone_ids = NULL,
   milestone_network,
   divergence_regions = NULL,
@@ -32,8 +32,8 @@ add_trajectory <- function(
   ...
 ) {
   # check whether object is a data wrapper
-  testthat::expect_true(is_data_wrapper(model))
-  cell_ids <- model$cell_ids
+  assert_that(is_data_wrapper(dataset))
+  cell_ids <- dataset$cell_ids
 
   # infer milestone_ids if not given
   if(is.null(milestone_ids)) {
@@ -41,7 +41,7 @@ add_trajectory <- function(
   }
 
   # check milestone ids and milestone network
-  testthat::expect_is(milestone_ids, "character")
+  assert_that(is.character(milestone_ids))
   milestone_network <- check_milestone_network(milestone_ids, milestone_network, allow_self_loops = allow_self_loops)
 
   # check divergence regions
@@ -97,7 +97,7 @@ add_trajectory <- function(
     divreg <- divergence_regions %>% filter(is_start, milestone_id == fr)
     if (nrow(divreg) >= 1) {
       divreg2 <- divergence_regions %>% filter(divergence_id == divreg$divergence_id)
-      testthat::expect_true(all(te$to %in% divreg2$milestone_id), info = "All divergence regions need to be explicitly defined")
+      assert_that(te$to %all_in% divreg2$milestone_id, msg = "All divergence regions need to be explicitly defined")
     } else {
       stop("Not all divergence regions are specified; check progressions or divergence regions")
     }
@@ -109,7 +109,7 @@ add_trajectory <- function(
   directed <- classification$directed
 
   # create output structure
-  model %>% extend_with(
+  dataset %>% extend_with(
     "dynwrap::with_trajectory",
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
@@ -122,82 +122,106 @@ add_trajectory <- function(
   )
 }
 
-#' Test whether an object is a model and has a trajectory
-#'
-#' @param object The object to be tested.
+#' @inheritParams add_trajectory
+#' @rdname add_trajectory
 #'
 #' @export
-is_wrapper_with_trajectory <- function(object) {
-  is_data_wrapper(object) && "dynwrap::with_trajectory" %in% class(object)
+is_wrapper_with_trajectory <- function(trajectory) {
+  is_data_wrapper(trajectory) && "dynwrap::with_trajectory" %in% class(trajectory)
 }
 
 
 # Check given trajectory input ----------------------------------------
-#' @importFrom testthat expect_is expect_equal expect_true
 check_milestone_network <- function(milestone_ids, milestone_network, allow_self_loops = FALSE) {
-  testthat::expect_is(milestone_network, "data.frame")
-  testthat::expect_equal(ncol(milestone_network), 4)
-  testthat::expect_setequal(colnames(milestone_network), c("from", "to", "length", "directed"))
+  assert_that(is.data.frame(milestone_network))
+  assert_that(ncol(milestone_network) == 4)
+  assert_that(setequal(colnames(milestone_network), c("from", "to", "length", "directed")))
+
   milestone_network <- milestone_network %>% select(from, to, length, directed)
-  testthat::expect_equal(sapply(milestone_network, class), c(from = "character", to = "character", length = "numeric", directed = "logical"))
-  testthat::expect_true(all(milestone_network$from %in% milestone_ids))
-  testthat::expect_true(all(milestone_network$to %in% milestone_ids))
-  testthat::expect_false(any(duplicated(milestone_network %>% select(from, to))))
+
+  assert_that(is.character(milestone_network$from))
+  assert_that(is.character(milestone_network$to))
+  assert_that(is.numeric(milestone_network$length))
+  assert_that(is.logical(milestone_network$directed))
+
+  assert_that(milestone_network$from %all_in% milestone_ids)
+  assert_that(milestone_network$to %all_in% milestone_ids)
+  assert_that(!any(duplicated(milestone_network %>% select(from, to))))
 
   if (!allow_self_loops) {
-    testthat::expect_false(any((milestone_network$from == milestone_network$to) & milestone_network$length > 0))
+    assert_that(!any((milestone_network$from == milestone_network$to) & milestone_network$length > 0))
   }
 
-  ## TODO: check if edges such as A->B B->A are presnet
+  check1 <- milestone_network
+  if (allow_self_loops) check1 <- check1 %>% filter(from != to)
+  check <-
+    inner_join(
+      check1 %>% transmute(from, to, left = "left"),
+      check1 %>% transmute(from = to, to = from, right = "right"),
+      by = c("from", "to")
+    )
+  assert_that(nrow(check) == 0, msg = "Milestone network should not contain A->B B->A edges")
 
   milestone_network
 }
 
-#' @importFrom testthat expect_is expect_equal expect_true
 check_divergence_regions <- function(milestone_ids, divergence_regions) {
-  testthat::expect_is(divergence_regions, "data.frame")
-  testthat::expect_equal(ncol(divergence_regions), 3)
-  testthat::expect_setequal(colnames(divergence_regions), c("divergence_id", "milestone_id", "is_start"))
+  assert_that(is.data.frame(divergence_regions))
+  assert_that(ncol(divergence_regions) == 3)
+  assert_that(setequal(colnames(divergence_regions), c("divergence_id", "milestone_id", "is_start")))
+
   divergence_regions <- divergence_regions %>% select(divergence_id, milestone_id, is_start)
-  testthat::expect_equal(sapply(divergence_regions, class), c(divergence_id = "character", milestone_id = "character", is_start = "logical"))
-  testthat::expect_true(all(divergence_regions$milestone_id %in% milestone_ids))
+
+  assert_that(is.character(divergence_regions$divergence_id))
+  assert_that(is.character(divergence_regions$milestone_id))
+  assert_that(is.logical(divergence_regions$is_start))
+  assert_that(divergence_regions$milestone_id %all_in% milestone_ids)
 
   dr_check <- divergence_regions %>% group_by(divergence_id) %>% summarise(num_starts = sum(is_start))
-  testthat::expect_true(all(dr_check$num_starts == 1))
+  assert_that(all(dr_check$num_starts == 1))
 
   divergence_regions
 }
 
-#' @importFrom testthat expect_is expect_equal expect_true
 check_milestone_percentages <- function(cell_ids, milestone_ids, milestone_percentages) {
-  testthat::expect_is(milestone_percentages, "data.frame")
-  testthat::expect_equal(ncol(milestone_percentages), 3)
-  testthat::expect_setequal(colnames(milestone_percentages), c("cell_id", "milestone_id", "percentage"))
+  assert_that(is.data.frame(milestone_percentages))
+  assert_that(ncol(milestone_percentages) == 3)
+  assert_that(setequal(colnames(milestone_percentages), c("cell_id", "milestone_id", "percentage")))
+
   milestone_percentages <- milestone_percentages %>% select(cell_id, milestone_id, percentage)
-  testthat::expect_equal(sapply(milestone_percentages, class), c(cell_id = "character", milestone_id = "character", percentage = "numeric"))
-  testthat::expect_true(all(milestone_percentages$cell_id %in% cell_ids))
-  testthat::expect_true(all(milestone_percentages$milestone_id %in% milestone_ids))
+
+  assert_that(is.character(milestone_percentages$cell_id))
+  assert_that(is.character(milestone_percentages$milestone_id))
+  assert_that(is.numeric(milestone_percentages$percentage))
+
+  assert_that(milestone_percentages$cell_id %all_in% cell_ids)
+  assert_that(milestone_percentages$milestone_id %all_in% milestone_ids)
 
   # fix precision errors
   milestone_percentages$percentage[milestone_percentages$percentage < 0 & milestone_percentages$percentage > -1e-6] <- 0
   milestone_percentages$percentage[milestone_percentages$percentage > 1 & milestone_percentages$percentage < 1+1e-6] <- 1
 
   mp_check <- tapply(milestone_percentages$percentage, milestone_percentages$cell_id, sum)
-  testthat::expect_true(all(abs(mp_check - 1) < 1e-6), info = "Sum of milestone percentages per cell_id should be exactly one")
+  assert_that(all(abs(mp_check - 1) < 1e-6), msg = "Sum of milestone percentages per cell_id should be exactly one")
 
   milestone_percentages
 }
 
-#' @importFrom testthat expect_is expect_equal expect_true
 check_progressions <- function(cell_ids, milestone_ids, milestone_network, progressions) {
-  testthat::expect_is(progressions, "data.frame")
-  testthat::expect_equal(ncol(progressions), 4)
-  testthat::expect_setequal(colnames(progressions), c("cell_id", "from", "to", "percentage"))
+  assert_that(is.data.frame(progressions))
+  assert_that(ncol(progressions) == 4)
+  assert_that(setequal(colnames(progressions), c("cell_id", "from", "to", "percentage")))
+
   progressions <- progressions %>% select(cell_id, from, to, percentage)
-  testthat::expect_equal(sapply(progressions, class), c(cell_id = "character", from = "character", to = "character", percentage = "numeric"))
-  testthat::expect_true(all(progressions$cell_id %in% cell_ids))
-  testthat::expect_true(all(progressions$from %in% milestone_ids))
-  testthat::expect_true(all(progressions$to %in% milestone_ids))
+
+  assert_that(is.character(progressions$cell_id))
+  assert_that(is.character(progressions$from))
+  assert_that(is.character(progressions$to))
+  assert_that(is.numeric(progressions$percentage))
+
+  assert_that(progressions$cell_id %all_in% cell_ids)
+  assert_that(progressions$from %all_in% milestone_ids)
+  assert_that(progressions$to %all_in% milestone_ids)
 
   # fix precision errors
   progressions$percentage[progressions$percentage < 0 & progressions$percentage > -1e-6] <- 0
@@ -205,11 +229,11 @@ check_progressions <- function(cell_ids, milestone_ids, milestone_network, progr
 
   # check percentage sum
   pg_check <- tapply(progressions$percentage, progressions$cell_id, sum)
-  testthat::expect_true(all(pg_check >= 0 & pg_check < (1 + 1e-6)), info = "Sum of progressions per cell_id should be exactly one")
+  assert_that(all(pg_check >= 0 & pg_check < (1 + 1e-6)), msg = "Sum of progressions per cell_id should be exactly one")
 
   # check edges
   pg_check <- progressions %>% left_join(milestone_network, by = c("from", "to"))
-  testthat::expect_true(all(!is.na(pg_check$directed)), info = "All progressions (from, to) edges need to be part of the milestone network")
+  assert_that(all(!is.na(pg_check$directed)), msg = "All progressions (from, to) edges need to be part of the milestone network")
 
   progressions
 }

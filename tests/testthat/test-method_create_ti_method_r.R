@@ -1,47 +1,59 @@
 context("Testing create_ti_method_r")
 
-dummy <- create_ti_method_r(
-  name = "dummy 1",
-  id = "dum1",
-  package_loaded = c("dynwrap"),
-  package_required = c("dplyr"),
-  input_required = c("counts"),
-  input_optional = NULL,
-  output = "trajectory",
-  parameters = list(
-    param = list(
+dummy_definition <- definition(
+  method = def_method(
+    id = "dummy"
+  ),
+  parameters = dynparam::parameter_set(
+    dynparam::character_parameter(
+      id = "fruit",
       default = "banana",
       values = c("apple", "banana", "cherry")
     )
   ),
-  run_fun = function(counts, param = "fjioiw", verbose, seed) {
-    wrap_data(
-      cell_ids = param
-    ) %>%
-      add_linear_trajectory(
-        pseudotime = set_names(0, param)
-      )
-  }
+  wrapper = def_wrapper(
+    input_required = "expression",
+    input_optional = "start_id"
+  )
+)
+
+dummy_run_fun = function(counts, parameters) {
+  wrap_data(
+    cell_ids = parameters$fruit
+  ) %>%
+    add_linear_trajectory(
+      pseudotime = set_names(0, parameters$fruit)
+    )
+}
+
+
+dummy <- create_ti_method_r(
+  dummy_definition,
+  dummy_run_fun,
+  package_loaded = "dynwrap",
+  package_required = "dplyr",
+  return_function = TRUE
 )
 
 dummy_instance <- dummy()
 
-dataset <- wrap_data(cell_ids = "a") %>%
+dataset <-
+  wrap_data(cell_ids = "a") %>%
   add_linear_trajectory(pseudotime = c(a = 1)) %>%
   add_expression(
-    counts = matrix(0, dimnames = list("a", "b")),
-    expression = matrix(0, dimnames = list("a", "b"))
+    counts = matrix(0:1, ncol = 2, dimnames = list("a", c("A", "B"))),
+    expression = matrix(0:1, ncol = 2, dimnames = list("a", c("A", "B")))
   )
 
 test_that("Testing simple create ti function", {
-  expect_equal( dummy_instance$name, "dummy 1" )
-  expect_equal( dummy_instance$id, "dum1" )
-  expect_equal( dummy_instance$run_info$package_loaded, "dynwrap" )
-  expect_equal( dummy_instance$run_info$package_required, "dplyr" )
-  expect_is( dummy_instance$parameters, "list" )
-  expect_is( dummy_instance$run_info$run_fun, "function" )
+  expect_equal( dummy_instance$method$name, "dummy" )
+  expect_equal( dummy_instance$method$id, "dummy" )
+  expect_equal( dummy_instance$run$package_loaded, "dynwrap" )
+  expect_equal( dummy_instance$run$package_required, "dplyr" )
+  expect_is( dummy_instance$parameters, "parameter_set" )
+  expect_is( dummy_instance$run$run_fun, "function" )
 
-  expect_equal(get_default_parameters(dummy_instance)$param, "banana")
+  expect_equal(get_default_parameters(dummy_instance)$fruit, "banana")
 })
 
 test_that("dummy method is able to correctly pass default argument", {
@@ -49,14 +61,13 @@ test_that("dummy method is able to correctly pass default argument", {
 })
 
 test_that("user is able to override parameter", {
-  expect_equal( infer_trajectory(dataset, dummy_instance, parameters = list(param = "cherry"))$cell_ids, "cherry" )
+  expect_equal( infer_trajectory(dataset, dummy_instance, parameters = list(fruit = "cherry"))$cell_ids, "cherry" )
 })
 
 test_that("user is able to set different default parameter", {
-  dummy_instance2 <- dummy(param = "101010")
+  dummy_instance2 <- dummy(fruit = "101010")
   expect_equal( infer_trajectory(dataset, dummy_instance2)$cell_ids, "101010" )
 
-
-  expect_equal(get_default_parameters(dummy_instance2)$param, "101010")
+  expect_equal(get_default_parameters(dummy_instance2)$fruit, "101010")
 })
 

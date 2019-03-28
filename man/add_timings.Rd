@@ -2,15 +2,26 @@
 % Please edit documentation in R/wrap_add_timings.R
 \name{add_timings}
 \alias{add_timings}
-\title{Add count and normalised expression values to a model}
+\alias{is_wrapper_with_timings}
+\alias{add_timing_checkpoint}
+\title{Add timings checkpoints}
 \usage{
-add_timings(model, timings)
+add_timings(trajectory, timings)
+
+is_wrapper_with_timings(trajectory)
+
+add_timing_checkpoint(timings, name)
 }
 \arguments{
-\item{model}{The model to which timings will be added}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{timings}{A list of timings.}
+
+\item{name}{The name of the timings checkpoint.}
 }
 \description{
-Add count and normalised expression values to a model
+Add timings checkpoints
+
+Helper function for storing timings information.
 }
+\keyword{adapt_trajectory}

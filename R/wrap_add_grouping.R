@@ -1,32 +1,34 @@
-#' Add a cell grouping to a data wrapper
+#' Add a cell grouping to a dataset
 #'
-#' @param model The model to which the grouping will be added.
+#' @inheritParams common_param
 #' @param grouping A grouping of the cells, can be a named vector or a dataframe with group_id (character) and cell_id (character)
 #' @param group_ids All group_ids, optional
-#' @param ... Extra information to be stored in the wrapper.
+#' @param ... Extra information to be stored in the dataset
+#'
+#' @keywords adapt_trajectory
 #'
 #' @export
 #'
 #' @importFrom testthat expect_equal expect_is expect_true
 add_grouping <- function(
-  model,
+  dataset,
   grouping,
   group_ids = NULL,
   ...
 ) {
   # process the grouping
-  grouping <- process_grouping(model, grouping)
+  grouping <- process_grouping(dataset, grouping)
 
   # if grouping not provided, have to calculate group_ids here
   if(is.null(group_ids)) group_ids <- unique(grouping)
 
   #
   if(length(names(grouping)) != length(grouping)) {
-    names(grouping) <- model$cell_ids
+    names(grouping) <- dataset$cell_ids
   }
 
-  # check whether object is a data wrapper
-  testthat::expect_true(is_data_wrapper(model))
+  # check whether dataset is a data wrapper
+  testthat::expect_true(is_data_wrapper(dataset))
 
   # check group ids
   testthat::expect_is(group_ids, "character")
@@ -36,16 +38,16 @@ add_grouping <- function(
   testthat::expect_named(grouping)
   testthat::expect_is(grouping, "character")
 
-  testthat::expect_true(all(names(grouping) %in% model$cell_ids))
+  testthat::expect_true(all(names(grouping) %in% dataset$cell_ids))
   testthat::expect_true(all(grouping[!is.na(grouping)] %in% group_ids))
 
   # check milestone ids, if data contains a trajectory
-  if (is_wrapper_with_trajectory(model)) {
-    testthat::expect_equal(model$milestone_ids, group_ids)
+  if (is_wrapper_with_trajectory(dataset)) {
+    testthat::expect_equal(dataset$milestone_ids, group_ids)
   }
 
   # create output structure
-  model %>% extend_with(
+  dataset %>% extend_with(
     "dynwrap::with_grouping",
     group_ids = group_ids,
     grouping = grouping,
@@ -55,20 +57,20 @@ add_grouping <- function(
 
 #' @rdname add_grouping
 #' @export
-is_wrapper_with_grouping <- function(model) {
-  is_data_wrapper(model) && "dynwrap::with_grouping" %in% class(model)
+is_wrapper_with_grouping <- function(dataset) {
+  is_data_wrapper(dataset) && "dynwrap::with_grouping" %in% class(dataset)
 }
 
 #' @rdname add_grouping
 #' @export
-get_grouping <- function(model, grouping = NULL) {
+get_grouping <- function(dataset, grouping = NULL) {
   if(is.null(grouping)) {
-    # no grouping provided, get from model
-    if(is_wrapper_with_grouping(model)) {
-      grouping <- set_names(model$grouping, model$cell_ids)
-    } else if (is_wrapper_with_prior_information(model)) {
-      if("groups_id" %in% names(model$prior_information)) {
-        grouping <- model$prior_information$groups_id %>%
+    # no grouping provided, get from dataset
+    if(is_wrapper_with_grouping(dataset)) {
+      grouping <- set_names(dataset$grouping, dataset$cell_ids)
+    } else if (is_wrapper_with_prior_information(dataset)) {
+      if("groups_id" %in% names(dataset$prior_information)) {
+        grouping <- dataset$prior_information$groups_id %>%
           {set_names(.$group_id, .$cell_id)}
       }
     } else {
@@ -76,31 +78,31 @@ get_grouping <- function(model, grouping = NULL) {
     }
   }  else if (length(grouping) == 1 && is.character(grouping)) {
     # extract group from column in cell_info
-    if(grouping %in% colnames(model$cell_info)) {
-      grouping <- set_names(model$cell_info[[grouping]], model$cell_id)
+    if(grouping %in% colnames(dataset$cell_info)) {
+      grouping <- set_names(dataset$cell_info[[grouping]], dataset$cell_id)
     } else {
       stop("Could not find column ", grouping, " in cell_info")
     }
   } else {
-    grouping <- process_grouping(model, grouping)
+    grouping <- process_grouping(dataset, grouping)
   }
 
   if(length(names(grouping)) != length(grouping)) {
-    names(grouping) <- model$cell_ids
+    names(grouping) <- dataset$cell_ids
   }
 
   grouping
 }
 
 
-process_grouping <- function(model, grouping) {
+process_grouping <- function(dataset, grouping) {
   if (is.data.frame(grouping) && all(c("group_id", "cell_id") %in% colnames(grouping))) {
     # dataframe
     grouping <- set_names(as.character(grouping$group_id), grouping$cell_id)
-  } else if (length(grouping) == length(model$cell_ids)) {
+  } else if (length(grouping) == length(dataset$cell_ids)) {
     # named vector of all cells
     if (is.null(names(grouping))) {
-      names(grouping) <- model$cell_ids
+      names(grouping) <- dataset$cell_ids
     }
   } else if (length(grouping) == length(names(grouping))) {
     # named vector, possibly not containing all cells
@@ -109,45 +111,54 @@ process_grouping <- function(model, grouping) {
   }
 
   # cells which are not grouped are given group NA
-  grouping[setdiff(model$cell_ids, names(grouping))] <- NA
+  grouping[setdiff(dataset$cell_ids, names(grouping))] <- NA
 
   # make sure the order of the grouping is the same as cell_ids
-  grouping <- grouping[model$cell_ids]
+  grouping <- grouping[dataset$cell_ids]
 
-  set_names(as.character(grouping), model$cell_ids)
+  set_names(as.character(grouping), dataset$cell_ids)
 }
 
 
-#' Grouping the cells onto their edges
+#' Create a grouping from a trajectory
 #'
-#' @param trajectory The trajectory object
+#' Grouping cells onto their edges, or grouping cells onto their nearest milestones
+#'
+#' @inheritParams common_param
 #' @param group_template Processed by glue::glue to name the group
 #'
+#' @name group_from_trajectory
+#'
+#' @keywords derive_trajectory
+NULL
+
+#' @rdname group_from_trajectory
 #' @export
 group_onto_trajectory_edges <- function(trajectory, group_template = "{from}->{to}") {
   # first map cells to largest percentage (in case of divergence regions)
-  progressions <- trajectory$progressions %>%
+  progressions <-
+    trajectory$progressions %>%
     group_by(cell_id) %>%
     arrange(-percentage) %>%
     slice(1) %>%
     ungroup()
 
   # do the actual grouping
-  grouping <- progressions %>%
+  grouping <-
+    progressions %>%
     group_by(from, to) %>%
     mutate(group_id = as.character(glue::glue(group_template))) %>%
     ungroup() %>%
     select(cell_id, group_id) %>%
     deframe()
 
-  grouping[trajectory$cell_ids]
+  cell_ids <- trajectory$cell_ids
+  ifelse(cell_ids %in% names(grouping), grouping[cell_ids], NA) %>%
+    set_names(cell_ids)
 }
 
 
-#' Grouping the cells onto the closest milestones
-#'
-#' @param trajectory The trajectory object
-#'
+#' @rdname group_from_trajectory
 #' @export
 group_onto_nearest_milestones <- function(trajectory) {
   grouping <- trajectory$milestone_percentages %>%
@@ -159,6 +170,8 @@ group_onto_nearest_milestones <- function(trajectory) {
     select(cell_id, milestone_id) %>%
     deframe()
 
-  grouping[trajectory$cell_ids]
+  cell_ids <- trajectory$cell_ids
+  ifelse(cell_ids %in% names(grouping), grouping[cell_ids], NA) %>%
+    set_names(cell_ids)
 }
 

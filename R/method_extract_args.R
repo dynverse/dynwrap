@@ -1,5 +1,18 @@
+.method_extract_inputs <- function(
+  dataset,
+  inputs
+) {
+  input_ids_dataset <-
+    inputs %>%
+    filter(required, type == "expression") %>%
+    pull(input_id)
+
+  map(input_ids_dataset, get_expression, dataset = dataset) %>%
+    set_names(input_ids_dataset)
+}
+
 #' @importFrom utils data
-.method_extract_args <- function(
+.method_extract_priors <- function(
   dataset,
   inputs,
   give_priors = NULL
@@ -10,21 +23,13 @@
     stop("Invalid priors requested: ", give_priors)
   }
 
-  input_ids_dataset <-
-    inputs %>%
-    filter(required, type == "expression") %>%
-    pull(input_id)
-
-  args_dataset <-
-    map(input_ids_dataset, get_expression, model = dataset) %>%
-    set_names(input_ids_dataset)
-
   # extract prior information
   priors <- dataset$prior_information
   priors$dataset <- dataset
 
   # required, check if the prior infirm
-  required_prior_ids <- inputs %>%
+  required_prior_ids <-
+    inputs %>%
     filter(required, type == "prior_information") %>%
     pull(input_id)
 
@@ -49,7 +54,8 @@
   args_required_priors <- priors[required_prior_ids]
 
   # optional
-  optional_prior_ids <- inputs %>%
+  optional_prior_ids <-
+    inputs %>%
     filter(!required, type == "prior_information", input_id %in% give_priors) %>%
     pull(input_id)
 
@@ -68,7 +74,6 @@
 
   # output
   c(
-    args_dataset,
     args_required_priors,
     args_optional_priors
   )

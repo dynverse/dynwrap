@@ -2,20 +2,23 @@
 #'
 #' This function will generate the milestone_network and progressions.
 #'
+#' @inheritParams common_param
 #' @inheritParams add_trajectory
 #' @inheritParams add_dimred
 #' @inheritParams add_grouping
 #'
 #' @param ... extra information to be stored in the wrapper.
 #'
+#' @keywords create_trajectory
+#'
 #' @export
 #'
-#' @return The trajectory model
+#' @return The trajectory
 #'
 #' @importFrom testthat expect_is expect_true expect_equal expect_false
 #' @importFrom pdist pdist
 add_dimred_projection <- function(
-  model,
+  dataset,
   milestone_ids = NULL,
   milestone_network,
   dimred,
@@ -24,9 +27,9 @@ add_dimred_projection <- function(
   ...
 ) {
   # check data wrapper
-  testthat::expect_true(is_data_wrapper(model))
+  testthat::expect_true(is_data_wrapper(dataset))
 
-  cell_ids <- model$cell_ids
+  cell_ids <- dataset$cell_ids
 
   # process milestone_ids
   if(is.null(milestone_ids)) {
@@ -35,12 +38,12 @@ add_dimred_projection <- function(
 
   # process grouping
   if(!is.null(grouping)) {
-    grouping <- process_grouping(model, grouping)
+    grouping <- process_grouping(dataset, grouping)
   }
 
   # add dimred and dimred_milestones
-  dimred <- process_dimred(model, dimred)
-  dimred_milestones <- process_dimred(model, dimred_milestones, "milestone_id")
+  dimred <- process_dimred(dataset, dimred)
+  dimred_milestones <- process_dimred(dataset, dimred_milestones, "milestone_id")
   testthat::expect_setequal(milestone_ids, rownames(dimred_milestones))
 
   # check milestone_network
@@ -106,21 +109,23 @@ add_dimred_projection <- function(
       bind_rows(data_frame(from = missing_gids, to = missing_gids, length = 0, directed = FALSE))
   }
 
-  # collect information on clusters
-  dimred_milestones_df <-
-    dimred_milestones %>%
-    data.frame(stringsAsFactors = FALSE) %>%
-    rownames_to_column("milestone_id")
-  dimred_trajectory_segments <- milestone_network %>%
-    left_join(dimred_milestones_df %>% rename(from = milestone_id) %>% rename_if(is.numeric, ~ paste0("from_", .)), by = "from") %>%
-    left_join(dimred_milestones_df %>% rename(to = milestone_id) %>% rename_if(is.numeric, ~ paste0("to_", .)), by = "to") %>%
-    select(starts_with("from_"), starts_with("to_")) %>%
-    magrittr::set_rownames(NULL) %>%
-    as.matrix
+  dimred_segment_progressions <-
+    milestone_network %>%
+    select(from, to) %>%
+    mutate(zero = from, one = to) %>%
+    gather(percentage, milestone_id, zero, one) %>%
+    mutate(percentage = c(zero = 0, one = 1)[percentage])
+
+  dimred_segment_points <-
+    dimred_milestones[dimred_segment_progressions$milestone_id, , drop = FALSE]
+
+  dimred_segment_progressions <-
+    dimred_segment_progressions %>%
+    select(from, to, percentage)
 
   # construct output
   out <- add_trajectory(
-    model = model,
+    dataset = dataset,
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
     divergence_regions = NULL,
@@ -129,7 +134,8 @@ add_dimred_projection <- function(
   ) %>% add_dimred(
     dimred = dimred,
     dimred_milestones = dimred_milestones,
-    dimred_trajectory_segments = dimred_trajectory_segments
+    dimred_segment_points = dimred_segment_points,
+    dimred_segment_progressions = dimred_segment_progressions
   )
 
   # add cell grouping of a milestone_assignment was given

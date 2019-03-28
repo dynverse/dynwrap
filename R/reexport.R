@@ -2,6 +2,10 @@
 #' @export
 babelwhale::test_docker_installation
 
+#' @importFrom babelwhale test_singularity_installation
+#' @export
+babelwhale::test_singularity_installation
+
 #' @importFrom babelwhale create_config
 #' @export
 babelwhale::create_config

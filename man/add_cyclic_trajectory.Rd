@@ -4,11 +4,11 @@
 \alias{add_cyclic_trajectory}
 \title{Constructs a circular trajectory using the pseudotime values of each cell.}
 \usage{
-add_cyclic_trajectory(model, pseudotime, directed = FALSE,
+add_cyclic_trajectory(dataset, pseudotime, directed = FALSE,
   do_scale_minmax = TRUE, ...)
 }
 \arguments{
-\item{model}{The model to which a cyclic trajectory will be added.}
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
 \item{pseudotime}{A named vector of pseudo times.}
 
@@ -20,8 +20,9 @@ Otherwise, will assume the values are already within that range.}
 \item{...}{extra information to be stored in the wrapper.}
 }
 \value{
-The trajectory model
+The trajectory
 }
 \description{
 This function will generate the milestone_network and progressions.
 }
+\keyword{create_trajectory}

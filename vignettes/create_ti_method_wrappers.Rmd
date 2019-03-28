@@ -1,0 +1,18 @@
+---
+title: "Creating a TI method: Types of wrappers"
+date: "`r Sys.Date()`"
+author:
+- Wouter Saelens
+- Robrecht Cannoodt
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Creating a TI method: Types of wrappers}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup}
+library(dynwrap)
+```
+
+To write

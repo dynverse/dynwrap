@@ -1,45 +1,47 @@
 #' Multifurcating trajectory with end state probabilities
 #'
 #' Constructs a multifurcating trajectory using the pseudotime values of each cell and their end state probabilities.
-#' If pseudotime values are not given, will use pseudotime already present in the model.
+#' If pseudotime values are not given, will use pseudotime already present in the dataset.
 #'
 #' This function will generate the milestone_network and progressions.
 #'
-#' @param model The model to which a multifurcating trajectory will be added.
+#' @inheritParams common_param
 #' @param pseudotime A named vector of pseudo times.
 #' @param end_state_probabilities A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone. If the data_frame contains only a cell_id column, the data will be processed using `add_linear_trajectory`
 #' @param do_scale_minmax Whether or not to scale the pseudotime between 0 and 1.
 #'   Otherwise, will assume the values are already within that range.
-#' @param ... Extras to be added to the model
+#' @param ... Extras to be added to the trajectory
 #'
-#' @return The trajectory model
+#' @keywords create_trajectory
+#'
+#' @return The trajectory
 #'
 #' @export
 #'
 #' @importFrom testthat expect_true
 add_end_state_probabilities <- function(
-  model,
+  dataset,
   end_state_probabilities,
   pseudotime = NULL,
   do_scale_minmax = TRUE,
   ...
 ) {
   # check data wrapper
-  expect_true(is_data_wrapper(model))
+  expect_true(is_data_wrapper(dataset))
 
   # process pseudotime
   if (!is.null(pseudotime)) {
-    pseudotime <- process_pseudotime(model, pseudotime)
+    pseudotime <- process_pseudotime(dataset, pseudotime)
     # scale pseudotime
     if (do_scale_minmax) {
       pseudotime <- scale_minmax(pseudotime)
     } else {
       expect_true(all(0 <= pseudotime & pseudotime <= 1))
     }
-    model <- model %>% add_pseudotime(pseudotime)
+    dataset <- dataset %>% add_pseudotime(pseudotime)
   } else {
-    expect_true("pseudotime" %in% names(model))
-    pseudotime <- model$pseudotime
+    expect_true("pseudotime" %in% names(dataset))
+    pseudotime <- dataset$pseudotime
   }
 
   # process end_state_probabilities
@@ -47,7 +49,7 @@ add_end_state_probabilities <- function(
 
   if (ncol(end_state_probabilities) == 1) {
     # process as linear of no end_state_probabilities are provided
-    model %>%
+    dataset %>%
       add_linear_trajectory(
         pseudotime = pseudotime,
         directed = TRUE,
@@ -83,7 +85,7 @@ add_end_state_probabilities <- function(
 
     # return output
     add_trajectory(
-      model = model,
+      dataset = dataset,
       milestone_ids = milestone_ids,
       milestone_network = milestone_network,
       divergence_regions = divergence_regions,

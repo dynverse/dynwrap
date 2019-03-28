@@ -3,7 +3,7 @@
 #' Note that the given data wrapper requires a trajectory and expression values
 #' to have been added already.
 #'
-#' @param dataset A data wrapper to extend upon.
+#' @inheritParams common_param
 #' @param start_id The start cells
 #' @param end_id The end cells
 #' @param groups_id The grouping of cells, a dataframe with cell_id and group_id
@@ -15,6 +15,8 @@
 #' @param timecourse_continuous The time for every cell
 #' @param timecourse_discrete The time for every cell in groups
 #' @param verbose Whether or not to print informative messages
+#'
+#' @keywords infer_trajectory
 #'
 #' @export
 #'
@@ -92,7 +94,7 @@ add_prior_information <- function(
         milestone_percentages = milestone_percentages,
         progressions = progressions,
         divergence_regions = divergence_regions,
-        expression = expression,
+        expression = get_expression(dataset),
         feature_info = feature_info,
         cell_info = cell_info,
         given = prior_information,
@@ -107,25 +109,27 @@ add_prior_information <- function(
 }
 
 
-#' Test whether an object is a dataset and contains prior information
-#'
-#' @param object The object to be tested.
+#' @inheritParams add_prior_information
+#' @rdname add_prior_information
 #'
 #' @export
-is_wrapper_with_prior_information <- function(object) {
-  is_data_wrapper(object) && "dynwrap::with_prior" %in% class(object)
+is_wrapper_with_prior_information <- function(dataset) {
+  is_data_wrapper(dataset) && "dynwrap::with_prior" %in% class(dataset)
 }
 
-#' Extract the prior information from the milestone network
+#' Extract the prior information from the trajectory
 #'
-#' For example, what are the start cells, the end cells, to which milestone does each cell belong to.
+#' For example, what are the start cells, the end cells, to which milestone does each cell belong to, ...
+#'
+#' The dataset has to contain a trajectory for this to work
 #'
 #' @inheritParams wrap_data
 #' @inheritParams add_trajectory
 #' @inheritParams add_expression
 #' @param marker_fdr Maximal FDR value for a gene to be considered a marker
 #' @param given Prior information already calculated
-#' @param verbose Whether or not to print informative messages
+#'
+#' @rdname add_prior_information
 #'
 #' @importFrom utils installed.packages head
 #'
@@ -205,7 +209,7 @@ generate_prior_information <- function(
           data_frame(cell_id = pseudocell, milestone_id = mids, percentage = 1)
         )
       )
-    geo <- compute_tented_geodesic_distances(tmp, waypoint_cells = pseudocell)[,cell_ids,drop = FALSE]
+    geo <- calculate_geodesic_distances(tmp, waypoint_cells = pseudocell)[,cell_ids,drop = FALSE]
     unique(unlist(apply(geo, 1, function(x) {
       sample(names(which(x == min(x))), 1)
     })))
@@ -263,23 +267,41 @@ generate_prior_information <- function(
       features_id <- feature_info %>%
         filter(!housekeeping) %>%
         pull(feature_id)
-    } else if ("scran" %in% rownames(utils::installed.packages())) {
-      findMarkers <- get("findMarkers", asNamespace("scran"))
-      markers <- findMarkers(t(expression), groups_id %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id))
-
-      features_id <- map(markers, as, "data.frame") %>%
-        map(rownames_to_column, "gene") %>%
-        bind_rows() %>%
-        filter(FDR < marker_fdr) %>%
-        pull("gene") %>%
-        unique()
     } else {
-      warning("scran should be installed to determine marker features, will simply order by standard deviation")
-
-      features_id <- apply(expression, 2, sd) %>%
-        sort() %>%
-        rownames() %>%
-        {utils::head(., round(length(.)*0.1))}
+      requireNamespace("ranger")
+      data <- data.frame(
+        PREDICT = groups_id %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id) %>% as.factor,
+        as.matrix(expression), ## TODO: can this work with a sparse matrix, somehow?
+        check.names = FALSE,
+        stringsAsFactors = FALSE
+      )
+      rf <- ranger::ranger(
+        data = data,
+        num.trees = 2000,
+        mtry = min(50, ncol(expression)),
+        sample.fraction = min(250 / nrow(expression), 1),
+        min.node.size = 20,
+        importance = "impurity",
+        write.forest = FALSE,
+        dependent.variable.name = "PREDICT",
+        verbose = FALSE
+      )
+      rfsh <- ranger::ranger(
+        data = data %>% mutate(PREDICT = sample(PREDICT)),
+        num.trees = 2000,
+        mtry = min(50, ncol(expression)),
+        sample.fraction = min(250 / nrow(expression), 1),
+        min.node.size = 20,
+        importance = "impurity",
+        write.forest = FALSE,
+        dependent.variable.name = "PREDICT",
+        verbose = FALSE
+      )
+      features_id <-
+        rf$variable.importance %>%
+        sort(decreasing = TRUE) %>%
+        keep(~ . > quantile(rfsh$variable.importance, .75)) %>%
+        names()
     }
   }
 
@@ -316,7 +338,7 @@ generate_prior_information <- function(
       if (!is.null(cell_info) && "simulationtime" %in% colnames(cell_info)) {
         set_names(cell_info$simulationtime, cell_info$cell_id)
       } else {
-        geo <- compute_tented_geodesic_distances_(
+        geo <- calculate_geodesic_distances_(
           cell_ids = cell_ids,
           milestone_ids = milestone_ids,
           milestone_network = milestone_network,

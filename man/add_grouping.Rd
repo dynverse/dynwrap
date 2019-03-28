@@ -4,23 +4,24 @@
 \alias{add_grouping}
 \alias{is_wrapper_with_grouping}
 \alias{get_grouping}
-\title{Add a cell grouping to a data wrapper}
+\title{Add a cell grouping to a dataset}
 \usage{
-add_grouping(model, grouping, group_ids = NULL, ...)
+add_grouping(dataset, grouping, group_ids = NULL, ...)
 
-is_wrapper_with_grouping(model)
+is_wrapper_with_grouping(dataset)
 
-get_grouping(model, grouping = NULL)
+get_grouping(dataset, grouping = NULL)
 }
 \arguments{
-\item{model}{The model to which the grouping will be added.}
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
 \item{grouping}{A grouping of the cells, can be a named vector or a dataframe with group_id (character) and cell_id (character)}
 
 \item{group_ids}{All group_ids, optional}
 
-\item{...}{Extra information to be stored in the wrapper.}
+\item{...}{Extra information to be stored in the dataset}
 }
 \description{
-Add a cell grouping to a data wrapper
+Add a cell grouping to a dataset
 }
+\keyword{adapt_trajectory}

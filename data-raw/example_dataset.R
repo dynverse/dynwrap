@@ -46,4 +46,4 @@ dynplot::plot_graph(example_dataset)
 dynplot::plot_dimred(example_dataset)
 dynplot::plot_heatmap(example_dataset)
 
-devtools::use_data(example_dataset, overwrite = TRUE)
+usethis::use_data(example_dataset, overwrite = TRUE)

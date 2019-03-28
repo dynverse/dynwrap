@@ -5,6 +5,8 @@
 #' @param cell_info Optional meta-information pertaining the cells.
 #' @param ... Extra information to be stored in the wrapper.
 #'
+#' @keywords create_trajectory
+#'
 #' @export
 #'
 #' @importFrom testthat expect_is expect_length expect_equal
@@ -42,11 +44,10 @@ wrap_data <- function(
   )
 }
 
-#' Test whether an object is a data_wrapper
-#'
-#' @param object The object to be tested.
+#' @rdname wrap_data
+#' @inheritParams common_param
 #'
 #' @export
-is_data_wrapper <- function(object) {
-  "dynwrap::data_wrapper" %in% class(object)
+is_data_wrapper <- function(dataset) {
+  "dynwrap::data_wrapper" %in% class(dataset)
 }

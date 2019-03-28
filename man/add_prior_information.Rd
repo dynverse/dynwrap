@@ -2,6 +2,8 @@
 % Please edit documentation in R/wrap_add_prior_information.R
 \name{add_prior_information}
 \alias{add_prior_information}
+\alias{is_wrapper_with_prior_information}
+\alias{generate_prior_information}
 \title{Add prior information to a data wrapper}
 \usage{
 add_prior_information(dataset, start_id = NULL, end_id = NULL,
@@ -9,9 +11,16 @@ add_prior_information(dataset, start_id = NULL, end_id = NULL,
   groups_n = NULL, start_n = NULL, end_n = NULL,
   timecourse_continuous = NULL, timecourse_discrete = NULL,
   verbose = TRUE)
+
+is_wrapper_with_prior_information(dataset)
+
+generate_prior_information(cell_ids, milestone_ids, milestone_network,
+  milestone_percentages, progressions, divergence_regions, expression,
+  feature_info = NULL, cell_info = NULL, marker_fdr = 0.005,
+  given = NULL, verbose = FALSE)
 }
 \arguments{
-\item{dataset}{A data wrapper to extend upon.}
+\item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
 \item{start_id}{The start cells}
 
@@ -34,8 +43,42 @@ add_prior_information(dataset, start_id = NULL, end_id = NULL,
 \item{timecourse_discrete}{The time for every cell in groups}
 
 \item{verbose}{Whether or not to print informative messages}
+
+\item{cell_ids}{The ids of the cells.}
+
+\item{milestone_ids}{The ids of the milestones in the trajectory. Type: Character vector.}
+
+\item{milestone_network}{The network of the milestones.
+Type: Data frame(from = character, to = character, length = numeric, directed = logical).}
+
+\item{milestone_percentages}{A data frame specifying what percentage milestone each cell
+consists of.
+Type: Data frame(cell_id = character, milestone_id = character, percentage = numeric).}
+
+\item{progressions}{Specifies the progression of a cell along a transition in the milestone_network.
+Type: Data frame(cell_id = character, from = character, to = character, percentage = numeric).}
+
+\item{divergence_regions}{A data frame specifying the divergence
+regions between milestones (e.g. a bifurcation).
+Type: Data frame(divergence_id = character, milestone_id = character, is_start = logical).}
+
+\item{expression}{The normalised expression values with genes in columns and cells in rows}
+
+\item{feature_info}{Optional meta-information of the features, a data.frame with at least feature_id as column}
+
+\item{cell_info}{Optional meta-information pertaining the cells.}
+
+\item{marker_fdr}{Maximal FDR value for a gene to be considered a marker}
+
+\item{given}{Prior information already calculated}
 }
 \description{
 Note that the given data wrapper requires a trajectory and expression values
 to have been added already.
+
+For example, what are the start cells, the end cells, to which milestone does each cell belong to, ...
 }
+\details{
+The dataset has to contain a trajectory for this to work
+}
+\keyword{infer_trajectory}

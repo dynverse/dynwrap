@@ -8,7 +8,7 @@ get_output_processor <- function(output_id) {
     arg_classes %>%
     keep(~. == "name") %>%
     names() %>%
-    setdiff(c("data_wrapper", "traj", "model", "pred", "object", "trajectory", "..."))
+    setdiff(c("trajectory", "dataset", "..."))
 
   optional_args <-
     arg_classes %>%
