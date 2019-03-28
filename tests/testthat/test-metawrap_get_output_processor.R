@@ -12,6 +12,6 @@ test_that("get_output_processor works correctly", {
   expect_is(op_expression, "list")
   expect_equal(op_expression$processor, add_expression)
   expect_equal(sort(op_expression$required_args), c("counts", "expression"))
-  expect_equal(sort(op_expression$optional_args), c("feature_info"))
+  expect_equal(sort(op_expression$optional_args), c("feature_info", "rna_velocity"))
   expect_equal(sort(op_expression$args), sort(c(op_expression$required_args, op_expression$optional_args)))
 })

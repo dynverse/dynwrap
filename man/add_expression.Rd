@@ -6,7 +6,8 @@
 \alias{get_expression}
 \title{Add count and normalised expression values to a dataset}
 \usage{
-add_expression(dataset, counts, expression, feature_info = NULL, ...)
+add_expression(dataset, counts, expression, feature_info = NULL,
+  rna_velocity = NULL, ...)
 
 is_wrapper_with_expression(dataset)
 
