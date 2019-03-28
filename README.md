@@ -57,6 +57,9 @@ changes.
   - MAJOR CHANGE: Add support for Singularity 3.0, drop support for
     previous releases of Singularity and singularity-hub.
 
+  - MAJOR CHANGE: dynwrap now always works with sparse count and
+    expression matrices
+
   - FEATURE: Add `create_ti_method_definition()` to create a definition
     from a local script.
 
