@@ -15,4 +15,4 @@ vignette: >
 library(dynwrap)
 ```
 
-Still to be written
+To write
