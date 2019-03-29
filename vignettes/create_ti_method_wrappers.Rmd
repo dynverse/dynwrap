@@ -12,7 +12,7 @@ vignette: >
 ---
 
 ```{r setup, echo = FALSE, message = FALSE}
-library(tidyverse)
+library(tibble)
 library(dynwrap)
 ```
 
@@ -34,7 +34,7 @@ tribble(
 - Milestone percentages, contains the positions of cells between milestones. For each cell, the percentages sum to one
 ```{r}
 cell_ids <- letters
-progressions <- 
+# progressions <- 
 ```
 
 - Progressions, an alternative to milestone percentages, also contains the positions of each cell but now based on its progression through an edge
