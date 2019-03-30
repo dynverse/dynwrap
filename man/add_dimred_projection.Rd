@@ -29,4 +29,31 @@ The trajectory
 \description{
 This function will generate the milestone_network and progressions.
 }
+\examples{
+library(tibble)
+dataset <- wrap_data(cell_ids = letters)
+
+milestone_network <- tibble::tibble(from = c("A", "B", "B"), to = c("B", "C", "D"), directed = TRUE, length = 1)
+milestone_network
+dimred <- matrix(
+  runif(length(dataset$cell_ids) * 2),
+  ncol = 2,
+  dimnames = list(dataset$cell_ids, c("comp_1", "comp_2"))
+)
+dimred
+dimred_milestones <- matrix(
+  runif(2*4),
+  ncol = 2,
+  dimnames = list(c("A", "B", "C", "D"), c("comp_1", "comp_2"))
+)
+dimred_milestones
+trajectory <- add_dimred_projection(
+  dataset,
+  milestone_network = milestone_network,
+  dimred = dimred,
+  dimred_milestones = dimred_milestones
+)
+
+if ("dynplot" \%in\% rownames(installed.packages())) {dynplot::plot_graph(trajectory)}
+}
 \keyword{create_trajectory}

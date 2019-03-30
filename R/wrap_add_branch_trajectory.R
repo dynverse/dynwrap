@@ -14,6 +14,30 @@
 #' @keywords create_trajectory
 #'
 #' @export
+#'
+#' @examples
+#' library(tibble)
+#' dataset <- wrap_data(cell_ids = letters)
+#'
+#' branch_network <- tibble(from = c("A", "A"), to = c("B", "C"))
+#' branch_network
+#' branches <- tibble(branch_id = c("A", "B", "C"), length = 1, directed = TRUE)
+#' branches
+#' branch_progressions <- tibble(
+#'   cell_id = dataset$cell_ids,
+#'   branch_id = sample(branches$branch_id, length(dataset$cell_ids), replace = TRUE),
+#'   percentage = runif(length(dataset$cell_ids))
+#' )
+#' branch_progressions
+#'
+#' trajectory <- add_branch_trajectory(
+#'   dataset,
+#'   branch_network,
+#'   branches,
+#'   branch_progressions
+#' )
+#'
+#' if ("dynplot" %in% rownames(installed.packages())) {dynplot::plot_graph(trajectory)}
 add_branch_trajectory <- function(
   dataset,
   branch_network,

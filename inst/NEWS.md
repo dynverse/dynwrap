@@ -1,3 +1,9 @@
+# dynwrap 1.0.1 (unreleased)
+
+* DOCUMENTATION: Added examples for each trajectory wrapper
+
+* DOCUMENTATION: Added vignette discussing wrapper types
+
 # dynwrap 1.0.0 (28-03-2019)
 
 * MAJOR CHANGE: Add support for Singularity 3.0, drop support for previous 

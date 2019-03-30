@@ -29,4 +29,22 @@ If pseudotime values are not given, will use pseudotime already present in the d
 \details{
 This function will generate the milestone_network and progressions.
 }
+\examples{
+library(tibble)
+dataset <- wrap_data(cell_ids = letters)
+
+pseudotime <- runif(length(dataset$cell_ids))
+names(pseudotime) <- dataset$cell_ids
+pseudotime
+end_state_probabilities <- tibble(
+  cell_id = dataset$cell_ids,
+  A = runif(length(dataset$cell_ids)),
+  B = 1-A
+)
+end_state_probabilities
+trajectory <- add_end_state_probabilities(dataset, end_state_probabilities, pseudotime)
+
+if ("dynplot" \%in\% rownames(installed.packages())) {dynplot::plot_graph(trajectory)}
+
+}
 \keyword{create_trajectory}

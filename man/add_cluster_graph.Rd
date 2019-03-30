@@ -24,4 +24,16 @@ The trajectory
 \description{
 This function will generate the milestone_network and progressions.
 }
+\examples{
+library(tibble)
+dataset <- wrap_data(cell_ids = letters)
+
+milestone_network <- tibble::tibble(from = c("A", "B", "B"), to = c("B", "C", "D"), directed = TRUE, length = 1)
+milestone_network
+grouping <- sample(c("A", "B", "C", "D"), length(dataset$cell_ids), replace = TRUE)
+grouping
+trajectory <- add_cluster_graph(dataset, milestone_network, grouping)
+
+if ("dynplot" \%in\% rownames(installed.packages())) {dynplot::plot_graph(trajectory)}
+}
 \keyword{create_trajectory}
