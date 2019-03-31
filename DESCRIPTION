@@ -53,6 +53,7 @@ Imports:
 Suggests: 
   devtools,
   dyndimred,
+  dynplot,
   hdf5r,
   ggplot2,
   knitr,

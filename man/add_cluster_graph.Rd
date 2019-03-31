@@ -28,7 +28,12 @@ This function will generate the milestone_network and progressions.
 library(tibble)
 dataset <- wrap_data(cell_ids = letters)
 
-milestone_network <- tibble::tibble(from = c("A", "B", "B"), to = c("B", "C", "D"), directed = TRUE, length = 1)
+milestone_network <- tibble::tibble(
+  from = c("A", "B", "B"),
+  to = c("B", "C", "D"),
+  directed = TRUE,
+  length = 1
+)
 milestone_network
 grouping <- sample(c("A", "B", "C", "D"), length(dataset$cell_ids), replace = TRUE)
 grouping

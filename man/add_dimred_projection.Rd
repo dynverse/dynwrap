@@ -33,7 +33,12 @@ This function will generate the milestone_network and progressions.
 library(tibble)
 dataset <- wrap_data(cell_ids = letters)
 
-milestone_network <- tibble::tibble(from = c("A", "B", "B"), to = c("B", "C", "D"), directed = TRUE, length = 1)
+milestone_network <- tibble::tibble(
+  from = c("A", "B", "B"),
+  to = c("B", "C", "D"),
+  directed = TRUE,
+  length = 1
+)
 milestone_network
 dimred <- matrix(
   runif(length(dataset$cell_ids) * 2),
