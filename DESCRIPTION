@@ -66,5 +66,6 @@ Remotes:
   dynverse/babelwhale@devel,
   dynverse/dynutils,
   dynverse/dyndimred,
-  dynverse/dynparam
+  dynverse/dynparam,
+  dynverse/dynplot
 VignetteBuilder: knitr
