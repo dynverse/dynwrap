@@ -53,9 +53,14 @@ changes.
 
 ### Recent changes in dynwrap 1.0.1 (unreleased)
 
+  - MINOR CHANGE: Make `create_ti_method_definition()` actually work
+
   - DOCUMENTATION: Added examples for each trajectory wrapper
 
   - DOCUMENTATION: Added vignette discussing wrapper types
+
+  - DOCUMENTATION: Added vignette discussing
+    `create_ti_method_definition()`
 
 ### Recent changes in dynwrap 1.0.0 (28-03-2019)
 

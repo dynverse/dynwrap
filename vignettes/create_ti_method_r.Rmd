@@ -77,9 +77,11 @@ run_fun <- function(expression, priors, parameters, seed, verbose) {
 }
 ```
 
+This function returns a trajectory object as described in [create a trajectory](../create_ti_method_wrappers). You may also add other relevant information to this output, often some timing checkpoints (`add_timings`), dimensionality reduction (`add_dimred`) or a cell clustering (`add_grouping`). Check out the [reference](https://dynverse.org/reference/dynwrap) for an overview or [post an issue or pull request](https://github.com/dynverse/dynwrap) if you want a type of output to be added.
+
 ## Testing it out
 
-To create the method, call `create_ti_method_r`. At this stage you can also define some R packages that have to be installed or loaded.
+To wrap the method, use `create_ti_method_r` with the definition and run function. At this stage you can also define some R packages that have to be installed or loaded.
 ```{r}
 ti_comp1 <- create_ti_method_r(definition, run_fun, package_loaded = "dplyr")
 ```
@@ -111,7 +113,7 @@ The easiest way to make this method available to others is to put it in an[R pac
 #' 
 #' @examples
 #' dataset <- dynwrap::example_dataset
-#' model <- dynwrap::infer_trajectory(dataset, ti_comp1()¸)
+#' model <- dynwrap::infer_trajectory(dataset, ti_comp1())
 ti_comp1 <- create_ti_method_r(definition, run_fun)
 ```
 
@@ -119,6 +121,5 @@ The parameter documentation will look like follows:
 ```{r}
 generate_parameter_documentation(definition)
 ```
-
 
 We also strongly encourage you to include within our collection of TI methods available in the [dynmethods R package](https://github.com/dynverse/dynmethods). Feel free to [create an issue](https://github.com/dynverse/dynmethods/labels/new%20method) or [send us a pull request](https://github.com/dynverse/dynmethods/pulls).

@@ -17,7 +17,7 @@ library(tibble)
 library(dynwrap)
 ```
 
-# Direct wrapping
+## Common trajectory model
 
 dynwrap always represents trajectories in the same way, as illustrated here with a tree trajectory
 
@@ -69,6 +69,8 @@ divergence_regions <- tribble(
 head(divergence_regions)
 ```
 
+## Direct wrapping
+
 These three objects (with either milestone percentages or progressions) are enough to form a trajectory using `add_trajectory`.
 
 ```{r}
@@ -80,7 +82,7 @@ trajectory <- wrap_data(cell_ids = cell_ids) %>%
   )
 ```
 
-# Indirect wrapping
+## Indirect wrapping
 
 Often, you don't want to directly output the milestone network and percentages, but want to output an alternative representation that is converted by dynwrap to the common representation:
 
