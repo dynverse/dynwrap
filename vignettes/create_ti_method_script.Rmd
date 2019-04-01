@@ -12,6 +12,8 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
+dir <- tempdir()
+setwd(dir)
 knitr::opts_knit$set(root.dir = normalizePath(tempdir(), winslash = '/'))
 ```
 
@@ -161,3 +163,7 @@ trajectory <- infer_trajectory(dataset, method(), debug = TRUE)
 ## Making your method available for other users
 
 Wrapping a method inside a script does not have any dependency management, and is therefore only meant for development purposes. To deploy your method to other users, check out the [containerisation tutorial](../create_ti_method_container)!
+
+## Wrapping a method without dyncli(py)
+
+While using dyncli to load and save the data is the most straightforward when using R and python, it's also possible to 
