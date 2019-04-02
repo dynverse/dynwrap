@@ -59,6 +59,7 @@ trajectory <- add_dimred_projection(
   dimred_milestones = dimred_milestones
 )
 
-if ("dynplot" \%in\% rownames(installed.packages())) {dynplot::plot_graph(trajectory)}
+# for plotting the result, install dynplot
+# dynplot::plot_graph(trajectory)
 }
 \keyword{create_trajectory}

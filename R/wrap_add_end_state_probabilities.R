@@ -35,8 +35,8 @@
 #' end_state_probabilities
 #' trajectory <- add_end_state_probabilities(dataset, end_state_probabilities, pseudotime)
 #'
-#' if ("dynplot" %in% rownames(installed.packages())) {dynplot::plot_graph(trajectory)}
-#'
+#' # for plotting the result, install dynplot
+#' # dynplot::plot_graph(trajectory)
 add_end_state_probabilities <- function(
   dataset,
   end_state_probabilities,

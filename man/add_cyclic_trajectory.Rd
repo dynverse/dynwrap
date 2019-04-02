@@ -33,6 +33,7 @@ pseudotime <- tibble(cell_id = dataset$cell_ids, pseudotime = runif(length(datas
 pseudotime
 trajectory <- add_cyclic_trajectory(dataset, pseudotime)
 
-if ("dynplot" \%in\% rownames(installed.packages())) {dynplot::plot_graph(trajectory)}
+# for plotting the result, install dynplot
+# dynplot::plot_graph(trajectory)
 }
 \keyword{create_trajectory}

@@ -58,7 +58,8 @@
 #'   progressions = progressions
 #' )
 #'
-#' if ("dynplot" %in% rownames(installed.packages())) {dynplot::plot_graph(trajectory)}
+#' # for plotting the result, install dynplot
+#' # dynplot::plot_graph(trajectory)
 add_trajectory <- function(
   dataset,
   milestone_ids = NULL,

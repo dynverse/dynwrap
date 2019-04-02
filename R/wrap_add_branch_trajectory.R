@@ -37,7 +37,8 @@
 #'   branch_progressions
 #' )
 #'
-#' if ("dynplot" %in% rownames(installed.packages())) {dynplot::plot_graph(trajectory)}
+#' # for plotting the result, install dynplot
+#' # dynplot::plot_graph(trajectory)
 add_branch_trajectory <- function(
   dataset,
   branch_network,

@@ -11,8 +11,41 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-```{r setup}
+```{r setup, message = FALSE}
 library(dynwrap)
+library(dplyr)
 ```
 
-To write
+Once [you have wrapped a method using a script and definition](../create_ti_method_script), all you need to share your method is a _Dockerfile_ which lists all the dependencies that need to be installed.
+
+Assuming that the _definition.yml_ and _run.R_ are located in current directory, a minimal _Dockerfile_ would look like:
+
+```{r, echo = FALSE, warning = FALSE}
+# get the latest dynwrapr tag
+
+tag <- readLines(curl::curl("https://registry.hub.docker.com/v1/repositories/dynverse/dynwrapr/tags")) %>% 
+  jsonlite::fromJSON() %>% 
+  pull(name) %>% 
+  last()
+
+stringr::str_glue("```Dockerfile
+FROM dynverse/dynwrapr:{tag}
+
+COPY definition.yml run.R /code/
+
+ENTRYPOINT ['/code/run.R']
+```") %>% knitr::asis_output()
+```
+
+`dynverse/dynwrapr` is here the base image, which contains the latest version of R, dynwrap, dyncli and most tidyverse dependencies. While not required, it's recommended to start from this base image, because dyncli provides an interface to run each method using the docker container from the command line. [As discussed before](../create_ti_method_script), wrapping is also a lot easier using dynwrap.
+
+The _Dockerfile_ then copies over the _definition.yml_ and _run.R_ file inside the "code" directory. It is highly recommended to also use these locations, simply to maintain consistency with the rest of the method wrappers included in dynmethods.
+
+Finally, we specify the entrypoint to be _run.R_. Do not specify this entrypoint using `ENTRYPOINT /code/run.R`, because this will create issues with specifying command-line arguments.
+
+That's it! Assuming that you have a functioning docker installation, you can build this container using
+
+```{bash}
+docker build -t my_ti_method .
+```
+
