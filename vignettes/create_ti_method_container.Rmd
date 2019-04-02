@@ -11,6 +11,11 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
+```{r, include = FALSE}
+dir <- tempdir()
+knitr::opts_knit$set(root.dir = normalizePath(tempdir(), winslash = '/'))
+```
+
 ```{r setup, message = FALSE}
 library(dynwrap)
 library(dplyr)
@@ -18,26 +23,102 @@ library(dplyr)
 
 Once [you have wrapped a method using a script and definition](../create_ti_method_script), all you need to share your method is a _Dockerfile_ which lists all the dependencies that need to be installed.
 
+We'll work with the following _definition.yml_:
+
+<div class="filename">definition.yml</div>
+
+```{r, echo = FALSE}
+definition_string <- "method:
+  id: comp_1
+
+parameters:
+  - id: component
+    default: 1
+    type: integer
+    distribution:
+      type: uniform
+      lower: 1
+      upper: 10
+    description: The nth component to use
+
+wrapper:
+  input_required: expression
+  input_optional: start_id
+"
+
+readr::write_file(definition_string, "definition.yml")
+knitr::asis_output(paste0("```yaml\n", definition_string, "\n```"))
+```
+
+and _run.py_:
+
+<div class="filename">run.py</div>
+
+```{r, echo = FALSE}
+run_py_script <- "#!/usr/bin/env python
+
+import dynclipy
+dataset = dynclipy.main()
+
+import pandas as pd
+import sklearn.decomposition
+
+# infer trajectory
+pca = sklearn.decomposition.PCA()
+dimred = pca.fit_transform(dataset['expression'])
+pseudotime = pd.Series(
+  dimred[:, dataset['parameters']['component']-1], 
+  index = dataset['expression'].index
+)
+
+# build trajectory
+trajectory = dynclipy.wrap_data(cell_ids = dataset['expression'].index)
+trajectory.add_linear_trajectory(pseudotime = pseudotime)
+
+# save output
+trajectory.write_output(dataset['output'])
+"
+
+readr::write_file(run_py_script, "run.py")
+knitr::asis_output(paste0("```python\n", run_py_script, "\n```"))
+```
+
+Make sure it is executable
+
+```{bash}
+chmod +x run.py
+```
+
 Assuming that the _definition.yml_ and _run.R_ are located in current directory, a minimal _Dockerfile_ would look like:
+
+<div class="filename">Dockerfile</div>
 
 ```{r, echo = FALSE, warning = FALSE}
 # get the latest dynwrapr tag
 
-tag <- readLines(curl::curl("https://registry.hub.docker.com/v1/repositories/dynverse/dynwrapr/tags")) %>% 
+con <- curl::curl("https://registry.hub.docker.com/v1/repositories/dynverse/dynwrappy/tags")
+tag <- readLines(con) %>% 
   jsonlite::fromJSON() %>% 
   pull(name) %>% 
   last()
+close(con)
 
-stringr::str_glue("```Dockerfile
-FROM dynverse/dynwrapr:{tag}
+docker_file <- stringr::str_glue("FROM dynverse/dynwrappy:{tag}
 
-COPY definition.yml run.R /code/
+COPY definition.yml run.py /code/
 
-ENTRYPOINT ['/code/run.R']
-```") %>% knitr::asis_output()
+ENTRYPOINT [\"/code/run.py\"]
+")
+
+readr::write_file(docker_file, "Dockerfile")
+knitr::asis_output(paste0("```Dockerfile\n", docker_file, "\n```"))
 ```
 
-`dynverse/dynwrapr` is here the base image, which contains the latest version of R, dynwrap, dyncli and most tidyverse dependencies. While not required, it's recommended to start from this base image, because dyncli provides an interface to run each method using the docker container from the command line. [As discussed before](../create_ti_method_script), wrapping is also a lot easier using dynwrap.
+`dynverse/dynwrappy` is here the base image, which contains the latest version of R, python, dynwrap, dyncli and most tidyverse dependencies. For R methods, you can use the `dynverse/dynwrapr` base. While not required, it's recommended to start from this base image, because dyncli provides an interface to run each method using the docker container from the command line. [As discussed before](../create_ti_method_script), wrapping is also a lot easier using dynwrap.
+
+<div class="notice tip">
+For reproducibility, it's best to specify the tag base image. You can find this these tags on dockerhub: https://hub.docker.com/r/dynverse/dynwrapr/tags.
+</div>
 
 The _Dockerfile_ then copies over the _definition.yml_ and _run.R_ file inside the "code" directory. It is highly recommended to also use these locations, simply to maintain consistency with the rest of the method wrappers included in dynmethods.
 
@@ -48,4 +129,68 @@ That's it! Assuming that you have a functioning docker installation, you can bui
 ```{bash}
 docker build -t my_ti_method .
 ```
+
+## Testing it out
+
+This method can now be loaded inside R using dynwrap
+
+```{r}
+method <- create_ti_method_container("my_ti_method")
+dataset <- dynwrap::example_dataset
+trajectory <- infer_trajectory(dataset, method(), verbose = TRUE)
+```
+
+```{r}
+# install dynplot to plot the output
+if ("dynplot" %in% rownames(installed.packages())) {
+  dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
+}
+```
+
+Congratulations! You now have a TI method that can be easily installed anywhere without dependency issues, and that can be easily included within the whole dynverse pipeline. Also included is integration with plotting and feature selection...
+
+So what's left? 
+
+## Testing and continuous integration
+
+To make a project like this maintainable in the long run, it is important that everytime something is changed, the method is tested to make sure it works fine.
+
+### Creating an example dataset
+
+To do this, we first add an _example.sh_ file, which will generate an example dataset that will certainly run without any error with the method. In this case, this example is just the example dataset included in dynwrap.
+
+<div class="filename">example.sh</div>
+
+```{r, echo = FALSE}
+example_script <- "#!/usr/bin/env Rscript
+
+dataset <- dynwrap::example_dataset
+
+file <- commandArgs(trailingOnly = TRUE)[[1]]
+dynutils::write_h5(dataset, file)
+"
+
+readr::write_file(example_script, "example.sh")
+knitr::asis_output(paste0("```R\n", example_script, "\n```"))
+```
+
+<div class="notice tip">
+You can of course provide your own example data here, but make sure it doesn't take too long to generate, and not too long for the TI method run.
+
+You can also add extra parameters and a fixed seed to the example data, e.g.: `dataset$seed <- 1` and `dataset$parameters <- list(component = 42)`
+</div>
+
+Now run the example script and test it:
+
+```{bash}
+chmod +x example.sh
+./example.sh example.h5
+```
+
+```{r}
+dataset <- dynutils::read_h5("example.h5")
+trajectory <- infer_trajectory(dataset, method())
+```
+
+### Continuous integration
 

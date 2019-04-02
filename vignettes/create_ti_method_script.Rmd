@@ -17,19 +17,19 @@ setwd(dir)
 knitr::opts_knit$set(root.dir = normalizePath(tempdir(), winslash = '/'))
 ```
 
-
 ```{r setup}
 library(dynwrap)
 ```
 
 An alternative to wrapping a script inside R, is to wrap it using an external script. Because this does not provide any dependency management, this is not really useful for method end-users, but rather as a way to easily develop a TI method and to ultimately step up towards [containerised wrapping](../create_ti_method_container).
 
-Similarly as a wrapper written in R, you'll need to provide both a definition (= a `definition.yml`) and a way to run the methods (= a script).
+Similarly as a wrapper written in R, you'll need to provide both a definition (= a _definition.yml_) and a way to run the methods (= a script).
 
-## `definition.yml`
+## _definition.yml_
 
 The definition has the same hierarchical structure as used by the `definition()` function. A minimal example 
 
+<div class="filename">definition.yml</div>
 ```{r, echo = FALSE}
 definition_string <- "method:
   id: comp_1
@@ -53,7 +53,7 @@ readr::write_file(definition_string, "definition.yml")
 knitr::asis_output(paste0("```yaml\n", definition_string, "\n```"))
 ```
 
-Check out the wrappers in dynmethods for an overview of what can be included in the definition file. For example: https://github.com/dynverse/ti_paga/blob/master/definition.yml
+You can use our template _definition.yml_ to see all the different possibilities of what can be included in the definition: https://github.com/dynverse/dynmethods/tree/master/template_container . It may also be useful to check out  some of the wrappers in dynmethods, e.g.: https://github.com/dynverse/ti_paga/blob/master/definition.yml
 
 ## Running script
 
@@ -69,6 +69,7 @@ The wrapper script will typically have the following structure:
 
 A minimal example script for R:
 
+<div class="filename">run.R</div>
 ```{r, echo = FALSE}
 run_r_string <- "#!/usr/bin/env Rscript
 
@@ -110,21 +111,26 @@ chmod +x run.R
 
 and for Python:
 
+<div class="filename">run.py</div>
 ```{r, echo = FALSE}
 run_py_script <- "#!/usr/bin/env python
 
 import dynclipy
-dataset <- dynclipy.main()
+dataset = dynclipy.main()
 
+import pandas as pd
 import sklearn.decomposition
 
 # infer trajectory
 pca = sklearn.decomposition.PCA()
 dimred = pca.fit_transform(dataset['expression'])
-pseudotime = dimred[:, dataset['parameters']['component']]
+pseudotime = pd.Series(
+  dimred[:, dataset['parameters']['component']-1], 
+  index = dataset['expression'].index
+)
 
 # build trajectory
-trajectory <- dynclipy.wrap_data(cell_ids = dataset['expression'].index)
+trajectory = dynclipy.wrap_data(cell_ids = dataset['expression'].index)
 trajectory.add_linear_trajectory(pseudotime = pseudotime)
 
 # save output
@@ -147,6 +153,7 @@ trajectory <- infer_trajectory(dataset, method(), verbose = TRUE)
 ```
 
 ```{r}
+# install dynplot to plot the output
 if ("dynplot" %in% rownames(installed.packages())) {
   dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
 }
