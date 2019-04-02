@@ -13,7 +13,6 @@ vignette: >
 
 ```{r, include = FALSE}
 dir <- tempdir()
-setwd(dir)
 knitr::opts_knit$set(root.dir = normalizePath(tempdir(), winslash = '/'))
 ```
 
