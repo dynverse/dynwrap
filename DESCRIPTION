@@ -1,7 +1,7 @@
 Package: dynwrap
 Type: Package
 Title: Common trajectory model for representing trajectories from all sources
-Version: 1.0.0.900
+Version: 1.0.0.9000
 Authors@R: c(
     person(
       "Robrecht", 
@@ -61,9 +61,9 @@ Suggests:
   ranger,
   rmarkdown,
   viridis
-Remotes:
-  dynverse/babelwhale@devel,
-  dynverse/dynutils,
-  dynverse/dyndimred,
-  dynverse/dynparam
 VignetteBuilder: knitr
+Remotes:  
+    dynverse/babelwhale@devel,
+    dynverse/dynutils@devel,
+    dynverse/dynparam@devel,
+    dynverse/dyndimred@devel
