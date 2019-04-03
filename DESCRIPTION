@@ -42,6 +42,7 @@ Imports:
   methods,
   pdist,
   purrr,
+  processx,
   readr,
   stringr,
   reshape2,

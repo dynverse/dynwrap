@@ -30,9 +30,9 @@ create_ti_method_definition <- function(
 
 .method_execution_execute_script <- function(method, preproc_meta) {
   # copy over script and rds
-  file.copy(fs::path_abs(method$run$script), preproc_meta$dir_dynwrap)
-  script_location <- fs::path_file(method$run$script)
-  file.copy(fs::path_abs(method$run$definition), paste0(preproc_meta$dir_dynwrap, "/definition.yml"))
+  file.copy(normalizePath(method$run$script), preproc_meta$dir_dynwrap)
+  script_location <- basename(method$run$script)
+  file.copy(normalizePath(method$run$definition), paste0(preproc_meta$dir_dynwrap, "/definition.yml"))
 
   # print information if desired
   if (preproc_meta$verbose) {
