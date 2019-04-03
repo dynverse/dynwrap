@@ -10,6 +10,7 @@
 \alias{create_singularity_config}
 \alias{get_default_config}
 \alias{set_default_config}
+\alias{test_h5_installation}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -18,5 +19,7 @@ below to see their documentation.
 
 \describe{
   \item{babelwhale}{\code{\link[babelwhale]{test_docker_installation}}, \code{\link[babelwhale]{test_singularity_installation}}, \code{\link[babelwhale]{create_config}}, \code{\link[babelwhale]{create_docker_config}}, \code{\link[babelwhale]{create_singularity_config}}, \code{\link[babelwhale]{get_default_config}}, \code{\link[babelwhale]{set_default_config}}}
+
+  \item{dynutils}{\code{\link[dynutils]{test_h5_installation}}}
 }}
 
