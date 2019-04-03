@@ -50,6 +50,6 @@ trajectory <- add_branch_trajectory(
 )
 
 # for plotting the result, install dynplot
-# dynplot::plot_graph(trajectory)
+#- dynplot::plot_graph(trajectory)
 }
 \keyword{create_trajectory}

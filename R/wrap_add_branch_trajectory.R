@@ -38,7 +38,7 @@
 #' )
 #'
 #' # for plotting the result, install dynplot
-#' # dynplot::plot_graph(trajectory)
+#' #- dynplot::plot_graph(trajectory)
 add_branch_trajectory <- function(
   dataset,
   branch_network,

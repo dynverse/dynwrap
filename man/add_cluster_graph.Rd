@@ -40,6 +40,6 @@ grouping
 trajectory <- add_cluster_graph(dataset, milestone_network, grouping)
 
 # for plotting the result, install dynplot
-# dynplot::plot_graph(trajectory)
+#- dynplot::plot_graph(trajectory)
 }
 \keyword{create_trajectory}

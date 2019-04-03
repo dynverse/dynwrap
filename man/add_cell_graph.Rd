@@ -49,6 +49,6 @@ to_keep
 trajectory <- add_cell_graph(dataset, cell_graph, to_keep)
 
 # for plotting the result, install dynplot
-# dynplot::plot_graph(trajectory)
+#- dynplot::plot_graph(trajectory)
 }
 \keyword{create_trajectory}

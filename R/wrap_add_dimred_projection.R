@@ -49,7 +49,7 @@
 #' )
 #'
 #' # for plotting the result, install dynplot
-#' # dynplot::plot_graph(trajectory)
+#' #- dynplot::plot_graph(trajectory)
 add_dimred_projection <- function(
   dataset,
   milestone_ids = NULL,

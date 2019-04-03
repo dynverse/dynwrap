@@ -33,7 +33,7 @@
 #' trajectory <- add_cluster_graph(dataset, milestone_network, grouping)
 #'
 #' # for plotting the result, install dynplot
-#' # dynplot::plot_graph(trajectory)
+#' #- dynplot::plot_graph(trajectory)
 add_cluster_graph <- function(
   dataset,
   milestone_network,

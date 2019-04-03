@@ -60,6 +60,6 @@ trajectory <- add_dimred_projection(
 )
 
 # for plotting the result, install dynplot
-# dynplot::plot_graph(trajectory)
+#- dynplot::plot_graph(trajectory)
 }
 \keyword{create_trajectory}

@@ -26,7 +26,7 @@
 #' trajectory <- add_cyclic_trajectory(dataset, pseudotime)
 #'
 #' # for plotting the result, install dynplot
-#' # dynplot::plot_graph(trajectory)
+#' #- dynplot::plot_graph(trajectory)
 add_cyclic_trajectory <- function(
   dataset,
   pseudotime,
