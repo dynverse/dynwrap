@@ -94,6 +94,7 @@ create_ti_method_container <- function(
   # print information if desired
   if (preproc_meta$verbose) {
     cat("Input saved to ", preproc_meta$dir_dynwrap, "\n", sep = "")
+    cat("Running method using babelwhale")
   }
 
   # run container
@@ -106,6 +107,12 @@ create_ti_method_container <- function(
     verbose = preproc_meta$verbose,
     debug = preproc_meta$debug
   )
+
+  # print information if desired
+  if (preproc_meta$verbose) {
+    cat("Output saved to ", file.path(preproc_meta$dir_dynwrap, "output.h5"), "\n", sep = "")
+    cat("Attempting to read in output with hdf5")
+  }
 
   # return output
   dynutils::read_h5(file.path(preproc_meta$dir_dynwrap, "output.h5"))

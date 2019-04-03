@@ -11,11 +11,6 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-```{r, include = FALSE}
-dir <- tempdir()
-knitr::opts_knit$set(root.dir = normalizePath(tempdir(), winslash = '/'))
-```
-
 ```{r setup}
 library(dynwrap)
 ```
@@ -107,7 +102,6 @@ Make sure this script is executable!
 chmod +x run.R
 ```
 
-
 and for Python:
 
 <div class="filename">run.py</div>
@@ -150,6 +144,7 @@ method <- create_ti_method_definition(
 dataset <- dynwrap::example_dataset
 trajectory <- infer_trajectory(dataset, method(), verbose = TRUE)
 ```
+
 
 ```{r}
 # install dynplot to plot the output

@@ -40,7 +40,7 @@ create_ti_method_definition <- function(
   }
 
   # run script
-  command <- script_location
+  command <- paste0("./", script_location)
   args <- c("--dataset", "input.h5", "--output", "output.h5")
 
   if (preproc_meta$debug) {
@@ -48,7 +48,7 @@ create_ti_method_definition <- function(
   }
 
   process <- processx::run(
-    command = script_location,
+    command = command,
     args = args,
     wd = preproc_meta$dir_dynwrap,
     echo = preproc_meta$verbose,
