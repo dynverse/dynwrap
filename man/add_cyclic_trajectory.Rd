@@ -25,4 +25,15 @@ The trajectory
 \description{
 This function will generate the milestone_network and progressions.
 }
+\examples{
+library(tibble)
+dataset <- wrap_data(cell_ids = letters)
+
+pseudotime <- tibble(cell_id = dataset$cell_ids, pseudotime = runif(length(dataset$cell_ids)))
+pseudotime
+trajectory <- add_cyclic_trajectory(dataset, pseudotime)
+
+# for plotting the result, install dynplot
+#- dynplot::plot_graph(trajectory)
+}
 \keyword{create_trajectory}

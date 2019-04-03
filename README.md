@@ -51,6 +51,17 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
+### Recent changes in dynwrap 1.0.1 (unreleased)
+
+  - MINOR CHANGE: Make `create_ti_method_definition()` actually work
+
+  - DOCUMENTATION: Added examples for each trajectory wrapper
+
+  - DOCUMENTATION: Added vignette discussing wrapper types
+
+  - DOCUMENTATION: Added vignette discussing
+    `create_ti_method_definition()`
+
 ### Recent changes in dynwrap 1.0.0 (28-03-2019)
 
   - MAJOR CHANGE: Add support for Singularity 3.0, drop support for
@@ -69,18 +80,8 @@ changes.
     `calculate_geodesic_distances()`
 
   - MINOR CHANGE: Harmonisation of function arguments to either
-    `dataset` or `trajectory`
-
-### Recent changes in dynwrap 0.3.1.2 (01-02-2019)
-
-  - BUG FIX: `simplify_replace_edges()` would sometimes swap edges in
-    milestone network around, but forget invert percentages.
-
-  - BUG FIX: Close sinks when interupting the R process
-
-  - MINOR CHANGE: Work with new babelwhale, which includes support for
-    singularity
-3.0
+    `dataset` or
+`trajectory`
 
 ## Dynverse dependencies
 

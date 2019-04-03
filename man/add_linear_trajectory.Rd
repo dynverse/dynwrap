@@ -26,8 +26,11 @@ The trajectory
 This function will generate the milestone_network and progressions.
 }
 \examples{
-dataset <- dynwrap::example_dataset
-pseudotime <- data.frame(cell_id = dataset$cell_ids, pseudotime = runif(length(dataset$cell_ids)))
+library(tibble)
+dataset <- wrap_data(cell_ids = letters)
+
+pseudotime <- tibble(cell_id = dataset$cell_ids, pseudotime = runif(length(dataset$cell_ids)))
+
 trajectory <- add_linear_trajectory(dataset, pseudotime)
 }
 \keyword{create_trajectory}

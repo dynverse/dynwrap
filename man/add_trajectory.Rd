@@ -43,4 +43,43 @@ The trajectory
 \description{
 Define a trajectory dataset given its milestone network and milestone percentages or progressions
 }
+\examples{
+library(dplyr)
+library(tibble)
+
+dataset <- wrap_data(cell_ids = letters)
+
+milestone_network <- tribble(
+  ~from, ~to, ~length, ~directed,
+  "A", "B", 1, FALSE,
+  "B", "C", 2, FALSE,
+  "B", "D", 1, FALSE,
+)
+milestone_network
+progressions <- milestone_network \%>\%
+  sample_n(length(dataset$cell_ids), replace = TRUE, weight = length) \%>\%
+  mutate(
+    cell_id = dataset$cell_ids,
+    percentage = runif(n())
+  ) \%>\%
+  select(cell_id, from, to, percentage)
+progressions
+divergence_regions <- tribble(
+  ~divergence_id, ~milestone_id, ~is_start,
+  "1", "A", TRUE,
+  "1", "B", FALSE,
+  "1", "C", FALSE
+)
+divergence_regions
+
+trajectory <- add_trajectory(
+  dataset,
+  milestone_network = milestone_network,
+  divergence_regions = divergence_regions,
+  progressions = progressions
+)
+
+# for plotting the result, install dynplot
+#- dynplot::plot_graph(trajectory)
+}
 \keyword{create_trajectory}

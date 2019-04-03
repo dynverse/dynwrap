@@ -19,6 +19,24 @@
 #' @export
 #'
 #' @importFrom testthat expect_true
+#'
+#' @examples
+#' library(tibble)
+#' dataset <- wrap_data(cell_ids = letters)
+#'
+#' pseudotime <- runif(length(dataset$cell_ids))
+#' names(pseudotime) <- dataset$cell_ids
+#' pseudotime
+#' end_state_probabilities <- tibble(
+#'   cell_id = dataset$cell_ids,
+#'   A = runif(length(dataset$cell_ids)),
+#'   B = 1-A
+#' )
+#' end_state_probabilities
+#' trajectory <- add_end_state_probabilities(dataset, end_state_probabilities, pseudotime)
+#'
+#' # for plotting the result, install dynplot
+#' #- dynplot::plot_graph(trajectory)
 add_end_state_probabilities <- function(
   dataset,
   end_state_probabilities,

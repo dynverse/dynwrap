@@ -4,8 +4,7 @@
 #'
 #' @inheritParams common_param
 #' @param cell_graph The edges between cells. Format: Data frame(from = character, to = character, length(optional) = numeric, directed(optional) = logical)
-#' @param to_keep A named vector containing booleans containing
-#'   whether or not a cell is part of the backbone. Or, alternatively a character vector containing the backbone cells
+#' @param to_keep A character vector with the identifiers of the backbone cells. Alternatively, a named boolean vector whether a cell is from the backbone
 #' @param milestone_prefix A prefix to add to the id of the cell ids when they are used as milestones, in order to avoid any naming conflicts,
 #' @param ... extra information to be stored in the wrapper.
 #'
@@ -16,6 +15,33 @@
 #' @keywords create_trajectory
 #'
 #' @importFrom testthat expect_is expect_true expect_equal
+#'
+#' @examples
+#' library(tibble)
+#' library(dplyr)
+#' dataset <- wrap_data(cell_ids = letters)
+#'
+#' backbone_cell_graph <- tibble(
+#'   from = letters[1:10],
+#'   to = letters[2:11],
+#'   length = 1,
+#'   directed = TRUE
+#' )
+#' leaves_cell_graph <- tibble(
+#'   from = letters[12:26],
+#'   to = sample(letters[1:11], 15, replace = TRUE),
+#'   length = 1,
+#'   directed = TRUE
+#' )
+#' cell_graph <- bind_rows(backbone_cell_graph, leaves_cell_graph)
+#' cell_graph
+#' to_keep <- letters[1:11]
+#' to_keep
+#'
+#' trajectory <- add_cell_graph(dataset, cell_graph, to_keep)
+#'
+#' # for plotting the result, install dynplot
+#' #- dynplot::plot_graph(trajectory)
 add_cell_graph <- function(
   dataset,
   cell_graph,

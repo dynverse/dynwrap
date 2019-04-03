@@ -25,3 +25,7 @@ babelwhale::get_default_config
 #' @importFrom babelwhale set_default_config
 #' @export
 babelwhale::set_default_config
+
+#' @importFrom dynutils test_h5_installation
+#' @export
+dynutils::test_h5_installation
