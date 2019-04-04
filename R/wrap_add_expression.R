@@ -3,7 +3,7 @@
 #' @inheritParams common_param
 #' @param counts The counts with genes in columns and cells in rows
 #' @param expression The normalised expression values with genes in columns and cells in rows
-#' @param rna_velocity RNA velocity feature WIP
+#' @param expression_projected Projected expression using RNA velocity
 #' @param feature_info Optional meta-information of the features, a data.frame with at least feature_id as column
 #' @param ... extra information to be stored in the dataset
 #' @param expression_source The source of expression, can be "counts", "expression", an expression matrix, or another dataset which contains expression
@@ -19,45 +19,17 @@ add_expression <- function(
   counts,
   expression,
   feature_info = NULL,
-  rna_velocity = NULL,
+  expression_projected = NULL,
   ...
 ) {
   testthat::expect_true(is_data_wrapper(dataset))
 
   assert_that(!(is.null(counts) && is.null(expression)), msg = "counts and expression can't both be NULL")
 
-  if (!is.null(counts)) {
-    if (is.matrix(counts)) {
-      counts <- Matrix::Matrix(counts, sparse = TRUE)
-    }
-    if (is_sparse(counts) && !"dgCMatrix" %in% class(counts)) {
-      counts <- as(counts, "dgCMatrix")
-    }
-    assert_that(
-      "dgCMatrix" %in% class(counts),
-      identical(rownames(counts), dataset$cell_ids)
-    )
-  }
-
-  if (!is.null(expression)) {
-    if (is.matrix(expression)) {
-      expression <- Matrix::Matrix(expression, sparse = TRUE)
-    }
-    assert_that(
-      "dgCMatrix" %in% class(expression),
-      identical(rownames(expression), dataset$cell_ids)
-    )
-  }
-
-  if (!is.null(rna_velocity)) {
-    if (is.matrix(rna_velocity)) {
-      rna_velocity <- Matrix::Matrix(rna_velocity, sparse = TRUE)
-    }
-    assert_that(
-      "dgCMatrix" %in% class(rna_velocity),
-      identical(rownames(rna_velocity), dataset$cell_ids)
-    )
-  }
+  # convert expression if needed
+  counts <- convert_expression(counts, dataset$cell_ids)
+  expression <- convert_expression(expression, dataset$cell_ids)
+  expression_projected <- convert_expression(expression_projected, dataset$cell_ids)
 
   if (!is.null(feature_info)) {
     assert_that(
@@ -75,7 +47,7 @@ add_expression <- function(
     "dynwrap::with_expression",
     counts = counts,
     expression = expression,
-    rna_velocity = rna_velocity,
+    expression_projected = expression_projected,
     feature_info = feature_info,
     ...
   )
@@ -129,7 +101,7 @@ wrap_expression <- function(
   counts,
   cell_info = NULL,
   feature_info = NULL,
-  rna_velocity = NULL,
+  expression_projected = NULL,
   ...
 ) {
   cell_ids <- rownames(expression) %||% rownames(counts)
@@ -147,8 +119,24 @@ wrap_expression <- function(
     add_expression(
       counts = counts,
       expression = expression,
-      rna_velocity = rna_velocity,
+      expression_projected = expression_projected,
       feature_ids = feature_ids,
       feature_info = feature_info
     )
+}
+
+
+convert_expression <- function(x, cell_ids) {
+  if (!is.null(x)) {
+    if (is.matrix(x)) {
+      x <- Matrix::Matrix(x, sparse = TRUE)
+    }
+    if (is_sparse(x) && !"dgCMatrix" %in% class(x)) {
+      x <- as(x, "dgCMatrix")
+    }
+    assert_that(
+      "dgCMatrix" %in% class(x),
+      identical(rownames(x), cell_ids)
+    )
+  }
 }

@@ -53,7 +53,7 @@ allowed_inputs <- tribble(
   ~input_id, ~description,
   "expression", "Expression matrix (sparse)",
   "counts", "Raw counts matrix (sparse)",
-  "rna_velocity", "RNA velocity matrix (sparse)"
+  "expression_projected", "Projected expression matrix based on RNA velocity (sparse)"
 ) %>% bind_rows(
   priors %>% select(input_id = prior_id, description = description)
 )
