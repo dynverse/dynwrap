@@ -1,3 +1,15 @@
+add_attraction <- function(
+  dataset
+) {
+  current <- get_expression(dataset, "expression")
+  projected <- get_expression(dataset, "expression_projected")
+
+  calculate_attraction(current, projected)
+}
+
+
+
+
 #' Calculate the attraction of cells to other cells using velocity
 #'
 #' @param current Current expression
@@ -9,8 +21,6 @@ calculate_attraction <- function(
   projected,
   cells = colnames(projected),
   n_waypoints = 50,
-  k = ceiling(n_waypoints / 2),
-  corr_sigma = 1,
   debug = FALSE
 ) {
   assertthat::assert_that(nrow(current) == nrow(projected))
