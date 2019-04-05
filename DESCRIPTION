@@ -62,7 +62,7 @@ Suggests:
   rmarkdown,
   viridis
 Remotes:
-  dynverse/babelwhale@devel,
+  dynverse/babelwhale,
   dynverse/dynutils,
   dynverse/dyndimred,
   dynverse/dynparam
