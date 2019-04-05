@@ -71,7 +71,7 @@ create_ti_method_container <- function(
   )
 
   # create all subdirectories
-  walk(paths, dir.create, showWarnings = FALSE)
+  walk(paths, dir.create, showWarnings = FALSE, recursive = TRUE)
 
   task <- inputs
   task$priors <- priors
