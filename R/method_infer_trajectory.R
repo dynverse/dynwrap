@@ -189,7 +189,9 @@ infer_trajectory <- dynutils::inherit_default_params(
       debug = debug
     )
 
-    if (is.null(design$model[[1]])) {
+    if (isTRUE(debug)) {
+      invisible()
+    } else if (is.null(design$model[[1]])) {
       error <- design$summary[[1]]$error[[1]]
       stop("Error during trajectory inference \n", crayon::bold(error), call. = FALSE)
     } else {

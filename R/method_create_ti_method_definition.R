@@ -42,6 +42,7 @@ create_ti_method_definition <- function(
   # run script
   command <- paste0("./", script_location)
   args <- c("--dataset", "input.h5", "--output", "output.h5")
+  if (preproc_meta$debug) args <- c(args, "--debug")
 
   process <- processx::run(
     command = command,

@@ -97,11 +97,14 @@ create_ti_method_container <- function(
     cat("Running method using babelwhale")
   }
 
+  args <- c("--dataset", "/ti/input.h5", "--output", "/ti/output.h5")
+  if (preproc_meta$debug) args <- c(args, "--debug")
+
   # run container
   output <- babelwhale::run(
     container_id = method$run$container_id,
     command = NULL,
-    args = c("--dataset", "/ti/input.h5", "--output", "/ti/output.h5"),
+    args = args,
     volumes = paste0(preproc_meta$dir_dynwrap %>% babelwhale:::fix_windows_path(), ":/ti"),
     workspace = "/ti/workspace",
     verbose = preproc_meta$verbose,
