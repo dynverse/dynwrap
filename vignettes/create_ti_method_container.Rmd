@@ -117,7 +117,7 @@ knitr::asis_output(paste0("```Dockerfile\n", docker_file, "\n```"))
 `dynverse/dynwrappy` is here the base image, which contains the latest version of R, python, dynwrap, dyncli and most tidyverse dependencies. For R methods, you can use the `dynverse/dynwrapr` base. While not required, it's recommended to start from these base images, because dyncli provides an interface to run each method using the docker container from the command line. [As discussed before](../create_ti_method_script), wrapping is also a lot easier using dynwrap.
 
 <div class="notices tip">
-For reproducibility, it's best to specify the tag base image. You can find this these tags on dockerhub: https://hub.docker.com/r/dynverse/dynwrapr/tags.
+For reproducibility, it's best to specify the tag of the base image. You can find this these tags on dockerhub: https://hub.docker.com/r/dynverse/dynwrapr/tags.
 </div>
 
 The _Dockerfile_ then copies over the _definition.yml_ and _run.py_ file inside the "code" directory. Typically, you won't change the locations of these files, simply to maintain consistency with the rest of the method wrappers included in dynmethods.
