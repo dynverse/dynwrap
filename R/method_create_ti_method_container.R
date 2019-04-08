@@ -94,7 +94,7 @@ create_ti_method_container <- function(
   # print information if desired
   if (preproc_meta$verbose) {
     cat("Input saved to ", preproc_meta$dir_dynwrap, "\n", sep = "")
-    cat("Running method using babelwhale")
+    cat("Running method using babelwhale\n")
   }
 
   args <- c("--dataset", "/ti/input.h5", "--output", "/ti/output.h5")
