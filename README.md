@@ -31,7 +31,7 @@ dyvnerse documentation website: <https://dynverse.org/> .
 dynwrap was used to wrap 50+ trajectory inference method within docker
 containers in [dynmethods](https://github.com/dynverse/dynmethods).
 
-![](man/figures/overview_wrapping_v2.png)
+![](man/figures/overview_wrapping_v3.png)
 
 The advantage of using a common model is that it allows:
 
@@ -51,6 +51,23 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
+### Recent changes in dynwrap 1.0.1 (09-04-2019)
+
+  - MINOR CHANGE: `infer_trajectory(..., debug = TRUE)` will now return
+    commands for both entering the container and running the
+    `dyncli::main()` function inside the container
+
+  - MINOR CHANGE: Make `create_ti_method_definition()` actually work
+
+  - DOCUMENTATION: Added examples for each trajectory wrapper
+
+  - DOCUMENTATION: Added vignette discussing wrapper types
+
+  - DOCUMENTATION: Added vignette discussing
+    `create_ti_method_definition()`
+
+  - BUG FIX: Fixed bug where `sink()` was not removed after interruption
+
 ### Recent changes in dynwrap 1.0.0 (28-03-2019)
 
   - MAJOR CHANGE: Add support for Singularity 3.0, drop support for
@@ -69,18 +86,8 @@ changes.
     `calculate_geodesic_distances()`
 
   - MINOR CHANGE: Harmonisation of function arguments to either
-    `dataset` or `trajectory`
-
-### Recent changes in dynwrap 0.3.1.2 (01-02-2019)
-
-  - BUG FIX: `simplify_replace_edges()` would sometimes swap edges in
-    milestone network around, but forget invert percentages.
-
-  - BUG FIX: Close sinks when interupting the R process
-
-  - MINOR CHANGE: Work with new babelwhale, which includes support for
-    singularity
-3.0
+    `dataset` or
+`trajectory`
 
 ## Dynverse dependencies
 

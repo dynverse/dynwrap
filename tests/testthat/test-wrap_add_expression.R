@@ -2,7 +2,7 @@ context("Testing add_expression")
 
 id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
-cell_info <- data_frame(
+cell_info <- tibble(
   cell_id = cell_ids,
   info1 = c("man", "in", "possession", "of", "a", "good"),
   info2 = c("fortune", "must", "be", "in", "want", "of"),
@@ -16,7 +16,7 @@ feature_names <- paste0("feature_", seq_len(num_features))
 
 expression <- matrix(runif(num_features * length(cell_ids), 8, 12), nrow = length(cell_ids), dimnames = list(cell_ids, feature_names))
 counts <- 2^expression - 1
-feature_info <- data_frame(feature_id = feature_names, mean = colMeans(expression), var = apply(expression, 2, var))
+feature_info <- tibble(feature_id = feature_names, mean = colMeans(expression), var = apply(expression, 2, var))
 
 wrapper1 <-
   wrap_data(

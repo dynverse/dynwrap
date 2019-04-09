@@ -18,8 +18,11 @@
 #' @importFrom testthat expect_is expect_true expect_named
 #'
 #' @examples
-#' dataset <- dynwrap::example_dataset
-#' pseudotime <- data.frame(cell_id = dataset$cell_ids, pseudotime = runif(length(dataset$cell_ids)))
+#' library(tibble)
+#' dataset <- wrap_data(cell_ids = letters)
+#'
+#' pseudotime <- tibble(cell_id = dataset$cell_ids, pseudotime = runif(length(dataset$cell_ids)))
+#'
 #' trajectory <- add_linear_trajectory(dataset, pseudotime)
 add_linear_trajectory <- function(
   dataset,
@@ -44,7 +47,7 @@ add_linear_trajectory <- function(
   milestone_ids <- c("milestone_begin", "milestone_end")
 
   # construct milestone_network
-  milestone_network <- data_frame(
+  milestone_network <- tibble(
     from = milestone_ids[[1]],
     to = milestone_ids[[2]],
     length = 1,
@@ -52,7 +55,7 @@ add_linear_trajectory <- function(
   )
 
   # construct progressions
-  progressions <- data_frame(
+  progressions <- tibble(
     cell_id = names(pseudotime),
     from = milestone_ids[[1]],
     to = milestone_ids[[2]],

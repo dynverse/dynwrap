@@ -36,7 +36,7 @@ convert_progressions_to_milestone_percentages <- function(
   # determine milestone percentages for 'from' milestones
   from_mls <- tapply(progressions$from, progressions$cell_id, first)
   from_pct <- 1 - tapply(progressions$percentage, progressions$cell_id, sum)
-  froms <- data_frame(
+  froms <- tibble(
     cell_id = names(from_mls) %||% character(),
     milestone_id = from_mls[cell_id],
     percentage = from_pct[cell_id]

@@ -16,6 +16,24 @@
 #' @importFrom pdist pdist
 #'
 #' @export
+#'
+#' @examples
+#' library(tibble)
+#' dataset <- wrap_data(cell_ids = letters)
+#'
+#' milestone_network <- tibble::tibble(
+#'   from = c("A", "B", "B"),
+#'   to = c("B", "C", "D"),
+#'   directed = TRUE,
+#'   length = 1
+#' )
+#' milestone_network
+#' grouping <- sample(c("A", "B", "C", "D"), length(dataset$cell_ids), replace = TRUE)
+#' grouping
+#' trajectory <- add_cluster_graph(dataset, milestone_network, grouping)
+#'
+#' # for plotting the result, install dynplot
+#' #- dynplot::plot_graph(trajectory)
 add_cluster_graph <- function(
   dataset,
   milestone_network,
@@ -53,7 +71,7 @@ add_cluster_graph <- function(
     milestone_network %>% select(from, to) %>% mutate(label = from, percentage = 0),
     milestone_network %>% select(from, to) %>% mutate(label = to, percentage = 1)
   )
-  progressions <- data_frame(
+  progressions <- tibble(
     cell_id = names(grouping),
     label = grouping
   ) %>%

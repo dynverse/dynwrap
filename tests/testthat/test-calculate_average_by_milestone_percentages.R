@@ -6,7 +6,7 @@ colnames(x) <- paste0("G", seq_len(ncol(x)))
 
 milestone_ids <- c("M1", "M2", "M3")
 
-milestone_percentages <- data_frame(
+milestone_percentages <- tibble(
   cell_id = rownames(x),
   z = seq(-1, 1, length.out = length(cell_id)),
   M1 = ifelse(z <= 0, -z, 0),
@@ -38,13 +38,13 @@ test_that("Testing edge cases", {
   expect_equal(rownames(x_grouped), milestone_ids)
   expect_equal(colnames(x_grouped), colnames(x)[[1]])
 
-  x_grouped <- calculate_average_by_milestone_percentages(x, data_frame(cell_id = rownames(x), milestone_id = "M1", percentage = 1))
+  x_grouped <- calculate_average_by_milestone_percentages(x, tibble(cell_id = rownames(x), milestone_id = "M1", percentage = 1))
   expect_equal(nrow(x_grouped), 1)
   expect_equal(ncol(x_grouped), 10)
   expect_equal(rownames(x_grouped), milestone_ids[[1]])
   expect_equal(colnames(x_grouped), colnames(x))
 
-  x_grouped <- calculate_average_by_milestone_percentages(x["C1", "G1", drop = FALSE], data_frame(cell_id = "C1", milestone_id = "M1", percentage = 1))
+  x_grouped <- calculate_average_by_milestone_percentages(x["C1", "G1", drop = FALSE], tibble(cell_id = "C1", milestone_id = "M1", percentage = 1))
   expect_equal(nrow(x_grouped), 1)
   expect_equal(ncol(x_grouped), 1)
   expect_equal(rownames(x_grouped), milestone_ids[[1]])

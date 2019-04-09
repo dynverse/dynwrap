@@ -1,3 +1,17 @@
+# dynwrap 1.0.1 (09-04-2019)
+
+* MINOR CHANGE: `infer_trajectory(..., debug = TRUE)` will now return commands for both entering the container and running the `dyncli::main()` function inside the container
+
+* MINOR CHANGE: Make `create_ti_method_definition()` actually work
+
+* DOCUMENTATION: Added examples for each trajectory wrapper
+
+* DOCUMENTATION: Added vignette discussing wrapper types
+
+* DOCUMENTATION: Added vignette discussing `create_ti_method_definition()`
+
+* BUG FIX: Fixed bug where `sink()` was not removed after interruption
+
 # dynwrap 1.0.0 (28-03-2019)
 
 * MAJOR CHANGE: Add support for Singularity 3.0, drop support for previous 

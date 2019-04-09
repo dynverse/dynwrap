@@ -10,7 +10,7 @@ add_end_state_probabilities(dataset, end_state_probabilities,
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
-\item{end_state_probabilities}{A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone. If the data_frame contains only a cell_id column, the data will be processed using \code{add_linear_trajectory}}
+\item{end_state_probabilities}{A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone. If the tibble contains only a cell_id column, the data will be processed using \code{add_linear_trajectory}}
 
 \item{pseudotime}{A named vector of pseudo times.}
 
@@ -28,5 +28,23 @@ If pseudotime values are not given, will use pseudotime already present in the d
 }
 \details{
 This function will generate the milestone_network and progressions.
+}
+\examples{
+library(tibble)
+dataset <- wrap_data(cell_ids = letters)
+
+pseudotime <- runif(length(dataset$cell_ids))
+names(pseudotime) <- dataset$cell_ids
+pseudotime
+end_state_probabilities <- tibble(
+  cell_id = dataset$cell_ids,
+  A = runif(length(dataset$cell_ids)),
+  B = 1-A
+)
+end_state_probabilities
+trajectory <- add_end_state_probabilities(dataset, end_state_probabilities, pseudotime)
+
+# for plotting the result, install dynplot
+#- dynplot::plot_graph(trajectory)
 }
 \keyword{create_trajectory}

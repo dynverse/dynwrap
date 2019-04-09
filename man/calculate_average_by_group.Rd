@@ -10,7 +10,7 @@ calculate_average_by_group(x, cell_grouping)
 \item{x}{A matrix. One row for every cell; one column for every feature. The rows must be named.}
 
 \item{cell_grouping}{A data frame denoting the grouping of the cells.
-Format: \code{data_frame(cell_id = character(), group_id = character())}.}
+Format: \code{tibble(cell_id = character(), group_id = character())}.}
 }
 \description{
 Calculate mean values per cell group

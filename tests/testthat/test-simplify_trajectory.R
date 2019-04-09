@@ -6,7 +6,7 @@ test_that("Simple test", {
   extras <- list("man")
 
   milestone_ids <- c("must", "be", "in", "want")
-  milestone_network <- data_frame(
+  milestone_network <- tibble(
     from = milestone_ids,
     to = milestone_ids[c(2,3,4,1)],
     length = c(2, 1, 3, 2),
@@ -44,7 +44,7 @@ test_that("Test whether simplify is able to correctly simplify an undirected", {
   cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
 
   milestone_ids <- c("A", "B", "C")
-  milestone_network <- data_frame(
+  milestone_network <- tibble(
     from = c("A", "A"),
     to = c("B", "C"),
     length = c(1, 2),
@@ -86,7 +86,7 @@ test_that("Test whether simplify is able to correctly simplify an undirected cyc
   cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
 
   milestone_ids <- c("A", "B", "C")
-  milestone_network <- data_frame(
+  milestone_network <- tibble(
     from = c("A", "B", "C"),
     to = c("B", "C", "A"),
     length = c(1, 2, 3),
@@ -128,7 +128,7 @@ test_that("Test whether simplify is able to correctly simplify a graph", {
   cell_ids <- c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12")
 
   milestone_ids <- c("A", "B", "C", "D", "E", "F")
-  milestone_network <- data_frame(
+  milestone_network <- tibble(
     from = c("A", "A", "C", "C", "E", "B"),
     to =   c("B", "D", "B", "D", "A", "F"),
     length = c(1, 2, 3, 4, 5, 6),

@@ -5,7 +5,8 @@
 \title{Define meta information on the TI method.}
 \usage{
 def_method(id, name = id, source = "tool", tool_id = NULL,
-  platform = NULL, url = NULL, license = NULL, authors = list())
+  platform = NULL, url = NULL, license = NULL, authors = list(),
+  description = NULL)
 }
 \arguments{
 \item{id}{An id by which to identify a method. Should only contain lowercase letters or underscores.}
@@ -29,6 +30,8 @@ def_method(id, name = id, source = "tool", tool_id = NULL,
 \item{license}{The software license the method uses (e.g. GPL-3, BSD-3, Artistic-2.0, MIT).}
 
 \item{authors}{A list of authors (see example).}
+
+\item{description}{Additional information on the method}
 }
 \description{
 Define meta information on the TI method.
@@ -50,7 +53,8 @@ def_method(
       github = "bobdylan",
       orcid = "0000-0003-1234-5678"
     )
-  )
+  ),
+  description = "I love trajectories!!"
 )
 }
 \keyword{create_ti_method}

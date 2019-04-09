@@ -21,6 +21,45 @@
 #' @return The trajectory
 #'
 #' @export
+#'
+#' @examples
+#' library(dplyr)
+#' library(tibble)
+#'
+#' dataset <- wrap_data(cell_ids = letters)
+#'
+#' milestone_network <- tribble(
+#'   ~from, ~to, ~length, ~directed,
+#'   "A", "B", 1, FALSE,
+#'   "B", "C", 2, FALSE,
+#'   "B", "D", 1, FALSE,
+#' )
+#' milestone_network
+#' progressions <- milestone_network %>%
+#'   sample_n(length(dataset$cell_ids), replace = TRUE, weight = length) %>%
+#'   mutate(
+#'     cell_id = dataset$cell_ids,
+#'     percentage = runif(n())
+#'   ) %>%
+#'   select(cell_id, from, to, percentage)
+#' progressions
+#' divergence_regions <- tribble(
+#'   ~divergence_id, ~milestone_id, ~is_start,
+#'   "1", "A", TRUE,
+#'   "1", "B", FALSE,
+#'   "1", "C", FALSE
+#' )
+#' divergence_regions
+#'
+#' trajectory <- add_trajectory(
+#'   dataset,
+#'   milestone_network = milestone_network,
+#'   divergence_regions = divergence_regions,
+#'   progressions = progressions
+#' )
+#'
+#' # for plotting the result, install dynplot
+#' #- dynplot::plot_graph(trajectory)
 add_trajectory <- function(
   dataset,
   milestone_ids = NULL,
@@ -46,7 +85,7 @@ add_trajectory <- function(
 
   # check divergence regions
   if (is.null(divergence_regions) || (is.data.frame(divergence_regions) && nrow(divergence_regions) == 0)) {
-    divergence_regions <- data_frame(divergence_id = character(0), milestone_id = character(0), is_start = logical(0))
+    divergence_regions <- tibble(divergence_id = character(0), milestone_id = character(0), is_start = logical(0))
   }
   divergence_regions <- check_divergence_regions(milestone_ids, divergence_regions)
 

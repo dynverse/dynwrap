@@ -75,7 +75,7 @@ calculate_trajectory_dimred <- function(
 
   # project dimensionality to samples
   mix_dimred <- function(milid, milpct) {
-    apply(layout[milid,,drop = FALSE], 2, function(x) sum(x * milpct)) %>% t %>% as_data_frame
+    apply(layout[milid,,drop = FALSE], 2, function(x) sum(x * milpct)) %>% t %>% as_tibble
   }
 
   # create output for samples

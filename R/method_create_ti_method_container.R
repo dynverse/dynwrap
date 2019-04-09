@@ -71,7 +71,7 @@ create_ti_method_container <- function(
   )
 
   # create all subdirectories
-  walk(paths, dir.create, showWarnings = FALSE)
+  walk(paths, dir.create, showWarnings = FALSE, recursive = TRUE)
 
   task <- inputs
   task$priors <- priors
@@ -94,18 +94,28 @@ create_ti_method_container <- function(
   # print information if desired
   if (preproc_meta$verbose) {
     cat("Input saved to ", preproc_meta$dir_dynwrap, "\n", sep = "")
+    cat("Running method using babelwhale\n")
   }
+
+  args <- c("--dataset", "/ti/input.h5", "--output", "/ti/output.h5")
+  if (preproc_meta$debug) args <- c(args, "--debug")
 
   # run container
   output <- babelwhale::run(
     container_id = method$run$container_id,
     command = NULL,
-    args = c("--dataset", "/ti/input.h5", "--output", "/ti/output.h5"),
+    args = args,
     volumes = paste0(preproc_meta$dir_dynwrap %>% babelwhale:::fix_windows_path(), ":/ti"),
     workspace = "/ti/workspace",
     verbose = preproc_meta$verbose,
     debug = preproc_meta$debug
   )
+
+  # print information if desired
+  if (preproc_meta$verbose) {
+    cat("Output saved to ", file.path(preproc_meta$dir_dynwrap, "output.h5"), "\n", sep = "")
+    cat("Attempting to read in output with hdf5")
+  }
 
   # return output
   dynutils::read_h5(file.path(preproc_meta$dir_dynwrap, "output.h5"))
