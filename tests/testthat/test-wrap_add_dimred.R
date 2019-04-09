@@ -173,7 +173,7 @@ test_that("Expect failure on wrong dimred parameter", {
   expect_error(
     wr_withtraj %>%
       add_dimred(
-        dimred = data_frame(1, 2)
+        dimred = tibble(1, 2)
       )
   )
 

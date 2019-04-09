@@ -76,7 +76,7 @@ test_that("Testing add_grouping fails when groupings is not in the correct forma
     wr_orig %>%
       add_grouping(
         group_ids = group_ids,
-        grouping = data_frame(grouping),
+        grouping = tibble(grouping),
         extras = extras
       )
   )

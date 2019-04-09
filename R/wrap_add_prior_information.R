@@ -206,7 +206,7 @@ generate_prior_information <- function(
         divergence_regions = divergence_regions,
         milestone_percentages = bind_rows(
           milestone_percentages,
-          data_frame(cell_id = pseudocell, milestone_id = mids, percentage = 1)
+          tibble(cell_id = pseudocell, milestone_id = mids, percentage = 1)
         )
       )
     geo <- calculate_geodesic_distances(tmp, waypoint_cells = pseudocell)[,cell_ids,drop = FALSE]

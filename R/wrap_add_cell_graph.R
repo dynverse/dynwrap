@@ -110,7 +110,7 @@ add_cell_graph <- function(
   progressions <-
     milestone_network_proto %>%
     rowwise() %>%
-    do(with(., data_frame(from, to, weight, node = path))) %>%
+    do(with(., tibble(from, to, weight, node = path))) %>%
     ungroup %>%
     group_by(node) %>%
     slice(1) %>%
@@ -119,7 +119,7 @@ add_cell_graph <- function(
     ) %>%
     ungroup() %>%
     right_join(
-      data_frame(cell_id = ids, node = closest_trajpoint),
+      tibble(cell_id = ids, node = closest_trajpoint),
       by = "node"
     ) %>%
     select(cell_id, from, to, percentage)

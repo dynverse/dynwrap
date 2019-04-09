@@ -48,7 +48,7 @@ create_ti_method_definition <- function(
     command = command,
     args = args,
     wd = preproc_meta$dir_dynwrap,
-    echo = preproc_meta$verbose,
+    echo = as.logical(preproc_meta$verbose) || preproc_meta$debug,
     echo_cmd = as.logical(preproc_meta$verbose) || preproc_meta$debug,
     spinner = TRUE
   )

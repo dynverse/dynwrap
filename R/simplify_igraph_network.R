@@ -113,7 +113,7 @@ simplify_igraph_network <- function(
         i_prev <- v_rem
 
         left_path <- list(
-          data_frame(from = i, to = i_prev, weight = simplify_get_edge(subgr, i, i_prev)$weight)
+          tibble(from = i, to = i_prev, weight = simplify_get_edge(subgr, i, i_prev)$weight)
         )
 
         while (to_process[[i]]) {
@@ -121,7 +121,7 @@ simplify_igraph_network <- function(
           tmp <- i
           i <- simplify_get_next(neighs, i, is_directed, left = TRUE, prev = i_prev)
           i_prev <- tmp
-          left_path[[length(left_path) + 1]] <- data_frame(from = i, to = i_prev, weight = simplify_get_edge(subgr, i, i_prev)$weight)
+          left_path[[length(left_path) + 1]] <- tibble(from = i, to = i_prev, weight = simplify_get_edge(subgr, i, i_prev)$weight)
         }
 
         # search for out end
@@ -129,7 +129,7 @@ simplify_igraph_network <- function(
         j_prev <- v_rem
 
         right_path <- list(
-          data_frame(from = j_prev, to = j, weight = simplify_get_edge(subgr, j_prev, j)$weight)
+          tibble(from = j_prev, to = j, weight = simplify_get_edge(subgr, j_prev, j)$weight)
         )
 
         while (to_process[[j]]) {
@@ -137,7 +137,7 @@ simplify_igraph_network <- function(
           tmp <- j
           j <- simplify_get_next(neighs, j, is_directed, left = FALSE, prev = j_prev)
           j_prev <- tmp
-          right_path[[length(right_path) + 1]] <- data_frame(from = j_prev, to = j, weight = simplify_get_edge(subgr, j_prev, j)$weight)
+          right_path[[length(right_path) + 1]] <- tibble(from = j_prev, to = j, weight = simplify_get_edge(subgr, j_prev, j)$weight)
         }
 
         left_path <- bind_rows(rev(left_path)) %>%

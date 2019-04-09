@@ -116,7 +116,7 @@ add_dimred_projection <- function(
             segment_start = dimred_milestones[mns$from, , drop = FALSE],
             segment_end = dimred_milestones[mns$to, , drop = FALSE]
           )
-          data_frame(
+          tibble(
             cell_id = cids,
             from = mns$from[proj$segment],
             to = mns$to[proj$segment],
@@ -124,7 +124,7 @@ add_dimred_projection <- function(
           )
         } else {
           # this group is a separate cluster
-          data_frame(
+          tibble(
             cell_id = cids,
             from = group_id,
             to = group_id,
@@ -139,7 +139,7 @@ add_dimred_projection <- function(
     # add missing group ids as clusters to the milestone network
     missing_gids <- group_ids %>% setdiff(c(milestone_network$from, milestone_network$to))
     milestone_network <- milestone_network %>%
-      bind_rows(data_frame(from = missing_gids, to = missing_gids, length = 0, directed = FALSE))
+      bind_rows(tibble(from = missing_gids, to = missing_gids, length = 0, directed = FALSE))
   }
 
   dimred_segment_progressions <-

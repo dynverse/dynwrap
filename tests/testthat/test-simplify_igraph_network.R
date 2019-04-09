@@ -202,7 +202,7 @@ test_that("error is produced when needed", {
 test_that("simplifications with a small cycle works as expected", {
   origdf <- data.frame(from = c("A", "B"), to = c("B", "A"), weight = c(1, 2), directed = T, stringsAsFactors = FALSE)
   gr <- igraph::graph_from_data_frame(origdf)
-  edge_points <- data_frame(id = c("x", "y"), from = c("A", "B"), to = c("B", "A"), percentage = c(.5, .6))
+  edge_points <- tibble(id = c("x", "y"), from = c("A", "B"), to = c("B", "A"), percentage = c(.5, .6))
   totlen <- sum(origdf$weight)
 
   s1 <- simplify_igraph_network(gr, allow_duplicated_edges = FALSE, allow_self_loops = TRUE, edge_points = edge_points)
@@ -228,7 +228,7 @@ test_that("simplifications with a small cycle works as expected", {
 test_that("simplifications with a large cycle works as expected", {
   origdf <- data.frame(from = c("A", "B", "C", "D"), to = c("B", "C", "D", "A"), weight = c(1, 2, 3, 4), directed = F, stringsAsFactors = FALSE)
   gr <- igraph::graph_from_data_frame(origdf, directed = any(origdf$directed))
-  edge_points <- data_frame(id = c("x", "y", "z"), from = c("A", "B", "D"), to = c("B", "C", "A"), percentage = c(.5, .6, 1))
+  edge_points <- tibble(id = c("x", "y", "z"), from = c("A", "B", "D"), to = c("B", "C", "A"), percentage = c(.5, .6, 1))
   totlen <- sum(origdf$weight)
 
   s1 <- simplify_igraph_network(gr, allow_duplicated_edges = FALSE, allow_self_loops = TRUE, edge_points = edge_points)

@@ -69,7 +69,7 @@ calculate_geodesic_distances_ <- function(
   }
 
   if (is.null(divergence_regions)) {
-    divergence_regions <- data_frame(divergence_id = character(0), milestone_id = character(0), is_start = logical(0))
+    divergence_regions <- tibble(divergence_id = character(0), milestone_id = character(0), is_start = logical(0))
   }
 
   # rename milestones to avoid name conflicts between cells and milestones
@@ -86,7 +86,7 @@ calculate_geodesic_distances_ <- function(
     rowwise() %>%
     mutate(in_divergence = divergence_regions %>% group_by(divergence_id) %>% summarise(match = all(c(from, to) %in% milestone_id)) %>% {any(.$match)}) %>%
     filter(!in_divergence) %>%
-    do({data_frame(divergence_id = paste0(.$from, "__", .$to), milestone_id = c(.$from, .$to), is_start = c(T, F))}) %>%
+    do({tibble(divergence_id = paste0(.$from, "__", .$to), milestone_id = c(.$from, .$to), is_start = c(T, F))}) %>%
     ungroup() %>%
     distinct(divergence_id, milestone_id, .keep_all = TRUE)
 
