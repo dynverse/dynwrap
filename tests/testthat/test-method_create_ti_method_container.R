@@ -28,8 +28,6 @@ for (tag in tags) {
       expect_true(is_wrapper_with_trajectory(trajectory1))
     })
 
-    expect_error(infer_trajectory(dataset, method, debug = TRUE), regexp = "Error during trajectory inference")
-
     expect_error(
       infer_trajectory(dataset_na, method),
       regexp = "Error during trajectory inference"

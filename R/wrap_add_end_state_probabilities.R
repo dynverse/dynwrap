@@ -7,7 +7,7 @@
 #'
 #' @inheritParams common_param
 #' @param pseudotime A named vector of pseudo times.
-#' @param end_state_probabilities A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone. If the data_frame contains only a cell_id column, the data will be processed using `add_linear_trajectory`
+#' @param end_state_probabilities A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone. If the tibble contains only a cell_id column, the data will be processed using `add_linear_trajectory`
 #' @param do_scale_minmax Whether or not to scale the pseudotime between 0 and 1.
 #'   Otherwise, will assume the values are already within that range.
 #' @param ... Extras to be added to the trajectory
@@ -79,7 +79,7 @@ add_end_state_probabilities <- function(
     end_milestone_ids <- colnames(end_state_probabilities)[colnames(end_state_probabilities) != "cell_id"]
     milestone_ids <- c(start_milestone_id, end_milestone_ids)
 
-    milestone_network <- data_frame(
+    milestone_network <- tibble(
       from = start_milestone_id,
       to = end_milestone_ids,
       length = 1,
@@ -87,7 +87,7 @@ add_end_state_probabilities <- function(
     )
 
     # one divergence region
-    divergence_regions <- data_frame(
+    divergence_regions <- tibble(
       milestone_id = milestone_ids,
       divergence_id = "D",
       is_start = milestone_ids == start_milestone_id

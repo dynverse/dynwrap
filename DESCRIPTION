@@ -1,7 +1,7 @@
 Package: dynwrap
 Type: Package
 Title: Common trajectory model for representing trajectories from all sources
-Version: 1.0.0.9000
+Version: 1.0.1.9000
 Authors@R: c(
     person(
       "Robrecht", 
@@ -34,6 +34,7 @@ Imports:
   dplyr,
   dynutils (>= 1.0.1.9000),
   dynparam,
+  hdf5r,
   igraph,
   glue,
   jsonlite,
@@ -54,7 +55,6 @@ Imports:
 Suggests: 
   devtools,
   dyndimred,
-  hdf5r,
   ggplot2,
   knitr,
   lhs,

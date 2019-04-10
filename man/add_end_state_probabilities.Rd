@@ -10,7 +10,7 @@ add_end_state_probabilities(dataset, end_state_probabilities,
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
-\item{end_state_probabilities}{A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone. If the data_frame contains only a cell_id column, the data will be processed using \code{add_linear_trajectory}}
+\item{end_state_probabilities}{A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone. If the tibble contains only a cell_id column, the data will be processed using \code{add_linear_trajectory}}
 
 \item{pseudotime}{A named vector of pseudo times.}
 

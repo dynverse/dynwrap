@@ -88,7 +88,7 @@ infer_trajectories <- function(
   if (is.null(parameters) || length(parameters) == 0) {
     parameters <- map(seq_along(method), ~list())
   }
-  testthat::expect_is(parameters, "list")
+  assert_that(is.list(parameters))
 
   # if a single set of parameters was given, make it a list
   if (length(method) == 1 && !is.null(names(parameters))) {
@@ -108,7 +108,7 @@ infer_trajectories <- function(
   }
 
   # check whether parameters is of the correct length
-  testthat::expect_equal(length(method), length(parameters))
+  assert_that(length(method) == length(parameters))
 
   # process dataset ----------------------
   if (dynwrap::is_data_wrapper(dataset)) {
@@ -189,7 +189,9 @@ infer_trajectory <- dynutils::inherit_default_params(
       debug = debug
     )
 
-    if (is.null(design$model[[1]])) {
+    if (isTRUE(debug)) {
+      invisible()
+    } else if (is.null(design$model[[1]])) {
       error <- design$summary[[1]]$error[[1]]
       stop("Error during trajectory inference \n", crayon::bold(error), call. = FALSE)
     } else {

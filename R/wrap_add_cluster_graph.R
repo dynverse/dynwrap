@@ -71,7 +71,7 @@ add_cluster_graph <- function(
     milestone_network %>% select(from, to) %>% mutate(label = from, percentage = 0),
     milestone_network %>% select(from, to) %>% mutate(label = to, percentage = 1)
   )
-  progressions <- data_frame(
+  progressions <- tibble(
     cell_id = names(grouping),
     label = grouping
   ) %>%

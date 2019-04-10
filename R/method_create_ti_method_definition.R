@@ -42,16 +42,13 @@ create_ti_method_definition <- function(
   # run script
   command <- paste0("./", script_location)
   args <- c("--dataset", "input.h5", "--output", "output.h5")
-
-  if (preproc_meta$debug) {
-    stop(paste0(c(command, args), collapse = " "))
-  }
+  if (preproc_meta$debug) args <- c(args, "--debug")
 
   process <- processx::run(
     command = command,
     args = args,
     wd = preproc_meta$dir_dynwrap,
-    echo = preproc_meta$verbose,
+    echo = as.logical(preproc_meta$verbose) || preproc_meta$debug,
     echo_cmd = as.logical(preproc_meta$verbose) || preproc_meta$debug,
     spinner = TRUE
   )

@@ -2,7 +2,7 @@ context("Testing add_expression")
 
 id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
-cell_info <- data_frame(
+cell_info <- tibble(
   cell_id = cell_ids,
   info1 = c("man", "in", "possession", "of", "a", "good"),
   info2 = c("fortune", "must", "be", "in", "want", "of"),

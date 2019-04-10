@@ -47,7 +47,7 @@ add_linear_trajectory <- function(
   milestone_ids <- c("milestone_begin", "milestone_end")
 
   # construct milestone_network
-  milestone_network <- data_frame(
+  milestone_network <- tibble(
     from = milestone_ids[[1]],
     to = milestone_ids[[2]],
     length = 1,
@@ -55,7 +55,7 @@ add_linear_trajectory <- function(
   )
 
   # construct progressions
-  progressions <- data_frame(
+  progressions <- tibble(
     cell_id = names(pseudotime),
     from = milestone_ids[[1]],
     to = milestone_ids[[2]],

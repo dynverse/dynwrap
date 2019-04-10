@@ -51,7 +51,11 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
-### Recent changes in dynwrap 1.0.1 (unreleased)
+### Recent changes in dynwrap 1.0.1 (09-04-2019)
+
+  - MINOR CHANGE: `infer_trajectory(..., debug = TRUE)` will now return
+    commands for both entering the container and running the
+    `dyncli::main()` function inside the container
 
   - MINOR CHANGE: Make `create_ti_method_definition()` actually work
 
@@ -61,6 +65,8 @@ changes.
 
   - DOCUMENTATION: Added vignette discussing
     `create_ti_method_definition()`
+
+  - BUG FIX: Fixed bug where `sink()` was not removed after interruption
 
 ### Recent changes in dynwrap 1.0.0 (28-03-2019)
 

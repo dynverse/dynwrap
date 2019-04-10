@@ -8,6 +8,8 @@
   return_verbose,
   debug
 ) {
+  if (debug) verbose <- TRUE
+
   # start the timer
   timings <- list(execution_start = Sys.time())
 
@@ -32,6 +34,7 @@
 
   # initialise stdout/stderr files
   sink_meta <- .method_init_sinks(verbose = verbose, return_verbose = return_verbose)
+  on.exit(.method_close_sinks(sink_meta))
 
   tryCatch({
     # print helpful message
@@ -90,7 +93,7 @@
 
     # retrieve stdout/stderr
     stds <- .method_close_sinks(sink_meta)
-    sink_meta$closed <- TRUE
+    on.exit({}, add = FALSE, after = FALSE)
 
     # stop timings
     timings$execution_stop <- Sys.time()

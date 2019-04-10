@@ -18,7 +18,7 @@ wr_orig <- wr_without_grouping %>% add_grouping(
   extras = extras
 )
 
-milestone_network <- data_frame(
+milestone_network <- tibble(
   from = group_ids[1:4],
   to = group_ids[2:5],
   length = c(1, 2, 4, 5),

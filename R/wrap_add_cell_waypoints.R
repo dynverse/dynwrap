@@ -71,7 +71,7 @@ determine_cell_trajectory_positions <- function(
         pull(cell_id) %>%
         unique()
 
-      data_frame(index = dii, cell_id = cells, divergence_id = divergence_ids[dii])
+      tibble(index = dii, cell_id = cells, divergence_id = divergence_ids[dii])
     })
 
   cells_on_edge <- progressions %>%

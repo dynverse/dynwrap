@@ -41,6 +41,7 @@ test_that("Testing infer_trajectory with control methods", {
 
   trajectory <- infer_trajectory(dataset, method)
   expect_s3_class(trajectory, "dynwrap::with_trajectory")
+  expect_equal(sink.number(), 0)
 
   # test priors
   trajectory <- infer_trajectory(dataset, method, give_priors = c("start_id"))

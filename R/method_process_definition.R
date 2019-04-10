@@ -67,6 +67,7 @@ definition <- function(
 #' @param url An URL to the codebase of the method.
 #' @param license The software license the method uses (e.g. GPL-3, BSD-3, Artistic-2.0, MIT).
 #' @param authors A list of authors (see example).
+#' @param description Additional information on the method
 #'
 #' @keywords create_ti_method
 #'
@@ -89,7 +90,8 @@ definition <- function(
 #'       github = "bobdylan",
 #'       orcid = "0000-0003-1234-5678"
 #'     )
-#'   )
+#'   ),
+#'   description = "I love trajectories!!"
 #' )
 def_method <- function(
   id,
@@ -99,7 +101,8 @@ def_method <- function(
   platform = NULL,
   url = NULL,
   license = NULL,
-  authors = list()
+  authors = list(),
+  description = NULL
 ) {
   as.list(environment())
 }

@@ -32,13 +32,13 @@ test_that("Testing edge cases", {
   expect_equal(rownames(x_grouped), group_ids)
   expect_equal(colnames(x_grouped), colnames(x)[[1]])
 
-  x_grouped <- calculate_average_by_group(x, data_frame(cell_id = rownames(x), group_id = "M1"))
+  x_grouped <- calculate_average_by_group(x, tibble(cell_id = rownames(x), group_id = "M1"))
   expect_equal(nrow(x_grouped), 1)
   expect_equal(ncol(x_grouped), 10)
   expect_equal(rownames(x_grouped), "M1")
   expect_equal(colnames(x_grouped), colnames(x))
 
-  x_grouped <- calculate_average_by_group(x["C1", "G1", drop = FALSE], data_frame(cell_id = "C1", group_id = "M1"))
+  x_grouped <- calculate_average_by_group(x["C1", "G1", drop = FALSE], tibble(cell_id = "C1", group_id = "M1"))
   expect_equal(nrow(x_grouped), 1)
   expect_equal(ncol(x_grouped), 1)
   expect_equal(rownames(x_grouped), "M1")
