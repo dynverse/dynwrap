@@ -1,3 +1,5 @@
+context("Testing orientation of trajectories")
+
 test_that("flip_edges works correctly", {
   cell_ids <- c("a", "b", "c", "d", "e")
 
@@ -15,22 +17,20 @@ test_that("flip_edges works correctly", {
     "e", "B", "C", 1
   )
 
-  trajectory <- wrap_expression(
-    counts = expression,
-    expression = expression,
-    expression_projected = expression_projected
+  trajectory <- wrap_data(
+    cell_ids = cell_ids
   ) %>%
     add_trajectory(milestone_network = milestone_network, progressions = progressions)
 
-  trajectory_flipped <- flip_edges(trajectory, milestone_network %>% filter(from == "a", to == "b"))
+  trajectory_flipped <- flip_edges(trajectory, milestone_network %>% filter(from == "B", to == "A"))
 
   expect_true(all(
     c("A->B", "B->C") %in%
-      paste0(trajectory_oriented$milestone_network$from, "->", trajectory_oriented$milestone_network$to))
+      paste0(trajectory_flipped$milestone_network$from, "->", trajectory_flipped$milestone_network$to))
   )
   expect_false(all(
     c("B->A", "C->B") %in%
-      paste0(trajectory_oriented$milestone_network$from, "->", trajectory_oriented$milestone_network$to))
+      paste0(trajectory_flipped$milestone_network$from, "->", trajectory_flipped$milestone_network$to))
   )
 
 })
