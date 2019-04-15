@@ -21,6 +21,7 @@ calculate_attraction <- function(
   projected,
   cells = colnames(projected),
   n_waypoints = 50,
+  k = 50,
   debug = FALSE
 ) {
   assertthat::assert_that(nrow(current) == nrow(projected))
@@ -83,5 +84,5 @@ calculate_attraction <- function(
 
 pcor <- function(x, y = x, method = "pearson", use = "everything") {
   assertthat::assert_that(ncol(x) == ncol(y));
-  purrr::map_dbl(seq_len(ncol(x)), ~ cor(x[,.], y[,.], method = method, use = use))
+  matrix(purrr::map_dbl(seq_len(ncol(x)), ~ cor(x[,.], y[,.], method = method, use = use)), nrow = 1)
 }

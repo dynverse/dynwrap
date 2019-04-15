@@ -6,7 +6,7 @@
 \title{Calculate geodesic distances between cells in a trajectory}
 \usage{
 calculate_geodesic_distances(trajectory, waypoint_cells = NULL,
-  waypoint_milestone_percentages = NULL)
+  waypoint_milestone_percentages = NULL, directed = FALSE)
 
 compute_tented_geodesic_distances(trajectory, waypoint_cells = NULL,
   waypoint_milestone_percentages = NULL)
@@ -17,6 +17,8 @@ compute_tented_geodesic_distances(trajectory, waypoint_cells = NULL,
 \item{waypoint_cells}{A vector of waypoint cells. Only the geodesic distances between waypoint cells and all other cells will be calculated.}
 
 \item{waypoint_milestone_percentages}{The milestone percentages of non-cell waypoints, containing waypoint_id, milestone_id and percentage columns}
+
+\item{directed}{Take into account the directions of the milestone edges. The cells that cannot be reached from a particular waypoint will have distance infinity.}
 }
 \description{
 Will calculate geodesic distances between cells within a trajectory. To speed things up, only the distances with a set of waypoint cells are calculated.

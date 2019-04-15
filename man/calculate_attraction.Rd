@@ -5,8 +5,7 @@
 \title{Calculate the attraction of cells to other cells using velocity}
 \usage{
 calculate_attraction(current, projected, cells = colnames(projected),
-  n_waypoints = 50, k = ceiling(n_waypoints/2), corr_sigma = 1,
-  debug = FALSE)
+  n_waypoints = 50, k = 50, debug = FALSE)
 }
 \arguments{
 \item{current}{Current expression}

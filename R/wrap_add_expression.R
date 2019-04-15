@@ -138,5 +138,7 @@ convert_expression <- function(x, cell_ids) {
       "dgCMatrix" %in% class(x),
       identical(rownames(x), cell_ids)
     )
+    x
   }
+  x
 }
