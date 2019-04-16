@@ -36,8 +36,12 @@
 #'   counts = expression,
 #'   expression = expression,
 #'   expression_projected = expression_projected
-#' ) %>%
-#'   add_trajectory(milestone_network = milestone_network, progressions = progressions)
+#' )
+#' trajectory <- add_trajectory(
+#'   trajectory,
+#'   milestone_network = milestone_network,
+#'   progressions = progressions
+#' )
 #'
 #' trajectory_oriented <- orient_topology_to_velocity(trajectory)
 #'
@@ -56,47 +60,66 @@ orient_topology_to_velocity <- function(
     stop("Orienting topologies with divergence regions doesn't work yet")
   }
 
-  # select waypoints along the trajectory topology
-  waypoints <- select_waypoints(trajectory)
+  # # select waypoints along the trajectory topology
+  # waypoints <- select_waypoints(trajectory)
+  #
+  # # project waypoints into original expression space, using both the expression and the projected (RNA velocity) expression
+  # waypoint_expression <- project_waypoints(trajectory, trajectory$expression, waypoints)
+  # waypoint_expression_projected <- project_waypoints(trajectory, trajectory$expression_projected, waypoints)
+  #
+  # # calculate for each edge within the waypoint network the difference in expression
+  # waypoint_network_vectors <- pmap(waypoints$waypoint_network, function(from, to, ...) {
+  #   waypoint_expression[to, ] - waypoint_expression[from, ]
+  # }) %>% do.call(rbind, .)
+  #
+  # # calculate the velocity vector for each waypoint
+  # assert_that(all(rownames(waypoint_expression_projected) == rownames(waypoint_expression)))
+  # assert_that(all(colnames(waypoint_expression_projected) == colnames(waypoint_expression)))
+  # waypoint_vectors <- waypoint_expression_projected - waypoint_expression
+  #
+  # # calculate correlation between:
+  # # * the difference in expression between each consecutive waypoint
+  # # * the RNA velocity vector at a particular waypoint
+  # waypoint_network_correlations <- pcor(
+  #   t(as.matrix(waypoint_network_vectors)),
+  #   t(as.matrix(waypoint_vectors[waypoints$waypoint_network$from, ]))
+  #   , method = "spearman"
+  # )[1, ]
+  #
+  # # summarise the correlation for each edge in the milestone network
+  # milestone_network_correlations <- waypoints$waypoint_network %>%
+  #   mutate(correlation = waypoint_network_correlations) %>%
+  #   group_by(from_milestone_id, to_milestone_id) %>%
+  #   summarise(
+  #     correlation_sd = sd(correlation),
+  #     correlation_mean = mean(correlation)
+  #   ) %>%
+  #   ungroup() %>%
+  #   rename(from = from_milestone_id, to = to_milestone_id)
+  #
+  # # switch the directionality of edges based on the average correlation
+  # milestone_network_toflip <- milestone_network_correlations %>%
+  #   filter(correlation_mean < 0) %>%
+  #   select(from, to)
 
-  # project waypoints into original expression space, using both the expression and the projected (RNA velocity) expression
-  waypoint_expression <- project_waypoints(trajectory, trajectory$expression, waypoints)
-  waypoint_expression_projected <- project_waypoints(trajectory, trajectory$expression_projected, waypoints)
+  flip_fractions <- pmap_dbl(trajectory$milestone_network, function(from, to, ...) {
+    progressions_edge <- trajectory$progressions %>%
+      filter(from == !!from, to == !!to) %>%
+      arrange(desc(percentage))
 
-  # calculate for each edge within the waypoint network the difference in expression
-  waypoint_network_vectors <- pmap(waypoints$waypoint_network, function(from, to, ...) {
-    waypoint_expression[to, ] - waypoint_expression[from, ]
-  }) %>% do.call(rbind, .)
+    nn_ix <- FNN::get.knnx(
+      trajectory$expression[progressions_edge$cell_id, ],
+      trajectory$expression_projected[progressions_edge$cell_id, ],
+      k = 1
+    )$nn.index[, 1]
 
-  # calculate the velocity vector for each waypoint
-  assert_that(all(rownames(waypoint_expression_projected) == rownames(waypoint_expression)))
-  assert_that(all(colnames(waypoint_expression_projected) == colnames(waypoint_expression)))
-  waypoint_vectors <- waypoint_expression_projected - waypoint_expression
+    sum(nn_ix > seq_along(nn_ix))/sum(nn_ix < seq_along(nn_ix))
+  })
 
-  # calculate correlation between:
-  # * the difference in expression between each consecutive waypoint
-  # * the RNA velocity vector at a particular waypoint
-  waypoint_network_correlations <- pcor(
-    t(as.matrix(waypoint_network_vectors)),
-    t(as.matrix(waypoint_vectors[waypoints$waypoint_network$from, ]))
-    , method = "spearman"
-  )[1, ]
+  milestone_network_toflip <- trajectory$milestone_network %>%
+    filter(flip_fractions > 1)
 
-  # summarise the correlation for each edge in the milestone network
-  milestone_network_correlations <- waypoints$waypoint_network %>%
-    mutate(correlation = waypoint_network_correlations) %>%
-    group_by(from_milestone_id, to_milestone_id) %>%
-    summarise(
-      correlation_sd = sd(correlation),
-      correlation_mean = mean(correlation)
-    ) %>%
-    ungroup() %>%
-    rename(from = from_milestone_id, to = to_milestone_id)
-
-  # switch the directionality of edges based on the average correlation
-  milestone_network_toflip <- milestone_network_correlations %>%
-    filter(correlation_mean < 0) %>%
-    select(from, to)
+  flip_edges(trajectory, milestone_network_toflip)
 
   trajectory <- flip_edges(trajectory, milestone_network_toflip)
 
@@ -119,6 +142,8 @@ orient_topology_to_velocity <- function(
 #' @inheritParams common_param
 #' @param milestone_network_toflip A dataframe with a from and to column, containing the subset of the milestone network #'
 #' @keywords adapt_trajectory
+#'
+#' @export
 flip_edges <- function(
   trajectory,
   milestone_network_toflip

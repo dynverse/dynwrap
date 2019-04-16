@@ -25,3 +25,7 @@ NULL
 #' @keywords internal
 #' @name common_param
 NULL
+
+
+# Define valid global variables
+if(getRversion() >= "2.15.1")  utils::globalVariables(c(".", "branch_id", "cell_id", "comp_1", "comp_2", "correlation", "correlation_mean","directed", "dist", "divergence_id", "edge_id", "feature_id", "flip", "from","from_milestone_id", "from_waypoint", "from2", "group_id", "housekeeping","in_divergence", "index", "input_id", "is_start", "ix", "label", "length1", "length2","milestone_id", "new_milestone_id", "new_new_milestone_id", "node", "node1", "node2", "num_cells", "one", "percentage", "PREDICT", "prior_id", "required", "rowname", "sd", "start","waypoint_id", "weight", "zero"))
