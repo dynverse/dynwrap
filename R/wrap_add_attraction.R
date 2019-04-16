@@ -14,15 +14,16 @@ add_attraction <- function(
 #'
 #' @param current Current expression
 #' @param projected Projected expression based on RNA velocity
+#' @param n_waypoints Number of waypoints to use
+#' @param k K knns
 #'
-#' @return Matrix containing the attraction ([-1, 1]) of each cell to the waypoint cells
+#' @return Matrix containing the attraction (\[-1, 1\]) of each cell to the waypoint cells
 calculate_attraction <- function(
   current,
   projected,
   cells = colnames(projected),
   n_waypoints = 50,
-  k = 50,
-  debug = FALSE
+  k = 50
 ) {
   assertthat::assert_that(nrow(current) == nrow(projected))
   assertthat::assert_that(ncol(current) == ncol(projected))

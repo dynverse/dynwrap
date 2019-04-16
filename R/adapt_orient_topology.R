@@ -112,7 +112,7 @@ orient_topology_to_velocity <- function(
 #' Flip a set of edges of the milestone network
 #'
 #' @description
-#' Note that this will remove associated roots, reroot the trajectory using [root_trajectory()]
+#' Note that this will remove associated roots, reroot the trajectory using [add_root()]
 #'
 #' @inheritParams common_param
 #' @param milestone_network_toflip A dataframe with a from and to column, containing the subset of the milestone network #'

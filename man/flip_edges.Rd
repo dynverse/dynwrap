@@ -12,6 +12,6 @@ flip_edges(trajectory, milestone_network_toflip)
 \item{milestone_network_toflip}{A dataframe with a from and to column, containing the subset of the milestone network #'}
 }
 \description{
-Note that this will remove associated roots, reroot the trajectory using \code{\link[=root_trajectory]{root_trajectory()}}
+Note that this will remove associated roots, reroot the trajectory using \code{\link[=add_root]{add_root()}}
 }
 \keyword{adapt_trajectory}
