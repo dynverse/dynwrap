@@ -1,7 +1,8 @@
 #' @rdname add_pseudotime
 #' @export
 calculate_pseudotime <- function(trajectory) {
-  if(!"root_milestone_id" %in% trajectory) {
+  if(!"root_milestone_id" %in% names(trajectory)) {
+    warning("Trajectory is not rooted. Add a root to the trajectory using dynwrap::add_root(). This will result in an error in future releases.")
     trajectory <- add_root(trajectory)
   }
 
@@ -13,7 +14,7 @@ calculate_pseudotime <- function(trajectory) {
 
   if(is.na(root_cell_id)) {stop("Could not find rooting cell for pseudotime calculation")}
 
-  pseudotime <- calculate_geodesic_distances(trajectory, root_cell_id)[1, ]
+  pseudotime <- calculate_geodesic_distances(trajectory, waypoint_cells = root_cell_id, directed = TRUE)[1, ]
 
   pseudotime
 }

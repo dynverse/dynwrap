@@ -5,7 +5,7 @@
 \title{Create a wrapper object with expression and counts}
 \usage{
 wrap_expression(id = NULL, expression, counts, cell_info = NULL,
-  feature_info = NULL, ...)
+  feature_info = NULL, expression_projected = NULL, ...)
 }
 \arguments{
 \item{id}{A unique identifier for the data. If \code{NULL}, a random string will be generated.}
@@ -17,6 +17,8 @@ wrap_expression(id = NULL, expression, counts, cell_info = NULL,
 \item{cell_info}{Optional meta-information pertaining the cells.}
 
 \item{feature_info}{Optional meta-information of the features, a data.frame with at least feature_id as column}
+
+\item{expression_projected}{Projected expression using RNA velocity}
 
 \item{...}{extra information to be stored in the dataset}
 }
