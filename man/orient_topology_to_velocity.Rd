@@ -49,8 +49,9 @@ trajectory <- wrap_expression(
 ) \%>\%
   add_trajectory(milestone_network = milestone_network, progressions = progressions)
 
-trajectory_oriented <- dynwrap::orient_topology_to_velocity(trajectory)
+trajectory_oriented <- orient_topology_to_velocity(trajectory)
 
 # the edge is now correctly oriented
 trajectory_oriented$milestone_network
+
 }
