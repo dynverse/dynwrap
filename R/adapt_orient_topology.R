@@ -109,7 +109,7 @@ orient_topology_to_velocity <- function(
       filter(from == !!from, to == !!to) %>%
       arrange(desc(percentage))
 
-    nn_ix <- FNN::knn.index(
+    nn_ix <- FNN::knnx.index(
       trajectory$expression[progressions_edge$cell_id, ],
       trajectory$expression_projected[progressions_edge$cell_id, ],
       k = 1
