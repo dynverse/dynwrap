@@ -3,12 +3,12 @@ context("Testing orientation of trajectories")
 test_that("flip_edges works correctly", {
   cell_ids <- c("a", "b", "c", "d", "e")
 
-  milestone_network <- tribble(
+  milestone_network <- tibble::tribble(
     ~from, ~to, ~length, ~directed,
     "B", "A", 1, TRUE,
     "B", "C", 1, TRUE
   )
-  progressions <- tribble(
+  progressions <- tibble::tribble(
     ~cell_id, ~from, ~to, ~percentage,
     "a", "B", "A", 1,
     "b", "B", "A", 0.5,
@@ -32,7 +32,6 @@ test_that("flip_edges works correctly", {
     c("B->A", "C->B") %in%
       paste0(trajectory_flipped$milestone_network$from, "->", trajectory_flipped$milestone_network$to))
   )
-
 })
 
 
@@ -54,12 +53,12 @@ test_that("orient_topology_to_velocity orients a linear trajectory correctly", {
   ))
 
   # the milestone network is "wrong" in the sense that B and A are wrongly oriented
-  milestone_network <- tribble(
+  milestone_network <- tibble::tribble(
     ~from, ~to, ~length, ~directed,
     "B", "A", 1, TRUE,
     "B", "C", 1, TRUE
   )
-  progressions <- tribble(
+  progressions <- tibble::tribble(
     ~cell_id, ~from, ~to, ~percentage,
     "a", "B", "A", 1,
     "b", "B", "A", 0.5,
@@ -81,5 +80,4 @@ test_that("orient_topology_to_velocity orients a linear trajectory correctly", {
   # make sure the first edge is correctly oriented
   expect_true("A->B" %in% paste0(trajectory_oriented$milestone_network$from, "->", trajectory_oriented$milestone_network$to))
   expect_false("B->A" %in% paste0(trajectory_oriented$milestone_network$from, "->", trajectory_oriented$milestone_network$to))
-
 })

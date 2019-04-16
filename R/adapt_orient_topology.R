@@ -18,12 +18,12 @@
 #' ))
 #'
 #' # the milestone network is "wrong" in the sense that B and A are oriented in the opposite direction
-#' milestone_network <- tribble(
+#' milestone_network <- tibble::tribble(
 #'   ~from, ~to, ~length, ~directed,
 #'   "B", "A", 1, TRUE,
 #'   "B", "C", 1, TRUE
 #' )
-#' progressions <- tribble(
+#' progressions <- tibble::tribble(
 #'   ~cell_id, ~from, ~to, ~percentage,
 #'   "a", "B", "A", 1,
 #'   "b", "B", "A", 0.5,
