@@ -2,6 +2,10 @@
 #'
 #' @inheritParams common_param
 #'
+#' @export
+#'
+#' @importFrom FNN knn.index
+#'
 #' @examples
 #' # we'll create a simple linear trajectory
 #' cell_ids <- c("a", "b", "c", "d", "e")
@@ -47,8 +51,6 @@
 #'
 #' # the edge is now correctly oriented
 #' trajectory_oriented$milestone_network
-#'
-#' @export
 orient_topology_to_velocity <- function(
   trajectory
 ) {
@@ -107,11 +109,11 @@ orient_topology_to_velocity <- function(
       filter(from == !!from, to == !!to) %>%
       arrange(desc(percentage))
 
-    nn_ix <- FNN::get.knnx(
+    nn_ix <- FNN::knn.index(
       trajectory$expression[progressions_edge$cell_id, ],
       trajectory$expression_projected[progressions_edge$cell_id, ],
       k = 1
-    )$nn.index[, 1]
+    )[, 1]
 
     sum(nn_ix > seq_along(nn_ix))/sum(nn_ix < seq_along(nn_ix))
   })
