@@ -14,6 +14,7 @@ add_attraction <- function(
 #'
 #' @param current Current expression
 #' @param projected Projected expression based on RNA velocity
+#' @param cells Which cells to use
 #' @param n_waypoints Number of waypoints to use
 #' @param k K knns
 #'

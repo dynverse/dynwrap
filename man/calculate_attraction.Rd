@@ -12,6 +12,8 @@ calculate_attraction(current, projected, cells = colnames(projected),
 
 \item{projected}{Projected expression based on RNA velocity}
 
+\item{cells}{Which cells to use}
+
 \item{n_waypoints}{Number of waypoints to use}
 
 \item{k}{K knns}
