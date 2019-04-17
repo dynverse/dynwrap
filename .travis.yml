@@ -33,9 +33,4 @@ jobs:
         - echo Skip
       after_success:
         - echo Skip
-    - stage: prepare cache
-      script:
-        - echo Skip
-      after_success:
-        - echo Skip
     - stage: test
