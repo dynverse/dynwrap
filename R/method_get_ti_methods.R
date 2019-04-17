@@ -22,7 +22,7 @@ get_ti_methods <- function(
 
     if (package == "dynwrap") {
       requireNamespace("pkgload")
-      root <- pkgload:::shim_system.file("tests/testthat/", package = "dynwrap")
+      root <- system.file("tests/testthat/", package = "dynwrap")
       env <- new.env()
       for (file in list.files(root, full.names = TRUE)) {
         source(file, local = env)

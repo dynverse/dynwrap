@@ -124,8 +124,6 @@
     lst(trajectory, summary)
 
   }, error = function(e) {
-    stds <- .method_close_sinks(sink_meta)
-
     stop("Error produced within dynwrap: ", e$message)
   })
 }
