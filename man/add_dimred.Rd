@@ -8,7 +8,8 @@
 \usage{
 add_dimred(dataset, dimred, dimred_milestones = NULL,
   dimred_segment_progressions = NULL, dimred_segment_points = NULL,
-  connect_segments = FALSE, expression_source = "expression", ...)
+  connect_segments = FALSE, project_trajectory = TRUE,
+  expression_source = "expression", ...)
 
 is_wrapper_with_dimred(dataset)
 
@@ -26,6 +27,8 @@ get_dimred(dataset, dimred = NULL, expression_source = "expression")
 \item{dimred_segment_points}{An optional dimensionality reduction of the trajectory segments. Format: \code{matrix(comp_1, comp_2, ...)}.}
 
 \item{connect_segments}{Whether to connect segments between edges}
+
+\item{project_trajectory}{Whether to also project the trajectory. Only relevant if dataset contains a trajectory, and dimred_segment_progressions and dimred_segment_points are not provided}
 
 \item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another dataset which contains expression}
 

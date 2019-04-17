@@ -50,17 +50,18 @@ project_waypoints <- function(
 #' Project a trajectory onto a dimensionality reduction using waypoints
 #'
 #' @inheritParams common_param
+#' @inheritParams add_dimred
 #' @param waypoints Waypoint list as created by [select_waypoints()]
 #'
 #' @return A list containing dimred_segment_points and dimred_segment_progressions, which can be given to [add_dimred()]
 #'
 #' @export
-project_trajectory <- function(trajectory, waypoints = select_waypoints(trajectory)) {
+project_trajectory <- function(trajectory, dimred, waypoints = select_waypoints(trajectory)) {
   waypoints <- select_waypoints(trajectory)
   waypoint_points <- project_waypoints(trajectory, dimred, waypoints = waypoints)
 
   lst(
     dimred_segment_points = waypoint_points,
-    imred_segment_progressions = waypoints$progressions %>% select(from, to, percentage)
+    dimred_segment_progressions = waypoints$progressions %>% select(from, to, percentage)
   )
 }

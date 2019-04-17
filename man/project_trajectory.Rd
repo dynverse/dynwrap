@@ -4,10 +4,13 @@
 \alias{project_trajectory}
 \title{Project a trajectory onto a dimensionality reduction using waypoints}
 \usage{
-project_trajectory(trajectory, waypoints = select_waypoints(trajectory))
+project_trajectory(trajectory, dimred,
+  waypoints = select_waypoints(trajectory))
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
+
+\item{dimred}{The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction}
 
 \item{waypoints}{Waypoint list as created by \code{\link[=select_waypoints]{select_waypoints()}}}
 }

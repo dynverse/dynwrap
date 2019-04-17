@@ -6,6 +6,7 @@
 #' @param dimred_segment_progressions An optional progression matrix of the trajectory segments. Format: `tibble(from, to, percentage)`
 #' @param dimred_segment_points An optional dimensionality reduction of the trajectory segments. Format: `matrix(comp_1, comp_2, ...)`.
 #' @param connect_segments Whether to connect segments between edges
+#' @param project_trajectory Whether to also project the trajectory. Only relevant if dataset contains a trajectory, and dimred_segment_progressions and dimred_segment_points are not provided
 #' @param ... extra information to be stored in the wrapper
 #'
 #' @keywords adapt_trajectory
@@ -20,6 +21,7 @@ add_dimred <- function(
   dimred_segment_progressions = NULL,
   dimred_segment_points = NULL,
   connect_segments = FALSE,
+  project_trajectory = TRUE,
   expression_source = "expression",
   ...
 ) {
@@ -53,6 +55,10 @@ add_dimred <- function(
       identical(colnames(dimred_segment_progressions), c("from", "to", "percentage")),
       nrow(dimred_segment_points) == nrow(dimred_segment_progressions)
     )
+  } else if (is_wrapper_with_trajectory(dataset) && project_trajectory) {
+    projection <- project_trajectory(dataset, dimred)
+    dimred_segment_progressions <- projection$dimred_segment_progressions
+    dimred_segment_points <- projection$dimred_segment_points
   }
 
   # TODO: add tests for connecting segments!
