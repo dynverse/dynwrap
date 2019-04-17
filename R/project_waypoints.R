@@ -12,6 +12,7 @@
 #' @return A matrix with waypoints in rows and dimensions in the columns.
 #'
 #' @importFrom stats dnorm
+#' @export
 project_waypoints <- function(
   trajectory,
   space,
@@ -43,4 +44,23 @@ project_waypoints <- function(
   projected_space <- weights %*% space
 
   projected_space
+}
+
+
+#' Project a trajectory onto a dimensionality reduction using waypoints
+#'
+#' @inheritParams common_param
+#' @param waypoints Waypoint list as created by [select_waypoints()]
+#'
+#' @return A list containing dimred_segment_points and dimred_segment_progressions, which can be given to [add_dimred()]
+#'
+#' @export
+project_trajectory <- function(trajectory, waypoints = select_waypoints(trajectory)) {
+  waypoints <- select_waypoints(trajectory)
+  waypoint_points <- project_waypoints(trajectory, dimred, waypoints = waypoints)
+
+  lst(
+    dimred_segment_points = waypoint_points,
+    imred_segment_progressions = waypoints$progressions %>% select(from, to, percentage)
+  )
 }

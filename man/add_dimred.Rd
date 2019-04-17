@@ -23,7 +23,7 @@ get_dimred(dataset, dimred = NULL, expression_source = "expression")
 
 \item{dimred_segment_progressions}{An optional progression matrix of the trajectory segments. Format: \code{tibble(from, to, percentage)}}
 
-\item{dimred_segment_points}{An optional dimensionality reduction of the trajectory segments. Format: \code{matrix(Comp1, Comp2, ...)}.}
+\item{dimred_segment_points}{An optional dimensionality reduction of the trajectory segments. Format: \code{matrix(comp_1, comp_2, ...)}.}
 
 \item{connect_segments}{Whether to connect segments between edges}
 
