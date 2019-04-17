@@ -19,6 +19,8 @@ project_waypoints <- function(
   waypoints = dynwrap::select_waypoints(trajectory),
   trajectory_projection_sd = sum(trajectory$milestone_network$length) * 0.05
 ) {
+  assert_that(!is.null(space))
+
   # calculate or check geodesic distances between waypoints and cells
   if ("geodesic_distances" %in% names(waypoints)) {
     assert_that(all(rownames(space) %in% colnames(waypoints$geodesic_distances)))
@@ -26,12 +28,13 @@ project_waypoints <- function(
     waypoints$geodesic_distances <- calculate_geodesic_distances(
       trajectory,
       waypoint_milestone_percentages = waypoints$milestone_percentages
-    )
+    )[unique(waypoints$milestone_percentages$waypoint_id), , drop = F]
   }
 
   # apply kernel on geodesic distances
   # in theory, many kernels are possible here, but for now this is fixed to a normal kernel
-  weights <- waypoints$geodesic_distances %>% stats::dnorm(sd = trajectory_projection_sd)
+  weights <- waypoints$geodesic_distances %>%
+    stats::dnorm(sd = trajectory_projection_sd)
   assert_that(all(!is.na(weights)))
 
   weights <- weights / rowSums(weights)
@@ -47,6 +50,27 @@ project_waypoints <- function(
 }
 
 
+
+#' Project milestones onto a dimensionality reduction
+#'
+#' @inheritParams common_param
+#' @inheritParams add_dimred
+#'
+#' @return A list containing dimred_segment_points and dimred_segment_progressions, which can be given to [add_dimred()]
+#'
+#' @export
+project_trajectory <- function(trajectory, dimred) {
+  waypoints <- select_waypoints(trajectory)
+  waypoint_points <- project_waypoints(trajectory, dimred, waypoints = waypoints)
+
+  lst(
+    dimred_segment_points = waypoint_points,
+    dimred_segment_progressions = waypoints$progressions %>% select(from, to, percentage)
+  )
+}
+
+
+
 #' Project a trajectory onto a dimensionality reduction using waypoints
 #'
 #' @inheritParams common_param
@@ -56,12 +80,15 @@ project_waypoints <- function(
 #' @return A list containing dimred_segment_points and dimred_segment_progressions, which can be given to [add_dimred()]
 #'
 #' @export
-project_trajectory <- function(trajectory, dimred, waypoints = select_waypoints(trajectory)) {
-  waypoints <- select_waypoints(trajectory)
+project_milestones <- function(trajectory, dimred) {
+  waypoints <- lst(
+    milestone_percentages = tibble(
+      waypoint_id = trajectory$milestone_ids,
+      milestone_id = waypoint_id,
+      percentage = 1
+    )
+  )
   waypoint_points <- project_waypoints(trajectory, dimred, waypoints = waypoints)
 
-  lst(
-    dimred_segment_points = waypoint_points,
-    dimred_segment_progressions = waypoints$progressions %>% select(from, to, percentage)
-  )
+  waypoint_points
 }

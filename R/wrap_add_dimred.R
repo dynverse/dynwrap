@@ -44,6 +44,8 @@ add_dimred <- function(
 
       assert_that(identical(rownames(dimred_milestones), milestone_ids))
     }
+  } else if (is_wrapper_with_trajectory(dataset) && project_trajectory) {
+    dimred_milestones <- project_milestones(dataset, dimred)
   }
 
   if (!is.null(dimred_segment_points) || !is.null(dimred_segment_progressions)) {

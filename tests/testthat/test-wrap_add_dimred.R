@@ -254,6 +254,18 @@ test_that("Expect failure on wrong dimred_segment_progressions parameter", {
 })
 
 
+test_that("Test add_dimred with projection", {
+  wr_withdimred <- wr_withtraj %>%
+    add_dimred(
+      dimred = dimred,
+      project_trajectory = TRUE
+    )
+  testthat::expect_true(!is.null(wr_withdimred$dimred_milestones))
+  testthat::expect_true(!is.null(wr_withdimred$dimred_segment_points))
+  testthat::expect_true(!is.null(wr_withdimred$dimred_segment_progressions))
+})
+
+
 test_that("Test get_dimred", {
   wr_withdimred <- wr_withtraj %>% add_dimred(dimred)
 
