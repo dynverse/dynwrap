@@ -87,7 +87,7 @@ is_wrapper_with_dimred <- function(dataset) {
 #' @export
 get_dimred <- function(dataset, dimred = NULL, expression_source = "expression") {
   if(is.function(dimred)) {
-    # function
+    # function -> calculate dimensionality reduction
     expression <- get_expression(dataset, expression_source)
     dimred <- dimred(expression)
   } else if (is.matrix(dimred)) {
@@ -215,4 +215,38 @@ connect_dimred_segments <- function(dimred_segment_progressions, dimred_segment_
     dimred_segment_progressions = bind_rows(dimred_segment_progressions, connecting_progressions),
     connecting_points = rbind(dimred_segment_points, connecting_points)
   )
+}
+
+
+
+
+dimred_merged <- function(dimred, expression, expression_projected) {
+  merge_projected(
+    expression,
+    expression_projected
+  ) %>%
+    dimred() %>%
+    split_projected()
+}
+
+
+
+
+merge_projected <- function(expression, expression_projected) {
+  rownames(expression_projected) <- paste0(rownames(expression_projected), "###PROJECTED")
+  rbind(
+    expression,
+    expression_projected
+  )
+}
+split_projected <- function(merged, cell_ids = str_subset(rownames(merged), ".*###PROJECTED", negate = TRUE)) {
+  projected <- merged[paste0(cell_ids, "###PROJECTED"),]
+  rownames(projected) <- cell_ids
+  colnames(projected) <- paste0(colnames(projected), "_projected")
+
+  lst(
+    current = merged[cell_ids, ],
+    projected
+  )
+  cbind(merged[cell_ids, ], projected)
 }
