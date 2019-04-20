@@ -34,6 +34,7 @@ Imports:
   dplyr,
   dynutils (>= 1.0.1.9000),
   dynparam,
+  FNN,
   hdf5r,
   igraph,
   glue,

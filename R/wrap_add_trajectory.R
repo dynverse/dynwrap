@@ -142,23 +142,22 @@ add_trajectory <- function(
     }
   }
 
-  ## Find out trajectory type from milestone network
-  classification <- classify_milestone_network(milestone_network)
-  trajectory_type <- classification$network_type
-  directed <- classification$directed
-
   # create output structure
-  dataset %>% extend_with(
+  dataset <- dataset %>% extend_with(
     "dynwrap::with_trajectory",
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
     divergence_regions = divergence_regions,
     milestone_percentages = milestone_percentages,
     progressions = progressions,
-    trajectory_type = trajectory_type,
-    directed = directed,
     ...
   )
+
+  # topology has changed - calculate metrics of the topology
+  dataset <- changed_topology(dataset)
+
+  # tada
+  dataset
 }
 
 #' @inheritParams add_trajectory
@@ -275,4 +274,18 @@ check_progressions <- function(cell_ids, milestone_ids, milestone_network, progr
   assert_that(all(!is.na(pg_check$directed)), msg = "All progressions (from, to) edges need to be part of the milestone network")
 
   progressions
+}
+
+
+
+
+
+# function to run once the topology has changed
+changed_topology <- function(trajectory) {
+  # reset classification of topology
+  classification <- classify_milestone_network(trajectory$milestone_network)
+  trajectory$trajectory_type <- classification$network_type
+  trajectory$directed <- classification$directed
+
+  trajectory
 }

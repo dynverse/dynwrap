@@ -30,7 +30,7 @@ for (tag in tags) {
 
     expect_error(
       infer_trajectory(dataset_na, method),
-      regexp = "Error during trajectory inference"
+      regexp = "Error produced within dynwrap"
     )
   })
 }

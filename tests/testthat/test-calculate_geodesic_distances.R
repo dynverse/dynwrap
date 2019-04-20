@@ -204,3 +204,62 @@ test_that("Testing calculate_geodesic_distances with zero length self loops", {
 
   testthat::expect_true(all(geodesic_distances == 0))
 })
+
+
+
+
+test_that("Testing calculate_geodesic_distances while taking into account directedness", {
+  # with a cycle
+  milestone_network <- tribble(
+    ~from, ~to, ~length, ~directed,
+    "A", "B", 1, TRUE,
+    "B", "C", 1, TRUE,
+    "C", "A", 1, TRUE
+  )
+  progressions <- tribble(
+    ~cell_id, ~from, ~to, ~percentage,
+    "a", "A", "B", 0,
+    "b", "A", "B", 0.5,
+    "c", "A", "B", 1,
+    "d", "B", "C", 0,
+    "e", "B", "C", 0.5,
+    "f", "B", "C", 1,
+    "g", "C", "A", 0,
+    "h", "C", "A", 0.5,
+  )
+  dataset <- wrap_data(cell_ids = progressions$cell_id) %>%
+    add_trajectory(
+      milestone_network = milestone_network,
+      progressions = progressions
+    )
+  waypoint_cell <- "a"
+  geodesic_distances <- calculate_geodesic_distances(dataset, waypoint_cells = waypoint_cell, directed = TRUE)[1, ]
+
+  expect_equal(geodesic_distances, c(a = 0.0, b = 0.5, c = 1.0, d = 1.0, e = 1.5, f = 2.0, g = 2.0, h = 2.5))
+
+  # with a linear
+  milestone_network <- tribble(
+    ~from, ~to, ~length, ~directed,
+    "A", "B", 1, TRUE,
+    "B", "C", 1, TRUE
+  )
+  progressions <- tribble(
+    ~cell_id, ~from, ~to, ~percentage,
+    "a", "A", "B", 0,
+    "b", "A", "B", 0.5,
+    "c", "A", "B", 1,
+    "d", "B", "C", 0,
+    "e", "B", "C", 0.5,
+    "f", "B", "C", 1
+  )
+  dataset <- wrap_data(cell_ids = progressions$cell_id) %>%
+    add_trajectory(
+      milestone_network = milestone_network,
+      progressions = progressions
+    )
+  waypoint_cell <- c("c", "f")
+  geodesic_distances <- calculate_geodesic_distances(dataset, waypoint_cells = dataset$cell_ids, directed = TRUE)
+
+  expect_equal(geodesic_distances["c", ], c(a = Inf, b = Inf, c = 0.0, d = 0.0, e = 0.5, f = 1.0))
+  expect_equal(geodesic_distances["f", ], c(a = Inf, b = Inf, c = Inf, d = Inf, e = Inf, f = 0.0))
+})
