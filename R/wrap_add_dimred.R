@@ -7,6 +7,7 @@
 #' @param dimred_segment_points An optional dimensionality reduction of the trajectory segments. Format: `matrix(comp_1, comp_2, ...)`.
 #' @param connect_segments Whether to connect segments between edges
 #' @param project_trajectory Whether to also project the trajectory. Only relevant if dataset contains a trajectory, and dimred_segment_progressions and dimred_segment_points are not provided
+#' @param pair_with_velocity Whether to use the velocity vectors for dimensionality reduction
 #' @param ... extra information to be stored in the wrapper
 #'
 #' @keywords adapt_trajectory
@@ -22,6 +23,7 @@ add_dimred <- function(
   dimred_segment_points = NULL,
   connect_segments = FALSE,
   project_trajectory = TRUE,
+  pair_with_velocity = !is.null(dataset$expression_projected),
   expression_source = "expression",
   ...
 ) {
@@ -33,7 +35,17 @@ add_dimred <- function(
     dimred <- process_dimred(dataset, dimred)
     testthat::expect_setequal(dataset$cell_id, rownames(dimred))
   } else {
-    dimred <- get_dimred(dataset, dimred, expression_source)
+    # run dimred
+    if (!pair_with_velocity) {
+      expression <- get_expression(dataset, expression_source)
+      dimred <- dimred(expression)
+    } else {
+      assert_that(expression_source == "expression", msg = "Can only do paired dimensionality reduction with velocity if expression source is expression")
+      expression <- get_expression(dataset, "expression")
+      expression_projected <- get_expression(dataset, "expression_projected")
+      dimred <- dimred_merged(dimred, expression = expression, expression_projected = expression_projected)
+    }
+
   }
 
   if (!is.null(dimred_milestones)) {

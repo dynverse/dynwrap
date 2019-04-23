@@ -2,9 +2,10 @@
 % Please edit documentation in R/project_waypoints.R
 \name{project_trajectory}
 \alias{project_trajectory}
-\title{Project milestones onto a dimensionality reduction}
+\title{Project a trajectory onto a dimensionality reduction using waypoints}
 \usage{
-project_trajectory(trajectory, dimred)
+project_trajectory(trajectory, dimred,
+  waypoints = select_waypoint(trajectory))
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
@@ -15,5 +16,5 @@ project_trajectory(trajectory, dimred)
 A list containing dimred_segment_points and dimred_segment_progressions, which can be given to \code{\link[=add_dimred]{add_dimred()}}
 }
 \description{
-Project milestones onto a dimensionality reduction
+Project a trajectory onto a dimensionality reduction using waypoints
 }

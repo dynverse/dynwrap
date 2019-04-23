@@ -2,7 +2,7 @@
 % Please edit documentation in R/project_waypoints.R
 \name{project_milestones}
 \alias{project_milestones}
-\title{Project a trajectory onto a dimensionality reduction using waypoints}
+\title{Project milestones onto a dimensionality reduction}
 \usage{
 project_milestones(trajectory, dimred)
 }
@@ -10,12 +10,10 @@ project_milestones(trajectory, dimred)
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{dimred}{The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction}
-
-\item{waypoints}{Waypoint list as created by \code{\link[=select_waypoints]{select_waypoints()}}}
 }
 \value{
 A list containing dimred_segment_points and dimred_segment_progressions, which can be given to \code{\link[=add_dimred]{add_dimred()}}
 }
 \description{
-Project a trajectory onto a dimensionality reduction using waypoints
+Project milestones onto a dimensionality reduction
 }
