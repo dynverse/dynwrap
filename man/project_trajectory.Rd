@@ -5,7 +5,7 @@
 \title{Project a trajectory onto a dimensionality reduction using waypoints}
 \usage{
 project_trajectory(trajectory, dimred,
-  waypoints = select_waypoint(trajectory))
+  waypoints = select_waypoints(trajectory))
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
