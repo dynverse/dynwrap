@@ -79,52 +79,52 @@ calculate_trajectory_dimred <- function(
   }
 
   # create output for samples
-  dimred_cells <- milestone_percentages %>%
+  cell_positions <- milestone_percentages %>%
     group_by(cell_id) %>%
     do(mix_dimred(.$milestone_id, .$percentage)) %>%
     ungroup %>%
     slice(match(cell_ids, cell_id))
 
   # create output for milestones
-  dimred_milestones <- space_milest_df %>%
+  milestone_positions <- space_milest_df %>%
     rename(milestone_id = rowname)
 
   # create output for edges between milestones
-  dimred_segments <- milestone_network %>%
-    left_join(space_milest_df %>% select(from = rowname, from.comp_1 = comp_1, from.comp_2 = comp_2), by = "from") %>%
-    left_join(space_milest_df %>% select(to = rowname, to.comp_1 = comp_1, to.comp_2 = comp_2), by = "to")
+  edge_positions <- milestone_network %>%
+    left_join(space_milest_df %>% select(from = rowname, comp_1_from = comp_1, comp_2_from = comp_2), by = "from") %>%
+    left_join(space_milest_df %>% select(to = rowname, comp_1_to = comp_1, comp_2_to = comp_2), by = "to")
 
   # extra lines and polygons for divergence regions
   if (nrow(trajectory$divergence_regions) > 0) {
     # determine the divergence triangles
     triags <- get_divergence_triangles(trajectory$divergence_regions)
 
-    dimred_divergence_segments <-
+    divergence_edge_positions <-
       triags %>%
       select(from = node1, to = node2) %>%
-      left_join(space_milest_df %>% select(from = rowname, from.comp_1 = comp_1, from.comp_2 = comp_2), by = "from") %>%
-      left_join(space_milest_df %>% select(to = rowname, to.comp_1 = comp_1, to.comp_2 = comp_2), by = "to")
+      left_join(space_milest_df %>% select(from = rowname, comp_1_from = comp_1, comp_2_from = comp_2), by = "from") %>%
+      left_join(space_milest_df %>% select(to = rowname, comp_1_to = comp_1, comp_2_to = comp_2), by = "to")
 
     # define polygon triangles
-    dimred_divergence_polys <-
+    divergence_polygon_positions <-
       triags %>%
       mutate(triangle_id = paste0("triangle_", row_number())) %>%
       select(-divergence_id) %>%
       gather(triangle_part, milestone_id, -triangle_id) %>%
-      left_join(dimred_milestones, "milestone_id")
+      left_join(milestone_positions, "milestone_id")
   } else {
-    dimred_divergence_segments <- tibble(from = character(0), to = character(0), from.comp_1 = numeric(0), from.comp_2 = numeric(0), to.comp_1 = numeric(0), to.comp_2 = numeric(0))
-    dimred_divergence_polys <- tibble(triangle_id = character(0), comp_1 = numeric(0), comp_2 = numeric(0))
+    divergence_edge_positions <- tibble(from = character(0), to = character(0), comp_1_from = numeric(0), comp_2_from = numeric(0), comp_1_to = numeric(0), comp_2_to = numeric(0))
+    divergence_polygon_positions <- tibble(triangle_id = character(0), comp_1 = numeric(0), comp_2 = numeric(0))
   }
 
 
   # return all output
   lst(
-    dimred_milestones,
-    dimred_segments,
-    dimred_cells,
-    dimred_divergence_segments,
-    dimred_divergence_polys
+    milestone_positions,
+    edge_positions,
+    cell_positions,
+    divergence_edge_positions,
+    divergence_polygon_positions
   )
 }
 

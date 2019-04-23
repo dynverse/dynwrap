@@ -49,24 +49,24 @@ trajectory <- wrap_data(
 test_that("calculate_trajectory_dimred output format is correct", {
   dimred <- calculate_trajectory_dimred(trajectory)
 
-  expect_equal(sort(names(dimred)), c("dimred_cells", "dimred_divergence_polys", "dimred_divergence_segments", "dimred_milestones", "dimred_segments"))
+  expect_equal(sort(names(dimred)), c("cell_positions", "divergence_edge_positions",  "divergence_polygon_positions", "edge_positions", "milestone_positions"))
 
-  dimred_segments <- dimred$dimred_segments
-  expect_equal(colnames(dimred_segments), c("from", "to", "length", "directed", "from.comp_1", "from.comp_2", "to.comp_1", "to.comp_2"))
-  join_check <- dimred_segments %>% inner_join(milestone_network, by = c("from", "to"))
+  edge_positions <- dimred$edge_positions
+  expect_equal(colnames(dimred_segments), c("from", "to", "length", "directed", "comp_1_from", "comp_2_from", "comp_1_to", "comp_2_to"))
+  join_check <- edge_positions %>% inner_join(milestone_network, by = c("from", "to"))
   expect_equal(join_check$length.x, join_check$length.y)
 
-  dimred_milestones <- dimred$dimred_milestones
-  expect_equal(colnames(dimred_milestones), c("milestone_id", "comp_1", "comp_2"))
-  expect_true(all(milestone_ids %in% dimred_milestones$milestone_id))
+  milestone_positions <- dimred$milestone_positions
+  expect_equal(colnames(milestone_positions), c("milestone_id", "comp_1", "comp_2"))
+  expect_true(all(milestone_ids %in% milestone_positions$milestone_id))
 
-  dimred_cells <- dimred$dimred_cells
-  expect_equal(colnames(dimred_cells), c("cell_id", "comp_1", "comp_2"))
-  expect_true(all(cell_ids %in% dimred_cells$cell_id))
+  cell_positions <- dimred$cell_positions
+  expect_equal(colnames(cell_positions), c("cell_id", "comp_1", "comp_2"))
+  expect_true(all(cell_ids %in% cell_positions$cell_id))
 
-  dimred_divergence_segments <- dimred$dimred_divergence_segments
-  expect_equal(colnames(dimred_divergence_segments), c("from", "to", "from.comp_1", "from.comp_2", "to.comp_1", "to.comp_2"))
+  divergence_edge_positions <- dimred$divergence_edge_positions
+  expect_equal(colnames(divergence_edge_positions), c("from", "to", "comp_1_from", "comp_2_from", "comp_1_to", "comp_2_to"))
 
-  dimred_divergence_polys <- dimred$dimred_divergence_polys
-  expect_equal(colnames(dimred_divergence_polys), c("triangle_id", "triangle_part", "milestone_id", "comp_1", "comp_2"))
+  divergence_polygon_positions <- dimred$divergence_polygon_positions
+  expect_equal(colnames(divergence_polygon_positions), c("triangle_id", "triangle_part", "milestone_id", "comp_1", "comp_2"))
 })
