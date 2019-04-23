@@ -51,7 +51,7 @@ test_that("Testing select_waypoints", {
   expect_true(nrow(wp$waypoints) >= 100)
   expect_setequal(wp$waypoints$waypoint_id, wp$milestone_percentages$waypoint_id)
   expect_setequal(wp$waypoints$waypoint_id, wp$progressions$waypoint_id)
-  expect_setequal(wp$waypoints$milestone_id, milestone_ids)
+  expect_true(all(milestone_ids %in% wp$waypoints$milestone_id))
   expect_setequal(wp$waypoints$waypoint_id, rownames(wp$geodesic_distances))
   expect_setequal(cell_ids, colnames(wp$geodesic_distances))
   expect_setequal(wp$waypoints$waypoint_id, c(wp$waypoint_network$from, wp$waypoint_network$to))

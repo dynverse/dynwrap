@@ -59,7 +59,7 @@ project_waypoints <- function(
 #' @return A list containing dimred_segment_points and dimred_segment_progressions, which can be given to [add_dimred()]
 #'
 #' @export
-project_trajectory <- function(trajectory, dimred, waypoints = select_waypoint(trajectory)) {
+project_trajectory <- function(trajectory, dimred, waypoints = select_waypoints(trajectory)) {
   waypoint_points <- project_waypoints(trajectory, dimred, waypoints = waypoints)
 
   lst(
