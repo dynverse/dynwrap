@@ -92,7 +92,8 @@ calculate_trajectory_dimred <- function(
   # create output for edges between milestones
   edge_positions <- milestone_network %>%
     left_join(space_milest_df %>% select(from = rowname, comp_1_from = comp_1, comp_2_from = comp_2), by = "from") %>%
-    left_join(space_milest_df %>% select(to = rowname, comp_1_to = comp_1, comp_2_to = comp_2), by = "to")
+    left_join(space_milest_df %>% select(to = rowname, comp_1_to = comp_1, comp_2_to = comp_2), by = "to") %>%
+    select(from, to, length, directed, comp_1_from, comp_2_from, comp_1_to, comp_2_to)
 
   # extra lines and polygons for divergence regions
   if (nrow(trajectory$divergence_regions) > 0) {
