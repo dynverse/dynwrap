@@ -93,7 +93,7 @@
 
     # retrieve stdout/stderr
     stds <- .method_close_sinks(sink_meta)
-    on.exit({}, add = FALSE, after = FALSE)
+    on.exit({}, add = FALSE)
 
     # stop timings
     timings$execution_stop <- Sys.time()
