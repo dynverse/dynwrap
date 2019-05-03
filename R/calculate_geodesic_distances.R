@@ -134,7 +134,7 @@ calculate_geodesic_distances_ <- function(
 
       wp_cells <- rownames(pct_mat)[rownames(pct_mat) %in% waypoint_ids]
 
-      dynutils::manhattan_distance(pct_mat, pct_mat[c(tent, wp_cells), , drop = FALSE]) %>%
+      dynutils::calculate_distance(pct_mat, pct_mat[c(tent, wp_cells), , drop = FALSE], "manhattan") %>%
         reshape2::melt(varnames = c("from", "to"), value.name = "length") %>%
         mutate_at(c("from", "to"), as.character) %>%
         filter(from != to)
