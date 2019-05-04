@@ -45,13 +45,13 @@ create_ti_method_r <- function(
   setwd(tmp_dir)
 
   # Load required packages and namespaces
-  if (!is.null(run$package_loaded) && !is.na(run$package_loaded) && length(run$package_loaded)) {
+  if (!is.null(run$package_loaded) && !any(is.na(run$package_loaded)) && length(run$package_loaded)) {
     for (pack in run$package_loaded) {
       suppressMessages(do.call(require, list(pack)))
     }
   }
 
-  if (!is.null(run$package_required) && !is.na(run$package_required) && length(run$package_required)) {
+  if (!is.null(run$package_required) && !any(is.na(run$package_required)) && length(run$package_required)) {
     for (pack in run$package_required) {
       suppressMessages(do.call(requireNamespace, list(pack)))
     }
