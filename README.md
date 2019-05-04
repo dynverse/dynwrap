@@ -51,6 +51,24 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
+### Recent changes in dynwrap 1.1 (04-05-2019)
+
+  - FEATURE: RNA velocity data can now be included in the wrapper
+
+  - FEATURE: RNA velocity projected expression can now be given to
+    methods
+
+  - FEATURE: Added `orient_topology_to_velocity()` to orient the edges
+    of a trajectory based on the velocity vectors
+
+  - FEATURE: `calculate_geodesic_distances()` now has a `directed`
+    parameter, with which you can calculate directed geodesic distances.
+    Unreachable cells will receive an infinite distance
+
+  - FEATURE: Added `projected_trajectory()` (ported from dynplot).
+    `add_dimred()` will now by default also add a projection of the
+    trajectory to the data
+
 ### Recent changes in dynwrap 1.0.1 (09-04-2019)
 
   - MINOR CHANGE: `infer_trajectory(..., debug = TRUE)` will now return
@@ -66,28 +84,8 @@ changes.
   - DOCUMENTATION: Added vignette discussing
     `create_ti_method_definition()`
 
-  - BUG FIX: Fixed bug where `sink()` was not removed after interruption
-
-### Recent changes in dynwrap 1.0.0 (28-03-2019)
-
-  - MAJOR CHANGE: Add support for Singularity 3.0, drop support for
-    previous releases of Singularity and singularity-hub.
-
-  - MAJOR CHANGE: dynwrap now always works with sparse count and
-    expression matrices
-
-  - FEATURE: Add `create_ti_method_definition()` to create a definition
-    from a local script.
-
-  - DOCUMENTATION: Major update of all documentation for dynbenchmark
-    publication
-
-  - MINOR CHANGE: Rename `compute_tented_geodesic_distances()` to
-    `calculate_geodesic_distances()`
-
-  - MINOR CHANGE: Harmonisation of function arguments to either
-    `dataset` or
-`trajectory`
+  - BUG FIX: Fixed bug where `sink()` was not removed after
+interruption
 
 ## Dynverse dependencies
 
