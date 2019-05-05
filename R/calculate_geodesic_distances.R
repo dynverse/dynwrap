@@ -157,6 +157,7 @@ calculate_geodesic_distances_ <- function(
 
       distances <- distances %>%
         as.matrix() %>%
+
         reshape2::melt(varnames = c("from", "to"), value.name = "length") %>%
         mutate_at(c("from", "to"), as.character) %>%
         filter(from != to)

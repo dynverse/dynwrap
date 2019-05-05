@@ -124,6 +124,9 @@
     lst(trajectory, summary)
 
   }, error = function(e) {
+    on.exit({}, add = FALSE)
+    stds <- .method_close_sinks(sink_meta)
+
     stop("Error produced within dynwrap: ", e$message)
   })
 }
@@ -152,24 +155,26 @@
   )
 }
 .method_close_sinks <- function(sink_meta) {
-  if (!sink_meta$verbose || sink_meta$return_verbose) {
-    sink(type = "output")
-    sink(type = "message")
-    if (!is.null(sink_meta$stderr_con) && !isTRUE(sink_meta$closed)) close(sink_meta$stderr_con)
-  }
-
-  if (sink_meta$return_verbose) {
-    stdout <- read_file(sink_meta$stdout_file)
-    stderr <- read_file(sink_meta$stderr_file)
-    if (sink_meta$verbose && length(stderr) > 0) {
-      cat("Messages (not in order):\n")
-      cat(paste(stderr, collapse = "\n"))
+  if (sink.number(type = c("output", "message")) > 0) {
+    if (!sink_meta$verbose || sink_meta$return_verbose) {
+      sink(type = "output")
+      sink(type = "message")
+      if (!is.null(sink_meta$stderr_con) && !isTRUE(sink_meta$closed)) close(sink_meta$stderr_con)
     }
-  } else {
-    stdout <- ""
-    stderr <- ""
-  }
 
-  lst(stdout, stderr)
+    if (sink_meta$return_verbose) {
+      stdout <- read_file(sink_meta$stdout_file)
+      stderr <- read_file(sink_meta$stderr_file)
+      if (sink_meta$verbose && length(stderr) > 0) {
+        cat("Messages (not in order):\n")
+        cat(paste(stderr, collapse = "\n"))
+      }
+    } else {
+      stdout <- ""
+      stderr <- ""
+    }
+
+    lst(stdout, stderr)
+  }
 }
 

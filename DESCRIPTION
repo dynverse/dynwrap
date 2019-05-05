@@ -32,7 +32,7 @@ Imports:
   assertthat,
   babelwhale,
   dplyr,
-  dynutils (>= 1.0.1.9000),
+  dynutils (>= 1.0.3),
   dynparam,
   FNN,
   hdf5r,
