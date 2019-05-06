@@ -52,7 +52,7 @@ test_that("calculate_trajectory_dimred output format is correct", {
   expect_equal(sort(names(dimred)), c("cell_positions", "divergence_edge_positions",  "divergence_polygon_positions", "edge_positions", "milestone_positions"))
 
   edge_positions <- dimred$edge_positions
-  expect_equal(colnames(dimred_segments), c("from", "to", "length", "directed", "comp_1_from", "comp_2_from", "comp_1_to", "comp_2_to"))
+  expect_equal(colnames(edge_positions), c("from", "to", "length", "directed", "comp_1_from", "comp_2_from", "comp_1_to", "comp_2_to"))
   join_check <- edge_positions %>% inner_join(milestone_network, by = c("from", "to"))
   expect_equal(join_check$length.x, join_check$length.y)
 
