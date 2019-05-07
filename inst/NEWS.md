@@ -1,4 +1,4 @@
-# dynwrap 1.1 (04-05-2019)
+# dynwrap 1.1 (07-05-2019)
 
 * FEATURE: RNA velocity data can now be included in the wrapper
 

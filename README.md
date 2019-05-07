@@ -51,7 +51,7 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
-### Recent changes in dynwrap 1.1 (04-05-2019)
+### Recent changes in dynwrap 1.1 (07-05-2019)
 
   - FEATURE: RNA velocity data can now be included in the wrapper
 
