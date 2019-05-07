@@ -55,6 +55,7 @@ project_waypoints <- function(
 #'
 #' @inheritParams common_param
 #' @inheritParams add_dimred
+#' @inheritParams project_waypoints
 #'
 #' @return A list containing dimred_segment_points and dimred_segment_progressions, which can be given to [add_dimred()]
 #'

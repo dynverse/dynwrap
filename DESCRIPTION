@@ -54,6 +54,7 @@ Imports:
   yaml,
   crayon
 Suggests: 
+  curl,
   devtools,
   dyndimred,
   ggplot2,
