@@ -147,7 +147,7 @@ for (network_type in names(all_networks)) {
   networks <- all_networks[[network_type]]
 
   for (network_name in names(networks)) {
-    test_that(glue::glue("test whether {network_name} is detected as {network_type}"), {
+    test_that(stringr::str_glue("test whether {network_name} is detected as {network_type}"), {
       milestone_network <- networks[[network_name]]
 
       detected_network_type <- classify_milestone_network(milestone_network)$network_type

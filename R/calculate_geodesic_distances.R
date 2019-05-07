@@ -7,6 +7,7 @@
 #' @inheritParams common_param
 #' @param waypoint_cells A vector of waypoint cells. Only the geodesic distances between waypoint cells and all other cells will be calculated.
 #' @param waypoint_milestone_percentages The milestone percentages of non-cell waypoints, containing waypoint_id, milestone_id and percentage columns
+#' @param directed Take into account the directions of the milestone edges. The cells that cannot be reached from a particular waypoint will have distance infinity.
 #'
 #' @keywords derive_trajectory
 #'
@@ -21,7 +22,8 @@
 calculate_geodesic_distances <- function(
   trajectory,
   waypoint_cells = NULL,
-  waypoint_milestone_percentages = NULL
+  waypoint_milestone_percentages = NULL,
+  directed = FALSE
 ) {
   testthat::expect_true(is_wrapper_with_trajectory(trajectory))
 
@@ -36,7 +38,8 @@ calculate_geodesic_distances <- function(
     milestone_percentages = trajectory$milestone_percentages,
     divergence_regions = trajectory$divergence_regions,
     waypoint_cells = waypoint_cells,
-    waypoint_milestone_percentages = waypoint_milestone_percentages
+    waypoint_milestone_percentages = waypoint_milestone_percentages,
+    directed = directed
   )
 }
 
@@ -47,7 +50,8 @@ calculate_geodesic_distances_ <- function(
   milestone_percentages,
   divergence_regions,
   waypoint_cells = NULL,
-  waypoint_milestone_percentages = NULL
+  waypoint_milestone_percentages = NULL,
+  directed = FALSE
 ) {
   cell_ids_trajectory <- unique(milestone_percentages$cell_id)
 
@@ -102,7 +106,7 @@ calculate_geodesic_distances_ <- function(
   is_directed <- any(milestone_network$directed)
   mil_gr <- igraph::graph_from_data_frame(milestone_network, directed = is_directed, vertices = milestone_ids)
 
-  # calculate cell-cell distances for pairs of cells that are in the same tent
+  # calculate cell-cell distances for pairs of cells that are in the same transition, i.e. an edge or a divergence region
   cell_in_tent_distances <-
     map_df(divergence_ids, function(did) {
       dir <- divergence_regions %>% filter(divergence_id == did)
@@ -134,11 +138,59 @@ calculate_geodesic_distances_ <- function(
 
       wp_cells <- rownames(pct_mat)[rownames(pct_mat) %in% waypoint_ids]
 
-      dynutils::calculate_distance(pct_mat, pct_mat[c(tent, wp_cells), , drop = FALSE], "manhattan") %>%
+      distances <- as.matrix(dynutils::calculate_distance(
+        pct_mat,
+        pct_mat[c(wp_cells, tent), , drop = FALSE],
+        "manhattan"
+      ))
+
+      if (directed) {
+        # calculate the sign of the distance
+        # distance is negative if the cell is closer to the beginning than the waypoint
+        begin <- dir %>% filter(is_start) %>% pull(milestone_id)
+
+        signs <- sign(-outer(distances[, begin], distances[begin, ], "-"))
+
+        signs[signs == 0] <- 1
+        distances <- distances * signs
+      }
+
+      distances <- distances %>%
+        as.matrix() %>%
+
         reshape2::melt(varnames = c("from", "to"), value.name = "length") %>%
         mutate_at(c("from", "to"), as.character) %>%
         filter(from != to)
+
+      distances
     })
+
+  if (directed) {
+    # switch from and to if distance is negative
+    cell_in_tent_distances$from2 <- cell_in_tent_distances$from
+    cell_in_tent_distances$from <- ifelse(
+      cell_in_tent_distances$length < 0,
+      cell_in_tent_distances$to,
+      cell_in_tent_distances$from2
+    )
+    cell_in_tent_distances$to <- ifelse(
+      cell_in_tent_distances$length < 0,
+      cell_in_tent_distances$from2,
+      cell_in_tent_distances$to
+    )
+    cell_in_tent_distances <- cell_in_tent_distances %>% select(-from2)
+    cell_in_tent_distances$length <- abs(cell_in_tent_distances$length)
+
+    # add reverse edges if distance approx. zero
+    # this is necessary because the direction will be taken into account
+    cell_in_tent_distances <- bind_rows(
+      cell_in_tent_distances,
+      cell_in_tent_distances %>%
+        filter(length <= 1e-20) %>%
+        mutate(from2 = from, from = to, to = from2) %>%
+        select(-from2)
+    )
+  }
 
   # combine all networks into one graph
   gr <-
@@ -146,15 +198,17 @@ calculate_geodesic_distances_ <- function(
     group_by(from, to) %>%
     summarise(length = min(length)) %>%
     ungroup() %>%
-    igraph::graph_from_data_frame(directed = FALSE, vertices = unique(c(milestone_ids, cell_ids_trajectory, waypoint_ids)))
+    igraph::graph_from_data_frame(directed = directed, vertices = unique(c(milestone_ids, cell_ids_trajectory, waypoint_ids)))
 
   # compute cell-to-cell distances across entire graph
+  mode <- ifelse(directed, "out", "all")
   out <- gr %>%
     igraph::distances(
       v = waypoint_ids,
       to = cell_ids_trajectory,
       weights = igraph::E(gr)$length,
-      algorithm = "dijkstra"
+      algorithm = "dijkstra",
+      mode = mode
     )
 
   # make matrix if only one waypoint

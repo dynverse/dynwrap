@@ -173,8 +173,11 @@
       stdout <- ""
       stderr <- ""
     }
-
-    lst(stdout, stderr)
+  } else {
+    stdout <- ""
+    stderr <- ""
   }
+
+  lst(stdout, stderr)
 }
 

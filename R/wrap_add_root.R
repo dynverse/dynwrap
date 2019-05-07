@@ -30,38 +30,20 @@ add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_mi
   }
 
   if (flip_edges) {
-
     milestone_order <- igraph::graph_from_data_frame(trajectory$milestone_network) %>%
       igraph::ego(nodes = root_milestone_id, 999) %>%
       first() %>%
       names()
     milestone_order <- c(milestone_order, setdiff(trajectory$milestone_ids, milestone_order)) # add disconnected milestones
 
-    # flip edge if from is later than to
-    trajectory$milestone_network <- trajectory$milestone_network %>%
+    # determine which edges to flip
+    milestone_network_toflip <- trajectory$milestone_network %>%
       mutate(
         flip = match(from, milestone_order) > match(to, milestone_order)
-      )
-
-    # flip milestone network & progressions
-    trajectory$progressions <- trajectory$progressions %>%
-      left_join(trajectory$milestone_network %>% select(from, to, flip), c("from", "to")) %>%
-      mutate(
-        from2 = from,
-        from = ifelse(flip, to, from),
-        to = ifelse(flip, from2, to),
-        percentage = ifelse(flip, 1-percentage, percentage)
       ) %>%
-      select(-flip, -from2)
+      filter(flip)
 
-    trajectory$milestone_network <- trajectory$milestone_network %>%
-      mutate(
-        from2 = from,
-        from = ifelse(flip, to, from),
-        to = ifelse(flip, from2, to),
-        directed = TRUE
-      ) %>%
-      select(-flip, -from2)
+    trajectory <- flip_edges(trajectory, milestone_network_toflip)
 
     # order milestone network
     milestone_order <- trajectory$milestone_network %>%
@@ -78,6 +60,7 @@ add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_mi
 
   trajectory
 }
+
 
 #' Add root cell to wrapper using expression of features
 #'
@@ -105,4 +88,11 @@ add_root_using_expression <- function(trajectory, features_oi, expression_source
 #' @export
 is_rooted <- function(trajectory) {
   is.null(trajectory$root_milestone_id)
+}
+
+
+
+remove_root <- function(trajectory) {
+  trajectory$root_milestone_id <- NULL
+  trajectory
 }

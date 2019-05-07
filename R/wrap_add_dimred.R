@@ -4,8 +4,10 @@
 #' @param dimred The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction
 #' @param dimred_milestones An optional dimensionality reduction of the milestones.
 #' @param dimred_segment_progressions An optional progression matrix of the trajectory segments. Format: `tibble(from, to, percentage)`
-#' @param dimred_segment_points An optional dimensionality reduction of the trajectory segments. Format: `matrix(Comp1, Comp2, ...)`.
+#' @param dimred_segment_points An optional dimensionality reduction of the trajectory segments. Format: `matrix(comp_1, comp_2, ...)`.
 #' @param connect_segments Whether to connect segments between edges
+#' @param project_trajectory Whether to also project the trajectory. Only relevant if dataset contains a trajectory, and dimred_segment_progressions and dimred_segment_points are not provided
+#' @param pair_with_velocity Whether to use the velocity vectors for dimensionality reduction
 #' @param ... extra information to be stored in the wrapper
 #'
 #' @keywords adapt_trajectory
@@ -20,6 +22,8 @@ add_dimred <- function(
   dimred_segment_progressions = NULL,
   dimred_segment_points = NULL,
   connect_segments = FALSE,
+  project_trajectory = TRUE,
+  pair_with_velocity = !is.null(dataset$expression_projected),
   expression_source = "expression",
   ...
 ) {
@@ -31,7 +35,17 @@ add_dimred <- function(
     dimred <- process_dimred(dataset, dimred)
     testthat::expect_setequal(dataset$cell_id, rownames(dimred))
   } else {
-    dimred <- get_dimred(dataset, dimred, expression_source)
+    # run dimred
+    if (!pair_with_velocity) {
+      expression <- get_expression(dataset, expression_source)
+      dimred <- dimred(expression)
+    } else {
+      assert_that(expression_source == "expression", msg = "Can only do paired dimensionality reduction with velocity if expression source is expression")
+      expression <- get_expression(dataset, "expression")
+      expression_projected <- get_expression(dataset, "expression_projected")
+      dimred <- dimred_merged(dimred, expression = expression, expression_projected = expression_projected)
+    }
+
   }
 
   if (!is.null(dimred_milestones)) {
@@ -42,6 +56,8 @@ add_dimred <- function(
 
       assert_that(identical(rownames(dimred_milestones), milestone_ids))
     }
+  } else if (is_wrapper_with_trajectory(dataset) && project_trajectory) {
+    dimred_milestones <- project_milestones(dataset, dimred)
   }
 
   if (!is.null(dimred_segment_points) || !is.null(dimred_segment_progressions)) {
@@ -53,6 +69,10 @@ add_dimred <- function(
       identical(colnames(dimred_segment_progressions), c("from", "to", "percentage")),
       nrow(dimred_segment_points) == nrow(dimred_segment_progressions)
     )
+  } else if (is_wrapper_with_trajectory(dataset) && project_trajectory) {
+    projection <- project_trajectory(dataset, dimred)
+    dimred_segment_progressions <- projection$dimred_segment_progressions
+    dimred_segment_points <- projection$dimred_segment_points
   }
 
   # TODO: add tests for connecting segments!
@@ -87,7 +107,7 @@ is_wrapper_with_dimred <- function(dataset) {
 #' @export
 get_dimred <- function(dataset, dimred = NULL, expression_source = "expression") {
   if(is.function(dimred)) {
-    # function
+    # function -> calculate dimensionality reduction
     expression <- get_expression(dataset, expression_source)
     dimred <- dimred(expression)
   } else if (is.matrix(dimred)) {
@@ -215,4 +235,38 @@ connect_dimred_segments <- function(dimred_segment_progressions, dimred_segment_
     dimred_segment_progressions = bind_rows(dimred_segment_progressions, connecting_progressions),
     connecting_points = rbind(dimred_segment_points, connecting_points)
   )
+}
+
+
+
+
+dimred_merged <- function(dimred, expression, expression_projected) {
+  merge_projected(
+    expression,
+    expression_projected
+  ) %>%
+    dimred() %>%
+    split_projected()
+}
+
+
+
+
+merge_projected <- function(expression, expression_projected) {
+  rownames(expression_projected) <- paste0(rownames(expression_projected), "###PROJECTED")
+  rbind(
+    expression,
+    expression_projected
+  )
+}
+split_projected <- function(merged, cell_ids = str_subset(rownames(merged), ".*###PROJECTED", negate = TRUE)) {
+  projected <- merged[paste0(cell_ids, "###PROJECTED"),]
+  rownames(projected) <- cell_ids
+  colnames(projected) <- paste0(colnames(projected), "_projected")
+
+  lst(
+    current = merged[cell_ids, ],
+    projected
+  )
+  cbind(merged[cell_ids, ], projected)
 }

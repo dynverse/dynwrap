@@ -146,9 +146,9 @@ trajectory <- infer_trajectory(dataset, method(), verbose = TRUE)
 
 ```{r}
 # install dynplot to plot the output
-if ("dynplot" %in% rownames(installed.packages())) {
-  dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
-}
+# if ("dynplot" %in% rownames(installed.packages())) {
+#   dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
+# }
 ```
 
 Congratulations! You now have a TI method that can be easily installed anywhere without dependency issues, and that can be included within the whole dynverse pipeline.

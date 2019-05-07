@@ -85,7 +85,7 @@ select_waypoints <- function(
     rename(waypoint_id = cell_id)
 
   # calculate distance
-  waypoint_geodesic_distances <- calculate_geodesic_distances(trajectory, waypoint_milestone_percentages = waypoint_milestone_percentages)
+  waypoint_geodesic_distances <- calculate_geodesic_distances(trajectory, waypoint_milestone_percentages = waypoint_milestone_percentages)[waypoint_progressions$waypoint_id, ]
 
   # also create network between waypoints
   waypoint_network <- waypoint_progressions %>%
