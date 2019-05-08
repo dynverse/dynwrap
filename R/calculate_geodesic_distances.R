@@ -150,6 +150,7 @@ calculate_geodesic_distances_ <- function(
         begin <- dir %>% filter(is_start) %>% pull(milestone_id)
 
         signs <- sign(-outer(distances[, begin], distances[begin, ], "-"))
+        signs[is.na(signs)] <- 1 # when disconnected, sign will be NaN, so that distance remains + Inf
 
         signs[signs == 0] <- 1
         distances <- distances * signs
@@ -164,6 +165,8 @@ calculate_geodesic_distances_ <- function(
 
       distances
     })
+
+  cell_in_tent_distances[is.na(cell_in_tent_distances$length), ]
 
   if (directed) {
     # switch from and to if distance is negative

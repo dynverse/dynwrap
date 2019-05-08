@@ -51,6 +51,11 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
+### Recent changes in dynwrap 1.1.1 (08-05-2019)
+
+  - BUG FIX: Fixed bug for directed geodesic distances with disconnected
+    graphs, dynverse/dynplot\#37
+
 ### Recent changes in dynwrap 1.1 (07-05-2019)
 
   - FEATURE: RNA velocity data can now be included in the wrapper
@@ -67,25 +72,8 @@ changes.
 
   - FEATURE: Added `projected_trajectory()` (ported from dynplot).
     `add_dimred()` will now by default also add a projection of the
-    trajectory to the data
-
-### Recent changes in dynwrap 1.0.1 (09-04-2019)
-
-  - MINOR CHANGE: `infer_trajectory(..., debug = TRUE)` will now return
-    commands for both entering the container and running the
-    `dyncli::main()` function inside the container
-
-  - MINOR CHANGE: Make `create_ti_method_definition()` actually work
-
-  - DOCUMENTATION: Added examples for each trajectory wrapper
-
-  - DOCUMENTATION: Added vignette discussing wrapper types
-
-  - DOCUMENTATION: Added vignette discussing
-    `create_ti_method_definition()`
-
-  - BUG FIX: Fixed bug where `sink()` was not removed after
-interruption
+    trajectory to the
+data
 
 ## Dynverse dependencies
 
