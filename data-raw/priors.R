@@ -10,6 +10,8 @@ priors <- tribble(
 
   "start_n", "# start states", "The number of start states", "soft",
 
+  "leaves_n", "# leaves", "The number of leaves", "soft",
+
   "groups_id", "Cell clustering", "Named character vector linking the cell identifiers to different states/branches", "hard",
 
   "groups_n", "# states", "Number of states/branches, including start, end and intermediary states", "soft",
@@ -32,4 +34,4 @@ prior_usages <- tribble(
   "required", "#FF4136"
 )
 
-devtools::use_data(priors, prior_usages, overwrite = TRUE)
+usethis::use_data(priors, prior_usages, overwrite = TRUE)

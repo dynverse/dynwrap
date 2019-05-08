@@ -8,7 +8,7 @@
 \usage{
 add_prior_information(dataset, start_id = NULL, end_id = NULL,
   groups_id = NULL, groups_network = NULL, features_id = NULL,
-  groups_n = NULL, start_n = NULL, end_n = NULL,
+  groups_n = NULL, start_n = NULL, end_n = NULL, leaves_n = NULL,
   timecourse_continuous = NULL, timecourse_discrete = NULL,
   verbose = TRUE)
 

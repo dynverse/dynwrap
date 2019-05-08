@@ -1,3 +1,7 @@
+# dynwrap 1.1.2 (08-05-2019)
+
+* FEATURE: Add leaves_n as prior information
+
 # dynwrap 1.1.1 (08-05-2019)
 
 * BUG FIX: Fixed bug for directed geodesic distances with disconnected graphs, dynverse/dynplot#37
