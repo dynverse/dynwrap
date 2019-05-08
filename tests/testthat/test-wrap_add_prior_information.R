@@ -88,7 +88,9 @@ test_that("Testing generate_prior_information", {
     "groups_n",
     "timecourse_continuous",
     "timecourse_discrete",
-    "end_n"
+    "end_n",
+    "start_n",
+    "leaves_n"
   )
 
   testthat::expect_true(all(expected_prior %in% names(prior_info)))
@@ -122,6 +124,10 @@ test_that("Testing generate_prior_information", {
   testthat::expect_equal(prior_info$timecourse_discrete, set_names(cell_info$timepoint, cell_info$cell_id))
 
   testthat::expect_equal(prior_info$end_n, 2)
+
+  testthat::expect_equal(prior_info$start_n, 1)
+
+  testthat::expect_equal(prior_info$leaves_n, 3)
 })
 
 
@@ -162,7 +168,8 @@ test_that("Testing add_prior_information", {
     "timecourse_continuous",
     "timecourse_discrete",
     "start_n",
-    "end_n"
+    "end_n",
+    "leaves_n"
   )
 
   testthat::expect_true(all(expected_prior %in% names(prior_info)))
@@ -198,6 +205,8 @@ test_that("Testing add_prior_information", {
   testthat::expect_equal(prior_info$end_n, 2)
 
   testthat::expect_equal(prior_info$start_n, 1)
+
+  testthat::expect_equal(prior_info$leaves_n, 3)
 })
 
 
