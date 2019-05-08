@@ -38,6 +38,8 @@ generate_prior_information(cell_ids, milestone_ids, milestone_network,
 
 \item{end_n}{Number of end states}
 
+\item{leaves_n}{Number of leaves}
+
 \item{timecourse_continuous}{The time for every cell}
 
 \item{timecourse_discrete}{The time for every cell in groups}
