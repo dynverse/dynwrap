@@ -12,6 +12,7 @@
 #' @param groups_n Number of branches
 #' @param start_n Number of start states
 #' @param end_n Number of end states
+#' @param leaves_n Number of leaves
 #' @param timecourse_continuous The time for every cell
 #' @param timecourse_discrete The time for every cell in groups
 #' @param verbose Whether or not to print informative messages
@@ -32,6 +33,7 @@ add_prior_information <- function(
   groups_n = NULL,
   start_n = NULL,
   end_n = NULL,
+  leaves_n = NULL,
   timecourse_continuous = NULL,
   timecourse_discrete = NULL,
   verbose = TRUE
@@ -329,6 +331,14 @@ generate_prior_information <- function(
     end_n <- length(end_milestones)
   }
 
+  ## NUMBER OF LEAVES STATES ##
+  if ("leaves_n" %in% names(given)) {
+    leaves_n <- given$leaves_n
+  } else {
+    if (verbose) cat("Computing end n\n")
+    leaves_n <- length(unique(c(start_milestones, end_milestones)))
+  }
+
   ## TIME AND TIME COURSE ##
   if ("timecourse_continuous" %in% names(given)) {
     timecourse_continuous <- given$timecourse_continuous
@@ -379,6 +389,7 @@ generate_prior_information <- function(
     timecourse_continuous,
     timecourse_discrete,
     start_n,
-    end_n
+    end_n,
+    leaves_n
   )
 }

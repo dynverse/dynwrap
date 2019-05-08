@@ -51,29 +51,15 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
+### Recent changes in dynwrap 1.1.2 (08-05-2019)
+
+  - FEATURE: Add leaves\_n as prior information
+
 ### Recent changes in dynwrap 1.1.1 (08-05-2019)
 
   - BUG FIX: Fixed bug for directed geodesic distances with disconnected
-    graphs, dynverse/dynplot\#37
-
-### Recent changes in dynwrap 1.1 (07-05-2019)
-
-  - FEATURE: RNA velocity data can now be included in the wrapper
-
-  - FEATURE: RNA velocity projected expression can now be given to
-    methods
-
-  - FEATURE: Added `orient_topology_to_velocity()` to orient the edges
-    of a trajectory based on the velocity vectors
-
-  - FEATURE: `calculate_geodesic_distances()` now has a `directed`
-    parameter, with which you can calculate directed geodesic distances.
-    Unreachable cells will receive an infinite distance
-
-  - FEATURE: Added `projected_trajectory()` (ported from dynplot).
-    `add_dimred()` will now by default also add a projection of the
-    trajectory to the
-data
+    graphs,
+dynverse/dynplot\#37
 
 ## Dynverse dependencies
 
