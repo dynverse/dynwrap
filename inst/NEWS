@@ -1,3 +1,7 @@
+dynwrap 1.1.1 (08-05-2019)
+
+* BUG FIX: Fixed bug for directed geodesic distances with disconnected graphs, dynverse/dynplot#37
+
 dynwrap 1.1 (07-05-2019)
 
 * FEATURE: RNA velocity data can now be included in the wrapper
