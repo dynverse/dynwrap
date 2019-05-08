@@ -12,6 +12,7 @@
 #' @param groups_n Number of branches
 #' @param start_n Number of start states
 #' @param end_n Number of end states
+#' @param leaves_n Number of leaves
 #' @param timecourse_continuous The time for every cell
 #' @param timecourse_discrete The time for every cell in groups
 #' @param verbose Whether or not to print informative messages
