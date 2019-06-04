@@ -51,15 +51,19 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
+### Recent changes in dynwrap 1.1.3 (05-06-2019)
+
+  - MINOR CHANGE `add_dimred()`: Add a separate argument for specifying
+    the projected dimred rather than expecting the projected dimred to
+    be passed as additional columns in `dimred`.
+
+  - BUG FIX: Fix for dynverse/dyno\#52, do specify whether or not to use
+    optional priors when passed
+
 ### Recent changes in dynwrap 1.1.2 (08-05-2019)
 
-  - FEATURE: Add leaves\_n as prior information
-
-### Recent changes in dynwrap 1.1.1 (08-05-2019)
-
-  - BUG FIX: Fixed bug for directed geodesic distances with disconnected
-    graphs,
-dynverse/dynplot\#37
+  - FEATURE: Add leaves\_n as prior
+information
 
 ## Dynverse dependencies
 
