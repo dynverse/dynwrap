@@ -82,10 +82,12 @@ create_ti_method_container <- function(
   # save data to file
   dynutils::write_h5(task, file.path(paths$dir_dynwrap, "input.h5"))
 
-  # return path information
+  # add extra information
+  paths$prior_names <- names(priors)
   paths$debug <- debug
   paths$verbose <- verbose
 
+  # return path information
   paths
 }
 
@@ -99,6 +101,12 @@ create_ti_method_container <- function(
 
   args <- c("--dataset", "/ti/input.h5", "--output", "/ti/output.h5")
   if (preproc_meta$debug) args <- c(args, "--debug")
+
+  if (!is.null(preproc_meta$prior_names)) {
+    # only the priors that were specified earlier
+    # have been saved to a file, so specifying 'all' is ok
+    args <- c(args, "--use_priors", "all")
+  }
 
   # run container
   output <- babelwhale::run(
