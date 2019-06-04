@@ -3,7 +3,7 @@
 * MINOR CHANGE `add_dimred()`: Add a separate argument for specifying the projected dimred rather than
   expecting the projected dimred to be passed as additional columns in `dimred`.
 
-* BUG FIX: Fix for dynverse/dyno#52, do specify whether or not to use optional priors when passed
+* BUG FIX: Fix for dynverse/dyno#52, do specify whether or not to use optional priors when passed.
 
 # dynwrap 1.1.2 (08-05-2019)
 
