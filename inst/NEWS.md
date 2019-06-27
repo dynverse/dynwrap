@@ -1,3 +1,7 @@
+# dynwrap 1.1.4 (unreleased)
+
+* BUG FIX: Fixed #142 where the error message was truncated
+
 # dynwrap 1.1.3 (05-06-2019)
 
 * MINOR CHANGE `add_dimred()`: Add a separate argument for specifying the projected dimred rather than
