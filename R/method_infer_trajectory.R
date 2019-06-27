@@ -193,7 +193,8 @@ infer_trajectory <- dynutils::inherit_default_params(
       invisible()
     } else if (is.null(design$model[[1]])) {
       error <- design$summary[[1]]$error[[1]]
-      stop("Error during trajectory inference \n", crayon::bold(error), call. = FALSE)
+      cat(crayon::red(crayon::bold(error)))
+      stop("Error during trajectory inference, see output above \U2191\U2191\U2191" , call. = FALSE)
     } else {
       first(design$model)
     }
