@@ -1,7 +1,7 @@
 Package: dynwrap
 Type: Package
 Title: Common trajectory model for representing trajectories from all sources
-Version: 1.1.3
+Version: 1.1.4
 Authors@R: c(
     person(
       "Robrecht", 

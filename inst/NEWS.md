@@ -1,3 +1,7 @@
+# dynwrap 1.1.4 (27-06-2019)
+
+* BUG FIX: Fixed #142 where the error message was truncated
+
 # dynwrap 1.1.3 (05-06-2019)
 
 * MINOR CHANGE `add_dimred()`: Add a separate argument for specifying the projected dimred rather than
@@ -11,7 +15,7 @@
 
 # dynwrap 1.1.1 (08-05-2019)
 
-* BUG FIX: Fixed bug for directed geodesic distances with disconnected graphs, dynverse/dynplot#37
+* BUG FIX: Fixed bug for directed geodesic distances with disconnected gra    phs, dynverse/dynplot#37
 
 # dynwrap 1.1 (07-05-2019)
 
