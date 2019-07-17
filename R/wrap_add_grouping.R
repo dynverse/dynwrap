@@ -22,7 +22,7 @@ add_grouping <- function(
   # if grouping not provided, have to calculate group_ids here
   if(is.null(group_ids)) group_ids <- unique(grouping)
 
-  #
+  # assume grouping is in the same order
   if(length(names(grouping)) != length(grouping)) {
     names(grouping) <- dataset$cell_ids
   }
@@ -40,11 +40,6 @@ add_grouping <- function(
 
   testthat::expect_true(all(names(grouping) %in% dataset$cell_ids))
   testthat::expect_true(all(grouping[!is.na(grouping)] %in% group_ids))
-
-  # check milestone ids, if data contains a trajectory
-  if (is_wrapper_with_trajectory(dataset)) {
-    testthat::expect_equal(dataset$milestone_ids, group_ids)
-  }
 
   # create output structure
   dataset %>% extend_with(
