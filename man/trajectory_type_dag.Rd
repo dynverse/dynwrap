@@ -3,12 +3,12 @@
 \docType{data}
 \name{trajectory_type_dag}
 \alias{trajectory_type_dag}
-\title{A DAG of trajectory types}
+\title{A DAG connecting different trajectory types}
 \format{An object of class \code{tbl_graph} (inherits from \code{igraph}) of length 10.}
 \usage{
 trajectory_type_dag
 }
 \description{
-A DAG of trajectory types
+A DAG connecting different trajectory types
 }
 \keyword{create_ti_method}
