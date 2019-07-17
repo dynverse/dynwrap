@@ -8,12 +8,27 @@
 #' @param dimred_segment_points An optional dimensionality reduction of the trajectory segments. Format: `matrix(comp_1, comp_2, ...)`.
 #' @param connect_segments Whether to connect segments between edges
 #' @param project_trajectory Whether to also project the trajectory. Only relevant if dataset contains a trajectory, and dimred_segment_progressions and dimred_segment_points are not provided
-#' @param pair_with_velocity Whether to use the velocity vectors for dimensionality reduction
+#' @param pair_with_velocity Whether to generate a paired dimensionality reduction with the projected expression.
 #' @param ... extra information to be stored in the wrapper
 #'
 #' @keywords adapt_trajectory
 #'
 #' @inheritParams get_expression
+#'
+#' @examples
+#' dataset <- example_dataset
+#' dataset <- add_dimred(
+#'   dataset,
+#'   dyndimred::dimred_landmark_mds
+#' )
+#' head(dataset$dimred)
+#'
+#' @return
+#' A dataset object with `dimred`, which is a numeric matrix with cells in rows and the different components in columns.
+#' - If the dataset contained projected expression, `dimred_projected` will also be present. This contains the dimensionality reduction of the projected cells.
+#' - If the dataset contained a trajectory, `dimred_milestones`, `dimred_segment_progressions` and `dimred_segment_points` will also be present. `dimred_milestones` contains the location of the milestones within the dimensionality reduction. `dimred_segment_progressions` contains the progressions of a set of points along the trajectory, and `dimred_segment_points` contains the location of these points in the dimensionality reduction
+#'
+#' @seealso [dyndimred::list_dimred_methods]()
 #'
 #' @export
 add_dimred <- function(

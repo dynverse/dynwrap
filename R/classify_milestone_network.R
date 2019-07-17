@@ -15,7 +15,7 @@
 #' classification$network_type
 #' classification$directed
 #'
-#' milestone_network <- tibble(
+#' milestone_network <- tibble::tibble(
 #'   from = c("A", "B", "B", "C", "C"),
 #'   to = c("B", "C", "D", "E", "F"),
 #'   length = 2,

@@ -34,13 +34,32 @@ get_dimred(dataset, dimred = NULL, expression_source = "expression")
 
 \item{project_trajectory}{Whether to also project the trajectory. Only relevant if dataset contains a trajectory, and dimred_segment_progressions and dimred_segment_points are not provided}
 
-\item{pair_with_velocity}{Whether to use the velocity vectors for dimensionality reduction}
+\item{pair_with_velocity}{Whether to generate a paired dimensionality reduction with the projected expression.}
 
 \item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another dataset which contains expression}
 
 \item{...}{extra information to be stored in the wrapper}
 }
+\value{
+A dataset object with \code{dimred}, which is a numeric matrix with cells in rows and the different components in columns.
+\itemize{
+\item If the dataset contained projected expression, \code{dimred_projected} will also be present. This contains the dimensionality reduction of the projected cells.
+\item If the dataset contained a trajectory, \code{dimred_milestones}, \code{dimred_segment_progressions} and \code{dimred_segment_points} will also be present. \code{dimred_milestones} contains the location of the milestones within the dimensionality reduction. \code{dimred_segment_progressions} contains the progressions of a set of points along the trajectory, and \code{dimred_segment_points} contains the location of these points in the dimensionality reduction
+}
+}
 \description{
 Add or create a dimensionality reduction
+}
+\examples{
+dataset <- example_dataset
+dataset <- add_dimred(
+  dataset,
+  dyndimred::dimred_landmark_mds
+)
+head(dataset$dimred)
+
+}
+\seealso{
+\url{dyndimred::list_dimred_methods}
 }
 \keyword{adapt_trajectory}

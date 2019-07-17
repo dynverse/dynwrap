@@ -18,7 +18,12 @@
 #'
 #' @keywords create_trajectory
 #'
-#' @return The trajectory
+#' @return The dataset object with trajectory information, including:
+#'  - `milestone_ids`: The names of the milestones, a character vector.
+#'  - `milestone_network`: The network between the milestones, a dataframe with the from milestone, to milestone, length of the edge, and whether it is directed.
+#'  - `divergence_regions`: The regions between three or more milestones where cells are diverging, a dataframe with the divergence id, the milestone id and whether this milestone is the start of the divergence
+#'  - `milestone_percentages`: For each cell its closeness to a particular milestone, a dataframe with the cell id, the milestone id, and its percentage (a number between 0 and 1 where higher values indicate that a cell is close to the milestone).
+#'  - `progressions`: For each cell its progression along a particular edge of the `milestone_network`. Contains the same information as `milestone_percentages`. A dataframe with cell id, from milestone, to milestone, and its percentage (a number between 0 and 1 where higher values indicate that a cell is close to the 'to' milestone and far from the 'from' milestone).
 #'
 #' @export
 #'

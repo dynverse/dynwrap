@@ -9,7 +9,7 @@
 #'   Type: Data frame(cell_id = character, branch_id = character, percentage = numeric).
 #' @param ... extra information to be stored in the trajectory
 #'
-#' @return The trajectory
+#' @inherit add_trajectory return
 #'
 #' @keywords create_trajectory
 #'
