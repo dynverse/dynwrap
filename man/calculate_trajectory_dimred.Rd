@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculate_trajectory_dimred.R
 \name{calculate_trajectory_dimred}
 \alias{calculate_trajectory_dimred}
-\title{Layout the trajectory and its cells in 2 dimensions}
+\title{Layout the trajectory and its cells in 2 dimensions using a graph layout}
 \usage{
 calculate_trajectory_dimred(trajectory, adjust_weights = FALSE)
 }
@@ -12,7 +12,14 @@ calculate_trajectory_dimred(trajectory, adjust_weights = FALSE)
 \item{adjust_weights}{Whether or not to rescale the milestone network weights}
 }
 \description{
-Layout the trajectory and its cells in 2 dimensions
+Layout the trajectory and its cells in 2 dimensions using a graph layout
+}
+\examples{
+data("example_dataset")
+trajectory_dimred <- calculate_trajectory_dimred(example_dataset)
+head(trajectory_dimred$milestone_positions)
+head(trajectory_dimred$cell_positions)
+
 }
 \seealso{
 wrap_data

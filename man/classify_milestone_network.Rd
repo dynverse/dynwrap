@@ -12,3 +12,25 @@ classify_milestone_network(milestone_network)
 \description{
 Classify a milestone network
 }
+\examples{
+milestone_network <- tibble::tibble(
+  from = c("A", "B", "C"),
+  to = c("B", "C", "A"),
+  length = 1,
+  directed = TRUE
+)
+classification <- classify_milestone_network(milestone_network)
+classification$network_type
+classification$directed
+
+milestone_network <- tibble(
+  from = c("A", "B", "B", "C", "C"),
+  to = c("B", "C", "D", "E", "F"),
+  length = 2,
+  directed = FALSE
+)
+classification <- classify_milestone_network(milestone_network)
+classification$network_type
+classification$directed
+
+}

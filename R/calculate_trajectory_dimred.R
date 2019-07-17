@@ -1,10 +1,16 @@
-#' Layout the trajectory and its cells in 2 dimensions
+#' Layout the trajectory and its cells in 2 dimensions using a graph layout
 #'
 #' @inheritParams common_param
 #' @param adjust_weights Whether or not to rescale the milestone network weights
 #'
 #' @importFrom igraph graph_from_data_frame layout_with_fr
 #' @importFrom testthat expect_true
+#'
+#' @examples
+#' data("example_dataset")
+#' trajectory_dimred <- calculate_trajectory_dimred(example_dataset)
+#' head(trajectory_dimred$milestone_positions)
+#' head(trajectory_dimred$cell_positions)
 #'
 #' @keywords derive_trajectory
 #'

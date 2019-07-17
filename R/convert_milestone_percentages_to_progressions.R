@@ -1,8 +1,29 @@
-#' Convert milestone percentages to progressions
-#' @param cell_ids Vector of all cell ids
-#' @param milestone_ids Vector of milestone ids
-#' @param milestone_network Milestone network
-#' @param milestone_percentages Milestone percentages
+#' Conversion between milestone percentages and progressions
+#'
+#' @inheritParams wrap_data
+#' @inheritParams add_trajectory
+#'
+#' @examples
+#' data(example_dataset)
+#'
+#' progressions <- convert_milestone_percentages_to_progressions(
+#'   cell_ids = example_dataset$cell_ids,
+#'   milestone_ids = example_dataset$milestone_ids,
+#'   milestone_network = example_dataset$milestone_network,
+#'   milestone_percentages = example_dataset$milestone_percentages
+#' )
+#' head(progressions)
+#'
+#' milestone_percentages <- convert_progressions_to_milestone_percentages(
+#'   cell_ids = example_dataset$cell_ids,
+#'   milestone_ids = example_dataset$milestone_ids,
+#'   milestone_network = example_dataset$milestone_network,
+#'   progressions = example_dataset$progressions
+#' )
+#' head(milestone_percentages)
+#'
+#' @rdname convert_milestone_percentages_to_progressions
+#'
 #' @export
 convert_milestone_percentages_to_progressions <- function(
   cell_ids,

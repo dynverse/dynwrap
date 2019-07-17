@@ -7,7 +7,7 @@
 "trajectory_types"
 
 
-#' A DAG of trajectory types
+#' A DAG connecting different trajectory types
 #'
 #' @keywords create_ti_method
 #'
@@ -32,7 +32,7 @@
 
 
 
-#' All allowed inputs
+#' All allowed inputs for a TI method
 #'
 #' @keywords create_ti_method
 #'
@@ -40,7 +40,7 @@
 "allowed_inputs"
 
 
-#' All allowed outputs
+#' All allowed outputs for a TI method
 #'
 #' @docType data
 "allowed_outputs"
