@@ -5,8 +5,6 @@
 #' of the end milestones.
 #'
 #' @param divergence_regions A divergence regions data frame as produced by `add_trajectory`.
-#'
-#' @export
 get_divergence_triangles <- function(divergence_regions) {
   map_df(unique(divergence_regions$divergence_id), function(did) {
     rel_did <- divergence_regions %>% filter(divergence_id == did)
