@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrap_add_branch_trajectory.R
 \name{add_branch_trajectory}
 \alias{add_branch_trajectory}
-\title{Create a trajectory given its branch network and the pseudotime of the cells on one of the branches}
+\title{Construct a trajectory given its branch network and the pseudotime of the cells on one of the branches.}
 \usage{
 add_branch_trajectory(dataset, branch_network, branches,
   branch_progressions, ...)
@@ -32,17 +32,19 @@ The dataset object with trajectory information, including:
 }
 }
 \description{
-Create a trajectory given its branch network and the pseudotime of the cells on one of the branches
+The branch network is converted to a milestone network by giving each branch a start and end milestone. If two branches are connected in the branch network, the end milestone of branch 1 and start milestone of branch 2 will be merged.
+}
+\details{
+The resulting trajectory will always be directed.
 }
 \examples{
-library(tibble)
 dataset <- wrap_data(cell_ids = letters)
 
-branch_network <- tibble(from = c("A", "A"), to = c("B", "C"))
+branch_network <- tibble::tibble(from = c("A", "A"), to = c("B", "C"))
 branch_network
-branches <- tibble(branch_id = c("A", "B", "C"), length = 1, directed = TRUE)
+branches <- tibble::tibble(branch_id = c("A", "B", "C"), length = 1, directed = TRUE)
 branches
-branch_progressions <- tibble(
+branch_progressions <- tibble::tibble(
   cell_id = dataset$cell_ids,
   branch_id = sample(branches$branch_id, length(dataset$cell_ids), replace = TRUE),
   percentage = runif(length(dataset$cell_ids))

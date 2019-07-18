@@ -3,18 +3,48 @@
 \name{add_cell_waypoints}
 \alias{add_cell_waypoints}
 \alias{is_wrapper_with_waypoint_cells}
-\title{Add cell waypoints to a wrapped trajectory}
+\alias{determine_cell_trajectory_positions}
+\alias{select_waypoint_cells}
+\title{Add or select waypoint cells of a trajectory}
 \usage{
 add_cell_waypoints(trajectory, num_cells_selected = 100)
 
 is_wrapper_with_waypoint_cells(trajectory)
+
+determine_cell_trajectory_positions(milestone_ids, milestone_network,
+  milestone_percentages, progressions, divergence_regions)
+
+select_waypoint_cells(milestone_ids, milestone_network,
+  milestone_percentages, progressions, divergence_regions,
+  num_cells_selected = 100)
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{num_cells_selected}{About the number of cells selected as waypoints}
+
+\item{milestone_ids}{The ids of the milestones in the trajectory. Type: Character vector.}
+
+\item{milestone_network}{The network of the milestones.
+Type: Data frame(from = character, to = character, length = numeric, directed = logical).}
+
+\item{milestone_percentages}{A data frame specifying what percentage milestone each cell
+consists of.
+Type: Data frame(cell_id = character, milestone_id = character, percentage = numeric).}
+
+\item{progressions}{Specifies the progression of a cell along a transition in the milestone_network.
+Type: Data frame(cell_id = character, from = character, to = character, percentage = numeric).}
+
+\item{divergence_regions}{A data frame specifying the divergence
+regions between milestones (e.g. a bifurcation).
+Type: Data frame(divergence_id = character, milestone_id = character, is_start = logical).}
+}
+\value{
+\code{add_cell_waypoints} returns a trajectory with \code{waypoint_cells}, a character vector containing the cell ids of the waypoint cells
+\code{select_waypoint_cells} returns a character vector containing the cell ids of the waypoint cells
 }
 \description{
-Add cell waypoints to a wrapped trajectory
+Waypoint cells are cells spread across all of the trajectory such that there is no other cell
+that has a large geodesic distance to any of the waypoint cells.
 }
 \keyword{adapt_trajectory}

@@ -1,7 +1,6 @@
 #' Constructs a trajectory using a graph between cells, by mapping cells onto a set of backbone cells.
 #'
-#' This function will generate the milestone_network and progressions.
-#'
+#' @inherit add_trajectory return
 #' @inheritParams common_param
 #' @param cell_graph The edges between cells. Format: Data frame(from = character, to = character, length(optional) = numeric, directed(optional) = logical)
 #' @param to_keep A character vector with the identifiers of the backbone cells. Alternatively, a named boolean vector whether a cell is from the backbone

@@ -22,7 +22,7 @@ add_cell_graph(dataset, cell_graph, to_keep,
 The trajectory
 }
 \description{
-This function will generate the milestone_network and progressions.
+Constructs a trajectory using a graph between cells, by mapping cells onto a set of backbone cells.
 }
 \examples{
 library(tibble)
