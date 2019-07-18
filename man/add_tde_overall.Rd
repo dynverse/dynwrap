@@ -9,9 +9,22 @@ add_tde_overall(trajectory, tde_overall)
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
-\item{tde_overall}{A tibble containing a feature_id (character) and differentially_expressed (logical). Can also contain other columns, such as the p-value, q-value, log fold-change, etc}
+\item{tde_overall}{A dataframe containing the \emph{feature_id}, and some other columns including whether it is differentially expressed (\emph{differentially_expressed}), the rank of differential expression among all other features (\emph{rank}), the p-value (\emph{pval}) or corrected value (\emph{qval}), and the log-fold change (\emph{lfc}).}
+}
+\value{
+A trajectory containing \emph{tde_overall}, a dataframe containing the \emph{feature_id}, and some other columns including whether it is differentially expressed (\emph{differentially_expressed}), the rank of differential expression among all other features (\emph{rank}), the p-value (\emph{pval}) or corrected value (\emph{qval}), and the log-fold change (\emph{lfc}).
 }
 \description{
-Add information on overall differentially expressed features
+To calculate differential expression within trajectories, check out the \href{https://github.com/dynverse/dynfeature}{dynfeature} package.
+}
+\examples{
+trajectory <- example_trajectory
+tde_overall <- tibble::tibble(
+  feature_id = trajectory$feature_info$feature_id,
+  differentially_expressed = sample(c(TRUE, FALSE), length(feature_id), replace = TRUE)
+)
+trajectory <- add_tde_overall(trajectory, tde_overall)
+trajectory$tde_overall
+
 }
 \keyword{adapt_trajectory}

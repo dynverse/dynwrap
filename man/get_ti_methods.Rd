@@ -2,7 +2,7 @@
 % Please edit documentation in R/method_get_ti_methods.R
 \name{get_ti_methods}
 \alias{get_ti_methods}
-\title{Return all TI ti_methods}
+\title{Return all TI that are installed in one or more packages}
 \usage{
 get_ti_methods(method_ids = NULL, as_tibble = TRUE,
   ti_packages = ifelse("dynmethods" \%in\%
@@ -14,11 +14,18 @@ get_ti_methods(method_ids = NULL, as_tibble = TRUE,
 
 \item{as_tibble}{Whether or not to return the ti_methods as a tibble}
 
-\item{ti_packages}{In which packages to look for ti methods}
+\item{ti_packages}{In which packages to look for TI methods. This will by default look into dynmethods if it is installed, otherwise in dynwrap.}
 
-\item{evaluate}{Automatically evaluate the functions}
+\item{evaluate}{Whether to evaluate the functions}
+}
+\value{
+A dataframe (or list if \code{as_tibble = FALSE}) containing the name (\emph{id}) of the TI method and the function (\emph{fun}) to load in the method.
 }
 \description{
-Return all TI ti_methods
+Return all TI that are installed in one or more packages
+}
+\examples{
+head(get_ti_methods())
+
 }
 \keyword{infer_trajectory}

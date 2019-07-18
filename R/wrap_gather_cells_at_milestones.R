@@ -1,6 +1,10 @@
-#' "Gather" cells to their closest milestones
+#' Gather cells to their closest milestones
+#'
+#' Cells will be moved to their closest milestones.
 #'
 #' @inheritParams common_param
+#'
+#' @return A trajectory where cells where moved to the closest milestone, the milestone_percentages and progressions will be adapated.
 #'
 #' @keywords adapt_trajectory
 #'

@@ -2,6 +2,18 @@
 #'
 #' @param milestone_network A milestone network
 #'
+#' @return A list containing
+#' - *network_type*: The network type (also known as the trajectory_type). See `dynwrap::trajectory_types` for an overview
+#' - *directed*: Whether the trajectory is directed
+#' - *properties*: Different properties of the trajectory, including:
+#'   - *is_directed*: Whether the trajectory is directed
+#'   - *max_degree*: The maximal degree
+#'   - *num_branch_nodes*: The number of branching nodes
+#'   - *num_outer_nodes*: Number of leaf (outer) nodes
+#'   - *is_self_loop*: Whether it contains self-loops
+#'   - *has_cycles*: Whether it has cycles
+#'   - *num_components*: The number of independent components
+#'
 #' @export
 #'
 #' @examples
@@ -24,8 +36,11 @@
 #' classification <- classify_milestone_network(milestone_network)
 #' classification$network_type
 #' classification$directed
+#' classification$props
 #'
 #' @importFrom igraph graph_from_data_frame
+#'
+#' @seealso [trajectory_types]()
 classify_milestone_network <- function(milestone_network) {
   is_directed <- any(milestone_network$directed)
 

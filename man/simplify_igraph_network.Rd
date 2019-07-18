@@ -8,7 +8,7 @@ simplify_igraph_network(gr, allow_duplicated_edges = TRUE,
   allow_self_loops = TRUE, force_keep = NULL, edge_points = NULL)
 }
 \arguments{
-\item{gr}{an igraph object}
+\item{gr}{An igraph object, see \code{\link[igraph:graph]{igraph::graph()}}}
 
 \item{allow_duplicated_edges}{Whether or not to allow duplicated edges between nodes.}
 
@@ -19,7 +19,12 @@ simplify_igraph_network(gr, allow_duplicated_edges = TRUE,
 \item{edge_points}{Points that are on edges}
 }
 \description{
-Simplify an igraph network such that consecutive linear edges are removed
+\itemize{
+\item Nodes with degree 2 (or indegree 1 and outdegree 1) are removed: A → B → C becomes A → C
+\item Cycles contain at least 3 nodes, ie. A → B → A becomes A → B → C → A
+\item Loops are converted to a cycle, unless \code{allow_self_loops = TRUE}
+\item Duplicated edges are removed, unless \code{allow_duplcated_edges = FALSE}
+}
 }
 \examples{
 net <- data.frame(

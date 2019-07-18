@@ -14,7 +14,10 @@ vignette: >
 ```{r, include = FALSE}
 dir <- tempdir()
 knitr::opts_knit$set(root.dir = normalizePath(tempdir(), winslash = '/'))
+
+NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true") # don't run some chunks on CRAN
 ```
+
 
 ```{r setup, message = FALSE}
 library(dynwrap)
@@ -28,23 +31,7 @@ We'll work with the following _definition.yml_:
 <div class="filename">definition.yml</div>
 
 ```{r, echo = FALSE}
-definition_string <- "method:
-  id: comp_1
-
-parameters:
-  - id: component
-    default: 1
-    type: integer
-    distribution:
-      type: uniform
-      lower: 1
-      upper: 10
-    description: The nth component to use
-
-wrapper:
-  input_required: expression
-  input_optional: start_id
-"
+definition_string <- paste0(readLines(system.file("examples/docker/definition.yml", package = "dynwrap")), collapse = "\n")
 
 readr::write_file(definition_string, "definition.yml")
 knitr::asis_output(paste0("```yaml\n", definition_string, "\n```"))
@@ -55,29 +42,7 @@ and _run.py_:
 <div class="filename">run.py</div>
 
 ```{r, echo = FALSE}
-run_py_script <- "#!/usr/bin/env python
-
-import dynclipy
-dataset = dynclipy.main()
-
-import pandas as pd
-import sklearn.decomposition
-
-# infer trajectory
-pca = sklearn.decomposition.PCA()
-dimred = pca.fit_transform(dataset['expression'])
-pseudotime = pd.Series(
-  dimred[:, dataset['parameters']['component']-1], 
-  index = dataset['expression'].index
-)
-
-# build trajectory
-trajectory = dynclipy.wrap_data(cell_ids = dataset['expression'].index)
-trajectory.add_linear_trajectory(pseudotime = pseudotime)
-
-# save output
-trajectory.write_output(dataset['output'])
-"
+run_py_script <- paste0(readLines(system.file("examples/docker/run.py", package = "dynwrap")), collapse = "\n")
 
 readr::write_file(run_py_script, "run.py")
 knitr::asis_output(paste0("```python\n", run_py_script, "\n```"))
@@ -85,7 +50,7 @@ knitr::asis_output(paste0("```python\n", run_py_script, "\n```"))
 
 Make sure it is executable
 
-```{bash}
+```{bash, eval=NOT_CRAN}
 chmod +x run.py
 ```
 
@@ -94,21 +59,8 @@ Assuming that the _definition.yml_ and _run.R_ are located in current directory,
 <div class="filename">Dockerfile</div>
 
 ```{r, echo = FALSE, warning = FALSE}
-# get the latest dynwrapr tag
+docker_file <- paste0(readLines(system.file("examples/docker/Dockerfile", package = "dynwrap")), collapse = "\n")
 
-con <- curl::curl("https://registry.hub.docker.com/v1/repositories/dynverse/dynwrappy/tags")
-tag <- readLines(con) %>% 
-  jsonlite::fromJSON() %>% 
-  pull(name) %>% 
-  last()
-close(con)
-
-docker_file <- stringr::str_glue("FROM dynverse/dynwrappy:{tag}
-
-COPY definition.yml run.py /code/
-
-ENTRYPOINT [\"/code/run.py\"]
-")
 
 readr::write_file(docker_file, "Dockerfile")
 knitr::asis_output(paste0("```Dockerfile\n", docker_file, "\n```"))
@@ -130,7 +82,7 @@ Do not specify this entrypoint using `ENTRYPOINT /code/run.R`, because this will
 
 That's it! Assuming that you have a functioning docker installation, you can build this container using
 
-```{bash}
+```{bash, eval=NOT_CRAN}
 docker build -t my_ti_method .
 ```
 
@@ -138,17 +90,19 @@ docker build -t my_ti_method .
 
 This method can now be loaded inside R using dynwrap
 
-```{r}
+```{r, eval=NOT_CRAN}
 method <- create_ti_method_container("my_ti_method")
 dataset <- dynwrap::example_dataset
 trajectory <- infer_trajectory(dataset, method(), verbose = TRUE)
 ```
 
-```{r}
+If you have dynplot installed, you can also plot the trajectory:
+
+```{r, eval=NOT_CRAN}
 # install dynplot to plot the output
-# if ("dynplot" %in% rownames(installed.packages())) {
-#   dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
-# }
+if ("dynplot" %in% rownames(installed.packages())) {
+  dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
+}
 ```
 
 Congratulations! You now have a TI method that can be easily installed anywhere without dependency issues, and that can be included within the whole dynverse pipeline.
@@ -186,12 +140,12 @@ You can also add extra parameters and a fixed seed to the example data, e.g.: `d
 
 Now run the example script and test it:
 
-```{bash}
+```{bash, eval=NOT_CRAN}
 chmod +x example.sh
 ./example.sh example.h5
 ```
 
-```{r}
+```{r, eval=NOT_CRAN}
 dataset <- dynutils::read_h5("example.h5")
 trajectory <- infer_trajectory(dataset, method())
 ```

@@ -14,7 +14,20 @@ create_ti_method_container(container_id, pull_if_needed = TRUE,
 
 \item{return_function}{Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.}
 }
+\value{
+A function that can be used to adapt the parameters of the method. This functions returns a list containing all metadata of the method, and can be used to \link[=infer_trajectory]{infer a trajectory}
+}
 \description{
-These functions create a TI method from a container using \code{babelwhale}. Supports both docker and singularity as a backend.
+These functions create a TI method from a container using \code{babelwhale}. Supports both docker and singularity as a backend. See \href{../doc/create_ti_method_container.html}{vignette("create_ti_method_container", "dynwrap")} for a tutorial on how to create a containerized TI method.
+}
+\examples{
+\donttest{
+method <- create_ti_method_container("dynverse/ti_angle")
+trajectory <- infer_trajectory(example_dataset, method())
+}
+
+}
+\seealso{
+vignette("create_ti_method_container", "dynwrap")
 }
 \keyword{create_ti_method}

@@ -9,6 +9,9 @@ orient_topology_to_velocity(trajectory)
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 }
+\value{
+The trajectory with oriented \emph{milestone_network} and \emph{progressions}
+}
 \description{
 Reorients the edges of the milestone network to the cell's RNA velocity vectors
 }
@@ -57,4 +60,10 @@ trajectory_oriented <- orient_topology_to_velocity(trajectory)
 
 # the edge is now correctly oriented
 trajectory_oriented$milestone_network
+assertthat::assert_that(
+  all(
+    trajectory_oriented$milestone_network[2, c("from", "to")] == c("B", "C")
+  )
+)
+
 }

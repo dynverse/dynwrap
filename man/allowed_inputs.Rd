@@ -11,4 +11,8 @@ allowed_inputs
 \description{
 All allowed inputs for a TI method
 }
+\examples{
+allowed_inputs
+
+}
 \keyword{create_ti_method}

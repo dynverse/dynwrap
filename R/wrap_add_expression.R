@@ -1,10 +1,10 @@
 #' Add count and normalised expression values to a dataset
 #'
 #' @inheritParams common_param
-#' @param counts The counts with genes in columns and cells in rows
-#' @param expression The normalised expression values with genes in columns and cells in rows
-#' @param expression_projected Projected expression using RNA velocity
-#' @param feature_info Optional meta-information of the features, a data.frame with at least feature_id as column
+#' @param counts The counts values of genes (columns) within cells (rows). This can be both a dense and sparse matrix.
+#' @param expression The normalised expression values of genes (columns) within cells (rows). This can be both a dense and sparse matrix.
+#' @param expression_projected Projected expression using RNA velocity of genes (columns) within cells (rows).  This can be both a dense and sparse matrix.
+#' @param feature_info Optional meta-information of the features, a dataframe with at least *feature_id* as column
 #' @param ... extra information to be stored in the dataset
 #' @param expression_source The source of expression, can be "counts", "expression", an expression matrix, or another dataset which contains expression
 #'
@@ -89,10 +89,25 @@ get_expression <- function(dataset, expression_source = "expression") {
 
 #' Create a wrapper object with expression and counts
 #'
+#' Projected expression based on RNA velocity can also be added to the wrapper through the `expression_projected` argument
+#'
+#' Information about the cells and/or features can be added through `cell_info` and `feature_info`
+#'
 #' @inheritParams add_expression
 #' @inheritParams wrap_data
 #'
 #' @keywords infer_trajectory
+#'
+#' @examples
+#' dataset <- wrap_expression(
+#'   counts = example_dataset$counts,
+#'   expression = example_dataset$expression,
+#'   expression_projected = example_dataset$expression_projected
+#' )
+#'
+#' dataset$counts[1:10, 1:3]
+#' dataset$expression[1:10, 1:3]
+#' dataset$expression_projected[1:10, 1:3]
 #'
 #' @export
 wrap_expression <- function(

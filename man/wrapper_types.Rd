@@ -11,4 +11,8 @@ wrapper_types
 \description{
 Metadata on wrapper types
 }
+\examples{
+wrapper_types
+
+}
 \keyword{create_ti_method}

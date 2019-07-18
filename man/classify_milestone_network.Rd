@@ -9,6 +9,23 @@ classify_milestone_network(milestone_network)
 \arguments{
 \item{milestone_network}{A milestone network}
 }
+\value{
+A list containing
+\itemize{
+\item \emph{network_type}: The network type (also known as the trajectory_type). See \code{dynwrap::trajectory_types} for an overview
+\item \emph{directed}: Whether the trajectory is directed
+\item \emph{properties}: Different properties of the trajectory, including:
+\itemize{
+\item \emph{is_directed}: Whether the trajectory is directed
+\item \emph{max_degree}: The maximal degree
+\item \emph{num_branch_nodes}: The number of branching nodes
+\item \emph{num_outer_nodes}: Number of leaf (outer) nodes
+\item \emph{is_self_loop}: Whether it contains self-loops
+\item \emph{has_cycles}: Whether it has cycles
+\item \emph{num_components}: The number of independent components
+}
+}
+}
 \description{
 Classify a milestone network
 }
@@ -32,5 +49,9 @@ milestone_network <- tibble::tibble(
 classification <- classify_milestone_network(milestone_network)
 classification$network_type
 classification$directed
+classification$props
 
+}
+\seealso{
+\url{trajectory_types}
 }

@@ -1,13 +1,17 @@
-#' Return all TI ti_methods
-#'
-#' @param method_ids The method identifiers. NULL if listing all methods
-#' @param as_tibble Whether or not to return the ti_methods as a tibble
-#' @param ti_packages In which packages to look for ti methods
-#' @param evaluate Automatically evaluate the functions
+#' Return all TI that are installed in one or more packages
 #'
 #' @inheritParams create_ti_method_container
+#' @param method_ids The method identifiers. NULL if listing all methods
+#' @param as_tibble Whether or not to return the ti_methods as a tibble
+#' @param ti_packages In which packages to look for TI methods. This will by default look into dynmethods if it is installed, otherwise in dynwrap.
+#' @param evaluate Whether to evaluate the functions
+#'
+#' @return A dataframe (or list if `as_tibble = FALSE`) containing the name (_id_) of the TI method and the function (_fun_) to load in the method.
 #'
 #' @keywords infer_trajectory
+#'
+#' @examples
+#' head(get_ti_methods())
 #'
 #' @importFrom utils lsf.str installed.packages
 #' @importFrom stringr str_replace

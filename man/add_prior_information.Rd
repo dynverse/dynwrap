@@ -4,7 +4,7 @@
 \alias{add_prior_information}
 \alias{is_wrapper_with_prior_information}
 \alias{generate_prior_information}
-\title{Add prior information to a data wrapper}
+\title{Add or compuate prior information for a trajectory}
 \usage{
 add_prior_information(dataset, start_id = NULL, end_id = NULL,
   groups_id = NULL, groups_network = NULL, features_id = NULL,
@@ -46,7 +46,7 @@ generate_prior_information(cell_ids, milestone_ids, milestone_network,
 
 \item{verbose}{Whether or not to print informative messages}
 
-\item{cell_ids}{The ids of the cells.}
+\item{cell_ids}{The identifiers of the cells.}
 
 \item{milestone_ids}{The ids of the milestones in the trajectory. Type: Character vector.}
 
@@ -64,9 +64,9 @@ Type: Data frame(cell_id = character, from = character, to = character, percenta
 regions between milestones (e.g. a bifurcation).
 Type: Data frame(divergence_id = character, milestone_id = character, is_start = logical).}
 
-\item{expression}{The normalised expression values with genes in columns and cells in rows}
+\item{expression}{The normalised expression values of genes (columns) within cells (rows). This can be both a dense and sparse matrix.}
 
-\item{feature_info}{Optional meta-information of the features, a data.frame with at least feature_id as column}
+\item{feature_info}{Optional meta-information of the features, a dataframe with at least \emph{feature_id} as column}
 
 \item{cell_info}{Optional meta-information pertaining the cells.}
 
@@ -75,12 +75,25 @@ Type: Data frame(divergence_id = character, milestone_id = character, is_start =
 \item{given}{Prior information already calculated}
 }
 \description{
-Note that the given data wrapper requires a trajectory and expression values
-to have been added already.
+If you specify
 
 For example, what are the start cells, the end cells, to which milestone does each cell belong to, ...
 }
 \details{
+If the dataset contains a trajectory (see \code{\link[=add_trajectory]{add_trajectory()}}) and expression data, this function will compute and add prior information using \code{\link[=generate_prior_information]{generate_prior_information()}}
+
 The dataset has to contain a trajectory for this to work
+}
+\examples{
+# add some prior information manually
+dataset <- example_dataset
+dataset <- add_prior_information(dataset, start_id = "Cell1")
+dataset$prior_information$start_id
+
+# compute prior information from a trajectory
+trajectory <- example_trajectory
+trajectory <- add_prior_information(trajectory)
+trajectory$prior_information$end_id
+
 }
 \keyword{infer_trajectory}

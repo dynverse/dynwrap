@@ -14,7 +14,7 @@ convert_progressions_to_milestone_percentages(cell_ids, milestone_ids,
   milestone_network, progressions)
 }
 \arguments{
-\item{cell_ids}{The ids of the cells.}
+\item{cell_ids}{The identifiers of the cells.}
 
 \item{milestone_ids}{The ids of the milestones in the trajectory. Type: Character vector.}
 
@@ -28,26 +28,31 @@ Type: Data frame(cell_id = character, milestone_id = character, percentage = num
 \item{progressions}{Specifies the progression of a cell along a transition in the milestone_network.
 Type: Data frame(cell_id = character, from = character, to = character, percentage = numeric).}
 }
+\value{
+For \code{convert_milestone_percentages_to_progressions}: The progressions
+For \code{convert_progressions_to_milestone_percentages}: The milestone percentages
+}
 \description{
 Conversion between milestone percentages and progressions
 }
 \examples{
-data(example_dataset)
-
 progressions <- convert_milestone_percentages_to_progressions(
-  cell_ids = example_dataset$cell_ids,
-  milestone_ids = example_dataset$milestone_ids,
-  milestone_network = example_dataset$milestone_network,
-  milestone_percentages = example_dataset$milestone_percentages
+  cell_ids = example_trajectory$cell_ids,
+  milestone_ids = example_trajectory$milestone_ids,
+  milestone_network = example_trajectory$milestone_network,
+  milestone_percentages = example_trajectory$milestone_percentages
 )
 head(progressions)
 
 milestone_percentages <- convert_progressions_to_milestone_percentages(
-  cell_ids = example_dataset$cell_ids,
-  milestone_ids = example_dataset$milestone_ids,
-  milestone_network = example_dataset$milestone_network,
-  progressions = example_dataset$progressions
+  cell_ids = example_trajectory$cell_ids,
+  milestone_ids = example_trajectory$milestone_ids,
+  milestone_network = example_trajectory$milestone_network,
+  progressions = example_trajectory$progressions
 )
 head(milestone_percentages)
 
+}
+\seealso{
+\code{\link[=add_trajectory]{add_trajectory()}}
 }

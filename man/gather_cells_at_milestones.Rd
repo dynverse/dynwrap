@@ -2,14 +2,17 @@
 % Please edit documentation in R/wrap_gather_cells_at_milestones.R
 \name{gather_cells_at_milestones}
 \alias{gather_cells_at_milestones}
-\title{"Gather" cells to their closest milestones}
+\title{Gather cells to their closest milestones}
 \usage{
 gather_cells_at_milestones(trajectory)
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 }
+\value{
+A trajectory where cells where moved to the closest milestone, the milestone_percentages and progressions will be adapated.
+}
 \description{
-"Gather" cells to their closest milestones
+Cells will be moved to their closest milestones.
 }
 \keyword{adapt_trajectory}

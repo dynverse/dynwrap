@@ -21,9 +21,18 @@ select_waypoints(trajectory, n_waypoints = 100,
 
 \item{resolution}{The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges, will be automatically computed using n_waypoints}
 }
-\description{
-Add or create waypoints to a trajectory
+\value{
+\strong{\code{add_waypoints}} returns the trajectory with \emph{waypoints} added, which is a list containing:
+\itemize{
+\item \emph{milestone_percentages} and \emph{progressions}: The milestone percentages and progressions of each waypoint, in the same format as the cell equivalents (see \code{\link[=add_trajectory]{add_trajectory()}}) but with a \emph{waypoint_id} column instead of a \emph{cell_id} column
+\item \emph{geodesic_distances}: a matrix with the geodesic distance of each waypoint (rows) to every cell (columns)
+\item \emph{waypoint_network}: a dataframe containing the network between consecutive waypoints, it contains information on the connected waypoints (\emph{from} and \emph{to}) and the edge on which they reside (\emph{from_milestone_id} and \emph{to_milestone_id})
+\item \emph{waypoints}: the waypoint identifiers
+}
 
-Waypoints are spread equally over the whole trajectory
+**\code{select_waypoints} returns the list as mentioned in \code{add_waypoints}
+}
+\description{
+Waypoints are points along the trajectory, which do not necessarily correspond to cells. They are selected in such a way that all parts of the trajectory are covered
 }
 \keyword{adapt_trajectory}

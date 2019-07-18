@@ -11,4 +11,8 @@ prior_usages
 \description{
 Metadata on prior usages
 }
+\examples{
+prior_usages
+
+}
 \keyword{create_ti_method}

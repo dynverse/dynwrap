@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrap_add_dimred_projection.R
 \name{add_dimred_projection}
 \alias{add_dimred_projection}
-\title{Constructs a trajectory by projecting cells within a dimensionality reduction onto a backbone formed by a milestone network. Optionally, a cell grouping can be given which will restrict the edges on which a cell can be projected.}
+\title{Constructs a trajectory by projecting cells within a dimensionality reduction}
 \usage{
 add_dimred_projection(dataset, milestone_ids = NULL, milestone_network,
   dimred, dimred_milestones, grouping = NULL, ...)
@@ -15,19 +15,32 @@ add_dimred_projection(dataset, milestone_ids = NULL, milestone_network,
 \item{milestone_network}{The network of the milestones.
 Type: Data frame(from = character, to = character, length = numeric, directed = logical).}
 
-\item{dimred}{The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction}
+\item{dimred}{Can be
+\itemize{
+\item A function which will perform the dimensionality reduction, see \code{\link[dyndimred:dimred]{dyndimred::list_dimred_methods()}}
+\item A matrix with the dimensionality reduction, with cells in rows and dimensions (\emph{comp_1}, \emph{comp_2}, ...) in columns
+}}
 
-\item{dimred_milestones}{An optional dimensionality reduction of the milestones.}
+\item{dimred_milestones}{An optional dimensionality reduction of the milestones. A matrix with milestones in rows and components (\emph{comp_1}, \emph{comp_2}, ...) in columns
 
-\item{grouping}{A grouping of the cells, can be a named vector or a dataframe with group_id (character) and cell_id (character)}
+This will be automatically calculated if \code{project_trajectory = TRUE}}
+
+\item{grouping}{A grouping of the cells, can be a named vector or a dataframe with \emph{group_id} and \emph{cell_id}}
 
 \item{...}{extra information to be stored in the wrapper.}
 }
 \value{
-The trajectory
+The dataset object with trajectory information, including:
+\itemize{
+\item \emph{milestone_ids}: The names of the milestones, a character vector.
+\item \emph{milestone_network}: The network between the milestones, a dataframe with the \emph{from} milestone, \emph{to} milestone, \emph{length} of the edge, and whether it is \emph{directed}.
+\item \emph{divergence_regions}: The regions between three or more milestones where cells are diverging, a dataframe with the divergence id (\emph{divergence_id}), the milestone id (\emph{milestone_id}) and whether this milestone is the start of the divergence (\emph{is_start})
+\item \emph{milestone_percentages}: For each cell its closeness to a particular milestone, a dataframe with the cell id (\emph{cell_id}), the milestone id (\emph{milestone_id}), and its \emph{percentage} (a number between 0 and 1 where higher values indicate that a cell is close to the milestone).
+\item \emph{progressions}: For each cell its progression along a particular edge of the \emph{milestone_network}. Contains the same information as \emph{milestone_percentages}. A dataframe with cell id (\emph{cell_id}), \emph{from} milestone, \emph{to} milestone, and its \emph{percentage} (a number between 0 and 1 where higher values indicate that a cell is close to the \emph{to} milestone and far from the \emph{from} milestone).
+}
 }
 \description{
-This function will generate the milestone_network and progressions.
+A dimensionality reduction of cells and milestones is used, along with the milestone network, to project cells onto the nearest edge. Optionally, a cell grouping can be given which will restrict the edges on which a cell can be projected.
 }
 \examples{
 library(tibble)

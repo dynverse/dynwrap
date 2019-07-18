@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrap_add_end_state_probabilities.R
 \name{add_end_state_probabilities}
 \alias{add_end_state_probabilities}
-\title{Multifurcating trajectory with end state probabilities}
+\title{Constructs a multifurcating trajectory using end state probabilities}
 \usage{
 add_end_state_probabilities(dataset, end_state_probabilities,
   pseudotime = NULL, do_scale_minmax = TRUE, ...)
@@ -10,7 +10,7 @@ add_end_state_probabilities(dataset, end_state_probabilities,
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
-\item{end_state_probabilities}{A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone. If the tibble contains only a cell_id column, the data will be processed using \code{add_linear_trajectory}}
+\item{end_state_probabilities}{A dataframe containing the \emph{cell_id} and additional numeric columns containing the probability for every end milestone. If the tibble contains only a cell_id column, the data will be processed using \code{add_linear_trajectory}}
 
 \item{pseudotime}{A named vector of pseudo times.}
 
@@ -20,23 +20,26 @@ Otherwise, will assume the values are already within that range.}
 \item{...}{Extras to be added to the trajectory}
 }
 \value{
-The trajectory
+The dataset object with trajectory information, including:
+\itemize{
+\item \emph{milestone_ids}: The names of the milestones, a character vector.
+\item \emph{milestone_network}: The network between the milestones, a dataframe with the \emph{from} milestone, \emph{to} milestone, \emph{length} of the edge, and whether it is \emph{directed}.
+\item \emph{divergence_regions}: The regions between three or more milestones where cells are diverging, a dataframe with the divergence id (\emph{divergence_id}), the milestone id (\emph{milestone_id}) and whether this milestone is the start of the divergence (\emph{is_start})
+\item \emph{milestone_percentages}: For each cell its closeness to a particular milestone, a dataframe with the cell id (\emph{cell_id}), the milestone id (\emph{milestone_id}), and its \emph{percentage} (a number between 0 and 1 where higher values indicate that a cell is close to the milestone).
+\item \emph{progressions}: For each cell its progression along a particular edge of the \emph{milestone_network}. Contains the same information as \emph{milestone_percentages}. A dataframe with cell id (\emph{cell_id}), \emph{from} milestone, \emph{to} milestone, and its \emph{percentage} (a number between 0 and 1 where higher values indicate that a cell is close to the \emph{to} milestone and far from the \emph{from} milestone).
+}
 }
 \description{
 Constructs a multifurcating trajectory using the pseudotime values of each cell and their end state probabilities.
 If pseudotime values are not given, will use pseudotime already present in the dataset.
 }
-\details{
-This function will generate the milestone_network and progressions.
-}
 \examples{
-library(tibble)
 dataset <- wrap_data(cell_ids = letters)
 
 pseudotime <- runif(length(dataset$cell_ids))
 names(pseudotime) <- dataset$cell_ids
 pseudotime
-end_state_probabilities <- tibble(
+end_state_probabilities <- tibble::tibble(
   cell_id = dataset$cell_ids,
   A = runif(length(dataset$cell_ids)),
   B = 1-A

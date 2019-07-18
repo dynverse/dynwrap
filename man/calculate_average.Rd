@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculate_average.R
 \name{calculate_average_by_group}
 \alias{calculate_average_by_group}
-\title{Calculate mean values per cell group}
+\title{Calculate average values of a matrix}
 \usage{
 calculate_average_by_group(x, cell_grouping)
 }
@@ -12,14 +12,17 @@ calculate_average_by_group(x, cell_grouping)
 \item{cell_grouping}{A data frame denoting the grouping of the cells.
 Format: \code{tibble(cell_id = character(), group_id = character())}.}
 }
+\value{
+A matrix containing for each feature (column) the average
+}
 \description{
-Calculate mean values per cell group
+\code{calculate_average_by_group} will calculate an average value per group, given a matrix with cells in the rows and some features in the columns (e.g. expression matrix)
 }
 \examples{
-data(example_dataset)
 calculate_average_by_group(
-  x = example_dataset$expression,
-  cell_grouping = example_dataset$prior_information$groups_id
+  x = example_trajectory$expression,
+  cell_grouping = example_trajectory$prior_information$groups_id
 )
+
 }
 \keyword{derive_trajectory}

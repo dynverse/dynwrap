@@ -2,9 +2,7 @@
 #'
 #' @inheritParams common_param
 #'
-#' @export
-#'
-#' @importFrom FNN knn.index
+#' @return The trajectory with oriented *milestone_network* and *progressions*
 #'
 #' @examples
 #' # we'll create a simple linear trajectory
@@ -51,6 +49,13 @@
 #'
 #' # the edge is now correctly oriented
 #' trajectory_oriented$milestone_network
+#' assertthat::assert_that(
+#'   all(
+#'     trajectory_oriented$milestone_network[2, c("from", "to")] == c("B", "C")
+#'   )
+#' )
+#'
+#' @export
 orient_topology_to_velocity <- function(
   trajectory
 ) {

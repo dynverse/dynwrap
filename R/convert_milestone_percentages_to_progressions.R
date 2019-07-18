@@ -3,22 +3,26 @@
 #' @inheritParams wrap_data
 #' @inheritParams add_trajectory
 #'
-#' @examples
-#' data(example_dataset)
+#' @return
+#' For `convert_milestone_percentages_to_progressions`: The progressions
+#' For `convert_progressions_to_milestone_percentages`: The milestone percentages
 #'
+#' @seealso [add_trajectory()]
+#'
+#' @examples
 #' progressions <- convert_milestone_percentages_to_progressions(
-#'   cell_ids = example_dataset$cell_ids,
-#'   milestone_ids = example_dataset$milestone_ids,
-#'   milestone_network = example_dataset$milestone_network,
-#'   milestone_percentages = example_dataset$milestone_percentages
+#'   cell_ids = example_trajectory$cell_ids,
+#'   milestone_ids = example_trajectory$milestone_ids,
+#'   milestone_network = example_trajectory$milestone_network,
+#'   milestone_percentages = example_trajectory$milestone_percentages
 #' )
 #' head(progressions)
 #'
 #' milestone_percentages <- convert_progressions_to_milestone_percentages(
-#'   cell_ids = example_dataset$cell_ids,
-#'   milestone_ids = example_dataset$milestone_ids,
-#'   milestone_network = example_dataset$milestone_network,
-#'   progressions = example_dataset$progressions
+#'   cell_ids = example_trajectory$cell_ids,
+#'   milestone_ids = example_trajectory$milestone_ids,
+#'   milestone_network = example_trajectory$milestone_network,
+#'   progressions = example_trajectory$progressions
 #' )
 #' head(milestone_percentages)
 #'

@@ -1,6 +1,19 @@
 #' Add or create waypoints to a trajectory
 #'
-#' @inheritParams select_waypoints
+#' Waypoints are points along the trajectory, which do not necessarily correspond to cells. They are selected in such a way that all parts of the trajectory are covered
+#'
+#' @inheritParams common_param
+#' @param n_waypoints The number of waypoints
+#' @param resolution The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges, will be automatically computed using n_waypoints
+#'
+#' @return
+#' **`add_waypoints`** returns the trajectory with *waypoints* added, which is a list containing:
+#' - *milestone_percentages* and *progressions*: The milestone percentages and progressions of each waypoint, in the same format as the cell equivalents (see [add_trajectory()]) but with a *waypoint_id* column instead of a *cell_id* column
+#' - *geodesic_distances*: a matrix with the geodesic distance of each waypoint (rows) to every cell (columns)
+#' - *waypoint_network*: a dataframe containing the network between consecutive waypoints, it contains information on the connected waypoints (*from* and *to*) and the edge on which they reside (*from_milestone_id* and *to_milestone_id*)
+#' - *waypoints*: the waypoint identifiers
+#'
+#' **`select_waypoints` returns the list as mentioned in `add_waypoints`
 #'
 #' @keywords adapt_trajectory
 #'
@@ -34,12 +47,6 @@ is_wrapper_with_waypoints <- function(trajectory) {
   is_wrapper_with_trajectory(trajectory) && "dynwrap::with_waypoints" %in% class(trajectory)
 }
 
-#' Waypoints are spread equally over the whole trajectory
-#'
-#' @inheritParams common_param
-#' @param n_waypoints The number of waypoints
-#' @param resolution The resolution of the waypoints, measured in the same units as the lengths of the milestone network edges, will be automatically computed using n_waypoints
-#'
 #' @rdname add_waypoints
 #'
 #' @export

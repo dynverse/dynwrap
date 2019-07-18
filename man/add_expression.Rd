@@ -16,13 +16,13 @@ get_expression(dataset, expression_source = "expression")
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
-\item{counts}{The counts with genes in columns and cells in rows}
+\item{counts}{The counts values of genes (columns) within cells (rows). This can be both a dense and sparse matrix.}
 
-\item{expression}{The normalised expression values with genes in columns and cells in rows}
+\item{expression}{The normalised expression values of genes (columns) within cells (rows). This can be both a dense and sparse matrix.}
 
-\item{feature_info}{Optional meta-information of the features, a data.frame with at least feature_id as column}
+\item{feature_info}{Optional meta-information of the features, a dataframe with at least \emph{feature_id} as column}
 
-\item{expression_projected}{Projected expression using RNA velocity}
+\item{expression_projected}{Projected expression using RNA velocity of genes (columns) within cells (rows).  This can be both a dense and sparse matrix.}
 
 \item{...}{extra information to be stored in the dataset}
 

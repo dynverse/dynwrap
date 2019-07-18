@@ -1,22 +1,20 @@
-#' Constructs a trajectory by projecting cells within a dimensionality reduction onto a backbone formed by a milestone network. Optionally, a cell grouping can be given which will restrict the edges on which a cell can be projected.
+#' Constructs a trajectory by projecting cells within a dimensionality reduction
 #'
-#' This function will generate the milestone_network and progressions.
+#' A dimensionality reduction of cells and milestones is used, along with the milestone network, to project cells onto the nearest edge. Optionally, a cell grouping can be given which will restrict the edges on which a cell can be projected.
 #'
 #' @inheritParams common_param
 #' @inheritParams add_trajectory
 #' @inheritParams add_dimred
 #' @inheritParams add_grouping
-#'
 #' @param ... extra information to be stored in the wrapper.
+#'
+#' @inherit add_trajectory return
 #'
 #' @keywords create_trajectory
 #'
 #' @export
 #'
-#' @return The trajectory
-#'
 #' @importFrom testthat expect_is expect_true expect_equal expect_false
-#' @importFrom pdist pdist
 #'
 #' @examples
 #' library(tibble)

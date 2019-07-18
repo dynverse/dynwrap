@@ -40,8 +40,9 @@ regions between milestones (e.g. a bifurcation).
 Type: Data frame(divergence_id = character, milestone_id = character, is_start = logical).}
 }
 \value{
-\code{add_cell_waypoints} returns a trajectory with \code{waypoint_cells}, a character vector containing the cell ids of the waypoint cells
-\code{select_waypoint_cells} returns a character vector containing the cell ids of the waypoint cells
+\strong{\code{add_cell_waypoints}} returns a trajectory with \emph{waypoint_cells}, a character vector containing the cell ids of the waypoint cells
+
+\strong{\code{select_waypoint_cells}} returns a character vector containing the cell ids of the waypoint cells
 }
 \description{
 Waypoint cells are cells spread across all of the trajectory such that there is no other cell

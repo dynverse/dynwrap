@@ -1,9 +1,16 @@
-#' Add timings checkpoints
+#' Add timings to a trajectory
 #'
 #' @inheritParams common_param
 #' @param timings A list of timings.
 #'
 #' @keywords adapt_trajectory
+#'
+#' @examples
+#' trajectory <- example_trajectory
+#' trajectory <- add_timings(
+#'   trajectory,
+#'   list(start = 0, end = 1)
+#' )
 #'
 #' @export
 #'

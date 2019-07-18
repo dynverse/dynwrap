@@ -9,3 +9,5 @@
 ^appveyor\.yml$
 ^containers$
 ^README\.Rmd$
+functions.R
+scripts

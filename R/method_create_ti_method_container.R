@@ -1,12 +1,22 @@
 #' Create a TI method from a docker / singularity container
 #'
-#' These functions create a TI method from a container using `babelwhale`. Supports both docker and singularity as a backend.
+#' These functions create a TI method from a container using `babelwhale`. Supports both docker and singularity as a backend. See [`vignette("create_ti_method_container", "dynwrap")`](../doc/create_ti_method_container.html) for a tutorial on how to create a containerized TI method.
 #'
 #' @param container_id The name of the container repository (e.g. `"dynverse/ti_angle"`).
 #' @param pull_if_needed Pull the container if not yet available.
 #' @inheritParams .method_process_definition
 #'
+#' @return A function that can be used to adapt the parameters of the method. This functions returns a list containing all metadata of the method, and can be used to [infer a trajectory][infer_trajectory()]
+#'
+#' @seealso vignette("create_ti_method_container", "dynwrap")
+#'
 #' @keywords create_ti_method
+#'
+#' @examples
+#' \donttest{
+#' method <- create_ti_method_container("dynverse/ti_angle")
+#' trajectory <- infer_trajectory(example_dataset, method())
+#' }
 #'
 #' @importFrom babelwhale get_default_config pull_container test_docker_installation test_singularity_installation list_docker_images
 #'
@@ -113,7 +123,7 @@ create_ti_method_container <- function(
     container_id = method$run$container_id,
     command = NULL,
     args = args,
-    volumes = paste0(preproc_meta$dir_dynwrap %>% babelwhale:::fix_windows_path(), ":/ti"),
+    volumes = paste0(preproc_meta$dir_dynwrap %>% fix_windows_path(), ":/ti"),
     workspace = "/ti/workspace",
     verbose = preproc_meta$verbose,
     debug = preproc_meta$debug
@@ -134,4 +144,16 @@ create_ti_method_container <- function(
   if (!preproc_meta$debug) {
     unlink(preproc_meta$dir_dynwrap, recursive = TRUE)
   }
+}
+
+
+
+fix_windows_path <- function(path) {
+  path <- gsub("\\\\", "/", path)
+
+  start <-
+    gsub("^([a-zA-Z]):/.*", "/\\1", path) %>%
+    tolower
+
+  gsub("[^:/]:", start, path)
 }

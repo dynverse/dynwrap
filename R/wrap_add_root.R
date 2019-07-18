@@ -1,6 +1,8 @@
 #' Root the trajectory
 #'
-#' Roots the trajectory by changing the directionality of all edges given a root cell
+#' Designates a milestone as root, and changes the direction of any edges so that they move away from the specified root (if `flip_edges=TRUE`, default).
+#'
+#' A `root_cell_id` can also be specified, and the root milestone will be determined as the milestone with the closest geodesic distance to this cell.
 #'
 #' @inheritParams common_param
 #' @param root_cell_id The root cell id, not required if root_milestone_id is given
@@ -8,6 +10,8 @@
 #' @param flip_edges Whether to flip edges which are going in the other direction compared to the root
 #'
 #' @keywords adapt_trajectory
+#'
+#' @return A trajectory, with a *root_milestone_id* and with adapted *milestone_network* and *progressions* based on the rooting.
 #'
 #' @importFrom purrr map2_int
 #'

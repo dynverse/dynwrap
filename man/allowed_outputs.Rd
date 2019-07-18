@@ -11,4 +11,8 @@ allowed_outputs
 \description{
 All allowed outputs for a TI method
 }
+\examples{
+allowed_outputs
+
+}
 \keyword{datasets}

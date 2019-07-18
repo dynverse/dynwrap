@@ -10,25 +10,22 @@ add_branch_trajectory(dataset, branch_network, branches,
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
-\item{branch_network}{The network between branches
-Type: Data frame(from = charactor, to = character)}
+\item{branch_network}{The network between branches, a dataframe with a \emph{from} and \emph{to} branch identifier}
 
-\item{branches}{The length and directedness of the branches
-Type: Data frame(branch_id = character, length = numeric, directed = logical)}
+\item{branches}{The length and directedness of the branches, a dataframe with the branch identifier (\emph{branch_id}), the length of the branch (\emph{length}) and whether it is \emph{directed}}
 
-\item{branch_progressions}{Specifies the progression of a cell along a transition in the branch network.
-Type: Data frame(cell_id = character, branch_id = character, percentage = numeric).}
+\item{branch_progressions}{Specifies the progression of a cell along a transition in the branch network. A dataframe containing the \emph{cell_id}, \emph{branch_id} and its progression along the edge (\emph{percentage}, between 0 and 1)}
 
 \item{...}{extra information to be stored in the trajectory}
 }
 \value{
 The dataset object with trajectory information, including:
 \itemize{
-\item \code{milestone_ids}: The names of the milestones, a character vector.
-\item \code{milestone_network}: The network between the milestones, a dataframe with the from milestone, to milestone, length of the edge, and whether it is directed.
-\item \code{divergence_regions}: The regions between three or more milestones where cells are diverging, a dataframe with the divergence id, the milestone id and whether this milestone is the start of the divergence
-\item \code{milestone_percentages}: For each cell its closeness to a particular milestone, a dataframe with the cell id, the milestone id, and its percentage (a number between 0 and 1 where higher values indicate that a cell is close to the milestone).
-\item \code{progressions}: For each cell its progression along a particular edge of the \code{milestone_network}. Contains the same information as \code{milestone_percentages}. A dataframe with cell id, from milestone, to milestone, and its percentage (a number between 0 and 1 where higher values indicate that a cell is close to the 'to' milestone and far from the 'from' milestone).
+\item \emph{milestone_ids}: The names of the milestones, a character vector.
+\item \emph{milestone_network}: The network between the milestones, a dataframe with the \emph{from} milestone, \emph{to} milestone, \emph{length} of the edge, and whether it is \emph{directed}.
+\item \emph{divergence_regions}: The regions between three or more milestones where cells are diverging, a dataframe with the divergence id (\emph{divergence_id}), the milestone id (\emph{milestone_id}) and whether this milestone is the start of the divergence (\emph{is_start})
+\item \emph{milestone_percentages}: For each cell its closeness to a particular milestone, a dataframe with the cell id (\emph{cell_id}), the milestone id (\emph{milestone_id}), and its \emph{percentage} (a number between 0 and 1 where higher values indicate that a cell is close to the milestone).
+\item \emph{progressions}: For each cell its progression along a particular edge of the \emph{milestone_network}. Contains the same information as \emph{milestone_percentages}. A dataframe with cell id (\emph{cell_id}), \emph{from} milestone, \emph{to} milestone, and its \emph{percentage} (a number between 0 and 1 where higher values indicate that a cell is close to the \emph{to} milestone and far from the \emph{from} milestone).
 }
 }
 \description{

@@ -5,12 +5,9 @@
 #' The resulting trajectory will always be directed.
 #'
 #' @inheritParams common_param
-#' @param branch_network The network between branches
-#'   Type: Data frame(from = charactor, to = character)
-#' @param branches The length and directedness of the branches
-#'   Type: Data frame(branch_id = character, length = numeric, directed = logical)
-#' @param branch_progressions Specifies the progression of a cell along a transition in the branch network.
-#'   Type: Data frame(cell_id = character, branch_id = character, percentage = numeric).
+#' @param branch_network The network between branches, a dataframe with a *from* and *to* branch identifier
+#' @param branches The length and directedness of the branches, a dataframe with the branch identifier (*branch_id*), the length of the branch (*length*) and whether it is *directed*
+#' @param branch_progressions Specifies the progression of a cell along a transition in the branch network. A dataframe containing the *cell_id*, *branch_id* and its progression along the edge (*percentage*, between 0 and 1)
 #' @param ... extra information to be stored in the trajectory
 #'
 #' @inherit add_trajectory return

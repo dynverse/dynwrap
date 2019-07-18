@@ -44,7 +44,6 @@ Imports:
   magrittr,
   Matrix,
   methods,
-  pdist,
   purrr,
   processx,
   readr,

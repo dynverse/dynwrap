@@ -1,8 +1,8 @@
 #' Add a cell grouping to a dataset
 #'
 #' @inheritParams common_param
-#' @param grouping A grouping of the cells, can be a named vector or a dataframe with group_id (character) and cell_id (character)
-#' @param group_ids All group_ids, optional
+#' @param grouping A grouping of the cells, can be a named vector or a dataframe with *group_id* and *cell_id*
+#' @param group_ids All group identifiers, optional
 #' @param ... Extra information to be stored in the dataset
 #'
 #' @keywords adapt_trajectory

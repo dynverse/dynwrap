@@ -1,19 +1,18 @@
 #' Constructs a trajectory using a cell grouping and a network between groups. Will use an existing grouping if it is present in the dataset.
 #'
-#' This function will generate the milestone_network and progressions.
+#' A trajectory in this form will rarely be useful, given that cells are only placed at the milestones themselves, but not on the edges between milestones. A better alternative might be to project the cells using a dimensionality reduction, see [add_dimred_projection()].
 #'
 #' @inheritParams common_param
+#' @inheritParams add_grouping
 #' @param milestone_network A network of milestones.
 #' @param explicit_splits Whether to make splits specific by adding a starting node. For example: A->B, A->C becomes A->X, X->B, X->C
-#' @inheritParams add_grouping
 #' @param ... extra information to be stored in the wrapper.
 #'
-#' @return The trajectory
+#' @inherit add_trajectory return
 #'
 #' @keywords create_trajectory
 #'
 #' @importFrom testthat expect_is expect_true expect_equal
-#' @importFrom pdist pdist
 #'
 #' @export
 #'

@@ -12,7 +12,7 @@ is_data_wrapper(dataset)
 \arguments{
 \item{id}{A unique identifier for the data. If \code{NULL}, a random string will be generated.}
 
-\item{cell_ids}{The ids of the cells.}
+\item{cell_ids}{The identifiers of the cells.}
 
 \item{cell_info}{Optional meta-information pertaining the cells.}
 
@@ -20,7 +20,17 @@ is_data_wrapper(dataset)
 
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 }
+\value{
+A list containing \emph{id}, \emph{cell_ids} and \emph{cell_info} (if specified)
+}
 \description{
 A data wrapper for datasets and trajectories
+}
+\examples{
+dataset <- wrap_data(
+  cell_ids = c("A", "B", "C")
+)
+dataset$cell_ids
+
 }
 \keyword{create_trajectory}

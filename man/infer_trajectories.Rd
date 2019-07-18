@@ -3,7 +3,7 @@
 \name{infer_trajectories}
 \alias{infer_trajectories}
 \alias{infer_trajectory}
-\title{Infer trajectories}
+\title{Infer one or more trajectories from a single-cell dataset}
 \usage{
 infer_trajectories(dataset, method, parameters = NULL,
   give_priors = NULL, seed = random_seed(), verbose = FALSE,
@@ -14,7 +14,7 @@ infer_trajectory(dataset, method, parameters = NULL,
   return_verbose = FALSE, debug = FALSE, ...)
 }
 \arguments{
-\item{dataset}{One or more datasets as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}. Prior information can be added using \code{\link[=add_prior_information]{add_prior_information()}}.}
+\item{dataset}{One or more datasets as created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}. Prior information can be added using \code{\link[=add_prior_information]{add_prior_information()}}.}
 
 \item{method}{One or more methods. Must be one of:
 \itemize{
@@ -46,11 +46,35 @@ Allows to parallellise the execution in an arbitrary way.}
 \item{...}{Any additional parameters given to the method, will be concatednated to the parameters argument}
 }
 \value{
-infer_trajectory: A trajectory
+\strong{\code{infer_trajectory}}: A trajectory object, which is a list containing
+\itemize{
+\item \emph{milestone_ids}: The names of the milestones, a character vector.
+\item \emph{milestone_network}: The network between the milestones, a dataframe with the from milestone, to milestone, length of the edge, and whether it is directed.
+\item \emph{divergence_regions}: The regions between three or more milestones where cells are diverging, a dataframe with the divergence id, the milestone id and whether this milestone is the start of the divergence
+\item \emph{milestone_percentages}: For each cell its closeness to a particular milestone, a dataframe with the cell id, the milestone id, and its percentage (a number between 0 and 1 where higher values indicate that a cell is close to the milestone).
+\item \emph{progressions}: For each cell its progression along a particular edge of the \emph{milestone_network}. Contains the same information as \emph{milestone_percentages}. A dataframe with cell id, from milestone, to milestone, and its percentage (a number between 0 and 1 where higher values indicate that a cell is close to the 'to' milestone and far from the 'from' milestone).
+\item \emph{cell_ids}: The names of the cells
+}
 
-infer_trajectories: A tibble containing the dataset and method identifiers, the trajectory \code{model} and a summary containing the execution times, output and errors if appropriate
+Some methods will include additional information in the output, such as
+\itemize{
+\item A dimensionality reduction (\emph{dimred}), the location of the trajectory milestones and edges in this dimensionality reduction (\emph{dimred_milestones}, \emph{dimred_segment_progressions} and \emph{dimred_segment_points}). See \code{\link[=add_dimred]{add_dimred()}} for more information on these objects.
+\item A cell grouping (\emph{grouping}). See \code{\link[=add_grouping]{add_grouping()}} for more information on this object.
+}
+
+\strong{\code{infer_trajectories}}: A tibble containing the dataset and method identifiers (\emph{dataset_id} and \emph{method_id}), the trajectory model as described above (\emph{model}), and a \emph{summary} containing the execution times, output and error if appropriate
 }
 \description{
-Infer trajectories
+Infer one or more trajectories from a single-cell dataset
+}
+\examples{
+dataset <- example_dataset
+method <- get_ti_methods(as_tibble = FALSE)[[1]]$fun
+
+trajectory <- infer_trajectory(dataset, method())
+
+head(trajectory$milestone_network)
+head(trajectory$progressions)
+
 }
 \keyword{infer_trajectory}

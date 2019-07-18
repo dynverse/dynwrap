@@ -11,17 +11,27 @@ calculate_trajectory_dimred(trajectory, adjust_weights = FALSE)
 
 \item{adjust_weights}{Whether or not to rescale the milestone network weights}
 }
+\value{
+A list containg
+\itemize{
+\item \emph{milestone_positions}: A dataframe containing the \emph{milestone_id} and the location of each milestone (\emph{comp_1} and \emph{comp_2})
+\item \emph{edge_positions}: A dataframe containing for each edge (\emph{from}, \emph{to}, \emph{length} and \emph{directed} columns) the position of the from milestone (\emph{comp_1_from} and \emph{comp_2_from}) and to milestone (\emph{comp_1_to} and \emph{comp_2_to}).
+\item \emph{cell_positions}: A dataframe containing the \emph{cell_id} and the location of each cell (\emph{comp_1} and \emph{comp_2})
+\item \emph{divergence_edge_positions}: A dataframe as \emph{edge_positions} but for each edge within a divergence
+\item \emph{divergence_polygon_positions}: A dataframe containing the \emph{triangle_id} and the location of the milestone within a divergence (\emph{comp_1} and \emph{comp_2})
+}
+}
 \description{
 Layout the trajectory and its cells in 2 dimensions using a graph layout
 }
 \examples{
-data("example_dataset")
-trajectory_dimred <- calculate_trajectory_dimred(example_dataset)
+trajectory_dimred <- calculate_trajectory_dimred(example_trajectory)
 head(trajectory_dimred$milestone_positions)
+head(trajectory_dimred$edge_positions)
 head(trajectory_dimred$cell_positions)
 
 }
 \seealso{
-wrap_data
+\url{wrap_data}
 }
 \keyword{derive_trajectory}

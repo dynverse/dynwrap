@@ -1,15 +1,16 @@
-#' Project waypoints within a trajectory (e.g. milestones) into a space defined by cells (e.g. expression)
+#' Project waypoints of a trajectory (e.g. milestones) into a space defined by cells (e.g. expression or a dimensionality reduction)
+#'
+#' This will first calculate the geodesic distance of each cell to the waypoint. This distance is used as a weight
 #'
 #' @inheritParams common_param
 #' @param space A matrix with cells in rows and different dimensions in the columns. This is typically an expression matrix or a dimensionality reduction
-#' @param waypoints A list containing:
+#' @param waypoints A set of waypoints, which can be created by [`select_waypoints()`][add_waypoints()]. It is a list containing:
 #'   * `waypoints`: a dataframe containing in the very least the waypoint_id
 #'   * `milestone_percentages`: the positions of waypoints withing the trajectory
 #'   * `geodesic_distances`: matrix with precalculated geodesic distances between waypoints (rows) and cells (columns), optional
-#'   A set of suitable waypoints can be created [dynwrap::select_waypoints()]
 #' @param trajectory_projection_sd The standard deviation of the gaussian kernel
 #'
-#' @return A matrix with waypoints in rows and dimensions in the columns.
+#' @return A matrix in which the waypoints (rows) were projected into a new space defined by the same number of dimensions (columns) as in the `space` argument
 #'
 #' @importFrom stats dnorm
 #' @export
@@ -51,13 +52,21 @@ project_waypoints <- function(
 
 
 
-#' Project a trajectory onto a dimensionality reduction using waypoints
+#' Project a trajectory onto a dimensionality reduction
 #'
 #' @inheritParams common_param
 #' @inheritParams add_dimred
 #' @inheritParams project_waypoints
+#' @param dimred The dimensionality reduction of the cells. A matrix with the positions of cells (rows) in the dimensions (columns)
 #'
-#' @return A list containing dimred_segment_points and dimred_segment_progressions, which can be given to [add_dimred()]
+#' @return A list containing
+#' - *dimred_segment_points*: The dimensionality reduction of a set of points along the trajectory. A matrix with the position of points (rows) in the dimensions (columns)
+#' - *dimred_segment_progressions* The progressions of the points. A dataframe containing the *from* and *to* milestones, and their *progression*. Has the same number of rows as *dimred_segment_points*
+#' - *dimred_milestones*: The dimensionality reduction of the milestones. A matrix with the position of milestones (rows) in the dimensions (columns)
+#'
+#' These objects can be given to [add_dimred()]
+#'
+#' @seealso [add_dimred()]
 #'
 #' @export
 project_trajectory <- function(trajectory, dimred, waypoints = select_waypoints(trajectory)) {
@@ -65,18 +74,14 @@ project_trajectory <- function(trajectory, dimred, waypoints = select_waypoints(
 
   lst(
     dimred_segment_points = waypoint_points,
-    dimred_segment_progressions = waypoints$progressions %>% select(from, to, percentage)
+    dimred_segment_progressions = waypoints$progressions %>% select(from, to, percentage),
+    dimred_milestones = project_milestones(trajectory, dimred)
   )
 }
 
 
 
-#' Project milestones onto a dimensionality reduction
-#'
-#' @inheritParams common_param
-#' @inheritParams add_dimred
-#'
-#' @return A list containing dimred_segment_points and dimred_segment_progressions, which can be given to [add_dimred()]
+#' @rdname project_trajectory
 #'
 #' @export
 project_milestones <- function(trajectory, dimred) {
@@ -87,7 +92,7 @@ project_milestones <- function(trajectory, dimred) {
       percentage = 1
     )
   )
-  waypoint_points <- project_waypoints(trajectory, dimred, waypoints = waypoints)
+  dimred_milestones <- project_waypoints(trajectory, dimred, waypoints = waypoints)
 
-  waypoint_points
+  dimred_milestones
 }

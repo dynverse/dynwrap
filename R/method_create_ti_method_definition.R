@@ -1,11 +1,23 @@
 #' Create a TI method from a local method definition file
 #'
 #' The local method definition file describes a method that is runnable on the local system.
+#' See [`vignette("create_ti_method_definition", "dynwrap")`](../doc/create_ti_method_definition.html) for a tutorial on how to create a containerized TI method.
 #'
 #' @param script Location of the script that will be executed. Has to contain a #!
 #' @inheritParams .method_process_definition
 #'
+#' @inherit create_ti_method_container return
+#'
 #' @keywords create_ti_method
+#'
+#' @examples
+#' \donttest{
+#' method <- create_ti_method_definition(
+#'   system.file("examples/script/definition.yml", package = "dynwrap"),
+#'   system.file("examples/script/run.R", package = "dynwrap")
+#' )
+#' trajectory <- infer_trajectory(example_dataset, method())
+#' }
 #'
 #' @importFrom yaml read_yaml
 #'

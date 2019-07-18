@@ -8,8 +8,9 @@
 #' @param num_cells_selected About the number of cells selected as waypoints
 #'
 #' @return
-#' `add_cell_waypoints` returns a trajectory with `waypoint_cells`, a character vector containing the cell ids of the waypoint cells
-#' `select_waypoint_cells` returns a character vector containing the cell ids of the waypoint cells
+#' **`add_cell_waypoints`** returns a trajectory with *waypoint_cells*, a character vector containing the cell ids of the waypoint cells
+#'
+#' **`select_waypoint_cells`** returns a character vector containing the cell ids of the waypoint cells
 #'
 #' @keywords adapt_trajectory
 #'

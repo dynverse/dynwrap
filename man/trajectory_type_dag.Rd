@@ -11,4 +11,8 @@ trajectory_type_dag
 \description{
 A DAG connecting different trajectory types
 }
+\examples{
+trajectory_type_dag
+
+}
 \keyword{create_ti_method}

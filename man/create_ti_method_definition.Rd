@@ -13,7 +13,21 @@ create_ti_method_definition(definition, script, return_function = TRUE)
 
 \item{return_function}{Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.}
 }
+\value{
+A function that can be used to adapt the parameters of the method. This functions returns a list containing all metadata of the method, and can be used to \link[=infer_trajectory]{infer a trajectory}
+}
 \description{
 The local method definition file describes a method that is runnable on the local system.
+See \href{../doc/create_ti_method_definition.html}{vignette("create_ti_method_definition", "dynwrap")} for a tutorial on how to create a containerized TI method.
+}
+\examples{
+\donttest{
+method <- create_ti_method_definition(
+  system.file("examples/script/definition.yml", package = "dynwrap"),
+  system.file("examples/script/run.R", package = "dynwrap")
+)
+trajectory <- infer_trajectory(example_dataset, method())
+}
+
 }
 \keyword{create_ti_method}
