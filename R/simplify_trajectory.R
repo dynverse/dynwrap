@@ -1,7 +1,7 @@
 #' Simplify a trajectory by removing transient milestones
 #'
-#' - Milestones that are not a leaf or a branching point are removed: A → B → C becomes A → C
-#' - Cycles contain at least 3 nodes, ie. A → B → A becomes A → B → C → A
+#' - Milestones that are not a leaf or a branching point are removed: A -> B -> C becomes A -> C
+#' - Cycles contain at least 3 nodes, ie. A -> B -> A becomes A -> B -> C -> A
 #' - Loops are converted to a cycle, unless `allow_self_loops = TRUE`
 #'
 #' The positions of the cells within the trajectory remain the same.

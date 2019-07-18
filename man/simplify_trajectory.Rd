@@ -13,8 +13,8 @@ simplify_trajectory(trajectory, allow_self_loops = FALSE)
 }
 \description{
 \itemize{
-\item Milestones that are not a leaf or a branching point are removed: A → B → C becomes A → C
-\item Cycles contain at least 3 nodes, ie. A → B → A becomes A → B → C → A
+\item Milestones that are not a leaf or a branching point are removed: A -> B -> C becomes A -> C
+\item Cycles contain at least 3 nodes, ie. A -> B -> A becomes A -> B -> C -> A
 \item Loops are converted to a cycle, unless \code{allow_self_loops = TRUE}
 }
 }

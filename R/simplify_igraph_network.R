@@ -1,7 +1,7 @@
 #' Simplify an igraph network such that consecutive linear edges are removed
 #'
-#' - Nodes with degree 2 (or indegree 1 and outdegree 1) are removed: A → B → C becomes A → C
-#' - Cycles contain at least 3 nodes, ie. A → B → A becomes A → B → C → A
+#' - Nodes with degree 2 (or indegree 1 and outdegree 1) are removed: A -> B -> C becomes A -> C
+#' - Cycles contain at least 3 nodes, ie. A -> B -> A becomes A -> B -> C -> A
 #' - Loops are converted to a cycle, unless `allow_self_loops = TRUE`
 #' - Duplicated edges are removed, unless `allow_duplcated_edges = FALSE`
 #'

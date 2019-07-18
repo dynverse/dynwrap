@@ -20,8 +20,8 @@ simplify_igraph_network(gr, allow_duplicated_edges = TRUE,
 }
 \description{
 \itemize{
-\item Nodes with degree 2 (or indegree 1 and outdegree 1) are removed: A → B → C becomes A → C
-\item Cycles contain at least 3 nodes, ie. A → B → A becomes A → B → C → A
+\item Nodes with degree 2 (or indegree 1 and outdegree 1) are removed: A -> B -> C becomes A -> C
+\item Cycles contain at least 3 nodes, ie. A -> B -> A becomes A -> B -> C -> A
 \item Loops are converted to a cycle, unless \code{allow_self_loops = TRUE}
 \item Duplicated edges are removed, unless \code{allow_duplcated_edges = FALSE}
 }
