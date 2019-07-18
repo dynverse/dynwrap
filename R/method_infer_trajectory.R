@@ -1,8 +1,11 @@
 #' Generate a random seed
 #'
-#' ... From the current seed.
+#' From the current seed.
 #'
-#' @noRd
+#' @examples
+#' random_seed()
+#'
+#' @export
 random_seed <- function() {
   sample.int(.Machine$integer.max, 1)
 }
