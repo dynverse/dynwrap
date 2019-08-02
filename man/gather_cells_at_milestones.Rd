@@ -15,4 +15,10 @@ A trajectory where cells where moved to the closest milestone, the milestone_per
 \description{
 Cells will be moved to their closest milestones.
 }
+\examples{
+trajectory <- example_trajectory
+trajectory <- gather_cells_at_milestones(trajectory)
+head(trajectory$milestone_percentages)
+
+}
 \keyword{adapt_trajectory}

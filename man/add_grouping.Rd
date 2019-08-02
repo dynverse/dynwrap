@@ -24,4 +24,14 @@ get_grouping(dataset, grouping = NULL)
 \description{
 Add a cell grouping to a dataset
 }
+\examples{
+dataset <- example_dataset
+
+grouping <- sample(c("A", "B", "C"), length(dataset$cell_ids), replace = TRUE)
+names(grouping) <- dataset$cell_ids
+
+dataset <- add_grouping(dataset, grouping)
+head(dataset$grouping)
+
+}
 \keyword{adapt_trajectory}

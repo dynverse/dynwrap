@@ -13,6 +13,23 @@
 #'
 #' @return A trajectory, with a *root_milestone_id* and with adapted *milestone_network* and *progressions* based on the rooting.
 #'
+#' @examples
+#' # add a root using a root cell
+#' trajectory <- example_trajectory
+#' trajectory <- add_root(
+#'   trajectory,
+#'   root_cell_id = sample(trajectory$cell_ids, 1)
+#' )
+#' trajectory$root_milestone_id
+#'
+#' # add a root using a root milestone id
+#' trajectory <- add_root(
+#'   trajectory,
+#'   root_milestone_id = "milestone_end"
+#' )
+#' trajectory$root_milestone_id
+#' trajectory$milestone_network
+#'
 #' @importFrom purrr map2_int
 #'
 #' @export

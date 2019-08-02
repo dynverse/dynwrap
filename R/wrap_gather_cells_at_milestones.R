@@ -8,6 +8,11 @@
 #'
 #' @keywords adapt_trajectory
 #'
+#' @examples
+#' trajectory <- example_trajectory
+#' trajectory <- gather_cells_at_milestones(trajectory)
+#' head(trajectory$milestone_percentages)
+#'
 #' @export
 gather_cells_at_milestones <- function(trajectory) {
   assert_that(is_wrapper_with_trajectory(trajectory))

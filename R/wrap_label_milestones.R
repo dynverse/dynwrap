@@ -18,6 +18,25 @@
 #'
 #' @keywords adapt_trajectory
 #'
+#' @examples
+#' trajectory <- example_trajectory
+#'
+#' # manual labelling
+#' trajectory <- label_milestones(
+#'   trajectory,
+#'   labelling = c("milestone_begin" = "Let's go")
+#' )
+#' get_milestone_labelling(trajectory)
+#'
+#' # marker gene labelling
+#' trajectory <- label_milestones_markers(
+#'   trajectory,
+#'   markers = list(A_high = "A")
+#' )
+#' get_milestone_labelling(trajectory)
+#'
+#' is_wrapper_with_milestone_labelling(trajectory)
+#'
 #' @export
 label_milestones <- function(trajectory, labelling) {
   milestone_ids <- trajectory$milestone_ids

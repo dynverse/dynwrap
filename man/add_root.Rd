@@ -36,4 +36,22 @@ Designates a milestone as root, and changes the direction of any edges so that t
 \details{
 A \code{root_cell_id} can also be specified, and the root milestone will be determined as the milestone with the closest geodesic distance to this cell.
 }
+\examples{
+# add a root using a root cell
+trajectory <- example_trajectory
+trajectory <- add_root(
+  trajectory,
+  root_cell_id = sample(trajectory$cell_ids, 1)
+)
+trajectory$root_milestone_id
+
+# add a root using a root milestone id
+trajectory <- add_root(
+  trajectory,
+  root_milestone_id = "milestone_end"
+)
+trajectory$root_milestone_id
+trajectory$milestone_network
+
+}
 \keyword{adapt_trajectory}

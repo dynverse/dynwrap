@@ -5,6 +5,7 @@
 #' - The trajectory, by projecting the milestones and some "waypoints" to the reduced space, only if `dataset` contains a trajectory
 #'
 #' @inheritParams common_param
+#' @inheritParams get_expression
 #' @param dimred Can be
 #' - A function which will perform the dimensionality reduction, see [`dyndimred::list_dimred_methods()`][dyndimred::dimred()]
 #' - A matrix with the dimensionality reduction, with cells in rows and dimensions (*comp_1*, *comp_2*, ...) in columns
@@ -26,8 +27,6 @@
 #' - If the dataset contained a trajectory, and `project_trajectory=TRUE` (default), *dimred_milestones*, *dimred_segment_progressions* and *dimred_segment_points* will also be present. These are described in [project_trajectory()].
 #'
 #' @keywords adapt_trajectory
-#'
-#' @inheritParams get_expression
 #'
 #' @examples
 #' dataset <- example_dataset

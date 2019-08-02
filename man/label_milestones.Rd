@@ -40,4 +40,24 @@ get_milestone_labelling(trajectory, label_milestones = NULL)
 \details{
 \code{label_milestones_markers} will assign a label to a milestone if its marker profile most closely resembles a given profile
 }
+\examples{
+trajectory <- example_trajectory
+
+# manual labelling
+trajectory <- label_milestones(
+  trajectory,
+  labelling = c("milestone_begin" = "Let's go")
+)
+get_milestone_labelling(trajectory)
+
+# marker gene labelling
+trajectory <- label_milestones_markers(
+  trajectory,
+  markers = list(A_high = "A")
+)
+get_milestone_labelling(trajectory)
+
+is_wrapper_with_milestone_labelling(trajectory)
+
+}
 \keyword{adapt_trajectory}

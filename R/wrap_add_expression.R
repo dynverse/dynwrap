@@ -10,6 +10,19 @@
 #'
 #' @keywords adapt_trajectory
 #'
+#' @examples
+#' cell_ids <- c("A", "B", "C")
+#' counts <- matrix(sample(0:10, 3*10, replace = TRUE), nrow = 3)
+#' rownames(counts) <- cell_ids
+#' colnames(counts) <- letters[1:10]
+#' expression <- log2(counts + 1)
+#'
+#' dataset <- wrap_data(id = "my_awesome_dataset", cell_ids = cell_ids)
+#' dataset <- add_expression(dataset, counts = counts, expression = expression)
+#'
+#' str(dataset$expression)
+#' str(dataset$counts)
+#'
 #' @export
 #'
 #' @importFrom Matrix Matrix

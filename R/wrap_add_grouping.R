@@ -7,6 +7,15 @@
 #'
 #' @keywords adapt_trajectory
 #'
+#' @examples
+#' dataset <- example_dataset
+#'
+#' grouping <- sample(c("A", "B", "C"), length(dataset$cell_ids), replace = TRUE)
+#' names(grouping) <- dataset$cell_ids
+#'
+#' dataset <- add_grouping(dataset, grouping)
+#' head(dataset$grouping)
+#'
 #' @export
 #'
 #' @importFrom testthat expect_equal expect_is expect_true
