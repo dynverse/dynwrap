@@ -1,3 +1,7 @@
+# dynwrap 1.2 (unreleased)
+
+* DOCUMENTATION: Added examples to all functions
+
 # dynwrap 1.1.4 (27-06-2019)
 
 * BUG FIX: Fixed #142 where the error message was truncated
