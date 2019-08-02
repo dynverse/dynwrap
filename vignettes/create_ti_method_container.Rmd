@@ -16,6 +16,8 @@ dir <- tempdir()
 knitr::opts_knit$set(root.dir = normalizePath(tempdir(), winslash = '/'))
 
 NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true") # don't run some chunks on CRAN
+
+knitr::opts_knit$get("root.dir")
 ```
 
 
@@ -61,7 +63,6 @@ Assuming that the _definition.yml_ and _run.R_ are located in current directory,
 ```{r, echo = FALSE, warning = FALSE}
 docker_file <- paste0(readLines(system.file("examples/docker/Dockerfile", package = "dynwrap")), collapse = "\n")
 
-
 readr::write_file(docker_file, "Dockerfile")
 knitr::asis_output(paste0("```Dockerfile\n", docker_file, "\n```"))
 ```
@@ -90,7 +91,7 @@ docker build -t my_ti_method .
 
 This method can now be loaded inside R using dynwrap
 
-```{r, eval=NOT_CRAN}
+```{r, eval=NOT_CRAN, error=TRUE}
 method <- create_ti_method_container("my_ti_method")
 dataset <- dynwrap::example_dataset
 trajectory <- infer_trajectory(dataset, method(), verbose = TRUE)
@@ -98,7 +99,7 @@ trajectory <- infer_trajectory(dataset, method(), verbose = TRUE)
 
 If you have dynplot installed, you can also plot the trajectory:
 
-```{r, eval=NOT_CRAN}
+```{r, eval=NOT_CRAN, error=TRUE}
 # install dynplot to plot the output
 if ("dynplot" %in% rownames(installed.packages())) {
   dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
@@ -145,7 +146,7 @@ chmod +x example.sh
 ./example.sh example.h5
 ```
 
-```{r, eval=NOT_CRAN}
+```{r, eval=NOT_CRAN, error=TRUE}
 dataset <- dynutils::read_h5("example.h5")
 trajectory <- infer_trajectory(dataset, method())
 ```
