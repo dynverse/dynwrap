@@ -39,9 +39,9 @@ The advantage of using a common model is that it allows:
 
 ## Latest changes
 
-Check out `news(package = "dynwrap")` or [NEWS.md](inst/NEWS.md) for a full list of changes.
+Check out `news(package = "dynwrap")` or [NEWS.md](NEWS.md) for a full list of changes.
 
-<!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
+<!-- This section gets automatically generated from inst/NEWS.md -->
 
 ```{r news, echo=FALSE, results="asis"}
 dynutils::update_news()
