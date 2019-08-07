@@ -44,7 +44,6 @@ Check out `news(package = "dynwrap")` or [NEWS.md](NEWS.md) for a full list of c
 <!-- This section gets automatically generated from inst/NEWS.md -->
 
 ```{r news, echo=FALSE, results="asis"}
-dynutils::update_news()
 cat(dynutils::recent_news())
 ```
 
