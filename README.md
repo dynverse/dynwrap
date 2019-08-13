@@ -45,11 +45,11 @@ The advantage of using a common model is that it allows:
 
 ## Latest changes
 
-Check out `news(package = "dynwrap")` or [NEWS.md](inst/NEWS.md) for a
+Check out `news(package = "dynwrap")` or [NEWS.md](NEWS.md) for a
 full list of
 changes.
 
-<!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
+<!-- This section gets automatically generated from inst/NEWS.md -->
 
 ### Recent changes in dynwrap 1.1.4 (27-06-2019)
 
