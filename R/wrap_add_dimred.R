@@ -290,10 +290,19 @@ dimred_merged <- function(dimred, expression, expression_projected) {
 
 
 merge_projected <- function(expression, expression_projected) {
+  # often, not all features are used to calculate the projected expression
+  # this is because enough spliced and unspliced reads need to be present
+  # this means that there are often more features in expression than in expression_projected
+  # we only use the common set of features here
   rownames(expression_projected) <- paste0(rownames(expression_projected), "###PROJECTED")
+  feature_ids <- intersect(colnames(expression), colnames(expression_projected))
+  if (length(feature_ids) == 0) {
+    stop("No common features between expression and expression_projected")
+  }
+
   rbind(
-    expression,
-    expression_projected
+    expression[, feature_ids],
+    expression_projected[, feature_ids]
   )
 }
 split_projected <- function(merged, cell_ids = str_subset(rownames(merged), ".*###PROJECTED", negate = TRUE)) {
