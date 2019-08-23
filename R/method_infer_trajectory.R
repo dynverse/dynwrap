@@ -71,7 +71,7 @@ infer_trajectories <- function(
   method,
   parameters = NULL,
   give_priors = NULL,
-  seed = dynutils::random_seed(),
+  seed = random_seed(),
   verbose = FALSE,
   return_verbose = FALSE,
   debug = FALSE,
