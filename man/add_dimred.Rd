@@ -15,7 +15,8 @@ add_dimred(dataset, dimred, dimred_projected = NULL,
 
 is_wrapper_with_dimred(dataset)
 
-get_dimred(dataset, dimred = NULL, expression_source = "expression")
+get_dimred(dataset, dimred = NULL, expression_source = "expression",
+  return_other_dimreds = FALSE)
 }
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
@@ -45,6 +46,8 @@ These will be automatically calculated if \code{project_trajectory = TRUE}}
 \item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another dataset which contains expression}
 
 \item{...}{extra information to be stored in the wrapper}
+
+\item{return_other_dimreds}{Whether or not to return also the milestone dimreds and the segment dimreds, if available.}
 }
 \value{
 A dataset object with \emph{dimred}, which is a numeric matrix with cells in rows and the different components in columns.
