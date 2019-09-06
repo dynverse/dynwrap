@@ -306,20 +306,11 @@ convert_definition <- function(definition_raw) {
 # else, assume this is already a correct definition and just return
 .method_load_definition <- function(definition) {
   if (is.character(definition)) {
-    read_definition(definition)
+    assert_that(is.character(definition), length(definition) == 1)
+    convert_definition(yaml::read_yaml(definition))
   } else {
     definition
   }
-}
-
-#' Read a definition from a yaml file
-#'
-#' @param file The file name
-#'
-#' @export
-read_definition <- function(file) {
-  assert_that(is.character(file), length(file) == 1)
-  convert_definition(yaml::read_yaml(file))
 }
 
 #' Method process definition
