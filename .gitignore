@@ -7,3 +7,5 @@
 inst/doc
 .DS_Store
 *.simg
+functions.R
+scripts

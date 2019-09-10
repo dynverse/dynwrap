@@ -306,13 +306,12 @@ convert_definition <- function(definition_raw) {
 # else, assume this is already a correct definition and just return
 .method_load_definition <- function(definition) {
   if (is.character(definition)) {
-    assert_that(length(definition) == 1)
+    assert_that(is.character(definition), length(definition) == 1)
     convert_definition(yaml::read_yaml(definition))
   } else {
     definition
   }
 }
-
 
 #' Method process definition
 #' @param definition A definition, see [definition()]

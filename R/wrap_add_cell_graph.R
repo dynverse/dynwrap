@@ -1,33 +1,33 @@
 #' Constructs a trajectory using a graph between cells, by mapping cells onto a set of backbone cells.
 #'
-#' This function will generate the milestone_network and progressions.
+#' The cells that are part of the backbone will form the trajectory. All other cells are moved towards the nearest cell that is part of the backbone.
 #'
+#' @inherit add_trajectory return
 #' @inheritParams common_param
-#' @param cell_graph The edges between cells. Format: Data frame(from = character, to = character, length(optional) = numeric, directed(optional) = logical)
-#' @param to_keep A character vector with the identifiers of the backbone cells. Alternatively, a named boolean vector whether a cell is from the backbone
+#' @param cell_graph The edges between cells, a dataframe containing the *from* and *to* cells, the *length, and whether this edge is *directed*
+#' @param to_keep Whether a cells is part of the backbone. May be a character vector with the identifiers of the backbone cells, or a named boolean vector whether a cell is from the backbone
 #' @param milestone_prefix A prefix to add to the id of the cell ids when they are used as milestones, in order to avoid any naming conflicts,
 #' @param ... extra information to be stored in the wrapper.
 #'
 #' @export
 #'
-#' @return The trajectory
+#' @inherit add_trajectory return
 #'
 #' @keywords create_trajectory
 #'
 #' @importFrom testthat expect_is expect_true expect_equal
 #'
 #' @examples
-#' library(tibble)
 #' library(dplyr)
 #' dataset <- wrap_data(cell_ids = letters)
 #'
-#' backbone_cell_graph <- tibble(
+#' backbone_cell_graph <- tibble::tibble(
 #'   from = letters[1:10],
 #'   to = letters[2:11],
 #'   length = 1,
 #'   directed = TRUE
 #' )
-#' leaves_cell_graph <- tibble(
+#' leaves_cell_graph <- tibble::tibble(
 #'   from = letters[12:26],
 #'   to = sample(letters[1:11], 15, replace = TRUE),
 #'   length = 1,

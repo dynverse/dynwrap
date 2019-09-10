@@ -27,7 +27,31 @@ is_rooted(trajectory)
 
 \item{expression_source}{Source of the expression, either a string or a matrix}
 }
+\value{
+A trajectory, with a \emph{root_milestone_id} and with adapted \emph{milestone_network} and \emph{progressions} based on the rooting.
+}
 \description{
-Roots the trajectory by changing the directionality of all edges given a root cell
+Designates a milestone as root, and changes the direction of any edges so that they move away from the specified root (if \code{flip_edges=TRUE}, default).
+}
+\details{
+A \code{root_cell_id} can also be specified, and the root milestone will be determined as the milestone with the closest geodesic distance to this cell.
+}
+\examples{
+# add a root using a root cell
+trajectory <- example_trajectory
+trajectory <- add_root(
+  trajectory,
+  root_cell_id = sample(trajectory$cell_ids, 1)
+)
+trajectory$root_milestone_id
+
+# add a root using a root milestone id
+trajectory <- add_root(
+  trajectory,
+  root_milestone_id = "milestone_end"
+)
+trajectory$root_milestone_id
+trajectory$milestone_network
+
 }
 \keyword{adapt_trajectory}

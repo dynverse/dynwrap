@@ -11,4 +11,8 @@ trajectory_types
 \description{
 Metadata on the trajectory types
 }
+\examples{
+trajectory_types
+
+}
 \keyword{create_ti_method}

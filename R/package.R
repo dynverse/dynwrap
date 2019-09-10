@@ -1,4 +1,6 @@
-#' This R package contains the code for a common model of single-cell trajectories.
+#' Inferring and adapting single-cell trajectories
+#'
+#' ![](logo.png)
 #'
 #' @import dplyr
 #' @import tidyr

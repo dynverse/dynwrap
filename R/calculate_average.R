@@ -1,19 +1,24 @@
-#' Calculate mean values per cell group
+#' Calculate average values of a matrix
+#'
+#' `calculate_average_by_group` will calculate an average value per group, given a matrix with cells in the rows and some features in the columns (e.g. expression matrix)
 #'
 #' @param x A matrix. One row for every cell; one column for every feature. The rows must be named.
 #' @param cell_grouping A data frame denoting the grouping of the cells.
 #'  Format: `tibble(cell_id = character(), group_id = character())`.
+#'
+#' @return A matrix containing for each feature (column) the average
 #'
 #' @keywords derive_trajectory
 #'
 #' @export
 #'
 #' @examples
-#' data(example_dataset)
 #' calculate_average_by_group(
-#'   x = example_dataset$expression,
-#'   cell_grouping = example_dataset$prior_information$groups_id
+#'   x = example_trajectory$expression,
+#'   cell_grouping = example_trajectory$prior_information$groups_id
 #' )
+#'
+#' @rdname calculate_average
 calculate_average_by_group <- function(x, cell_grouping) {
   milestone_percentages <-
     cell_grouping %>%
@@ -23,29 +28,6 @@ calculate_average_by_group <- function(x, cell_grouping) {
   calculate_average_by_milestone_percentages(x, milestone_percentages)
 }
 
-
-
-
-
-#' Calculate mean values by milestone percentages
-#'
-#' @param x A matrix. One row for every cell; one column for every feature. The rows must be named.
-#' @param milestone_percentages A data frame of milestone percentages.
-#'  Format: `tibble(cell_id = character(), milestone_id = character(), percentage = numeric())`.
-#'
-#' @keywords derive_trajectory
-#'
-#' @importFrom reshape2 acast
-#' @importFrom testthat expect_equal expect_true
-#'
-#' @export
-#'
-#' @examples
-#' data(example_dataset)
-#' calculate_average_by_milestone_percentages(
-#'   x = example_dataset$expression,
-#'   milestone_percentages = example_dataset$milestone_percentages
-#' )
 calculate_average_by_milestone_percentages <- function(x, milestone_percentages) {
   # cast milestone percentages to matrix
   milpct_m <- milestone_percentages %>%
@@ -63,4 +45,3 @@ calculate_average_by_milestone_percentages <- function(x, milestone_percentages)
 
   t(milpct_m) %*% x
 }
-

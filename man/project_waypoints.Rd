@@ -2,7 +2,7 @@
 % Please edit documentation in R/project_waypoints.R
 \name{project_waypoints}
 \alias{project_waypoints}
-\title{Project waypoints within a trajectory (e.g. milestones) into a space defined by cells (e.g. expression)}
+\title{Project waypoints of a trajectory (e.g. milestones) into a space defined by cells (e.g. expression or a dimensionality reduction)}
 \usage{
 project_waypoints(trajectory, space,
   waypoints = dynwrap::select_waypoints(trajectory),
@@ -14,19 +14,18 @@ project_waypoints(trajectory, space,
 
 \item{space}{A matrix with cells in rows and different dimensions in the columns. This is typically an expression matrix or a dimensionality reduction}
 
-\item{waypoints}{A list containing:
+\item{waypoints}{A set of waypoints, which can be created by \code{\link[=add_waypoints]{select_waypoints()}}. It is a list containing:
 \itemize{
 \item \code{waypoints}: a dataframe containing in the very least the waypoint_id
 \item \code{milestone_percentages}: the positions of waypoints withing the trajectory
 \item \code{geodesic_distances}: matrix with precalculated geodesic distances between waypoints (rows) and cells (columns), optional
-A set of suitable waypoints can be created \code{\link[dynwrap:select_waypoints]{dynwrap::select_waypoints()}}
 }}
 
 \item{trajectory_projection_sd}{The standard deviation of the gaussian kernel}
 }
 \value{
-A matrix with waypoints in rows and dimensions in the columns.
+A matrix in which the waypoints (rows) were projected into a new space defined by the same number of dimensions (columns) as in the \code{space} argument
 }
 \description{
-Project waypoints within a trajectory (e.g. milestones) into a space defined by cells (e.g. expression)
+This will first calculate the geodesic distance of each cell to the waypoint. This distance is used as a weight
 }

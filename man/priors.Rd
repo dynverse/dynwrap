@@ -11,4 +11,8 @@ priors
 \description{
 Metadata on priors
 }
+\examples{
+priors
+
+}
 \keyword{create_ti_method}

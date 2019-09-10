@@ -8,39 +8,71 @@
 \usage{
 add_dimred(dataset, dimred, dimred_projected = NULL,
   dimred_milestones = NULL, dimred_segment_progressions = NULL,
-  dimred_segment_points = NULL, connect_segments = FALSE,
-  project_trajectory = TRUE,
+  dimred_segment_points = NULL, project_trajectory = TRUE,
+  connect_segments = FALSE,
   pair_with_velocity = !is.null(dataset$expression_projected),
   expression_source = "expression", ...)
 
 is_wrapper_with_dimred(dataset)
 
-get_dimred(dataset, dimred = NULL, expression_source = "expression")
+get_dimred(dataset, dimred = NULL, expression_source = "expression",
+  return_other_dimreds = FALSE)
 }
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
-\item{dimred}{The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction}
+\item{dimred}{Can be
+\itemize{
+\item A function which will perform the dimensionality reduction, see \code{\link[dyndimred:dimred]{dyndimred::list_dimred_methods()}}
+\item A matrix with the dimensionality reduction, with cells in rows and dimensions (\emph{comp_1}, \emph{comp_2}, ...) in columns
+}}
 
-\item{dimred_projected}{An optional dimensionality reduction of the projected cells (RNA velocity).}
+\item{dimred_projected}{An optional dimensionality reduction of the projected cells (RNA velocity). A matrix with cells in rows and components (\emph{comp_1}, \emph{comp_2}, ...) in columns}
 
-\item{dimred_milestones}{An optional dimensionality reduction of the milestones.}
+\item{dimred_milestones}{An optional dimensionality reduction of the milestones. A matrix with milestones in rows and components (\emph{comp_1}, \emph{comp_2}, ...) in columns
 
-\item{dimred_segment_progressions}{An optional progression matrix of the trajectory segments. Format: \code{tibble(from, to, percentage)}}
+This will be automatically calculated if \code{project_trajectory = TRUE}}
 
-\item{dimred_segment_points}{An optional dimensionality reduction of the trajectory segments. Format: \code{matrix(comp_1, comp_2, ...)}.}
+\item{dimred_segment_progressions, dimred_segment_points}{An optional set of points along the trajectory with their dimensionality reduction. \code{dimred_segment_progressions} is a dataframe containing the \emph{from} and \emph{to} milestones, and their \emph{progression}. \code{dimred_segment_points} is a matrix with points (the same number as in \code{dimred_segment_progressions}) in rows and components (\emph{comp_1}, \emph{comp_2}, ...) in columns. Both objects have the same number of rows.
 
-\item{connect_segments}{Whether to connect segments between edges}
+These will be automatically calculated if \code{project_trajectory = TRUE}}
 
 \item{project_trajectory}{Whether to also project the trajectory. Only relevant if dataset contains a trajectory, and dimred_segment_progressions and dimred_segment_points are not provided}
 
-\item{pair_with_velocity}{Whether to use the velocity vectors for dimensionality reduction}
+\item{connect_segments}{Whether to connect segments between edges}
+
+\item{pair_with_velocity}{Whether to generate a paired dimensionality reduction with the projected expression.}
 
 \item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another dataset which contains expression}
 
 \item{...}{extra information to be stored in the wrapper}
+
+\item{return_other_dimreds}{Whether or not to return also the milestone dimreds and the segment dimreds, if available.}
+}
+\value{
+A dataset object with \emph{dimred}, which is a numeric matrix with cells in rows and the different components in columns.
+\itemize{
+\item If the dataset contained projected expression, \emph{dimred_projected} will also be present, which contains dimensionality reduction of the projected cells. It is a matrix with the locations of projected cells (rows) in the dimensions (columns)
+\item If the dataset contained a trajectory, and \code{project_trajectory=TRUE} (default), \emph{dimred_milestones}, \emph{dimred_segment_progressions} and \emph{dimred_segment_points} will also be present. These are described in \code{\link[=project_trajectory]{project_trajectory()}}.
+}
 }
 \description{
-Add or create a dimensionality reduction
+This can also perform dimensionality reduction of
+\itemize{
+\item The projected expression state with RNA velocity, only if \code{dimred} is a function and  \code{pair_with_velocity=TRUE}
+\item The trajectory, by projecting the milestones and some "waypoints" to the reduced space, only if \code{dataset} contains a trajectory
+}
+}
+\examples{
+dataset <- example_dataset
+dataset <- add_dimred(
+  dataset,
+  dyndimred::dimred_landmark_mds
+)
+head(dataset$dimred)
+
+}
+\seealso{
+\code{\link[dyndimred:list_dimred_methods]{dyndimred::list_dimred_methods()}}, \code{\link[=project_trajectory]{project_trajectory()}}
 }
 \keyword{adapt_trajectory}

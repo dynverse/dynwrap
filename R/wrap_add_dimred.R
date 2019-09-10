@@ -1,19 +1,42 @@
 #' Add or create a dimensionality reduction
 #'
+#' This can also perform dimensionality reduction of
+#' - The projected expression state with RNA velocity, only if `dimred` is a function and  `pair_with_velocity=TRUE`
+#' - The trajectory, by projecting the milestones and some "waypoints" to the reduced space, only if `dataset` contains a trajectory
+#'
 #' @inheritParams common_param
-#' @param dimred The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction
-#' @param dimred_projected An optional dimensionality reduction of the projected cells (RNA velocity).
-#' @param dimred_milestones An optional dimensionality reduction of the milestones.
-#' @param dimred_segment_progressions An optional progression matrix of the trajectory segments. Format: `tibble(from, to, percentage)`
-#' @param dimred_segment_points An optional dimensionality reduction of the trajectory segments. Format: `matrix(comp_1, comp_2, ...)`.
-#' @param connect_segments Whether to connect segments between edges
+#' @inheritParams get_expression
+#' @param dimred Can be
+#' - A function which will perform the dimensionality reduction, see [`dyndimred::list_dimred_methods()`][dyndimred::dimred()]
+#' - A matrix with the dimensionality reduction, with cells in rows and dimensions (*comp_1*, *comp_2*, ...) in columns
+#' @param dimred_projected An optional dimensionality reduction of the projected cells (RNA velocity). A matrix with cells in rows and components (*comp_1*, *comp_2*, ...) in columns
+#' @param dimred_milestones An optional dimensionality reduction of the milestones. A matrix with milestones in rows and components (*comp_1*, *comp_2*, ...) in columns
+#'
+#' This will be automatically calculated if `project_trajectory = TRUE`
+#' @param dimred_segment_progressions,dimred_segment_points An optional set of points along the trajectory with their dimensionality reduction. `dimred_segment_progressions` is a dataframe containing the *from* and *to* milestones, and their *progression*. `dimred_segment_points` is a matrix with points (the same number as in `dimred_segment_progressions`) in rows and components (*comp_1*, *comp_2*, ...) in columns. Both objects have the same number of rows.
+#'
+#' These will be automatically calculated if `project_trajectory = TRUE`
 #' @param project_trajectory Whether to also project the trajectory. Only relevant if dataset contains a trajectory, and dimred_segment_progressions and dimred_segment_points are not provided
-#' @param pair_with_velocity Whether to use the velocity vectors for dimensionality reduction
+#' @param connect_segments Whether to connect segments between edges
+#' @param pair_with_velocity Whether to generate a paired dimensionality reduction with the projected expression.
 #' @param ... extra information to be stored in the wrapper
+#'
+#' @return
+#' A dataset object with *dimred*, which is a numeric matrix with cells in rows and the different components in columns.
+#' - If the dataset contained projected expression, *dimred_projected* will also be present, which contains dimensionality reduction of the projected cells. It is a matrix with the locations of projected cells (rows) in the dimensions (columns)
+#' - If the dataset contained a trajectory, and `project_trajectory=TRUE` (default), *dimred_milestones*, *dimred_segment_progressions* and *dimred_segment_points* will also be present. These are described in [project_trajectory()].
 #'
 #' @keywords adapt_trajectory
 #'
-#' @inheritParams get_expression
+#' @examples
+#' dataset <- example_dataset
+#' dataset <- add_dimred(
+#'   dataset,
+#'   dyndimred::dimred_landmark_mds
+#' )
+#' head(dataset$dimred)
+#'
+#' @seealso [dyndimred::list_dimred_methods()], [project_trajectory()]
 #'
 #' @export
 add_dimred <- function(
@@ -23,8 +46,8 @@ add_dimred <- function(
   dimred_milestones = NULL,
   dimred_segment_progressions = NULL,
   dimred_segment_points = NULL,
-  connect_segments = FALSE,
   project_trajectory = TRUE,
+  connect_segments = FALSE,
   pair_with_velocity = !is.null(dataset$expression_projected),
   expression_source = "expression",
   ...
@@ -118,8 +141,11 @@ is_wrapper_with_dimred <- function(dataset) {
 }
 
 #' @rdname add_dimred
+#' @param return_other_dimreds Whether or not to return also the milestone dimreds and the segment dimreds, if available.
 #' @export
-get_dimred <- function(dataset, dimred = NULL, expression_source = "expression") {
+get_dimred <- function(dataset, dimred = NULL, expression_source = "expression", return_other_dimreds = FALSE) {
+  extra_out <- NULL
+
   if(is.function(dimred)) {
     # function -> calculate dimensionality reduction
     expression <- get_expression(dataset, expression_source)
@@ -154,6 +180,34 @@ get_dimred <- function(dataset, dimred = NULL, expression_source = "expression")
       dimred <- dataset$dimred[[dimred]]
     } else {
       dimred <- dataset$dimred
+
+      if (return_other_dimreds) {
+        extra_out <- list()
+
+        if (!is.null(dataset$dimred_milestones)) {
+          dimred_milestones <- dataset$dimred_milestones
+          colnames(dimred_milestones) <-
+            paste0("comp_", seq_len(ncol(dimred_milestones)))
+          extra_out$dimred_milestones <- dimred_milestones
+        }
+
+        if (!is.null(dataset$dimred_segment_progressions) && !is.null(dataset$dimred_segment_points)) {
+          dimred_segment_points <- dataset$dimred_segment_points
+          dimred_segment_progressions <- dataset$dimred_segment_progressions
+          colnames(dimred_segment_points) <-
+            paste0("comp_", seq_len(ncol(dimred_segment_points)))
+          extra_out$dimred_segment_points <- dimred_segment_points
+          extra_out$dimred_segment_progressions <- dimred_segment_progressions
+        }
+
+        if (!is.null(dataset$dimred_projected)) {
+          dimred_projected <- dataset$dimred_projected
+          colnames(dimred_projected) <-
+            paste0("comp_", seq_len(ncol(dimred_projected)))
+          extra_out$dimred_projected <- dimred_projected
+        }
+
+      }
     }
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   } else {
@@ -162,6 +216,10 @@ get_dimred <- function(dataset, dimred = NULL, expression_source = "expression")
 
   # make sure the rownames are in the correct order
   dimred <- dimred[dataset$cell_ids, ]
+
+  if (!is.null(extra_out)) {
+    attr(dimred, "extra") <- extra_out
+  }
 
   dimred
 }
@@ -267,10 +325,19 @@ dimred_merged <- function(dimred, expression, expression_projected) {
 
 
 merge_projected <- function(expression, expression_projected) {
+  # often, not all features are used to calculate the projected expression
+  # this is because enough spliced and unspliced reads need to be present
+  # this means that there are often more features in expression than in expression_projected
+  # we only use the common set of features here
   rownames(expression_projected) <- paste0(rownames(expression_projected), "###PROJECTED")
+  feature_ids <- intersect(colnames(expression), colnames(expression_projected))
+  if (length(feature_ids) == 0) {
+    stop("No common features between expression and expression_projected")
+  }
+
   rbind(
-    expression,
-    expression_projected
+    expression[, feature_ids],
+    expression_projected[, feature_ids]
   )
 }
 split_projected <- function(merged, cell_ids = str_subset(rownames(merged), ".*###PROJECTED", negate = TRUE)) {

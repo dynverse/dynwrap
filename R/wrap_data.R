@@ -1,13 +1,21 @@
 #' A data wrapper for datasets and trajectories
 #'
 #' @param id A unique identifier for the data. If `NULL`, a random string will be generated.
-#' @param cell_ids The ids of the cells.
+#' @param cell_ids The identifiers of the cells.
 #' @param cell_info Optional meta-information pertaining the cells.
 #' @param ... Extra information to be stored in the wrapper.
+#'
+#' @return A list containing *id*, *cell_ids* and *cell_info* (if specified)
 #'
 #' @keywords create_trajectory
 #'
 #' @export
+#'
+#' @examples
+#' dataset <- wrap_data(
+#'   cell_ids = c("A", "B", "C")
+#' )
+#' dataset$cell_ids
 #'
 #' @importFrom testthat expect_is expect_length expect_equal
 wrap_data <- function(

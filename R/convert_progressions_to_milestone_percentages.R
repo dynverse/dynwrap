@@ -1,8 +1,5 @@
-#' Convert progressions to milestone percentages
-#' @param cell_ids Vector of all cell ids
-#' @param milestone_ids Vector of milestone ids
-#' @param milestone_network Milestone network
-#' @param progressions Progressions dataframe
+#' @rdname convert_milestone_percentages_to_progressions
+#'
 #' @export
 convert_progressions_to_milestone_percentages <- function(
   cell_ids,

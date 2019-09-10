@@ -1,33 +1,30 @@
-#' Multifurcating trajectory with end state probabilities
+#' Constructs a multifurcating trajectory using end state probabilities
 #'
 #' Constructs a multifurcating trajectory using the pseudotime values of each cell and their end state probabilities.
 #' If pseudotime values are not given, will use pseudotime already present in the dataset.
 #'
-#' This function will generate the milestone_network and progressions.
-#'
 #' @inheritParams common_param
 #' @param pseudotime A named vector of pseudo times.
-#' @param end_state_probabilities A dataframe containing cell_id (character) and additional numeric columns containing the probability for every end milestone. If the tibble contains only a cell_id column, the data will be processed using `add_linear_trajectory`
+#' @param end_state_probabilities A dataframe containing the *cell_id* and additional numeric columns containing the probability for every end milestone. If the tibble contains only a cell_id column, the data will be processed using `add_linear_trajectory`
 #' @param do_scale_minmax Whether or not to scale the pseudotime between 0 and 1.
 #'   Otherwise, will assume the values are already within that range.
 #' @param ... Extras to be added to the trajectory
 #'
-#' @keywords create_trajectory
+#' @inherit add_trajectory return
 #'
-#' @return The trajectory
+#' @keywords create_trajectory
 #'
 #' @export
 #'
 #' @importFrom testthat expect_true
 #'
 #' @examples
-#' library(tibble)
 #' dataset <- wrap_data(cell_ids = letters)
 #'
 #' pseudotime <- runif(length(dataset$cell_ids))
 #' names(pseudotime) <- dataset$cell_ids
 #' pseudotime
-#' end_state_probabilities <- tibble(
+#' end_state_probabilities <- tibble::tibble(
 #'   cell_id = dataset$cell_ids,
 #'   A = runif(length(dataset$cell_ids)),
 #'   B = 1-A

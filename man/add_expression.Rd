@@ -16,13 +16,13 @@ get_expression(dataset, expression_source = "expression")
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
-\item{counts}{The counts with genes in columns and cells in rows}
+\item{counts}{The counts values of genes (columns) within cells (rows). This can be both a dense and sparse matrix.}
 
-\item{expression}{The normalised expression values with genes in columns and cells in rows}
+\item{expression}{The normalised expression values of genes (columns) within cells (rows). This can be both a dense and sparse matrix.}
 
-\item{feature_info}{Optional meta-information of the features, a data.frame with at least feature_id as column}
+\item{feature_info}{Optional meta-information of the features, a dataframe with at least \emph{feature_id} as column}
 
-\item{expression_projected}{Projected expression using RNA velocity}
+\item{expression_projected}{Projected expression using RNA velocity of genes (columns) within cells (rows).  This can be both a dense and sparse matrix.}
 
 \item{...}{extra information to be stored in the dataset}
 
@@ -30,5 +30,19 @@ get_expression(dataset, expression_source = "expression")
 }
 \description{
 Add count and normalised expression values to a dataset
+}
+\examples{
+cell_ids <- c("A", "B", "C")
+counts <- matrix(sample(0:10, 3*10, replace = TRUE), nrow = 3)
+rownames(counts) <- cell_ids
+colnames(counts) <- letters[1:10]
+expression <- log2(counts + 1)
+
+dataset <- wrap_data(id = "my_awesome_dataset", cell_ids = cell_ids)
+dataset <- add_expression(dataset, counts = counts, expression = expression)
+
+str(dataset$expression)
+str(dataset$counts)
+
 }
 \keyword{adapt_trajectory}

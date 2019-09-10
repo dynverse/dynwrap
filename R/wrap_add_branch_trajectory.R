@@ -1,29 +1,29 @@
-#' Create a trajectory given its branch network and the pseudotime of the cells on one of the branches
+#' Construct a trajectory given its branch network and the pseudotime of the cells on one of the branches.
+#'
+#' The branch network is converted to a milestone network by giving each branch a start and end milestone. If two branches are connected in the branch network, the end milestone of branch 1 and start milestone of branch 2 will be merged.
+#'
+#' The resulting trajectory will always be directed.
 #'
 #' @inheritParams common_param
-#' @param branch_network The network between branches
-#'   Type: Data frame(from = charactor, to = character)
-#' @param branches The length and directedness of the branches
-#'   Type: Data frame(branch_id = character, length = numeric, directed = logical)
-#' @param branch_progressions Specifies the progression of a cell along a transition in the branch network.
-#'   Type: Data frame(cell_id = character, branch_id = character, percentage = numeric).
+#' @param branch_network The network between branches, a dataframe with a *from* and *to* branch identifier
+#' @param branches The length and directedness of the branches, a dataframe with the branch identifier (*branch_id*), the length of the branch (*length*) and whether it is *directed*
+#' @param branch_progressions Specifies the progression of a cell along a transition in the branch network. A dataframe containing the *cell_id*, *branch_id* and its progression along the edge (*percentage*, between 0 and 1)
 #' @param ... extra information to be stored in the trajectory
 #'
-#' @return The trajectory
+#' @inherit add_trajectory return
 #'
 #' @keywords create_trajectory
 #'
 #' @export
 #'
 #' @examples
-#' library(tibble)
 #' dataset <- wrap_data(cell_ids = letters)
 #'
-#' branch_network <- tibble(from = c("A", "A"), to = c("B", "C"))
+#' branch_network <- tibble::tibble(from = c("A", "A"), to = c("B", "C"))
 #' branch_network
-#' branches <- tibble(branch_id = c("A", "B", "C"), length = 1, directed = TRUE)
+#' branches <- tibble::tibble(branch_id = c("A", "B", "C"), length = 1, directed = TRUE)
 #' branches
-#' branch_progressions <- tibble(
+#' branch_progressions <- tibble::tibble(
 #'   cell_id = dataset$cell_ids,
 #'   branch_id = sample(branches$branch_id, length(dataset$cell_ids), replace = TRUE),
 #'   percentage = runif(length(dataset$cell_ids))

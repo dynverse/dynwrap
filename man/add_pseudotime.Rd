@@ -12,9 +12,15 @@ add_pseudotime(trajectory, pseudotime = NULL)
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
-\item{pseudotime}{Named vector containing the pseudotime for every cell}
+\item{pseudotime}{Named vector containing the pseudotime for every cell. If not given, the pseudotime will be calculated.}
+}
+\value{
+The trajectory with \emph{pseudotime} added, which is a named vector containing the pseudotime values for every cell.
 }
 \description{
-Add or calculate pseudotime as distance from the root
+When calculating the pseudotime, the trajectory is expected to be rooted (see \code{\link[=add_root]{add_root()}})
+}
+\seealso{
+\code{\link[=add_root]{add_root()}}, \code{\link[=add_linear_trajectory]{add_linear_trajectory()}}
 }
 \keyword{derive_trajectory}

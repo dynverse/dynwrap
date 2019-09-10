@@ -1,11 +1,20 @@
 #' Add a cell grouping to a dataset
 #'
 #' @inheritParams common_param
-#' @param grouping A grouping of the cells, can be a named vector or a dataframe with group_id (character) and cell_id (character)
-#' @param group_ids All group_ids, optional
+#' @param grouping A grouping of the cells, can be a named vector or a dataframe with *group_id* and *cell_id*
+#' @param group_ids All group identifiers, optional
 #' @param ... Extra information to be stored in the dataset
 #'
 #' @keywords adapt_trajectory
+#'
+#' @examples
+#' dataset <- example_dataset
+#'
+#' grouping <- sample(c("A", "B", "C"), length(dataset$cell_ids), replace = TRUE)
+#' names(grouping) <- dataset$cell_ids
+#'
+#' dataset <- add_grouping(dataset, grouping)
+#' head(dataset$grouping)
 #'
 #' @export
 #'
@@ -22,7 +31,7 @@ add_grouping <- function(
   # if grouping not provided, have to calculate group_ids here
   if(is.null(group_ids)) group_ids <- unique(grouping)
 
-  #
+  # assume grouping is in the same order
   if(length(names(grouping)) != length(grouping)) {
     names(grouping) <- dataset$cell_ids
   }
@@ -40,11 +49,6 @@ add_grouping <- function(
 
   testthat::expect_true(all(names(grouping) %in% dataset$cell_ids))
   testthat::expect_true(all(grouping[!is.na(grouping)] %in% group_ids))
-
-  # check milestone ids, if data contains a trajectory
-  if (is_wrapper_with_trajectory(dataset)) {
-    testthat::expect_equal(dataset$milestone_ids, group_ids)
-  }
 
   # create output structure
   dataset %>% extend_with(

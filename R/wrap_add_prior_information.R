@@ -1,7 +1,8 @@
-#' Add prior information to a data wrapper
+#' Add or compuate prior information for a trajectory
 #'
-#' Note that the given data wrapper requires a trajectory and expression values
-#' to have been added already.
+#' If you specify
+#'
+#' If the dataset contains a trajectory (see [add_trajectory()]) and expression data, this function will compute and add prior information using [generate_prior_information()]
 #'
 #' @inheritParams common_param
 #' @param start_id The start cells
@@ -18,6 +19,17 @@
 #' @param verbose Whether or not to print informative messages
 #'
 #' @keywords infer_trajectory
+#'
+#' @examples
+#' # add some prior information manually
+#' dataset <- example_dataset
+#' dataset <- add_prior_information(dataset, start_id = "Cell1")
+#' dataset$prior_information$start_id
+#'
+#' # compute prior information from a trajectory
+#' trajectory <- example_trajectory
+#' trajectory <- add_prior_information(trajectory)
+#' trajectory$prior_information$end_id
 #'
 #' @export
 #'
@@ -88,7 +100,7 @@ add_prior_information <- function(
     if (verbose) cat("Calculating prior information using trajectory\n")
 
     # compute prior information and add it to the wrapper
-    prior_information <-
+    calculated_prior_information <-
       with(dataset, generate_prior_information(
         cell_ids = cell_ids,
         milestone_ids = milestone_ids,
@@ -102,6 +114,8 @@ add_prior_information <- function(
         given = prior_information,
         verbose = verbose
       ))
+
+    prior_information <- purrr::list_modify(calculated_prior_information, !!!prior_information)
   }
 
   dataset %>% extend_with(

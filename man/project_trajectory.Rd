@@ -2,27 +2,39 @@
 % Please edit documentation in R/project_waypoints.R
 \name{project_trajectory}
 \alias{project_trajectory}
-\title{Project a trajectory onto a dimensionality reduction using waypoints}
+\alias{project_milestones}
+\title{Project a trajectory onto a dimensionality reduction}
 \usage{
 project_trajectory(trajectory, dimred,
   waypoints = select_waypoints(trajectory))
+
+project_milestones(trajectory, dimred)
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
-\item{dimred}{The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction}
+\item{dimred}{The dimensionality reduction of the cells. A matrix with the positions of cells (rows) in the dimensions (columns)}
 
-\item{waypoints}{A list containing:
+\item{waypoints}{A set of waypoints, which can be created by \code{\link[=add_waypoints]{select_waypoints()}}. It is a list containing:
 \itemize{
 \item \code{waypoints}: a dataframe containing in the very least the waypoint_id
 \item \code{milestone_percentages}: the positions of waypoints withing the trajectory
 \item \code{geodesic_distances}: matrix with precalculated geodesic distances between waypoints (rows) and cells (columns), optional
-A set of suitable waypoints can be created \code{\link[dynwrap:select_waypoints]{dynwrap::select_waypoints()}}
 }}
 }
 \value{
-A list containing dimred_segment_points and dimred_segment_progressions, which can be given to \code{\link[=add_dimred]{add_dimred()}}
+A list containing
+\itemize{
+\item \emph{dimred_segment_points}: The dimensionality reduction of a set of points along the trajectory. A matrix with the position of points (rows) in the dimensions (columns)
+\item \emph{dimred_segment_progressions} The progressions of the points. A dataframe containing the \emph{from} and \emph{to} milestones, and their \emph{progression}. Has the same number of rows as \emph{dimred_segment_points}
+\item \emph{dimred_milestones}: The dimensionality reduction of the milestones. A matrix with the position of milestones (rows) in the dimensions (columns)
+}
+
+These objects can be given to \code{\link[=add_dimred]{add_dimred()}}
 }
 \description{
-Project a trajectory onto a dimensionality reduction using waypoints
+Project a trajectory onto a dimensionality reduction
+}
+\seealso{
+\code{\link[=add_dimred]{add_dimred()}}
 }

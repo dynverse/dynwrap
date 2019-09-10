@@ -1,6 +1,11 @@
 #' Simplify an igraph network such that consecutive linear edges are removed
 #'
-#' @param gr an igraph object
+#' - Nodes with degree 2 (or indegree 1 and outdegree 1) are removed: A -> B -> C becomes A -> C
+#' - Cycles contain at least 3 nodes, ie. A -> B -> A becomes A -> B -> C -> A
+#' - Loops are converted to a cycle, unless `allow_self_loops = TRUE`
+#' - Duplicated edges are removed, unless `allow_duplcated_edges = FALSE`
+#'
+#' @param gr An igraph object, see [igraph::graph()]
 #' @param allow_duplicated_edges Whether or not to allow duplicated edges between nodes.
 #' @param allow_self_loops Whether or not to allow self loops.
 #' @param force_keep Nodes that will not be removed under any condition

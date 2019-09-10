@@ -1,14 +1,10 @@
 #' Simplify a trajectory by removing transient milestones
 #'
-#' Transient milestones are milestones with a degree of two (if undirected) or with an indegree of one and outdegree of one (if directed)
+#' - Milestones that are not a leaf or a branching point are removed: A -> B -> C becomes A -> C
+#' - Cycles contain at least 3 nodes, ie. A -> B -> A becomes A -> B -> C -> A
+#' - Loops are converted to a cycle, unless `allow_self_loops = TRUE`
 #'
-#' The positions of the cells within the trajectory remain the same
-#'
-#' A -> B -> C is simplified to A -> C.
-#'
-#' A — B — C is simplified to A — C.
-#'
-#' A -> B -> C -> D -> A is simplified to A -> B -> D.
+#' The positions of the cells within the trajectory remain the same.
 #'
 #' @inheritParams common_param
 #' @inheritParams simplify_igraph_network

@@ -2,7 +2,7 @@
 % Please edit documentation in R/method_create_ti_method_r.R
 \name{create_ti_method_r}
 \alias{create_ti_method_r}
-\title{Create a TI method wrapper}
+\title{Create a TI method from an R function wrapper}
 \usage{
 create_ti_method_r(definition, run_fun, package_required = character(),
   package_loaded = character(), remotes_package = character(),
@@ -21,7 +21,51 @@ create_ti_method_r(definition, run_fun, package_required = character(),
 
 \item{return_function}{Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.}
 }
+\value{
+A function that can be used to adapt the parameters of the method. This functions returns a list containing all metadata of the method, and can be used to \link[=infer_trajectory]{infer a trajectory}
+}
 \description{
-Create a TI method wrapper
+Create a TI method from an R function wrapper
+}
+\examples{
+# define the parameters and other metadata
+definition <- definition(
+  method = def_method(
+    id = "comp1"
+  ),
+  parameters = def_parameters(
+    dynparam::integer_parameter(
+      id = "component",
+      default = 1,
+      distribution = dynparam::uniform_distribution(1, 10),
+      description = "The nth component to use"
+    )
+  ),
+  wrapper = def_wrapper(
+    input_required = "expression",
+    input_optional = "start_id"
+  )
+)
+
+# define a wrapper function
+run_fun <- function(expression, priors, parameters, seed, verbose) {
+  pca <- prcomp(expression)
+
+  pseudotime <- pca$x[, parameters$component]
+
+  # flip pseudotimes using start_id
+  if (!is.null(priors$start_id)) {
+    if(mean(pseudotime[start_id]) > 0.5) {
+     pseudotime <- 1-pseudotime
+    }
+  }
+
+  dynwrap::wrap_data(cell_ids = rownames(expression)) \%>\%
+    dynwrap::add_linear_trajectory(pseudotime = pseudotime)
+}
+
+method <- create_ti_method_r(definition, run_fun, package_loaded = "dplyr")
+trajectory <- infer_trajectory(example_dataset, method())
+
 }
 \keyword{create_ti_method}

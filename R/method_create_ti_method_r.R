@@ -1,5 +1,4 @@
-
-#' Create a TI method wrapper
+#' Create a TI method from an R function wrapper
 #'
 #' @param run_fun A function to infer a trajectory, with parameters counts/expression, parameters, priors, verbose and seed
 #' @param package_loaded The packages that need to be loaded before executing the method.
@@ -7,7 +6,49 @@
 #' @param remotes_package Package from which the remote locations of dependencies have to be extracted, eg. `dynmethods`.
 #' @inheritParams .method_process_definition
 #'
+#' @inherit create_ti_method_container return
+#'
 #' @keywords create_ti_method
+#'
+#' @examples
+#' # define the parameters and other metadata
+#' definition <- definition(
+#'   method = def_method(
+#'     id = "comp1"
+#'   ),
+#'   parameters = def_parameters(
+#'     dynparam::integer_parameter(
+#'       id = "component",
+#'       default = 1,
+#'       distribution = dynparam::uniform_distribution(1, 10),
+#'       description = "The nth component to use"
+#'     )
+#'   ),
+#'   wrapper = def_wrapper(
+#'     input_required = "expression",
+#'     input_optional = "start_id"
+#'   )
+#' )
+#'
+#' # define a wrapper function
+#' run_fun <- function(expression, priors, parameters, seed, verbose) {
+#'   pca <- prcomp(expression)
+#'
+#'   pseudotime <- pca$x[, parameters$component]
+#'
+#'   # flip pseudotimes using start_id
+#'   if (!is.null(priors$start_id)) {
+#'     if(mean(pseudotime[start_id]) > 0.5) {
+#'      pseudotime <- 1-pseudotime
+#'     }
+#'   }
+#'
+#'   dynwrap::wrap_data(cell_ids = rownames(expression)) %>%
+#'     dynwrap::add_linear_trajectory(pseudotime = pseudotime)
+#' }
+#'
+#' method <- create_ti_method_r(definition, run_fun, package_loaded = "dplyr")
+#' trajectory <- infer_trajectory(example_dataset, method())
 #'
 #' @export
 create_ti_method_r <- function(

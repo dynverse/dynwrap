@@ -1,6 +1,6 @@
 #' Constructs a circular trajectory using the pseudotime values of each cell.
 #'
-#' This function will generate the milestone_network and progressions.
+#' The pseudotime is divided into three equally sized segments, and are placed within a trajectory in the form A -> B -> C -> A
 #'
 #' @inheritParams common_param
 #' @param pseudotime A named vector of pseudo times.
@@ -9,11 +9,11 @@
 #'   Otherwise, will assume the values are already within that range.
 #' @param ... extra information to be stored in the wrapper.
 #'
+#' @inherit add_trajectory return
+#'
 #' @keywords create_trajectory
 #'
 #' @export
-#'
-#' @return The trajectory
 #'
 #' @importFrom testthat expect_is expect_true expect_named
 #'

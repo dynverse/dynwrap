@@ -4,7 +4,7 @@
 \alias{add_timings}
 \alias{is_wrapper_with_timings}
 \alias{add_timing_checkpoint}
-\title{Add timings checkpoints}
+\title{Add timings to a trajectory}
 \usage{
 add_timings(trajectory, timings)
 
@@ -20,8 +20,16 @@ add_timing_checkpoint(timings, name)
 \item{name}{The name of the timings checkpoint.}
 }
 \description{
-Add timings checkpoints
+Add timings to a trajectory
 
 Helper function for storing timings information.
+}
+\examples{
+trajectory <- example_trajectory
+trajectory <- add_timings(
+  trajectory,
+  list(start = 0, end = 1)
+)
+
 }
 \keyword{adapt_trajectory}

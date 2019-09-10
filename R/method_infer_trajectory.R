@@ -1,15 +1,18 @@
 #' Generate a random seed
 #'
-#' ... From the current seed.
+#' From the current seed.
+#'
+#' @examples
+#' random_seed()
 #'
 #' @export
 random_seed <- function() {
   sample.int(.Machine$integer.max, 1)
 }
 
-#' Infer trajectories
+#' Infer one or more trajectories from a single-cell dataset
 #'
-#' @param dataset One or more datasets as created by [infer_trajectory()] or [add_trajectory()]. Prior information can be added using [add_prior_information()].
+#' @param dataset One or more datasets as created by [wrap_data()] or [wrap_expression()]. Prior information can be added using [add_prior_information()].
 #' @param method One or more methods. Must be one of:
 #' \itemize{
 #'   \item{an object or list of ti_... objects (eg. `dynmethods::ti_comp1()`),}
@@ -38,9 +41,29 @@ random_seed <- function() {
 #' @importFrom testthat expect_true
 #'
 #' @return
-#'   infer_trajectory: A trajectory
+#'  **`infer_trajectory`**: A trajectory object, which is a list containing
+#'  - *milestone_ids*: The names of the milestones, a character vector.
+#'  - *milestone_network*: The network between the milestones, a dataframe with the from milestone, to milestone, length of the edge, and whether it is directed.
+#'  - *divergence_regions*: The regions between three or more milestones where cells are diverging, a dataframe with the divergence id, the milestone id and whether this milestone is the start of the divergence
+#'  - *milestone_percentages*: For each cell its closeness to a particular milestone, a dataframe with the cell id, the milestone id, and its percentage (a number between 0 and 1 where higher values indicate that a cell is close to the milestone).
+#'  - *progressions*: For each cell its progression along a particular edge of the *milestone_network*. Contains the same information as *milestone_percentages*. A dataframe with cell id, from milestone, to milestone, and its percentage (a number between 0 and 1 where higher values indicate that a cell is close to the 'to' milestone and far from the 'from' milestone).
+#'  - *cell_ids*: The names of the cells
 #'
-#'   infer_trajectories: A tibble containing the dataset and method identifiers, the trajectory `model` and a summary containing the execution times, output and errors if appropriate
+#' Some methods will include additional information in the output, such as
+#'
+#' - A dimensionality reduction (*dimred*), the location of the trajectory milestones and edges in this dimensionality reduction (*dimred_milestones*, *dimred_segment_progressions* and *dimred_segment_points*). See [add_dimred()] for more information on these objects.
+#' - A cell grouping (*grouping*). See [add_grouping()] for more information on this object.
+#'
+#' **`infer_trajectories`**: A tibble containing the dataset and method identifiers (*dataset_id* and *method_id*), the trajectory model as described above (*model*), and a *summary* containing the execution times, output and error if appropriate
+#'
+#' @examples
+#' dataset <- example_dataset
+#' method <- get_ti_methods(as_tibble = FALSE)[[1]]$fun
+#'
+#' trajectory <- infer_trajectory(dataset, method())
+#'
+#' head(trajectory$milestone_network)
+#' head(trajectory$progressions)
 #'
 #' @export
 infer_trajectories <- function(

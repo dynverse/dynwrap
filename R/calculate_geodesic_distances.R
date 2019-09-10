@@ -9,14 +9,16 @@
 #' @param waypoint_milestone_percentages The milestone percentages of non-cell waypoints, containing waypoint_id, milestone_id and percentage columns
 #' @param directed Take into account the directions of the milestone edges. The cells that cannot be reached from a particular waypoint will have distance infinity.
 #'
+#' @return A matrix containing geodesic distances between each waypoint cell (rows) and cell (columns)
+#'
 #' @keywords derive_trajectory
 #'
 #' @importFrom igraph graph_from_data_frame neighborhood E distances
 #' @importFrom reshape2 acast melt
 #'
 #' @examples
-#' data(example_dataset)
-#' geodesic_distances <- calculate_geodesic_distances(example_dataset)
+#' geodesic_distances <- calculate_geodesic_distances(example_trajectory)
+#' geodesic_distances[1:10, 1:10]
 #'
 #' @export
 calculate_geodesic_distances <- function(

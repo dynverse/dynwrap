@@ -22,10 +22,16 @@ calculate_pseudotime <- function(trajectory) {
 
 #' Add or calculate pseudotime as distance from the root
 #'
+#' When calculating the pseudotime, the trajectory is expected to be rooted (see [add_root()])
+#'
 #' @inheritParams common_param
-#' @param pseudotime Named vector containing the pseudotime for every cell
+#' @param pseudotime Named vector containing the pseudotime for every cell. If not given, the pseudotime will be calculated.
+#'
+#' @return The trajectory with *pseudotime* added, which is a named vector containing the pseudotime values for every cell.
 #'
 #' @keywords derive_trajectory
+#'
+#' @seealso [add_root()], [add_linear_trajectory()]
 #'
 #' @export
 add_pseudotime <- function(trajectory, pseudotime = NULL) {

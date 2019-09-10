@@ -10,19 +10,34 @@ wrap_expression(id = NULL, expression, counts, cell_info = NULL,
 \arguments{
 \item{id}{A unique identifier for the data. If \code{NULL}, a random string will be generated.}
 
-\item{expression}{The normalised expression values with genes in columns and cells in rows}
+\item{expression}{The normalised expression values of genes (columns) within cells (rows). This can be both a dense and sparse matrix.}
 
-\item{counts}{The counts with genes in columns and cells in rows}
+\item{counts}{The counts values of genes (columns) within cells (rows). This can be both a dense and sparse matrix.}
 
 \item{cell_info}{Optional meta-information pertaining the cells.}
 
-\item{feature_info}{Optional meta-information of the features, a data.frame with at least feature_id as column}
+\item{feature_info}{Optional meta-information of the features, a dataframe with at least \emph{feature_id} as column}
 
-\item{expression_projected}{Projected expression using RNA velocity}
+\item{expression_projected}{Projected expression using RNA velocity of genes (columns) within cells (rows).  This can be both a dense and sparse matrix.}
 
 \item{...}{extra information to be stored in the dataset}
 }
 \description{
-Create a wrapper object with expression and counts
+Projected expression based on RNA velocity can also be added to the wrapper through the \code{expression_projected} argument
+}
+\details{
+Information about the cells and/or features can be added through \code{cell_info} and \code{feature_info}
+}
+\examples{
+dataset <- wrap_expression(
+  counts = example_dataset$counts,
+  expression = example_dataset$expression,
+  expression_projected = example_dataset$expression_projected
+)
+
+dataset$counts[1:10, 1:3]
+dataset$expression[1:10, 1:3]
+dataset$expression_projected[1:10, 1:3]
+
 }
 \keyword{infer_trajectory}

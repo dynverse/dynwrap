@@ -7,5 +7,9 @@
 random_seed()
 }
 \description{
-... From the current seed.
+From the current seed.
+}
+\examples{
+random_seed()
+
 }

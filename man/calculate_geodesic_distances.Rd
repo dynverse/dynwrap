@@ -20,6 +20,9 @@ compute_tented_geodesic_distances(trajectory, waypoint_cells = NULL,
 
 \item{directed}{Take into account the directions of the milestone edges. The cells that cannot be reached from a particular waypoint will have distance infinity.}
 }
+\value{
+A matrix containing geodesic distances between each waypoint cell (rows) and cell (columns)
+}
 \description{
 Will calculate geodesic distances between cells within a trajectory. To speed things up, only the distances with a set of waypoint cells are calculated.
 }
@@ -27,8 +30,8 @@ Will calculate geodesic distances between cells within a trajectory. To speed th
 The geodesic distance takes into account the length of an edge regions of delayed commitment.
 }
 \examples{
-data(example_dataset)
-geodesic_distances <- calculate_geodesic_distances(example_dataset)
+geodesic_distances <- calculate_geodesic_distances(example_trajectory)
+geodesic_distances[1:10, 1:10]
 
 }
 \keyword{derive_trajectory}

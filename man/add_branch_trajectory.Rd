@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrap_add_branch_trajectory.R
 \name{add_branch_trajectory}
 \alias{add_branch_trajectory}
-\title{Create a trajectory given its branch network and the pseudotime of the cells on one of the branches}
+\title{Construct a trajectory given its branch network and the pseudotime of the cells on one of the branches.}
 \usage{
 add_branch_trajectory(dataset, branch_network, branches,
   branch_progressions, ...)
@@ -10,32 +10,38 @@ add_branch_trajectory(dataset, branch_network, branches,
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
-\item{branch_network}{The network between branches
-Type: Data frame(from = charactor, to = character)}
+\item{branch_network}{The network between branches, a dataframe with a \emph{from} and \emph{to} branch identifier}
 
-\item{branches}{The length and directedness of the branches
-Type: Data frame(branch_id = character, length = numeric, directed = logical)}
+\item{branches}{The length and directedness of the branches, a dataframe with the branch identifier (\emph{branch_id}), the length of the branch (\emph{length}) and whether it is \emph{directed}}
 
-\item{branch_progressions}{Specifies the progression of a cell along a transition in the branch network.
-Type: Data frame(cell_id = character, branch_id = character, percentage = numeric).}
+\item{branch_progressions}{Specifies the progression of a cell along a transition in the branch network. A dataframe containing the \emph{cell_id}, \emph{branch_id} and its progression along the edge (\emph{percentage}, between 0 and 1)}
 
 \item{...}{extra information to be stored in the trajectory}
 }
 \value{
-The trajectory
+The dataset object with trajectory information, including:
+\itemize{
+\item \emph{milestone_ids}: The names of the milestones, a character vector.
+\item \emph{milestone_network}: The network between the milestones, a dataframe with the \emph{from} milestone, \emph{to} milestone, \emph{length} of the edge, and whether it is \emph{directed}.
+\item \emph{divergence_regions}: The regions between three or more milestones where cells are diverging, a dataframe with the divergence id (\emph{divergence_id}), the milestone id (\emph{milestone_id}) and whether this milestone is the start of the divergence (\emph{is_start})
+\item \emph{milestone_percentages}: For each cell its closeness to a particular milestone, a dataframe with the cell id (\emph{cell_id}), the milestone id (\emph{milestone_id}), and its \emph{percentage} (a number between 0 and 1 where higher values indicate that a cell is close to the milestone).
+\item \emph{progressions}: For each cell its progression along a particular edge of the \emph{milestone_network}. Contains the same information as \emph{milestone_percentages}. A dataframe with cell id (\emph{cell_id}), \emph{from} milestone, \emph{to} milestone, and its \emph{percentage} (a number between 0 and 1 where higher values indicate that a cell is close to the \emph{to} milestone and far from the \emph{from} milestone).
+}
 }
 \description{
-Create a trajectory given its branch network and the pseudotime of the cells on one of the branches
+The branch network is converted to a milestone network by giving each branch a start and end milestone. If two branches are connected in the branch network, the end milestone of branch 1 and start milestone of branch 2 will be merged.
+}
+\details{
+The resulting trajectory will always be directed.
 }
 \examples{
-library(tibble)
 dataset <- wrap_data(cell_ids = letters)
 
-branch_network <- tibble(from = c("A", "A"), to = c("B", "C"))
+branch_network <- tibble::tibble(from = c("A", "A"), to = c("B", "C"))
 branch_network
-branches <- tibble(branch_id = c("A", "B", "C"), length = 1, directed = TRUE)
+branches <- tibble::tibble(branch_id = c("A", "B", "C"), length = 1, directed = TRUE)
 branches
-branch_progressions <- tibble(
+branch_progressions <- tibble::tibble(
   cell_id = dataset$cell_ids,
   branch_id = sample(branches$branch_id, length(dataset$cell_ids), replace = TRUE),
   percentage = runif(length(dataset$cell_ids))

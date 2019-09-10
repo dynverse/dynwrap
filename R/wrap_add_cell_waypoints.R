@@ -1,7 +1,16 @@
-#' Add cell waypoints to a wrapped trajectory
+#' Add or select waypoint cells of a trajectory
 #'
+#' Waypoint cells are cells spread across all of the trajectory such that there is no other cell
+#' that has a large geodesic distance to any of the waypoint cells.
+#'
+#' @inheritParams add_trajectory
 #' @inheritParams common_param
-#' @inheritParams select_waypoint_cells
+#' @param num_cells_selected About the number of cells selected as waypoints
+#'
+#' @return
+#' **`add_cell_waypoints`** returns a trajectory with *waypoint_cells*, a character vector containing the cell ids of the waypoint cells
+#'
+#' **`select_waypoint_cells`** returns a character vector containing the cell ids of the waypoint cells
 #'
 #' @keywords adapt_trajectory
 #'
@@ -34,10 +43,7 @@ is_wrapper_with_waypoint_cells <- function(trajectory) {
   is_wrapper_with_trajectory(trajectory) && "dynwrap::with_cell_waypoints" %in% class(trajectory)
 }
 
-#' Determine the positions of all cells in the trajectory
-#'
-#' @inheritParams add_trajectory
-#'
+#' @rdname add_cell_waypoints
 #' @export
 determine_cell_trajectory_positions <- function(
   milestone_ids,
@@ -86,14 +92,7 @@ determine_cell_trajectory_positions <- function(
   )
 }
 
-#' Select the waypoint cells
-#'
-#' Waypoint cells are cells spread across all of the trajectory such that there is no other cell
-#' that has a large geodesic distance to any of the waypoint cells.
-#'
-#' @inheritParams add_trajectory
-#' @param num_cells_selected About the number of cells selected as waypoints
-#'
+#' @rdname add_cell_waypoints
 #' @export
 select_waypoint_cells <- function(
   milestone_ids,

@@ -15,13 +15,23 @@ get_grouping(dataset, grouping = NULL)
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 
-\item{grouping}{A grouping of the cells, can be a named vector or a dataframe with group_id (character) and cell_id (character)}
+\item{grouping}{A grouping of the cells, can be a named vector or a dataframe with \emph{group_id} and \emph{cell_id}}
 
-\item{group_ids}{All group_ids, optional}
+\item{group_ids}{All group identifiers, optional}
 
 \item{...}{Extra information to be stored in the dataset}
 }
 \description{
 Add a cell grouping to a dataset
+}
+\examples{
+dataset <- example_dataset
+
+grouping <- sample(c("A", "B", "C"), length(dataset$cell_ids), replace = TRUE)
+names(grouping) <- dataset$cell_ids
+
+dataset <- add_grouping(dataset, grouping)
+head(dataset$grouping)
+
 }
 \keyword{adapt_trajectory}

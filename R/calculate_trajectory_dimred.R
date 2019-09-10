@@ -1,16 +1,29 @@
-#' Layout the trajectory and its cells in 2 dimensions
+#' Layout the trajectory and its cells in 2 dimensions using a graph layout
 #'
 #' @inheritParams common_param
 #' @param adjust_weights Whether or not to rescale the milestone network weights
 #'
+#' @return A list containg
+#' - *milestone_positions*: A dataframe containing the *milestone_id* and the location of each milestone (*comp_1* and *comp_2*)
+#' - *edge_positions*: A dataframe containing for each edge (*from*, *to*, *length* and *directed* columns) the position of the from milestone (*comp_1_from* and *comp_2_from*) and to milestone (*comp_1_to* and *comp_2_to*).
+#' - *cell_positions*: A dataframe containing the *cell_id* and the location of each cell (*comp_1* and *comp_2*)
+#' - *divergence_edge_positions*: A dataframe as *edge_positions* but for each edge within a divergence
+#' - *divergence_polygon_positions*: A dataframe containing the *triangle_id* and the location of the milestone within a divergence (*comp_1* and *comp_2*)
+#'
 #' @importFrom igraph graph_from_data_frame layout_with_fr
 #' @importFrom testthat expect_true
+#'
+#' @examples
+#' trajectory_dimred <- calculate_trajectory_dimred(example_trajectory)
+#' head(trajectory_dimred$milestone_positions)
+#' head(trajectory_dimred$edge_positions)
+#' head(trajectory_dimred$cell_positions)
 #'
 #' @keywords derive_trajectory
 #'
 #' @export
 #'
-#' @seealso wrap_data
+#' @seealso [wrap_data]()
 calculate_trajectory_dimred <- function(
   trajectory,
   adjust_weights = FALSE
@@ -127,5 +140,36 @@ calculate_trajectory_dimred <- function(
     divergence_edge_positions,
     divergence_polygon_positions
   )
+}
+
+
+
+#' Helper function for processing divergence regions
+#'
+#' This function returns the combinations between
+#' the start of each divergence region and pairwise combinations
+#' of the end milestones.
+#'
+#' @param divergence_regions A divergence regions data frame as produced by `add_trajectory`.
+#'
+#' @noRd
+get_divergence_triangles <- function(divergence_regions) {
+  map_df(unique(divergence_regions$divergence_id), function(did) {
+    rel_did <- divergence_regions %>% filter(divergence_id == did)
+
+    fr <- rel_did %>% filter(is_start) %>% pull(milestone_id)
+    tos <- rel_did %>% filter(!is_start) %>% pull(milestone_id)
+
+    crossing(
+      node1 = tos,
+      node2 = tos
+    ) %>%
+      filter(node1 > node2) %>%
+      mutate(
+        divergence_id = did,
+        start = fr
+      ) %>%
+      select(divergence_id, start, node1, node2)
+  })
 }
 

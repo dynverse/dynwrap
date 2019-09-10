@@ -32,18 +32,22 @@ example_dataset <-
     expression = expression,
     counts = counts
   ) %>%
+  add_dimred(
+    dimred = expression
+  )
+
+example_trajectory <- example_dataset %>%
   add_linear_trajectory(
     pseudotime = pseudotime,
     directed = TRUE
   ) %>%
-  add_dimred(
-    dimred = expression
-  ) %>%
   add_prior_information() %>%
-  add_cell_waypoints()
+  add_cell_waypoints() %>%
+  add_dimred(dimred = expression)
 
-dynplot::plot_graph(example_dataset)
-dynplot::plot_dimred(example_dataset)
-dynplot::plot_heatmap(example_dataset)
+dynplot::plot_graph(example_trajectory)
+dynplot::plot_dimred(example_trajectory)
+dynplot::plot_heatmap(example_trajectory)
 
+usethis::use_data(example_trajectory, overwrite = TRUE)
 usethis::use_data(example_dataset, overwrite = TRUE)
