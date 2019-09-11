@@ -6,7 +6,7 @@
 \title{Create a definition}
 \usage{
 definition(method, wrapper, manuscript = NULL, container = NULL,
-  parameters = parameter_set())
+  package = NULL, parameters = parameter_set())
 
 is_ti_method(method)
 }

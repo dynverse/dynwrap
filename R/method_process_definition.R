@@ -28,6 +28,7 @@ definition <- function(
   wrapper,
   manuscript = NULL,
   container = NULL,
+  package = NULL,
   parameters = parameter_set()
 ) {
   definition <- as.list(environment()) %>%
