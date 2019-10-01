@@ -8,6 +8,7 @@
 #' @param wrapper Meta information on the wrapper itself (see [def_wrapper()]).
 #' @param manuscript Meta information on the manuscript, if applicable (see [def_manuscript()]).
 #' @param container Meta information on the container in which the wrapper resides, if applicable (see [def_container()]).
+#' @param package Meta information on the package in which the wrapper resides, if applicable (see [def_package()]).
 #' @param parameters Meta information on the parameters of the TI method (see [def_parameters()]).
 #'
 #' @keywords create_ti_method

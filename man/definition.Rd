@@ -19,6 +19,8 @@ is_ti_method(method)
 
 \item{container}{Meta information on the container in which the wrapper resides, if applicable (see \code{\link[=def_container]{def_container()}}).}
 
+\item{package}{Meta information on the package in which the wrapper resides, if applicable (see \code{\link[=def_package]{def_package()}}).}
+
 \item{parameters}{Meta information on the parameters of the TI method (see \code{\link[=def_parameters]{def_parameters()}}).}
 }
 \description{
