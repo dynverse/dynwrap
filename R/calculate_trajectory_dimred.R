@@ -4,11 +4,18 @@
 #' @param adjust_weights Whether or not to rescale the milestone network weights
 #'
 #' @return A list containg
-#' - *milestone_positions*: A dataframe containing the *milestone_id* and the location of each milestone (*comp_1* and *comp_2*)
-#' - *edge_positions*: A dataframe containing for each edge (*from*, *to*, *length* and *directed* columns) the position of the from milestone (*comp_1_from* and *comp_2_from*) and to milestone (*comp_1_to* and *comp_2_to*).
-#' - *cell_positions*: A dataframe containing the *cell_id* and the location of each cell (*comp_1* and *comp_2*)
-#' - *divergence_edge_positions*: A dataframe as *edge_positions* but for each edge within a divergence
-#' - *divergence_polygon_positions*: A dataframe containing the *triangle_id* and the location of the milestone within a divergence (*comp_1* and *comp_2*)
+#' - *milestone_positions*: A dataframe containing the *milestone_id*
+#'     and the location of each milestone (*comp_1* and *comp_2*)
+#' - *edge_positions*: A dataframe containing for each edge
+#'      (*from*, *to*, *length* and *directed* columns) the position
+#'       of the from milestone (*comp_1_from* and *comp_2_from*) and to
+#'       milestone (*comp_1_to* and *comp_2_to*).
+#' - *cell_positions*: A dataframe containing the *cell_id* and the
+#'   ¨location of each cell (*comp_1* and *comp_2*)
+#' - *divergence_edge_positions*: A dataframe as *edge_positions*
+#'    but for each edge within a divergence
+#' - *divergence_polygon_positions*: A dataframe containing the *triangle_id*
+#'    and the location of the milestone within a divergence (*comp_1* and *comp_2*)
 #'
 #' @importFrom igraph graph_from_data_frame layout_with_fr
 #' @importFrom testthat expect_true
@@ -23,7 +30,7 @@
 #'
 #' @export
 #'
-#' @seealso [wrap_data]()
+#' @seealso [wrap_data()]
 calculate_trajectory_dimred <- function(
   trajectory,
   adjust_weights = FALSE

@@ -45,25 +45,27 @@ The advantage of using a common model is that it allows:
 
 ## Latest changes
 
-Check out `news(package = "dynwrap")` or [NEWS.md](NEWS.md) for a
-full list of
-changes.
+Check out `news(package = "dynwrap")` or [NEWS.md](NEWS.md) for a full
+list of changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md -->
 
+### Recent changes in dynwrap 1.2 (unreleased)
+
+#### Documentation
+
+  - Added examples to all functions
+
+#### New features
+
+  - Improved RNA velocity handling:
+      - Not all features need to be present in the projected expression,
+        allowing integration with standard velocyto.R pipelines
+
 ### Recent changes in dynwrap 1.1.4 (27-06-2019)
 
-  - BUG FIX: Fixed \#142 where the error message was truncated
-
-### Recent changes in dynwrap 1.1.3 (05-06-2019)
-
-  - MINOR CHANGE `add_dimred()`: Add a separate argument for specifying
-    the projected dimred rather than expecting the projected dimred to
-    be passed as additional columns in `dimred`.
-
-  - BUG FIX: Fix for dynverse/dyno\#52, do specify whether or not to use
-    optional priors when
-passed.
+  - BUG FIX: Fixed \#142 where the error message was
+truncated
 
 ## Dynverse dependencies
 

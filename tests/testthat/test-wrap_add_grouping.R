@@ -1,4 +1,4 @@
-context("Testing add_expression")
+context("Testing add_grouping")
 
 id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")

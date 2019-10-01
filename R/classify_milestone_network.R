@@ -3,7 +3,7 @@
 #' @param milestone_network A milestone network
 #'
 #' @return A list containing
-#' - *network_type*: The network type (also known as the trajectory_type). See `dynwrap::trajectory_types` for an overview
+#' - *network_type*: The network type (also known as the trajectory_type). See `dynwrap::trajectory_types` for an overview.
 #' - *directed*: Whether the trajectory is directed
 #' - *properties*: Different properties of the trajectory, including:
 #'   - *is_directed*: Whether the trajectory is directed
@@ -40,7 +40,7 @@
 #'
 #' @importFrom igraph graph_from_data_frame
 #'
-#' @seealso [trajectory_types]()
+#' @seealso `dynwrap::trajectory_types`
 classify_milestone_network <- function(milestone_network) {
   is_directed <- any(milestone_network$directed)
 

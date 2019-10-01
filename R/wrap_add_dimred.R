@@ -141,8 +141,11 @@ is_wrapper_with_dimred <- function(dataset) {
 }
 
 #' @rdname add_dimred
+#' @param return_other_dimreds Whether or not to return also the milestone dimreds and the segment dimreds, if available.
 #' @export
-get_dimred <- function(dataset, dimred = NULL, expression_source = "expression") {
+get_dimred <- function(dataset, dimred = NULL, expression_source = "expression", return_other_dimreds = FALSE) {
+  extra_out <- NULL
+
   if(is.function(dimred)) {
     # function -> calculate dimensionality reduction
     expression <- get_expression(dataset, expression_source)
@@ -177,6 +180,34 @@ get_dimred <- function(dataset, dimred = NULL, expression_source = "expression")
       dimred <- dataset$dimred[[dimred]]
     } else {
       dimred <- dataset$dimred
+
+      if (return_other_dimreds) {
+        extra_out <- list()
+
+        if (!is.null(dataset$dimred_milestones)) {
+          dimred_milestones <- dataset$dimred_milestones
+          colnames(dimred_milestones) <-
+            paste0("comp_", seq_len(ncol(dimred_milestones)))
+          extra_out$dimred_milestones <- dimred_milestones
+        }
+
+        if (!is.null(dataset$dimred_segment_progressions) && !is.null(dataset$dimred_segment_points)) {
+          dimred_segment_points <- dataset$dimred_segment_points
+          dimred_segment_progressions <- dataset$dimred_segment_progressions
+          colnames(dimred_segment_points) <-
+            paste0("comp_", seq_len(ncol(dimred_segment_points)))
+          extra_out$dimred_segment_points <- dimred_segment_points
+          extra_out$dimred_segment_progressions <- dimred_segment_progressions
+        }
+
+        if (!is.null(dataset$dimred_projected)) {
+          dimred_projected <- dataset$dimred_projected
+          colnames(dimred_projected) <-
+            paste0("comp_", seq_len(ncol(dimred_projected)))
+          extra_out$dimred_projected <- dimred_projected
+        }
+
+      }
     }
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   } else {
@@ -185,6 +216,10 @@ get_dimred <- function(dataset, dimred = NULL, expression_source = "expression")
 
   # make sure the rownames are in the correct order
   dimred <- dimred[dataset$cell_ids, ]
+
+  if (!is.null(extra_out)) {
+    attr(dimred, "extra") <- extra_out
+  }
 
   dimred
 }
