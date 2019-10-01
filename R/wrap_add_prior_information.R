@@ -1,4 +1,4 @@
-#' Add or compuate prior information for a trajectory
+#' Add or compute prior information for a trajectory
 #'
 #' If you specify
 #'

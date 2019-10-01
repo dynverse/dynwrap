@@ -4,7 +4,7 @@
 \alias{add_prior_information}
 \alias{is_wrapper_with_prior_information}
 \alias{generate_prior_information}
-\title{Add or compuate prior information for a trajectory}
+\title{Add or compute prior information for a trajectory}
 \usage{
 add_prior_information(dataset, start_id = NULL, end_id = NULL,
   groups_id = NULL, groups_network = NULL, features_id = NULL,
