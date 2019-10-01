@@ -190,7 +190,7 @@ def_container <- function(
 
 #' Meta information on the package in which the TI function resides
 #'
-#' @param name: The name of the package
+#' @param name The name of the package
 #' @param remote The github repository handle
 #' @param function_name The name of the function
 #'

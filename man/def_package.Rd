@@ -9,9 +9,9 @@ def_package(remote, name, function_name)
 \arguments{
 \item{remote}{The github repository handle}
 
-\item{function_name}{The name of the function}
+\item{name}{The name of the package}
 
-\item{name:}{The name of the package}
+\item{function_name}{The name of the function}
 }
 \description{
 Meta information on the package in which the TI function resides
