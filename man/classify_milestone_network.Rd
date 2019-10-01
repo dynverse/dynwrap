@@ -12,7 +12,7 @@ classify_milestone_network(milestone_network)
 \value{
 A list containing
 \itemize{
-\item \emph{network_type}: The network type (also known as the trajectory_type). See \code{dynwrap::trajectory_types} for an overview
+\item \emph{network_type}: The network type (also known as the trajectory_type). See \code{dynwrap::trajectory_types} for an overview.
 \item \emph{directed}: Whether the trajectory is directed
 \item \emph{properties}: Different properties of the trajectory, including:
 \itemize{
@@ -53,5 +53,5 @@ classification$props
 
 }
 \seealso{
-\url{trajectory_types}
+\code{dynwrap::trajectory_types}
 }
