@@ -6,7 +6,7 @@
 \title{Create a definition}
 \usage{
 definition(method, wrapper, manuscript = NULL, container = NULL,
-  parameters = parameter_set())
+  package = NULL, parameters = parameter_set())
 
 is_ti_method(method)
 }
@@ -18,6 +18,8 @@ is_ti_method(method)
 \item{manuscript}{Meta information on the manuscript, if applicable (see \code{\link[=def_manuscript]{def_manuscript()}}).}
 
 \item{container}{Meta information on the container in which the wrapper resides, if applicable (see \code{\link[=def_container]{def_container()}}).}
+
+\item{package}{Meta information on the package in which the wrapper resides, if applicable (see \code{\link[=def_package]{def_package()}}).}
 
 \item{parameters}{Meta information on the parameters of the TI method (see \code{\link[=def_parameters]{def_parameters()}}).}
 }

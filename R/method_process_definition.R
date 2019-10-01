@@ -8,6 +8,7 @@
 #' @param wrapper Meta information on the wrapper itself (see [def_wrapper()]).
 #' @param manuscript Meta information on the manuscript, if applicable (see [def_manuscript()]).
 #' @param container Meta information on the container in which the wrapper resides, if applicable (see [def_container()]).
+#' @param package Meta information on the package in which the wrapper resides, if applicable (see [def_package()]).
 #' @param parameters Meta information on the parameters of the TI method (see [def_parameters()]).
 #'
 #' @keywords create_ti_method
@@ -28,6 +29,7 @@ definition <- function(
   wrapper,
   manuscript = NULL,
   container = NULL,
+  package = NULL,
   parameters = parameter_set()
 ) {
   definition <- as.list(environment()) %>%
@@ -187,6 +189,30 @@ def_container <- function(
   as.list(environment())
 }
 
+#' Meta information on the package in which the TI function resides
+#'
+#' @param name The name of the package
+#' @param remote The github repository handle
+#' @param function_name The name of the function
+#'
+#' @keywords create_ti_method
+#'
+#' @export
+#'
+#' @examples
+#' def_package(
+#'   remote = "rcannood/SCORPIUS",
+#'   name = "SCORPIUS",
+#'   function_name = "ti_scorpius"
+#' )
+def_package <- function(
+  remote,
+  name,
+  function_name
+) {
+  as.list(environment())
+}
+
 
 #' Meta information on the wrapper
 #'
@@ -295,6 +321,7 @@ convert_definition <- function(definition_raw) {
     method = purrr::invoke(def_method, definition_raw$method %||% list()),
     wrapper = purrr::invoke(def_wrapper, definition_raw$wrapper %||% list()),
     container = purrr::invoke(def_container, definition_raw$container %||% list()),
+    package = purrr::invoke(def_package, definition_raw$package %||% list()),
     manuscript = purrr::invoke(def_manuscript, definition_raw$manuscript %||% list()),
     parameters = dynparam::as_parameter_set(definition_raw$parameters %||% list())
   )
