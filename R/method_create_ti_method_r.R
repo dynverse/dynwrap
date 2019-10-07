@@ -77,14 +77,6 @@ create_ti_method_r <- function(
 .method_execution_preproc_function <- function(method) {
   run <- method$run
 
-  # create a temporary directory to set as working directory,
-  # to avoid polluting the working directory if a method starts
-  # producing files haphazardly
-  tmp_dir <- tempfile(pattern = method$method$id)
-  dir.create(tmp_dir)
-  old_wd <- getwd()
-  setwd(tmp_dir)
-
   # Load required packages and namespaces
   if (!is.null(run$package_loaded) && !any(is.na(run$package_loaded)) && length(run$package_loaded)) {
     for (pack in run$package_loaded) {
@@ -97,11 +89,6 @@ create_ti_method_r <- function(
       suppressMessages(do.call(requireNamespace, list(pack)))
     }
   }
-
-  lst(
-    tmp_dir,
-    old_wd
-  )
 }
 
 .method_execution_execute_function <- function(method, inputs, priors, parameters, verbose, seed, preproc_meta) {
@@ -126,11 +113,7 @@ create_ti_method_r <- function(
 
 
 .method_execution_postproc_function <- function(preproc_meta) {
-  # wd to previous folder
-  setwd(preproc_meta$old_wd)
 
-  # Remove temporary folder
-  unlink(preproc_meta$tmp_dir, recursive = TRUE, force = TRUE)
 }
 
 

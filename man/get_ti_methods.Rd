@@ -5,9 +5,8 @@
 \title{Return all TI that are installed in one or more packages}
 \usage{
 get_ti_methods(method_ids = NULL, as_tibble = TRUE,
-  ti_packages = ifelse("dynmethods" \%in\%
-  rownames(utils::installed.packages()), "dynmethods", "dynwrap"),
-  evaluate = FALSE)
+  ti_packages = ifelse(requireNamespace("dynmethods", quietly = TRUE),
+  "dynmethods", "dynwrap"), evaluate = FALSE)
 }
 \arguments{
 \item{method_ids}{The method identifiers. NULL if listing all methods}
