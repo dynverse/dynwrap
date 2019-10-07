@@ -13,6 +13,10 @@ vignette: >
 
 ```{r setup}
 library(dynwrap)
+
+# dyncli is not installed on travis or CRAN, so don't run some parts of the vignette there
+NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true")
+NOT_TRAVIS <- !identical(tolower(Sys.getenv("TRAVIS")), "true")
 ```
 
 This vignette describes how to include your own method into the dynverse workflow. We'll illustrate this with a very basic method: using one of the components of a PCA as the pseudotime.
@@ -94,7 +98,7 @@ dataset <- dynwrap::example_dataset
 trajectory <- infer_trajectory(dataset, ti_comp1())
 ```
 
-```{r}
+```{r, eval=NOT_CRAN && NOT_TRAVIS}
 if (requireNamespace("dynplot", quietly = TRUE)) {
   dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
 }
