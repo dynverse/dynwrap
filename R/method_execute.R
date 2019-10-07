@@ -40,90 +40,93 @@
   )
   on.exit(.method_close_sinks_and_wd(sink_meta))
 
-  # print helpful message
-  if (verbose) {
-    cat(
-      "Executing '", method$method$id, "' on '", dataset$id, "'\n",
-      "With parameters: ", deparse(parameters), ",\n",
-      "inputs: ", paste0(names(inputs), collapse = ", "), ", and\n",
-      "priors : ", paste0(names(priors), collapse = ", "), "\n",
-      sep = ""
-    )
-  }
-
-  # run preproc
-  preproc_meta <-
-    if (method$run$backend == "function") {
-      .method_execution_preproc_function(method = method)
-    } else {
-      .method_execution_preproc_container(method = method, inputs = inputs, priors = priors, parameters = parameters, verbose = verbose || return_verbose, seed = seed, debug = debug)
+  tryCatch({
+    # print helpful message
+    if (verbose) {
+      cat(
+        "Executing '", method$method$id, "' on '", dataset$id, "'\n",
+        "With parameters: ", deparse(parameters), ",\n",
+        "inputs: ", paste0(names(inputs), collapse = ", "), ", and\n",
+        "priors : ", paste0(names(priors), collapse = ", "), "\n",
+        sep = ""
+      )
     }
 
-  # initialise output variables
-  trajectory <- NULL
-  timings$method_beforepreproc <- Sys.time()
-
-  error <- tryCatch({
-    # execute method and return trajectory
-    trajectory <-
+    # run preproc
+    preproc_meta <-
       if (method$run$backend == "function") {
-        .method_execution_execute_function(method = method, inputs = inputs, priors = priors, parameters = parameters, verbose = verbose || return_verbose, seed = seed, preproc_meta = preproc_meta)
-      } else if (method$run$backend == "script") {
-        .method_execution_execute_script(method = method, preproc_meta = preproc_meta)
+        .method_execution_preproc_function(method = method)
       } else {
-        .method_execution_execute_container(method = method, preproc_meta = preproc_meta)
+        .method_execution_preproc_container(method = method, inputs = inputs, priors = priors, parameters = parameters, verbose = verbose || return_verbose, seed = seed, debug = debug)
       }
 
-    # add trajectory timings and timings stop
-    timings <- c(timings, trajectory$timings)
-    timings$method_afterpostproc <- Sys.time()
+    # initialise output variables
+    trajectory <- NULL
+    timings$method_beforepreproc <- Sys.time()
 
-    # remove timings from trajectory
-    trajectory$timings <- NULL
-    class(trajectory) <- setdiff(class(trajectory), "dynwrap::with_timings")
+    error <- tryCatch({
+      # execute method and return trajectory
+      trajectory <-
+        if (method$run$backend == "function") {
+          .method_execution_execute_function(method = method, inputs = inputs, priors = priors, parameters = parameters, verbose = verbose || return_verbose, seed = seed, preproc_meta = preproc_meta)
+        } else if (method$run$backend == "script") {
+          .method_execution_execute_script(method = method, preproc_meta = preproc_meta)
+        } else {
+          .method_execution_execute_container(method = method, preproc_meta = preproc_meta)
+        }
 
-    NA_character_
+      # add trajectory timings and timings stop
+      timings <- c(timings, trajectory$timings)
+      timings$method_afterpostproc <- Sys.time()
+
+      # remove timings from trajectory
+      trajectory$timings <- NULL
+      class(trajectory) <- setdiff(class(trajectory), "dynwrap::with_timings")
+
+      NA_character_
+    }, error = function(e) {
+      e$message
+    })
+
+    # run postproc
+    if (method$run$backend == "function") {
+      .method_execution_postproc_function(preproc_meta = preproc_meta) # empty
+    } else {
+      .method_execution_postproc_container(preproc_meta = preproc_meta)
+    }
+
+    # retrieve stdout/stderr
+    stds <- .method_close_sinks_and_wd(sink_meta)
+    on.exit({}, add = FALSE)
+
+    # stop timings
+    timings$execution_stop <- Sys.time()
+
+    # if method doesn't return these timings, row with the oars we have
+    if (!"method_afterpreproc" %in% names(timings)) timings$method_afterpreproc <- timings$method_beforepreproc
+    if (!"method_aftermethod" %in% names(timings)) timings$method_aftermethod <- timings$method_afterpostproc
+
+    # make sure timings are numeric
+    timings <- map_dbl(timings, as.numeric)
+
+    # calculate timing differences
+    timings_diff <- diff(timings[c("execution_start", "method_beforepreproc", "method_afterpreproc", "method_aftermethod", "method_afterpostproc", "execution_stop")]) %>%
+      set_names(c("time_sessionsetup", "time_preprocessing", "time_method", "time_postprocessing", "time_sessioncleanup"))
+
+    # create a summary tibble
+    summary <- tibble(
+      method_name = method$method$name,
+      method_id = method$method$id,
+      dataset_id = dataset$id,
+      stdout = stds$stdout,
+      stderr = stds$stderr,
+      error = error,
+      prior_df = list(method$wrapper$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(inputs)))
+    ) %>%
+      bind_cols(as.data.frame(as.list(timings_diff)))
   }, error = function(e) {
-    e$message
+    stop("Error produced in dynwrap input/output:\n", e$message)
   })
-
-  # run postproc
-  if (method$run$backend == "function") {
-    .method_execution_postproc_function(preproc_meta = preproc_meta) # empty
-  } else {
-    .method_execution_postproc_container(preproc_meta = preproc_meta)
-  }
-
-  # retrieve stdout/stderr
-  stds <- .method_close_sinks_and_wd(sink_meta)
-  on.exit({}, add = FALSE)
-
-  # stop timings
-  timings$execution_stop <- Sys.time()
-
-  # if method doesn't return these timings, row with the oars we have
-  if (!"method_afterpreproc" %in% names(timings)) timings$method_afterpreproc <- timings$method_beforepreproc
-  if (!"method_aftermethod" %in% names(timings)) timings$method_aftermethod <- timings$method_afterpostproc
-
-  # make sure timings are numeric
-  timings <- map_dbl(timings, as.numeric)
-
-  # calculate timing differences
-  timings_diff <- diff(timings[c("execution_start", "method_beforepreproc", "method_afterpreproc", "method_aftermethod", "method_afterpostproc", "execution_stop")]) %>%
-    set_names(c("time_sessionsetup", "time_preprocessing", "time_method", "time_postprocessing", "time_sessioncleanup"))
-
-  # create a summary tibble
-  summary <- tibble(
-    method_name = method$method$name,
-    method_id = method$method$id,
-    dataset_id = dataset$id,
-    stdout = stds$stdout,
-    stderr = stds$stderr,
-    error = error,
-    prior_df = list(method$wrapper$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(inputs)))
-  ) %>%
-    bind_cols(as.data.frame(as.list(timings_diff)))
-
   lst(trajectory, summary)
 }
 
