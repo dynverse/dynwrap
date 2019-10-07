@@ -34,7 +34,7 @@ The definition has the same hierarchical structure as used by the `definition()`
 
 <div class="filename">definition.yml</div>
 ```{r, echo = FALSE}
-definition_string <- paste0(readLines(system.file("examples/script/definition.yml", package = "dynwrap")), collapse = "\n")
+definition_string <- paste0(readLines(system.file("examples/script/definition.yml", package = "dynwrap")), "\n", collapse = "")
 
 readr::write_file(definition_string, "definition.yml")
 knitr::asis_output(paste0("```yaml\n", definition_string, "\n```"))
@@ -58,7 +58,7 @@ A minimal example script for R:
 
 <div class="filename">run.R</div>
 ```{r, echo = FALSE}
-run_r_string <- paste0(readLines(system.file("examples/script/run.R", package = "dynwrap")), collapse = "\n")
+run_r_string <- paste0(readLines(system.file("examples/script/run.R", package = "dynwrap")), "\n", collapse = "")
 
 readr::write_file(run_r_string, "run.R")
 knitr::asis_output(paste0("```r\n", run_r_string, "\n```"))
@@ -74,7 +74,7 @@ and for Python:
 
 <div class="filename">run.py</div>
 ```{r, echo = FALSE}
-run_py_script <- paste0(readLines(system.file("examples/script/run.py", package = "dynwrap")), collapse = "\n")
+run_py_script <- paste0(readLines(system.file("examples/script/run.py", package = "dynwrap")), "\n", collapse = "")
 
 readr::write_file(run_py_script, "run.py")
 knitr::asis_output(paste0("```python\n", run_py_script, "\n```"))
@@ -94,7 +94,7 @@ trajectory <- infer_trajectory(dataset, method(), verbose = TRUE)
 
 ```{r, eval=NOT_CRAN && NOT_TRAVIS}
 # install dynplot to plot the output
-if ("dynplot" %in% rownames(installed.packages())) {
+if (requireNamespace("dynplot", quietly = TRUE)) {
   dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
 }
 ```

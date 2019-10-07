@@ -101,7 +101,7 @@ If you have dynplot installed, you can also plot the trajectory:
 
 ```{r, eval=NOT_CRAN, error=TRUE}
 # install dynplot to plot the output
-if ("dynplot" %in% rownames(installed.packages())) {
+if (requireNamespace("dynplot", quietly = TRUE)) {
   dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
 }
 ```

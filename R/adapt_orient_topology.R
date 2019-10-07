@@ -1,6 +1,7 @@
 #' Reorients the edges of the milestone network to the cell's RNA velocity vectors
 #'
 #' @inheritParams common_param
+#' @inheritParams add_expression
 #'
 #' @return The trajectory with oriented *milestone_network* and *progressions*
 #'
@@ -57,27 +58,35 @@
 #'
 #' @export
 orient_topology_to_velocity <- function(
-  trajectory
+  trajectory,
+  expression = trajectory$expression,
+  expression_projected = trajectory$expression_projected
 ) {
   # dummy proofing
   assert_that(is(trajectory, "dynwrap::with_trajectory"))
-  assert_that(!is.null(trajectory$expression_projected))
+  assert_that(!is.null(expression))
+  assert_that(!is.null(expression_projected))
 
   if (nrow(trajectory$divergence_regions)) {
     stop("Orienting topologies with divergence regions doesn't work yet")
   }
 
   flip_fractions <- pmap_dbl(trajectory$milestone_network, function(from, to, ...) {
+    # order cells based on their percentage
     progressions_edge <- trajectory$progressions %>%
       filter(from == !!from, to == !!to) %>%
       arrange(desc(percentage))
 
+    # find for each cell its nearest neighbor (not self) in the expression_projected
     nn_ix <- FNN::knnx.index(
-      trajectory$expression[progressions_edge$cell_id, ],
-      trajectory$expression_projected[progressions_edge$cell_id, ],
-      k = 1
-    )[, 1]
+      expression[progressions_edge$cell_id, ],
+      expression_projected[progressions_edge$cell_id, ],
+      k = 2
+    )
+    nn_ix[, 1][nn_ix[, 1] == seq_len(nrow(nn_ix))] <- NA
+    nn_ix <- nn_ix %>% apply(1, function(x) first(x[!is.na(x)]))
 
+    # find out whether RNA velocity support and edge reversal
     sum(nn_ix > seq_along(nn_ix))/sum(nn_ix < seq_along(nn_ix))
   })
 

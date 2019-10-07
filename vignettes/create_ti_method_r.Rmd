@@ -95,9 +95,9 @@ trajectory <- infer_trajectory(dataset, ti_comp1())
 ```
 
 ```{r}
-# if ("dynplot" %in% rownames(installed.packages())) {
-#   dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
-# }
+if (requireNamespace("dynplot", quietly = TRUE)) {
+  dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
+}
 ```
 
 ## Making your method available for other users

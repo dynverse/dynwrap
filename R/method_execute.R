@@ -33,8 +33,12 @@
   rm(parameters_)
 
   # initialise stdout/stderr files
-  sink_meta <- .method_init_sinks(verbose = verbose, return_verbose = return_verbose)
-  on.exit(.method_close_sinks(sink_meta))
+  sink_meta <- .method_init_sinks_and_wd(
+    name = method$method$id,
+    verbose = verbose,
+    return_verbose = return_verbose
+  )
+  on.exit(.method_close_sinks_and_wd(sink_meta))
 
   tryCatch({
     # print helpful message
@@ -86,13 +90,13 @@
 
     # run postproc
     if (method$run$backend == "function") {
-      .method_execution_postproc_function(preproc_meta = preproc_meta)
+      .method_execution_postproc_function(preproc_meta = preproc_meta) # empty
     } else {
       .method_execution_postproc_container(preproc_meta = preproc_meta)
     }
 
     # retrieve stdout/stderr
-    stds <- .method_close_sinks(sink_meta)
+    stds <- .method_close_sinks_and_wd(sink_meta)
     on.exit({}, add = FALSE)
 
     # stop timings
@@ -120,18 +124,21 @@
       prior_df = list(method$wrapper$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(inputs)))
     ) %>%
       bind_cols(as.data.frame(as.list(timings_diff)))
-
-    lst(trajectory, summary)
-
   }, error = function(e) {
-    on.exit({}, add = FALSE)
-    stds <- .method_close_sinks(sink_meta)
-
-    stop("Error produced within dynwrap: ", e$message)
+    stop("Error produced in dynwrap input/output:\n", e$message)
   })
+  lst(trajectory, summary)
 }
 
-.method_init_sinks <- function(verbose, return_verbose) {
+.method_init_sinks_and_wd <- function(name, verbose, return_verbose) {
+  # create a temporary directory to set as working directory,
+  # to avoid polluting the working directory if a method starts
+  # producing files haphazardly
+  tmp_wd <- tempfile(pattern = name)
+  dir.create(tmp_wd)
+  old_wd <- getwd()
+  setwd(tmp_wd)
+
   if (!verbose || return_verbose) {
     stdout_file <- tempfile()
     sink(stdout_file, type = "output", split = verbose, append = TRUE)
@@ -147,6 +154,8 @@
   }
 
   lst(
+    tmp_wd,
+    old_wd,
     stdout_file,
     stderr_file,
     stderr_con,
@@ -154,7 +163,14 @@
     return_verbose
   )
 }
-.method_close_sinks <- function(sink_meta) {
+.method_close_sinks_and_wd <- function(sink_meta) {
+  # wd to previous folder
+  setwd(sink_meta$old_wd)
+
+  # Remove temporary folder
+  unlink(sink_meta$tmp_wd, recursive = TRUE, force = TRUE)
+
+  # close sinks
   if (sink.number(type = c("output", "message")) > 0) {
     if (!sink_meta$verbose || sink_meta$return_verbose) {
       sink(type = "output")

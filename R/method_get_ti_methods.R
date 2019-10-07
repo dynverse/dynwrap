@@ -13,13 +13,13 @@
 #' @examples
 #' head(get_ti_methods())
 #'
-#' @importFrom utils lsf.str installed.packages
+#' @importFrom utils lsf.str
 #' @importFrom stringr str_replace
 #' @export
 get_ti_methods <- function(
   method_ids = NULL,
   as_tibble = TRUE,
-  ti_packages = ifelse("dynmethods" %in% rownames(utils::installed.packages()), "dynmethods", "dynwrap"),
+  ti_packages = ifelse(requireNamespace("dynmethods", quietly = TRUE), "dynmethods", "dynwrap"),
   evaluate = FALSE
 ) {
   ti_methods <- map(ti_packages, function(package) {

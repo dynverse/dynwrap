@@ -33,9 +33,6 @@ dataset <-
   ) %>%
   add_prior_information(start_id = cell_ids[[1]])
 
-# make sure dynmethods is not installed
-# if ("dynmethods" %in% rownames(utils::installed.packages())) remove.packages("dynmethods")
-
 test_that("Testing infer_trajectory with control methods", {
   method <- ti_comp1()
 

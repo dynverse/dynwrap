@@ -27,8 +27,10 @@ create_ti_method_definition <- function(
   script,
   return_function = TRUE
 ) {
-  definition_path <- definition
+  definition_path <- normalizePath(definition)
   definition <- .method_load_definition(definition)
+
+  if (!is.null(script)) script <- normalizePath(script)
 
   definition$run <- list(
     backend = "script",
