@@ -1,6 +1,7 @@
 #' Reorients the edges of the milestone network to the cell's RNA velocity vectors
 #'
 #' @inheritParams common_param
+#' @inheritParams add_expression
 #'
 #' @return The trajectory with oriented *milestone_network* and *progressions*
 #'

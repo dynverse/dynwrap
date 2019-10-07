@@ -10,6 +10,10 @@ orient_topology_to_velocity(trajectory,
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
+
+\item{expression}{The normalised expression values of genes (columns) within cells (rows). This can be both a dense and sparse matrix.}
+
+\item{expression_projected}{Projected expression using RNA velocity of genes (columns) within cells (rows).  This can be both a dense and sparse matrix.}
 }
 \value{
 The trajectory with oriented \emph{milestone_network} and \emph{progressions}
