@@ -146,6 +146,19 @@ flip_edges <- function(
     ) %>%
     select(-flip, -from2)
 
+  if (!is.null(trajectory$dimred_segment_progressions)) {
+    trajectory$dimred_segment_progressions <-
+      trajectory$dimred_segment_progressions %>%
+      left_join(trajectory$milestone_network %>% select(from, to, flip), c("from", "to")) %>%
+      mutate(
+        from2 = from,
+        from = ifelse(flip, to, from),
+        to = ifelse(flip, from2, to),
+        percentage = ifelse(flip, 1-percentage, percentage)
+      ) %>%
+      select(-flip, -from2)
+  }
+
   trajectory$milestone_network <- trajectory$milestone_network %>%
     mutate(
       from2 = from,
