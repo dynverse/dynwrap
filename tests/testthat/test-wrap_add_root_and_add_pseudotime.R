@@ -46,6 +46,7 @@ trajectory <- wrap_data(
   divergence_regions = divergence_regions
 )
 
+# dynplot::plot_graph(trajectory, label_milestones = TRUE)
 test_that("Testing add_root", {
   rooted <- add_root(trajectory, root_cell_id = "a")
 
@@ -74,5 +75,5 @@ test_that("Testing add_root_using_expression",{
 test_that("Testing calculate_pseudotime", {
   trajectory <- add_root(trajectory)
   trajectory <- add_pseudotime(trajectory)
-  expect_equal(trajectory$pseudotime, c("a" = 0, "b" = 1.4, "c" = 2.6, "d" = 4.3, "e" = 4.4, "f" = 6.8))
+  expect_equal(trajectory$pseudotime, c("a" = 0.2, "b" = 1.6, "c" = 2.8, "d" = 4.5, "e" = 4.6, "f" = 7.0))
 })
