@@ -1,15 +1,15 @@
-# dynwrap 1.2 (unreleased)
+# dynwrap 1.2.0 
 
-## Documentation
+* DOCUMENTATION: Added examples to all functions
 
-* Added examples to all functions
+* FUNCTIONALITY: Improved RNA velocity handling. Not all features need to be present
+  in the projected expression, allowing integration with standard velocyto.R pipelines.
+  
+* BUG FIX: Fix pseudotime calculation on branching trajectories (#139).
 
-## New features
+# dynwrap 1.1.4 (11-10-2019)
 
-* Improved RNA velocity handling:
-  - Not all features need to be present in the projected expression, allowing integration with standard velocyto.R pipelines
-
-# dynwrap 1.1.4 (27-06-2019)
+First CRAN release!
 
 * BUG FIX: Fixed #142 where the error message was truncated
 

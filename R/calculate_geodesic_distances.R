@@ -67,7 +67,7 @@ calculate_geodesic_distances_ <- function(
   }
 
   if (!is.null(waypoint_milestone_percentages)) {
-    waypoint_ids <- c(waypoint_ids, unique(waypoint_milestone_percentages$waypoint_id))
+    waypoint_ids <- unique(c(waypoint_ids, waypoint_milestone_percentages$waypoint_id))
     milestone_percentages <- bind_rows(
       milestone_percentages,
       waypoint_milestone_percentages %>% rename(cell_id = waypoint_id)
@@ -118,7 +118,8 @@ calculate_geodesic_distances_ <- function(
       tent_nomid <- setdiff(tent, mid)
       tent_distances <- igraph::distances(mil_gr, v = mid, to = tent, mode = "out", weights = igraph::E(mil_gr)$length)
 
-      relevant_pct <- milestone_percentages %>%
+      relevant_pct <-
+        milestone_percentages %>%
         group_by(cell_id) %>%
         filter(all(milestone_id %in% tent)) %>%
         ungroup()
@@ -160,15 +161,12 @@ calculate_geodesic_distances_ <- function(
 
       distances <- distances %>%
         as.matrix() %>%
-
         reshape2::melt(varnames = c("from", "to"), value.name = "length") %>%
         mutate_at(c("from", "to"), as.character) %>%
         filter(from != to)
 
       distances
     })
-
-  cell_in_tent_distances[is.na(cell_in_tent_distances$length), ]
 
   if (directed) {
     # switch from and to if distance is negative

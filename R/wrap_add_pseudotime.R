@@ -6,17 +6,22 @@ calculate_pseudotime <- function(trajectory) {
     trajectory <- add_root(trajectory)
   }
 
-  root_cell_id <- trajectory$milestone_percentages %>%
-    filter(milestone_id == trajectory$root_milestone_id) %>%
-    arrange(desc(percentage)) %>%
-    pull(cell_id) %>%
-    first()
+  mid <- trajectory$root_milestone_id
+  mid_tempname <- paste0("MyRootMilestone", mid)
 
-  if(is.na(root_cell_id)) {stop("Could not find rooting cell for pseudotime calculation")}
+  geod <- calculate_geodesic_distances(
+    trajectory,
+    waypoint_cells = mid_tempname,
+    waypoint_milestone_percentages = tibble(waypoint_id = mid_tempname, milestone_id = mid, percentage = 1),
+    directed = TRUE
+  )
+  rownames(geod) <- mid
 
-  pseudotime <- calculate_geodesic_distances(trajectory, waypoint_cells = root_cell_id, directed = TRUE)[1, ]
-
-  pseudotime
+  if (nrow(geod) == 1) {
+    geod[1,]
+  } else {
+    t(geod)
+  }
 }
 
 
