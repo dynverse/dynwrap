@@ -56,7 +56,10 @@ add_root <- function(
   }
 
   if (flip_edges) {
-    gr <- igraph::graph_from_data_frame(trajectory$milestone_network %>% rename(weight = length))
+    gr <- igraph::graph_from_data_frame(
+      trajectory$milestone_network %>% rename(weight = length),
+      directed = any(trajectory$milestone_network$directed)
+    )
 
     # TODO: allow to add multiple roots for disconnected trajectories??
 
