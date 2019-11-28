@@ -18,7 +18,7 @@ A function that can be used to adapt the parameters of the method. This function
 }
 \description{
 The local method definition file describes a method that is runnable on the local system.
-See \href{../doc/create_ti_method_definition.html}{vignette("create_ti_method_definition", "dynwrap")} for a tutorial on how to create a containerized TI method.
+See \href{../doc/create_ti_method_definition.html}{\code{vignette("create_ti_method_definition", "dynwrap")}} for a tutorial on how to create a containerized TI method.
 }
 \examples{
 \donttest{

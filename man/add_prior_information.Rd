@@ -6,18 +6,38 @@
 \alias{generate_prior_information}
 \title{Add or compute prior information for a trajectory}
 \usage{
-add_prior_information(dataset, start_id = NULL, end_id = NULL,
-  groups_id = NULL, groups_network = NULL, features_id = NULL,
-  groups_n = NULL, start_n = NULL, end_n = NULL, leaves_n = NULL,
-  timecourse_continuous = NULL, timecourse_discrete = NULL,
-  verbose = TRUE)
+add_prior_information(
+  dataset,
+  start_id = NULL,
+  end_id = NULL,
+  groups_id = NULL,
+  groups_network = NULL,
+  features_id = NULL,
+  groups_n = NULL,
+  start_n = NULL,
+  end_n = NULL,
+  leaves_n = NULL,
+  timecourse_continuous = NULL,
+  timecourse_discrete = NULL,
+  verbose = TRUE
+)
 
 is_wrapper_with_prior_information(dataset)
 
-generate_prior_information(cell_ids, milestone_ids, milestone_network,
-  milestone_percentages, progressions, divergence_regions, expression,
-  feature_info = NULL, cell_info = NULL, marker_fdr = 0.005,
-  given = NULL, verbose = FALSE)
+generate_prior_information(
+  cell_ids,
+  milestone_ids,
+  milestone_network,
+  milestone_percentages,
+  progressions,
+  divergence_regions,
+  expression,
+  feature_info = NULL,
+  cell_info = NULL,
+  marker_fdr = 0.005,
+  given = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}

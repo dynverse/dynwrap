@@ -6,17 +6,28 @@
 \alias{get_dimred}
 \title{Add or create a dimensionality reduction}
 \usage{
-add_dimred(dataset, dimred, dimred_projected = NULL,
-  dimred_milestones = NULL, dimred_segment_progressions = NULL,
-  dimred_segment_points = NULL, project_trajectory = TRUE,
+add_dimred(
+  dataset,
+  dimred,
+  dimred_projected = NULL,
+  dimred_milestones = NULL,
+  dimred_segment_progressions = NULL,
+  dimred_segment_points = NULL,
+  project_trajectory = TRUE,
   connect_segments = FALSE,
   pair_with_velocity = !is.null(dataset$expression_projected),
-  expression_source = "expression", ...)
+  expression_source = "expression",
+  ...
+)
 
 is_wrapper_with_dimred(dataset)
 
-get_dimred(dataset, dimred = NULL, expression_source = "expression",
-  return_other_dimreds = FALSE)
+get_dimred(
+  dataset,
+  dimred = NULL,
+  expression_source = "expression",
+  return_other_dimreds = FALSE
+)
 }
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}

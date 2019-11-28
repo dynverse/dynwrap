@@ -313,7 +313,7 @@ connect_dimred_segments <- function(dimred_segment_progressions, dimred_segment_
 
 
 dimred_merged <- function(dimred, expression, expression_projected) {
-  merge_projected(
+    merge_projected(
     expression,
     expression_projected
   ) %>%

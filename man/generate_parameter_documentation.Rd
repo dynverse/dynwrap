@@ -2,7 +2,7 @@
 % Please edit documentation in R/method_create_ti_method_r.R
 \name{generate_parameter_documentation}
 \alias{generate_parameter_documentation}
-\title{Generate the parameter documentation of a method, use with \code{@eval}}
+\title{Generate the parameter documentation of a method, use with \verb{@eval}}
 \usage{
 generate_parameter_documentation(definition)
 }
@@ -13,5 +13,5 @@ generate_parameter_documentation(definition)
 A character vector containing the roxygen tags
 }
 \description{
-Generate the parameter documentation of a method, use with \code{@eval}
+Generate the parameter documentation of a method, use with \verb{@eval}
 }

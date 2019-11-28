@@ -4,8 +4,13 @@
 \alias{add_cyclic_trajectory}
 \title{Constructs a circular trajectory using the pseudotime values of each cell.}
 \usage{
-add_cyclic_trajectory(dataset, pseudotime, directed = FALSE,
-  do_scale_minmax = TRUE, ...)
+add_cyclic_trajectory(
+  dataset,
+  pseudotime,
+  directed = FALSE,
+  do_scale_minmax = TRUE,
+  ...
+)
 }
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}

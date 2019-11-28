@@ -3,7 +3,6 @@
 \docType{package}
 \name{dynwrap}
 \alias{dynwrap}
-\alias{dynwrap-package}
 \title{Inferring and adapting single-cell trajectories}
 \description{
 \figure{logo.png}{}

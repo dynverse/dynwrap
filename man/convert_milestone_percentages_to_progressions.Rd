@@ -7,11 +7,19 @@
 \alias{convert_progressions_to_milestone_percentages}
 \title{Conversion between milestone percentages and progressions}
 \usage{
-convert_milestone_percentages_to_progressions(cell_ids, milestone_ids,
-  milestone_network, milestone_percentages)
+convert_milestone_percentages_to_progressions(
+  cell_ids,
+  milestone_ids,
+  milestone_network,
+  milestone_percentages
+)
 
-convert_progressions_to_milestone_percentages(cell_ids, milestone_ids,
-  milestone_network, progressions)
+convert_progressions_to_milestone_percentages(
+  cell_ids,
+  milestone_ids,
+  milestone_network,
+  progressions
+)
 }
 \arguments{
 \item{cell_ids}{The identifiers of the cells.}

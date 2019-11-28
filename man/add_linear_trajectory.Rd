@@ -4,8 +4,13 @@
 \alias{add_linear_trajectory}
 \title{Constructs a linear trajectory using pseudotime values}
 \usage{
-add_linear_trajectory(dataset, pseudotime, directed = FALSE,
-  do_scale_minmax = TRUE, ...)
+add_linear_trajectory(
+  dataset,
+  pseudotime,
+  directed = FALSE,
+  do_scale_minmax = TRUE,
+  ...
+)
 }
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
