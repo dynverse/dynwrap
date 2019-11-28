@@ -5,33 +5,11 @@ Initial submission of dyno: Representing and Inferring Single-Cell Trajectories
   
 ## Resubmission
 
-> Thanks, if there are references describing the (theoretical background
-of) methods in your package, please add these in the Description field
-of your DESCRIPTION file.
+> Thanks, please do not change the working directory in your functions. If
+you really have to, please ensure with on.exit() that the old settings
+are reset
 
-Fixed!
-
-> Please do not change the working directory in your functions.
-If you really have to, please ensure with on.exit() that the old 
-settings are reset.
-
-Thanks! I changed the code to:
-```
-sink_meta <- .method_init_sinks_and_wd(
-  name = method$method$id,
-  verbose = verbose,
-  return_verbose = return_verbose
-)
-on.exit(.method_close_sinks_and_wd(sink_meta))
-```
-
-> You are using installed.packages().
-
-Make sense that I should not be using installed.packages().
-I now use requireNamespace instead.
-```
-requireNamespace("dynmethods", quietly = TRUE)
-```
+Fixed! :)
 
 ## Test environments
 * local Fedora install, R 3.6.0
