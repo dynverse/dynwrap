@@ -47,7 +47,7 @@ trajectory <- wrap_data(
 )
 
 # dynplot::plot_graph(trajectory, label_milestones = TRUE)
-test_that("Testing add_root", {
+test_that("Testing add_root on simple linear trajectory", {
   rooted <- add_root(trajectory, root_cell_id = "a")
 
   expect_true(rooted$root_milestone_id == "W")
@@ -59,6 +59,20 @@ test_that("Testing add_root", {
 
   expect_error(add_root(trajectory, root_cell_id = "trajectories are cool"))
   expect_error(add_root(trajectory, root_milestone_id = "trajectories are cool"))
+})
+
+
+test_that("Testing add_root on a more complex linear trajectory", {
+  trajectory2 <- wrap_data(cell_ids = "a") %>%
+    add_trajectory(
+      milestone_network = tibble(from = c("2", "1", "4", "3"), to = c("1", "4", "3", "5"), length = 1, directed = TRUE),
+      progressions = tibble(cell_id = "a", from = "2", to = "1", percentage = 0)
+    )
+
+
+  trajectory2_rooted <- add_root(trajectory2, root_milestone_id = "5")
+
+  expect_true(all(trajectory2_rooted$milestone_network$from == c("5", "3", "4", "1")))
 })
 
 
