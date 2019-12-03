@@ -7,6 +7,8 @@
 
 * BUG FIX `flip_edges()`: Also flip `dimred_segment_progressions` if available.
 
+* BUG FIX `add_root()`: Fix rooting for some linear trajectories (#149)
+
 # dynwrap 1.1.4 (11-10-2019)
 
 First CRAN release!

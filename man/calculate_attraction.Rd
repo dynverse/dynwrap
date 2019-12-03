@@ -4,8 +4,13 @@
 \alias{calculate_attraction}
 \title{Calculate the attraction of cells to other cells using velocity}
 \usage{
-calculate_attraction(current, projected, cells = colnames(projected),
-  n_waypoints = 50, k = 50)
+calculate_attraction(
+  current,
+  projected,
+  cells = colnames(projected),
+  n_waypoints = 50,
+  k = 50
+)
 }
 \arguments{
 \item{current}{Current expression}

@@ -4,8 +4,13 @@
 \alias{simplify_igraph_network}
 \title{Simplify an igraph network such that consecutive linear edges are removed}
 \usage{
-simplify_igraph_network(gr, allow_duplicated_edges = TRUE,
-  allow_self_loops = TRUE, force_keep = NULL, edge_points = NULL)
+simplify_igraph_network(
+  gr,
+  allow_duplicated_edges = TRUE,
+  allow_self_loops = TRUE,
+  force_keep = NULL,
+  edge_points = NULL
+)
 }
 \arguments{
 \item{gr}{An igraph object, see \code{\link[igraph:graph]{igraph::graph()}}}

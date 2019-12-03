@@ -5,8 +5,11 @@
 \alias{project_milestones}
 \title{Project a trajectory onto a dimensionality reduction}
 \usage{
-project_trajectory(trajectory, dimred,
-  waypoints = select_waypoints(trajectory))
+project_trajectory(
+  trajectory,
+  dimred,
+  waypoints = select_waypoints(trajectory)
+)
 
 project_milestones(trajectory, dimred)
 }

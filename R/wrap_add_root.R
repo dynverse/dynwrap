@@ -68,7 +68,7 @@ add_root <- function(
 
     # add milestones upstream of the root id
     ord2 <- igraph::distances(gr, v = root_milestone_id, mode = "all")[1,] %>% keep(is.finite) %>% sort() %>% names()
-    milestone_order <- intersect(ord1, ord2)
+    milestone_order <- union(ord1, ord2)
 
     # why though? should disconnected milestones be reordered?
     # I'm putting this in comments for now.

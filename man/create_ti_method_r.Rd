@@ -4,9 +4,14 @@
 \alias{create_ti_method_r}
 \title{Create a TI method from an R function wrapper}
 \usage{
-create_ti_method_r(definition, run_fun, package_required = character(),
-  package_loaded = character(), remotes_package = character(),
-  return_function = TRUE)
+create_ti_method_r(
+  definition,
+  run_fun,
+  package_required = character(),
+  package_loaded = character(),
+  remotes_package = character(),
+  return_function = TRUE
+)
 }
 \arguments{
 \item{definition}{A definition, see \code{\link[=definition]{definition()}}}

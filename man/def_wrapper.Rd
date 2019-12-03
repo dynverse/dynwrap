@@ -4,9 +4,13 @@
 \alias{def_wrapper}
 \title{Meta information on the wrapper}
 \usage{
-def_wrapper(input_required, input_optional = character(),
-  type = "trajectory", topology_inference = NULL,
-  trajectory_types = character())
+def_wrapper(
+  input_required,
+  input_optional = character(),
+  type = "trajectory",
+  topology_inference = NULL,
+  trajectory_types = character()
+)
 }
 \arguments{
 \item{input_required}{The required inputs for this method. See \code{dynwrap::allowed_inputs()}.}

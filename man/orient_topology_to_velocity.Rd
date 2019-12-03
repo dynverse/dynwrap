@@ -4,9 +4,11 @@
 \alias{orient_topology_to_velocity}
 \title{Reorients the edges of the milestone network to the cell's RNA velocity vectors}
 \usage{
-orient_topology_to_velocity(trajectory,
+orient_topology_to_velocity(
+  trajectory,
   expression = trajectory$expression,
-  expression_projected = trajectory$expression_projected)
+  expression_projected = trajectory$expression_projected
+)
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}

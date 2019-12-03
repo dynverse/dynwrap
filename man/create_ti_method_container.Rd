@@ -4,8 +4,11 @@
 \alias{create_ti_method_container}
 \title{Create a TI method from a docker / singularity container}
 \usage{
-create_ti_method_container(container_id, pull_if_needed = TRUE,
-  return_function = TRUE)
+create_ti_method_container(
+  container_id,
+  pull_if_needed = TRUE,
+  return_function = TRUE
+)
 }
 \arguments{
 \item{container_id}{The name of the container repository (e.g. \code{"dynverse/ti_angle"}).}
@@ -18,7 +21,7 @@ create_ti_method_container(container_id, pull_if_needed = TRUE,
 A function that can be used to adapt the parameters of the method. This functions returns a list containing all metadata of the method, and can be used to \link[=infer_trajectory]{infer a trajectory}
 }
 \description{
-These functions create a TI method from a container using \code{babelwhale}. Supports both docker and singularity as a backend. See \href{../doc/create_ti_method_container.html}{vignette("create_ti_method_container", "dynwrap")} for a tutorial on how to create a containerized TI method.
+These functions create a TI method from a container using \code{babelwhale}. Supports both docker and singularity as a backend. See \href{../doc/create_ti_method_container.html}{\code{vignette("create_ti_method_container", "dynwrap")}} for a tutorial on how to create a containerized TI method.
 }
 \examples{
 \donttest{

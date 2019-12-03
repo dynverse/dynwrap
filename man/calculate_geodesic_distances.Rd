@@ -5,11 +5,18 @@
 \alias{compute_tented_geodesic_distances}
 \title{Calculate geodesic distances between cells in a trajectory}
 \usage{
-calculate_geodesic_distances(trajectory, waypoint_cells = NULL,
-  waypoint_milestone_percentages = NULL, directed = FALSE)
+calculate_geodesic_distances(
+  trajectory,
+  waypoint_cells = NULL,
+  waypoint_milestone_percentages = NULL,
+  directed = FALSE
+)
 
-compute_tented_geodesic_distances(trajectory, waypoint_cells = NULL,
-  waypoint_milestone_percentages = NULL)
+compute_tented_geodesic_distances(
+  trajectory,
+  waypoint_cells = NULL,
+  waypoint_milestone_percentages = NULL
+)
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
@@ -18,7 +25,7 @@ compute_tented_geodesic_distances(trajectory, waypoint_cells = NULL,
 
 \item{waypoint_milestone_percentages}{The milestone percentages of non-cell waypoints, containing waypoint_id, milestone_id and percentage columns}
 
-\item{directed}{Take into account the directions of the milestone edges. The cells that cannot be reached from a particular waypoint will have distance infinity.}
+\item{directed}{Take into account the directions of the milestone edges. The cells that cannot be reached from a particular waypoint will have distance infinity. You can also give a character, if it is "forward" it will function the same as TRUE, if "reverse" it will calculate distances from a cell to waypoints.}
 }
 \value{
 A matrix containing geodesic distances between each waypoint cell (rows) and cell (columns)

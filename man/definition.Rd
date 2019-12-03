@@ -5,8 +5,14 @@
 \alias{is_ti_method}
 \title{Create a definition}
 \usage{
-definition(method, wrapper, manuscript = NULL, container = NULL,
-  package = NULL, parameters = parameter_set())
+definition(
+  method,
+  wrapper,
+  manuscript = NULL,
+  container = NULL,
+  package = NULL,
+  parameters = parameter_set()
+)
 
 is_ti_method(method)
 }
@@ -26,7 +32,7 @@ is_ti_method(method)
 \description{
 A definition contains meta information on a TI method and various aspects thereof.
 For brevity, the example only contains a minimum example, check the documentation
-of the \code{def_*} helper functions for more extensive examples.
+of the \verb{def_*} helper functions for more extensive examples.
 }
 \examples{
 library(dynparam)

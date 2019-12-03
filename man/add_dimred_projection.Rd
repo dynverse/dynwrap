@@ -4,8 +4,15 @@
 \alias{add_dimred_projection}
 \title{Constructs a trajectory by projecting cells within a dimensionality reduction}
 \usage{
-add_dimred_projection(dataset, milestone_ids = NULL, milestone_network,
-  dimred, dimred_milestones, grouping = NULL, ...)
+add_dimred_projection(
+  dataset,
+  milestone_ids = NULL,
+  milestone_network,
+  dimred,
+  dimred_milestones,
+  grouping = NULL,
+  ...
+)
 }
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}

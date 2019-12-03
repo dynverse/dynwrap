@@ -4,8 +4,13 @@
 \alias{add_end_state_probabilities}
 \title{Constructs a multifurcating trajectory using end state probabilities}
 \usage{
-add_end_state_probabilities(dataset, end_state_probabilities,
-  pseudotime = NULL, do_scale_minmax = TRUE, ...)
+add_end_state_probabilities(
+  dataset,
+  end_state_probabilities,
+  pseudotime = NULL,
+  do_scale_minmax = TRUE,
+  ...
+)
 }
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}

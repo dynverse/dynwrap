@@ -4,10 +4,12 @@
 \alias{project_waypoints}
 \title{Project waypoints of a trajectory (e.g. milestones) into a space defined by cells (e.g. expression or a dimensionality reduction)}
 \usage{
-project_waypoints(trajectory, space,
+project_waypoints(
+  trajectory,
+  space,
   waypoints = dynwrap::select_waypoints(trajectory),
-  trajectory_projection_sd = sum(trajectory$milestone_network$length) *
-  0.05)
+  trajectory_projection_sd = sum(trajectory$milestone_network$length) * 0.05
+)
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}

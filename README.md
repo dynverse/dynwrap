@@ -52,8 +52,6 @@ list of changes.
 
 ### Recent changes in dynwrap 1.2.0
 
-  - DOCUMENTATION: Added examples to all functions
-
   - FUNCTIONALITY: Improved RNA velocity handling. Not all features need
     to be present in the projected expression, allowing integration with
     standard velocyto.R pipelines.
@@ -64,12 +62,16 @@ list of changes.
   - BUG FIX `flip_edges()`: Also flip `dimred_segment_progressions` if
     available.
 
+  - BUG FIX `add_root()`: Fix rooting for some linear trajectories
+    (\#149)
+
 ### Recent changes in dynwrap 1.1.4 (11-10-2019)
 
 First CRAN release\!
 
-  - BUG FIX: Fixed \#142 where the error message was
-truncated
+  - BUG FIX: Fixed \#142 where the error message was truncated
+
+  - DOCUMENTATION: Added examples to all functions.
 
 ## Dynverse dependencies
 
