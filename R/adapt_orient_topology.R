@@ -14,7 +14,7 @@
 #'   b = pseudotime ** 2,
 #'   c = log(pseudotime)
 #' ))
-#' expression_projected <- as.matrix(data.frame(
+#' expression_future <- as.matrix(data.frame(
 #'   a = (pseudotime + 1),
 #'   b = (pseudotime + 1) ** 2,
 #'   c = log(pseudotime + 1)
@@ -38,7 +38,7 @@
 #' trajectory <- wrap_expression(
 #'   counts = expression,
 #'   expression = expression,
-#'   expression_projected = expression_projected
+#'   expression_future = expression_future
 #' )
 #' trajectory <- add_trajectory(
 #'   trajectory,
@@ -59,35 +59,24 @@
 #' @export
 orient_topology_to_velocity <- function(
   trajectory,
-  expression = trajectory$expression,
-  expression_projected = trajectory$expression_projected
+  transition_matrix
 ) {
   # dummy proofing
   assert_that(is(trajectory, "dynwrap::with_trajectory"))
-  assert_that(!is.null(expression))
-  assert_that(!is.null(expression_projected))
+  assert_that(!is.null(transition_matrix))
 
   if (nrow(trajectory$divergence_regions)) {
     stop("Orienting topologies with divergence regions doesn't work yet")
   }
 
   flip_fractions <- pmap_dbl(trajectory$milestone_network, function(from, to, ...) {
-    # order cells based on their percentage
     progressions_edge <- trajectory$progressions %>%
       filter(from == !!from, to == !!to) %>%
-      arrange(desc(percentage))
+      arrange(percentage)
 
-    # find for each cell its nearest neighbor (not self) in the expression_projected
-    nn_ix <- FNN::knnx.index(
-      expression[progressions_edge$cell_id, ],
-      expression_projected[progressions_edge$cell_id, ],
-      k = 2
-    )
-    nn_ix[, 1][nn_ix[, 1] == seq_len(nrow(nn_ix))] <- NA
-    nn_ix <- nn_ix %>% apply(1, function(x) first(x[!is.na(x)]))
+    transition_matrix_ordered <- transition_matrix[progressions_edge$cell_id, progressions_edge$cell_id]
 
-    # find out whether RNA velocity support and edge reversal
-    sum(nn_ix > seq_along(nn_ix))/sum(nn_ix < seq_along(nn_ix))
+    sum(Matrix::tril(transition_matrix_ordered, 1)) / sum(Matrix::triu(transition_matrix_ordered, 1))
   })
 
   milestone_network_toflip <- trajectory$milestone_network %>%
