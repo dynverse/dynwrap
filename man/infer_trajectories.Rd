@@ -59,7 +59,7 @@ Must be a subset of all available priors (\link[dynwrap:priors]{dynwrap::priors}
 \item{map_fun}{A map function to use when inferring trajectories with multiple datasets or methods.
 Allows to parallellise the execution in an arbitrary way.}
 
-\item{...}{Any additional parameters given to the method, will be concatednated to the parameters argument}
+\item{...}{Any additional parameters given to the method, will be concatenated to the parameters argument}
 }
 \value{
 \strong{\code{infer_trajectory}}: A trajectory object, which is a list containing

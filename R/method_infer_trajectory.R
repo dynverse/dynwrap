@@ -184,7 +184,7 @@ infer_trajectories <- function(
 }
 
 #' @rdname infer_trajectories
-#' @param ... Any additional parameters given to the method, will be concatednated to the parameters argument
+#' @param ... Any additional parameters given to the method, will be concatenated to the parameters argument
 #' @export
 infer_trajectory <- dynutils::inherit_default_params(
   list(infer_trajectories),
