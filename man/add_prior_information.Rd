@@ -19,6 +19,7 @@ add_prior_information(
   leaves_n = NULL,
   timecourse_continuous = NULL,
   timecourse_discrete = NULL,
+  dimred = NULL,
   verbose = TRUE
 )
 
@@ -63,6 +64,8 @@ generate_prior_information(
 \item{timecourse_continuous}{The time for every cell}
 
 \item{timecourse_discrete}{The time for every cell in groups}
+
+\item{dimred}{A dimensionality reduction of the cells (see \code{\link[=add_dimred]{add_dimred()}})}
 
 \item{verbose}{Whether or not to print informative messages}
 

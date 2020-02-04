@@ -4,18 +4,10 @@
 \alias{orient_topology_to_velocity}
 \title{Reorients the edges of the milestone network to the cell's RNA velocity vectors}
 \usage{
-orient_topology_to_velocity(
-  trajectory,
-  expression = trajectory$expression,
-  expression_projected = trajectory$expression_projected
-)
+orient_topology_to_velocity(trajectory, transition_matrix)
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
-
-\item{expression}{The normalised expression values of genes (columns) within cells (rows). This can be both a dense and sparse matrix.}
-
-\item{expression_projected}{Projected expression using RNA velocity of genes (columns) within cells (rows).  This can be both a dense and sparse matrix.}
 }
 \value{
 The trajectory with oriented \emph{milestone_network} and \emph{progressions}
@@ -32,7 +24,7 @@ expression <- as.matrix(data.frame(
   b = pseudotime ** 2,
   c = log(pseudotime)
 ))
-expression_projected <- as.matrix(data.frame(
+expression_future <- as.matrix(data.frame(
   a = (pseudotime + 1),
   b = (pseudotime + 1) ** 2,
   c = log(pseudotime + 1)
@@ -56,7 +48,7 @@ progressions <- tibble::tribble(
 trajectory <- wrap_expression(
   counts = expression,
   expression = expression,
-  expression_projected = expression_projected
+  expression_future = expression_future
 )
 trajectory <- add_trajectory(
   trajectory,

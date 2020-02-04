@@ -10,7 +10,7 @@ wrap_expression(
   counts,
   cell_info = NULL,
   feature_info = NULL,
-  expression_projected = NULL,
+  expression_future = NULL,
   ...
 )
 }
@@ -25,12 +25,12 @@ wrap_expression(
 
 \item{feature_info}{Optional meta-information of the features, a dataframe with at least \emph{feature_id} as column}
 
-\item{expression_projected}{Projected expression using RNA velocity of genes (columns) within cells (rows).  This can be both a dense and sparse matrix.}
+\item{expression_future}{Projected expression using RNA velocity of genes (columns) within cells (rows).  This can be both a dense and sparse matrix.}
 
 \item{...}{extra information to be stored in the dataset}
 }
 \description{
-Projected expression based on RNA velocity can also be added to the wrapper through the \code{expression_projected} argument
+Projected expression based on RNA velocity can also be added to the wrapper through the \code{expression_future} argument
 }
 \details{
 Information about the cells and/or features can be added through \code{cell_info} and \code{feature_info}
@@ -39,12 +39,12 @@ Information about the cells and/or features can be added through \code{cell_info
 dataset <- wrap_expression(
   counts = example_dataset$counts,
   expression = example_dataset$expression,
-  expression_projected = example_dataset$expression_projected
+  expression_future = example_dataset$expression_future
 )
 
 dataset$counts[1:10, 1:3]
 dataset$expression[1:10, 1:3]
-dataset$expression_projected[1:10, 1:3]
+dataset$expression_future[1:10, 1:3]
 
 }
 \keyword{infer_trajectory}

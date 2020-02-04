@@ -46,7 +46,7 @@ test_that("orient_topology_to_velocity orients a linear trajectory correctly", {
     b = pseudotime ** 2,
     c = log(pseudotime)
   ))
-  expression_projected <- as.matrix(data.frame(
+  expression_future <- as.matrix(data.frame(
     a = (pseudotime + 1),
     b = (pseudotime + 1) ** 2,
     c = log(pseudotime + 1)
@@ -70,7 +70,7 @@ test_that("orient_topology_to_velocity orients a linear trajectory correctly", {
   trajectory <- wrap_expression(
     counts = expression,
     expression = expression,
-    expression_projected = expression_projected
+    expression_future = expression_future
   ) %>%
     add_trajectory(milestone_network = milestone_network, progressions = progressions)
 
