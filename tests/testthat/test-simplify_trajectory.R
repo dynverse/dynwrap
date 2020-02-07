@@ -21,6 +21,15 @@ test_that("Simple test", {
     "a",            "in",    "want", 0.0,
     "single",       "want",  "must", 0.4
   )
+  dimred_segment_progressions <- tribble(
+     ~from,    ~to, ~percentage,
+     "must",  "be",   0.3,
+    "must",  "be",   1.0,
+    "be",    "in",   0.5,
+    "be",    "in",   0.9,
+    "in",    "want", 0.0,
+    "want",  "must", 0.4
+  )
 
   trajectory<-
     wrap_data(
@@ -32,10 +41,12 @@ test_that("Simple test", {
       milestone_network = milestone_network,
       progressions = progressions
     )
+  trajectory$dimred_segment_progressions <- dimred_segment_progressions
   simp <- simplify_trajectory(trajectory)
 
   # TODO: Add more tests! for more trajectory types! and more parameters!
 
+  expect_true(nrow(trajectory$dimred_segment_progressions) == nrow(simp$dimred_segment_progressions))
 })
 
 
