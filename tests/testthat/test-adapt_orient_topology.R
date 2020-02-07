@@ -22,6 +22,12 @@ test_that("flip_edges works correctly", {
   ) %>%
     add_trajectory(milestone_network = milestone_network, progressions = progressions)
 
+  trajectory$dimred_segment_progressions <- tribble(
+    ~from, ~to, ~percentage,
+    "B", "A", 0,
+    "B", "C", 1
+  )
+
   trajectory_flipped <- flip_edges(trajectory, milestone_network %>% filter(from == "B", to == "A"))
 
   expect_true(all(
@@ -31,6 +37,10 @@ test_that("flip_edges works correctly", {
   expect_false(all(
     c("B->A", "C->B") %in%
       paste0(trajectory_flipped$milestone_network$from, "->", trajectory_flipped$milestone_network$to))
+  )
+
+  expect_true(
+    all(trajectory_flipped$dimred_segment_progressions$percentage == 1)
   )
 })
 
