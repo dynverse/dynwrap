@@ -4,6 +4,7 @@
 \alias{add_root}
 \alias{add_root_using_expression}
 \alias{is_rooted}
+\alias{remove_root}
 \title{Root the trajectory}
 \usage{
 add_root(
@@ -20,6 +21,8 @@ add_root_using_expression(
 )
 
 is_rooted(trajectory)
+
+remove_root(trajectory)
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}

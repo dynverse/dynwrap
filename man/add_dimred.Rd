@@ -9,13 +9,12 @@
 add_dimred(
   dataset,
   dimred,
-  dimred_projected = NULL,
   dimred_milestones = NULL,
   dimred_segment_progressions = NULL,
   dimred_segment_points = NULL,
   project_trajectory = TRUE,
   connect_segments = FALSE,
-  pair_with_velocity = !is.null(dataset$expression_projected),
+  pair_with_velocity = !is.null(dataset$expression_future),
   expression_source = "expression",
   ...
 )
@@ -38,8 +37,6 @@ get_dimred(
 \item A matrix with the dimensionality reduction, with cells in rows and dimensions (\emph{comp_1}, \emph{comp_2}, ...) in columns
 }}
 
-\item{dimred_projected}{An optional dimensionality reduction of the projected cells (RNA velocity). A matrix with cells in rows and components (\emph{comp_1}, \emph{comp_2}, ...) in columns}
-
 \item{dimred_milestones}{An optional dimensionality reduction of the milestones. A matrix with milestones in rows and components (\emph{comp_1}, \emph{comp_2}, ...) in columns
 
 This will be automatically calculated if \code{project_trajectory = TRUE}}
@@ -52,8 +49,6 @@ These will be automatically calculated if \code{project_trajectory = TRUE}}
 
 \item{connect_segments}{Whether to connect segments between edges}
 
-\item{pair_with_velocity}{Whether to generate a paired dimensionality reduction with the projected expression.}
-
 \item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another dataset which contains expression}
 
 \item{...}{extra information to be stored in the wrapper}
@@ -63,7 +58,6 @@ These will be automatically calculated if \code{project_trajectory = TRUE}}
 \value{
 A dataset object with \emph{dimred}, which is a numeric matrix with cells in rows and the different components in columns.
 \itemize{
-\item If the dataset contained projected expression, \emph{dimred_projected} will also be present, which contains dimensionality reduction of the projected cells. It is a matrix with the locations of projected cells (rows) in the dimensions (columns)
 \item If the dataset contained a trajectory, and \code{project_trajectory=TRUE} (default), \emph{dimred_milestones}, \emph{dimred_segment_progressions} and \emph{dimred_segment_points} will also be present. These are described in \code{\link[=project_trajectory]{project_trajectory()}}.
 }
 }

@@ -43,7 +43,7 @@ definition <- function(
       input_id = c(inputs, params),
       required = input_id %in% definition$wrapper$input_required,
       type = case_when(
-        input_id %in% c("counts", "expression", "expression_projected") ~ "expression",
+        input_id %in% c("counts", "expression", "expression_future") ~ "expression",
         input_id %in% params ~ "parameter",
         TRUE ~ "prior_information"
       )

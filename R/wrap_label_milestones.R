@@ -66,11 +66,15 @@ label_milestones <- function(trajectory, labelling) {
 #' @rdname label_milestones
 #' @export
 label_milestones_markers <- function(trajectory, markers, expression_source = "expression", n_nearest_cells = 20) {
+  assert_that(length(markers) > 0)
+
   milestone_ids <- trajectory$milestone_ids
   expression <- get_expression(trajectory, expression_source)
 
   local_expression <- map2_df(names(markers), markers, function(new_milestone_id, features_oi) {
     map_df(milestone_ids, function(milestone_id) {
+      assert_that(all_in(features_oi, colnames(expression)))
+
       cells_oi <- trajectory$milestone_percentages %>%
         filter(milestone_id == !!milestone_id) %>%
         top_n(n_nearest_cells, percentage) %>%

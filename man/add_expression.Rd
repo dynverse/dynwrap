@@ -11,7 +11,7 @@ add_expression(
   counts,
   expression,
   feature_info = NULL,
-  expression_projected = NULL,
+  expression_future = NULL,
   ...
 )
 
@@ -28,7 +28,7 @@ get_expression(dataset, expression_source = "expression")
 
 \item{feature_info}{Optional meta-information of the features, a dataframe with at least \emph{feature_id} as column}
 
-\item{expression_projected}{Projected expression using RNA velocity of genes (columns) within cells (rows).  This can be both a dense and sparse matrix.}
+\item{expression_future}{Projected expression using RNA velocity of genes (columns) within cells (rows).  This can be both a dense and sparse matrix.}
 
 \item{...}{extra information to be stored in the dataset}
 

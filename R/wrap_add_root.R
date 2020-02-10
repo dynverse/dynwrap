@@ -133,7 +133,10 @@ is_rooted <- function(trajectory) {
 }
 
 
-
+#' @inheritParams add_root
+#' @rdname add_root
+#'
+#' @export
 remove_root <- function(trajectory) {
   trajectory$root_milestone_id <- NULL
   trajectory
