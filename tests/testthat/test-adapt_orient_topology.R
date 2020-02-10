@@ -84,10 +84,11 @@ test_that("orient_topology_to_velocity orients a linear trajectory correctly", {
   ) %>%
     add_trajectory(milestone_network = milestone_network, progressions = progressions)
 
-  # orient the trajectory
-  trajectory_oriented <- dynwrap::orient_topology_to_velocity(trajectory)
-
-  # make sure the first edge is correctly oriented
-  expect_true("A->B" %in% paste0(trajectory_oriented$milestone_network$from, "->", trajectory_oriented$milestone_network$to))
-  expect_false("B->A" %in% paste0(trajectory_oriented$milestone_network$from, "->", trajectory_oriented$milestone_network$to))
+  # TODO: move to scvelo package or re-enable this part of the test?
+  # # orient the trajectory
+  # trajectory_oriented <- dynwrap::orient_topology_to_velocity(trajectory)
+  #
+  # # make sure the first edge is correctly oriented
+  # expect_true("A->B" %in% paste0(trajectory_oriented$milestone_network$from, "->", trajectory_oriented$milestone_network$to))
+  # expect_false("B->A" %in% paste0(trajectory_oriented$milestone_network$from, "->", trajectory_oriented$milestone_network$to))
 })
