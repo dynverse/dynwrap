@@ -19,11 +19,13 @@ simplify_trajectory <- function(trajectory, allow_self_loops = FALSE) {
     vertices = trajectory$milestone_ids
   )
 
-  edge_points <- trajectory$progressions %>% rename(id = cell_id)
-  if(!is.null(trajectory$dimred_segment_progressions)) {
-    edge_points <- edge_points %>% bind_rows(
-      trajectory$dimred_segment_progressions %>%
-        mutate(id = paste0("DIMRED_SEGMENT_PROGRESSIONS_", row_number()))
+  # cell simplification
+  edge_points <- trajectory$progressions %>% rename(id = cell_id) %>% mutate(id = paste0("SIMPLIFYCELL_", id))
+
+  if (!is.null(trajectory$dimred_segment_points) && !is.null(trajectory$dimred_segment_progressions)) {
+    edge_points <- bind_rows(
+      edge_points,
+      trajectory$dimred_segment_progressions %>% mutate(id = paste0("SIMPLIFYSEGMENT_", seq_len(n())))
     )
   }
 
@@ -39,18 +41,8 @@ simplify_trajectory <- function(trajectory, allow_self_loops = FALSE) {
     select(from, to, length = weight, directed) %>%
     distinct(from, to, .keep_all = TRUE)
   progressions <- out$edge_points %>%
-    filter(!startsWith(id, "DIMRED_SEGMENT_PROGRESSIONS")) %>%
-    select(cell_id = id, from, to, percentage)
-  if(!is.null(trajectory$dimred_segment_progressions)) {
-    dimred_segment_progressions <- out$edge_points %>% filter(
-      startsWith(id, "DIMRED_SEGMENT_PROGRESSIONS")
-    ) %>%
-      mutate(
-        ix = as.numeric(gsub("DIMRED_SEGMENT_PROGRESSIONS_([0-9]*)", "\\1", id))
-    ) %>%
-      arrange(ix) %>%
-      select(-ix, -id)
-  }
+    filter(grepl("^SIMPLIFYCELL_", id)) %>%
+    transmute(cell_id = gsub("^SIMPLIFYCELL_", "", id), from, to, percentage)
 
   # test whether milestone_network and progressions contain the exact same edges
   different_edges <- progressions %>% group_by(from, to) %>% summarise() %>% anti_join(milestone_network, c("from", "to"))
@@ -64,9 +56,29 @@ simplify_trajectory <- function(trajectory, allow_self_loops = FALSE) {
       milestone_network = milestone_network,
       progressions = progressions,
       divergence_regions = trajectory$divergence_regions,
-      allow_self_loops = allow_self_loops,
-      dimred_segment_progressions = dimred_segment_progressions
+      allow_self_loops = allow_self_loops
     )
+
+  # cell simplification
+  if (!is.null(trajectory$dimred_milestones)) {
+    newtrajectory$dimred_milestones <- trajectory$dimred_milestones[newtrajectory$milestone_ids, , drop = FALSE]
+  }
+  if (!is.null(trajectory$dimred_segment_points) && !is.null(trajectory$dimred_segment_progressions)) {
+    filtered_segs <-
+      out$edge_points %>%
+      filter(grepl("^SIMPLIFYSEGMENT_", id)) %>%
+      mutate(id = as.integer(gsub("^SIMPLIFYSEGMENT_", "", id))) %>%
+      group_by(from, to) %>%
+      arrange(percentage) %>%
+      filter(!duplicated(percentage)) %>%
+      ungroup() %>%
+      arrange(from, to, percentage)
+    newtrajectory$dimred_segment_points <-
+      trajectory$dimred_segment_points[filtered_segs$id, , drop = FALSE]
+    newtrajectory$dimred_segment_progressions <-
+      filtered_segs %>% select(from, to, percentage)
+  }
+
   # TODO: if newtrajectory contains grouping, dimred, ..., remove them as necessary
   # We need a "filter_milestones" thing for this :)
 

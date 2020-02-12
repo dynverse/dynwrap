@@ -9,7 +9,11 @@
 
 * BUG FIX `add_root()`: Fix rooting for some linear trajectories (#149)
 
-* FUNCTIONALITY: Allow a named vector for groups_id prior information (#154)
+* SMALL CHANGE: Allow a named vector for groups_id prior information (#154)
+
+* SMALL CHANGE: Moved `orient_topology_to_velocity()` to scvelo R package.
+
+* BUG FIX: `simplify_trajectory()` handles dimred_milestones and dimred_segments values (#153).
 
 # dynwrap 1.1.4 (11-10-2019)
 
