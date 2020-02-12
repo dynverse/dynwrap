@@ -39,6 +39,7 @@ random_seed <- function() {
 #' @importFrom readr read_file
 #' @importFrom stringr str_length
 #' @importFrom testthat expect_true
+#' @importFrom dynutils extract_row_to_list
 #'
 #' @return
 #'  **`infer_trajectory`**: A trajectory object, which is a list containing
