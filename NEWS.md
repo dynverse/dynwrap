@@ -9,6 +9,8 @@
 
 * BUG FIX `add_root()`: Fix rooting for some linear trajectories (#149)
 
+* FUNCTIONALITY: Allow a named vector for groups_id prior information (#154)
+
 # dynwrap 1.1.4 (11-10-2019)
 
 First CRAN release!

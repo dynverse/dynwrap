@@ -73,6 +73,10 @@ add_prior_information <- function(
     testthat::expect_true(all(start_id %in% dataset$cell_ids))
   }
   if (!is.null(groups_id)) {
+    if(is.vector(groups_id)) {
+      testthat::expect_true(!is.null(names(groups_id)))
+      groups_id <- enframe(groups_id, c("cell_id", "group_id"))
+    }
     testthat::expect_true(is.data.frame(groups_id))
     testthat::expect_setequal(colnames(groups_id), c("cell_id", "group_id"))
     testthat::expect_setequal(groups_id$cell_id, dataset$cell_ids)
