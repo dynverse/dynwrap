@@ -75,7 +75,8 @@ add_prior_information <- function(
   if (!is.null(groups_id)) {
     if(is.vector(groups_id)) {
       testthat::expect_true(!is.null(names(groups_id)))
-      groups_id <- enframe(groups_id, c("cell_id", "group_id"))
+      groups_id <- enframe(groups_id, "cell_id", "group_id")
+      prior_information$groups_id <- groups_id
     }
     testthat::expect_true(is.data.frame(groups_id))
     testthat::expect_setequal(colnames(groups_id), c("cell_id", "group_id"))
