@@ -7,7 +7,7 @@
 #' @inheritParams common_param
 #' @param waypoint_cells A vector of waypoint cells. Only the geodesic distances between waypoint cells and all other cells will be calculated.
 #' @param waypoint_milestone_percentages The milestone percentages of non-cell waypoints, containing waypoint_id, milestone_id and percentage columns
-#' @param directed Take into account the directions of the milestone edges. The cells that cannot be reached from a particular waypoint will have distance infinity. You can also give a character, if it is "forward" it will function the same as TRUE, if "reverse" it will calculate distances from a cell to waypoints.
+#' @param directed Take into account the directions of the milestone edges. The cells that cannot be reached from a particular waypoint will have distance infinity. You can also give a character, if it is "forward" it will look forward, if it is "reverse" it will look in the reversed direction
 #'
 #' @return A matrix containing geodesic distances between each waypoint cell (rows) and cell (columns)
 #'
