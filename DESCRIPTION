@@ -24,7 +24,7 @@ Authors@R: c(
   )
 URL: https://github.com/dynverse/dynwrap
 BugReports: https://github.com/dynverse/dynwrap/issues
-License: GPL-3
+License: MIT + LICENSE file
 LazyData: TRUE
 RoxygenNote: 7.0.2
 Roxygen: list(markdown = TRUE)
