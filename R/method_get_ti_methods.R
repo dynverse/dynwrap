@@ -1,6 +1,5 @@
 #' Return all TI that are installed in one or more packages
 #'
-#' @inheritParams create_ti_method_container
 #' @param method_ids The method identifiers. NULL if listing all methods
 #' @param as_tibble Whether or not to return the ti_methods as a tibble
 #' @param ti_packages In which packages to look for TI methods. This will by default look into dynmethods if it is installed, otherwise in dynwrap.
