@@ -49,6 +49,8 @@ These will be automatically calculated if \code{project_trajectory = TRUE}}
 
 \item{connect_segments}{Whether to connect segments between edges}
 
+\item{pair_with_velocity}{Can perform dimensionality reduction if \code{dimred} is a function.}
+
 \item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another dataset which contains expression}
 
 \item{...}{extra information to be stored in the wrapper}

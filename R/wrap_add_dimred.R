@@ -17,6 +17,7 @@
 #' These will be automatically calculated if `project_trajectory = TRUE`
 #' @param project_trajectory Whether to also project the trajectory. Only relevant if dataset contains a trajectory, and dimred_segment_progressions and dimred_segment_points are not provided
 #' @param connect_segments Whether to connect segments between edges
+#' @param pair_with_velocity Can perform dimensionality reduction if `dimred` is a function.
 #' @param ... extra information to be stored in the wrapper
 #'
 #' @return
