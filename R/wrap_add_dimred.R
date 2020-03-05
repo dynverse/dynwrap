@@ -29,12 +29,14 @@
 #' @keywords adapt_trajectory
 #'
 #' @examples
-#' dataset <- example_dataset
-#' dataset <- add_dimred(
-#'   dataset,
-#'   dyndimred::dimred_landmark_mds
-#' )
-#' head(dataset$dimred)
+#' if (requireNamespace("dyndimred", quietly = TRUE)) {
+#'   dataset <- example_dataset
+#'   dataset <- add_dimred(
+#'     dataset,
+#'     dyndimred::dimred_landmark_mds
+#'   )
+#'   head(dataset$dimred)
+#' }
 #'
 #' @seealso [dyndimred::list_dimred_methods()], [project_trajectory()]
 #'

@@ -1,13 +1,10 @@
-# dynwrap 1.2 (unreleased)
+# dynwrap 1.2
 
-## Documentation
+* DOCUMENTATION: Added examples to all functions.
 
-* Added examples to all functions
+* FEATURE: Improved RNA velocity handling. Not all features need to be present in the projected expression, allowing integration with standard velocyto.R pipelines
 
-## New features
-
-* Improved RNA velocity handling:
-  - Not all features need to be present in the projected expression, allowing integration with standard velocyto.R pipelines
+* BUG FIX `add_dimred()`: Do not execute example of dyndimred is not installed.
 
 # dynwrap 1.1.4 (27-06-2019)
 
