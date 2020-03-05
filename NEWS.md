@@ -13,7 +13,9 @@
 
 * SMALL CHANGE: Moved `orient_topology_to_velocity()` to scvelo R package.
 
-* BUG FIX: `simplify_trajectory()` handles dimred_milestones and dimred_segments values (#153).
+* BUG FIX `simplify_trajectory()`: handle dimred_milestones and dimred_segments values (#153).
+
+* BUG FIX `add_dimred()`: Do not execute example of dyndimred is not installed.
 
 # dynwrap 1.1.4 (11-10-2019)
 

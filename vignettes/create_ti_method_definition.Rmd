@@ -6,9 +6,11 @@ author:
 - Robrecht Cannoodt
 output: rmarkdown::html_vignette
 vignette: >
+  \usepackage[utf8]{inputenc}
   %\VignetteIndexEntry{Creating a TI method: Script}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -66,8 +68,8 @@ knitr::asis_output(paste0("```r\n", run_r_string, "\n```"))
 
 Make sure this script is executable!
 
-```{bash, eval=NOT_CRAN && NOT_TRAVIS}
-chmod +x run.R
+```{r, eval=NOT_CRAN && NOT_TRAVIS}
+Sys.chmod("run.R", mode = "0770")
 ```
 
 and for Python:
@@ -83,19 +85,21 @@ knitr::asis_output(paste0("```python\n", run_py_script, "\n```"))
 ## Testing it out
 
 ```{r, eval=NOT_CRAN && NOT_TRAVIS}
-method <- create_ti_method_definition(
-  "definition.yml",
-  "run.R"
-)
-dataset <- dynwrap::example_dataset
-trajectory <- infer_trajectory(dataset, method(), verbose = TRUE)
+if (requireNamespace("dyncli", quietly = TRUE)) {
+  method <- create_ti_method_definition(
+    "definition.yml",
+    "run.R"
+  )
+  dataset <- dynwrap::example_dataset
+  trajectory <- infer_trajectory(dataset, method(), verbose = TRUE)
+}
 ```
 
 
 ```{r, eval=NOT_CRAN && NOT_TRAVIS}
 # install dynplot to plot the output
 if (requireNamespace("dynplot", quietly = TRUE)) {
-  dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
+  dynplot::plot_dimred(trajectory, color_cells = "pseudotime", expression_source = as.matrix(dataset$expression))
 }
 ```
 
@@ -120,3 +124,11 @@ While using dyncli to load and save the data is the most straightforward when us
 - Write the output file in the correct hdf5 format
 
 If after this you're still convinced you want to do this, please contact us. We'll be able to provide some further documentation!
+
+```{r, echo = FALSE}
+temp_files <- c("run.R", "run.py", "definition.yml")
+for (file in temp_files) {
+  if (file.exists(file)) 
+    file.remove(file)
+}
+```

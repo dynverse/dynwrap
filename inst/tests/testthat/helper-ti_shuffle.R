@@ -12,7 +12,7 @@ ti_shuffle <- dynwrap::create_ti_method_r(
 
   # describe packages needed by method
   package_loaded = c("dplyr", "tidyr", "purrr", "dynwrap", "dynutils"),
-  package_required = c("dyndimred"),
+  package_required = NULL,
 
   # function to run the method with
   run_fun = function(

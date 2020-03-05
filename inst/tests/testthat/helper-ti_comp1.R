@@ -2,10 +2,7 @@
 #'
 #' Wrapper around TI method
 #'
-#' @param dimred_method A character vector specifying which dimensionality reduction method to use.
-#'   See [dyndimred::dimred] for the list of available dimensionality reduction methods.
 #' @param component The component to use
-#' @inheritParams dyndimred::dimred
 ti_comp1 <- dynwrap::create_ti_method_r(
   definition = dynwrap::definition(
     # describe method
@@ -15,11 +12,6 @@ ti_comp1 <- dynwrap::create_ti_method_r(
 
     # describe tuneable parameters
     parameters = dynparam::parameter_set(
-      dynparam::character_parameter(
-        id = "dimred_method",
-        default = "pca",
-        values = names(dyndimred::list_dimred_methods())
-      ),
       dynparam::integer_parameter(
         id = "component",
         default = 1,
@@ -48,7 +40,9 @@ ti_comp1 <- dynwrap::create_ti_method_r(
     # TIMING: done with preproc
     tl <- add_timing_checkpoint(NULL, "method_afterpreproc")
 
-    dimred <- dyndimred::dimred(expression, method = parameters$dimred_method, ndim = max(parameters$component, 2L))
+    dimred <- prcomp(as.matrix(expression), rank. = 10)$x
+    pseudotime <- dimred[,parameters$component]
+    names(pseudotime) <- rownames(expression)
 
     # TIMING: done with method
     tl <- tl %>% add_timing_checkpoint("method_aftermethod")
@@ -57,7 +51,7 @@ ti_comp1 <- dynwrap::create_ti_method_r(
     wrap_data(
       cell_ids = rownames(expression)
     ) %>% add_linear_trajectory(
-      pseudotime = dimred[,parameters$component] %>% set_names(rownames(expression))
+      pseudotime = pseudotime
     ) %>% add_dimred(
       dimred = dimred
     ) %>% add_timings(
@@ -67,5 +61,5 @@ ti_comp1 <- dynwrap::create_ti_method_r(
 
   # describe packages needed by method
   package_loaded = c("dplyr", "tidyr", "purrr", "dynwrap", "dynutils"),
-  package_required = c("dyndimred")
+  package_required = NULL
 )
