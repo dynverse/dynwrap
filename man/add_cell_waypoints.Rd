@@ -11,12 +11,22 @@ add_cell_waypoints(trajectory, num_cells_selected = 100)
 
 is_wrapper_with_waypoint_cells(trajectory)
 
-determine_cell_trajectory_positions(milestone_ids, milestone_network,
-  milestone_percentages, progressions, divergence_regions)
+determine_cell_trajectory_positions(
+  milestone_ids,
+  milestone_network,
+  milestone_percentages,
+  progressions,
+  divergence_regions
+)
 
-select_waypoint_cells(milestone_ids, milestone_network,
-  milestone_percentages, progressions, divergence_regions,
-  num_cells_selected = 100)
+select_waypoint_cells(
+  milestone_ids,
+  milestone_network,
+  milestone_percentages,
+  progressions,
+  divergence_regions,
+  num_cells_selected = 100
+)
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}

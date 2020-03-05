@@ -4,8 +4,12 @@
 \alias{def_manuscript}
 \title{Meta information on the manuscript}
 \usage{
-def_manuscript(doi = NULL, google_scholar_cluster_id = NULL,
-  preprint_date = NULL, publication_date = NULL)
+def_manuscript(
+  doi = NULL,
+  google_scholar_cluster_id = NULL,
+  preprint_date = NULL,
+  publication_date = NULL
+)
 }
 \arguments{
 \item{doi}{A doi identifier (not an url)}

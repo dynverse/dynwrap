@@ -4,9 +4,17 @@
 \alias{def_method}
 \title{Define meta information on the TI method.}
 \usage{
-def_method(id, name = id, source = "tool", tool_id = NULL,
-  platform = NULL, url = NULL, license = NULL, authors = list(),
-  description = NULL)
+def_method(
+  id,
+  name = id,
+  source = "tool",
+  tool_id = NULL,
+  platform = NULL,
+  url = NULL,
+  license = NULL,
+  authors = list(),
+  description = NULL
+)
 }
 \arguments{
 \item{id}{An id by which to identify a method. Should only contain lowercase letters or underscores.}

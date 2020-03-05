@@ -5,9 +5,16 @@
 \alias{is_wrapper_with_trajectory}
 \title{Construct a trajectory given its milestone network and milestone percentages or progressions}
 \usage{
-add_trajectory(dataset, milestone_ids = NULL, milestone_network,
-  divergence_regions = NULL, milestone_percentages = NULL,
-  progressions = NULL, allow_self_loops = FALSE, ...)
+add_trajectory(
+  dataset,
+  milestone_ids = NULL,
+  milestone_network,
+  divergence_regions = NULL,
+  milestone_percentages = NULL,
+  progressions = NULL,
+  allow_self_loops = FALSE,
+  ...
+)
 
 is_wrapper_with_trajectory(trajectory)
 }

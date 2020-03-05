@@ -4,8 +4,13 @@
 \alias{add_branch_trajectory}
 \title{Construct a trajectory given its branch network and the pseudotime of the cells on one of the branches.}
 \usage{
-add_branch_trajectory(dataset, branch_network, branches,
-  branch_progressions, ...)
+add_branch_trajectory(
+  dataset,
+  branch_network,
+  branches,
+  branch_progressions,
+  ...
+)
 }
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}

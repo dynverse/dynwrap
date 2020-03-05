@@ -4,8 +4,13 @@
 \alias{add_cell_graph}
 \title{Constructs a trajectory using a graph between cells, by mapping cells onto a set of backbone cells.}
 \usage{
-add_cell_graph(dataset, cell_graph, to_keep,
-  milestone_prefix = "milestone_", ...)
+add_cell_graph(
+  dataset,
+  cell_graph,
+  to_keep,
+  milestone_prefix = "milestone_",
+  ...
+)
 }
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}

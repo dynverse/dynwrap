@@ -4,8 +4,13 @@
 \alias{add_cluster_graph}
 \title{Constructs a trajectory using a cell grouping and a network between groups. Will use an existing grouping if it is present in the dataset.}
 \usage{
-add_cluster_graph(dataset, milestone_network, grouping = NULL,
-  explicit_splits = FALSE, ...)
+add_cluster_graph(
+  dataset,
+  milestone_network,
+  grouping = NULL,
+  explicit_splits = FALSE,
+  ...
+)
 }
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}

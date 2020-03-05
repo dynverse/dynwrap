@@ -5,11 +5,18 @@
 \alias{compute_tented_geodesic_distances}
 \title{Calculate geodesic distances between cells in a trajectory}
 \usage{
-calculate_geodesic_distances(trajectory, waypoint_cells = NULL,
-  waypoint_milestone_percentages = NULL, directed = FALSE)
+calculate_geodesic_distances(
+  trajectory,
+  waypoint_cells = NULL,
+  waypoint_milestone_percentages = NULL,
+  directed = FALSE
+)
 
-compute_tented_geodesic_distances(trajectory, waypoint_cells = NULL,
-  waypoint_milestone_percentages = NULL)
+compute_tented_geodesic_distances(
+  trajectory,
+  waypoint_cells = NULL,
+  waypoint_milestone_percentages = NULL
+)
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}

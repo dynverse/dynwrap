@@ -4,8 +4,15 @@
 \alias{wrap_expression}
 \title{Create a wrapper object with expression and counts}
 \usage{
-wrap_expression(id = NULL, expression, counts, cell_info = NULL,
-  feature_info = NULL, expression_projected = NULL, ...)
+wrap_expression(
+  id = NULL,
+  expression,
+  counts,
+  cell_info = NULL,
+  feature_info = NULL,
+  expression_projected = NULL,
+  ...
+)
 }
 \arguments{
 \item{id}{A unique identifier for the data. If \code{NULL}, a random string will be generated.}

@@ -6,13 +6,19 @@
 \alias{select_waypoints}
 \title{Add or create waypoints to a trajectory}
 \usage{
-add_waypoints(trajectory, n_waypoints = 100,
-  resolution = sum(trajectory$milestone_network$length)/n_waypoints)
+add_waypoints(
+  trajectory,
+  n_waypoints = 100,
+  resolution = sum(trajectory$milestone_network$length)/n_waypoints
+)
 
 is_wrapper_with_waypoints(trajectory)
 
-select_waypoints(trajectory, n_waypoints = 100,
-  resolution = sum(trajectory$milestone_network$length)/n_waypoints)
+select_waypoints(
+  trajectory,
+  n_waypoints = 100,
+  resolution = sum(trajectory$milestone_network$length)/n_waypoints
+)
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
