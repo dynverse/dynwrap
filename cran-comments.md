@@ -1,18 +1,7 @@
-Initial submission of dyno: Representing and Inferring Single-Cell Trajectories
-  Provides functionality to infer trajectories from single-cell data,
-  represent them into a common format, and adapt them. Other biological information
-  can also be added, such as cellular grouping, RNA velocity and annotation.
-  
-## Resubmission
-
-> Thanks, please do not change the working directory in your functions. If
-you really have to, please ensure with on.exit() that the old settings
-are reset
-
-Fixed! :)
+Fixing the check problems as notified by Prof. Brian Ripley.
 
 ## Test environments
-* local Fedora install, R 3.6.0
+* local Fedora install, R 3.6.2
 * ubuntu 16.04 (on travis-ci), R 3.6.0
 * win-builder (devel and release)
 
