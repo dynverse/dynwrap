@@ -40,7 +40,9 @@ ti_comp1 <- dynwrap::create_ti_method_r(
     # TIMING: done with preproc
     tl <- add_timing_checkpoint(NULL, "method_afterpreproc")
 
-    dimred <- prcomp(as.matrix(expression), rank. = 10L)
+    dimred <- prcomp(as.matrix(expression), rank. = 10)$x
+    pseudotime <- dimred[,parameters$component]
+    names(pseudotime) <- rownames(expression)
 
     # TIMING: done with method
     tl <- tl %>% add_timing_checkpoint("method_aftermethod")
@@ -49,7 +51,7 @@ ti_comp1 <- dynwrap::create_ti_method_r(
     wrap_data(
       cell_ids = rownames(expression)
     ) %>% add_linear_trajectory(
-      pseudotime = dimred[,parameters$component] %>% set_names(rownames(expression))
+      pseudotime = pseudotime
     ) %>% add_dimred(
       dimred = dimred
     ) %>% add_timings(
