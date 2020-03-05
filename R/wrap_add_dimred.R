@@ -148,11 +148,13 @@ is_wrapper_with_dimred <- function(dataset) {
 get_dimred <- function(dataset, dimred = NULL, expression_source = "expression", return_other_dimreds = FALSE) {
   extra_out <- NULL
 
-  if(is.function(dimred)) {
+  if (is.function(dimred)) {
     # function -> calculate dimensionality reduction
     expression <- get_expression(dataset, expression_source)
     dimred <- dimred(expression)
-  } else if (is.matrix(dimred)) {
+  }
+
+  if (is.matrix(dimred)) {
     # matrix
     assert_that(is.numeric(dimred))
     assert_that(length(rownames(dimred)) == nrow(dimred))
