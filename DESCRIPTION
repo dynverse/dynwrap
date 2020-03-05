@@ -34,17 +34,15 @@ Depends:
 Imports:
   assertthat,
   babelwhale,
+  crayon,
   dplyr,
   dynutils (>= 1.0.3),
   dynparam,
   FNN,
-  hdf5r,
   igraph,
   glue,
-  jsonlite,
   magrittr,
   Matrix,
-  methods,
   purrr,
   processx,
   readr,
@@ -53,19 +51,13 @@ Imports:
   testthat,
   tibble,
   tidyr,
-  yaml,
-  crayon
+  yaml
 Suggests: 
-  curl,
-  devtools,
   dyndimred,
-  ggplot2,
   knitr,
-  lhs,
   pkgload,
   ranger,
-  rmarkdown,
-  viridis
+  rmarkdown
 VignetteBuilder: knitr
 Remotes: 
     dynverse/babelwhale@master,
