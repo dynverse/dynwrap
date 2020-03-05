@@ -5,7 +5,7 @@ Description: Provides functionality to infer trajectories from single-cell data,
   represent them into a common format, and adapt them. Other biological information
   can also be added, such as cellular grouping, RNA velocity and annotation.
   Saelens et al. (2019) <doi:10.1038/s41587-019-0071-9>.
-Version: 1.1.4
+Version: 1.2.0.9000
 Authors@R: c(
     person(
       "Robrecht", 
@@ -60,7 +60,7 @@ Suggests:
   rmarkdown
 VignetteBuilder: knitr
 Remotes: 
-    dynverse/babelwhale@master,
-    dynverse/dynutils@master,
-    dynverse/dynparam@master,
-    dynverse/dyndimred@master
+    dynverse/babelwhale@devel,
+    dynverse/dynutils@devel,
+    dynverse/dynparam@devel,
+    dynverse/dyndimred@devel
