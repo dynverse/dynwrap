@@ -43,6 +43,7 @@ Imports:
   glue,
   magrittr,
   Matrix,
+  methods,
   purrr,
   processx,
   readr,

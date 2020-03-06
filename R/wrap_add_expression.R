@@ -153,7 +153,7 @@ wrap_expression <- function(
     )
 }
 
-
+#' @importFrom methods as
 convert_expression <- function(x, cell_ids) {
   if (!is.null(x)) {
     if (is.matrix(x)) {

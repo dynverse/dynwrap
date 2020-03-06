@@ -7,13 +7,18 @@
 #' @param milestone_network_toflip A dataframe with a from and to column, containing the subset of the milestone network #'
 #' @keywords adapt_trajectory
 #'
+#'
+#' @importFrom methods is
+#'
 #' @export
 flip_edges <- function(
   trajectory,
   milestone_network_toflip
 ) {
-  assert_that(is(milestone_network_toflip, "data.frame"))
-  assert_that(all(c("from", "to") %in% colnames(milestone_network_toflip)))
+  assert_that(
+    is(milestone_network_toflip, "data.frame"),
+    c("from", "to") %all_in% colnames(milestone_network_toflip),
+  )
   assert_that(all(
     paste0(milestone_network_toflip$from, milestone_network_toflip$to) %in%
       paste0(trajectory$milestone_network$from, trajectory$milestone_network$to)

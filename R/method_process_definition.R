@@ -346,6 +346,8 @@ convert_definition <- function(definition_raw) {
 #' @param definition A definition, see [definition()]
 #' @param return_function Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.
 #'
+#' @importFrom methods formalArgs
+#'
 #' @keywords create_ti_method
 .method_process_definition <- function(definition, return_function) {
   # return function if requested
