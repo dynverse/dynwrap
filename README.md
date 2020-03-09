@@ -74,8 +74,8 @@ list of changes.
   - BUG FIX `simplify_trajectory()`: handle dimred\_milestones and
     dimred\_segments values (\#153).
 
-  - BUG FIX `add_dimred()`: Do not execute example of dyndimred is not
-    installed.
+  - BUG FIX `add_dimred()`: Do not execute example of dyndimred if is
+    not installed.
 
 ### Recent changes in dynwrap 1.1.4 (11-10-2019)
 
