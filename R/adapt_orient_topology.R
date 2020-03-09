@@ -17,7 +17,7 @@ flip_edges <- function(
 ) {
   assert_that(
     is(milestone_network_toflip, "data.frame"),
-    c("from", "to") %all_in% colnames(milestone_network_toflip),
+    c("from", "to") %all_in% colnames(milestone_network_toflip)
   )
   assert_that(all(
     paste0(milestone_network_toflip$from, milestone_network_toflip$to) %in%
