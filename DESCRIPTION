@@ -60,8 +60,3 @@ Suggests:
   ranger,
   rmarkdown
 VignetteBuilder: knitr
-Remotes: 
-    dynverse/babelwhale@master,
-    dynverse/dynutils@master,
-    dynverse/dynparam@master,
-    dynverse/dyndimred@master
