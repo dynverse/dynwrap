@@ -65,13 +65,26 @@ list of changes.
   - BUG FIX `add_root()`: Fix rooting for some linear trajectories
     (\#149)
 
+  - SMALL CHANGE: Allow a named vector for groups\_id prior information
+    (\#154)
+
+  - SMALL CHANGE: Moved `orient_topology_to_velocity()` to scvelo R
+    package.
+
+  - BUG FIX `simplify_trajectory()`: handle dimred\_milestones and
+    dimred\_segments values (\#153).
+
+  - BUG FIX `add_dimred()`: Do not execute example of dyndimred is not
+    installed.
+
 ### Recent changes in dynwrap 1.1.4 (11-10-2019)
 
 First CRAN release\!
 
   - BUG FIX: Fixed \#142 where the error message was truncated
 
-  - DOCUMENTATION: Added examples to all functions.
+  - DOCUMENTATION: Added examples to all
+functions.
 
 ## Dynverse dependencies
 
