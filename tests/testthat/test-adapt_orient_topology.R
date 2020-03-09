@@ -22,6 +22,12 @@ test_that("flip_edges works correctly", {
   ) %>%
     add_trajectory(milestone_network = milestone_network, progressions = progressions)
 
+  trajectory$dimred_segment_progressions <- tribble(
+    ~from, ~to, ~percentage,
+    "B", "A", 0,
+    "B", "C", 1
+  )
+
   trajectory_flipped <- flip_edges(trajectory, milestone_network %>% filter(from == "B", to == "A"))
 
   expect_true(all(
@@ -31,6 +37,10 @@ test_that("flip_edges works correctly", {
   expect_false(all(
     c("B->A", "C->B") %in%
       paste0(trajectory_flipped$milestone_network$from, "->", trajectory_flipped$milestone_network$to))
+  )
+
+  expect_true(
+    all(trajectory_flipped$dimred_segment_progressions$percentage == 1)
   )
 })
 
@@ -46,7 +56,7 @@ test_that("orient_topology_to_velocity orients a linear trajectory correctly", {
     b = pseudotime ** 2,
     c = log(pseudotime)
   ))
-  expression_projected <- as.matrix(data.frame(
+  expression_future <- as.matrix(data.frame(
     a = (pseudotime + 1),
     b = (pseudotime + 1) ** 2,
     c = log(pseudotime + 1)
@@ -70,14 +80,15 @@ test_that("orient_topology_to_velocity orients a linear trajectory correctly", {
   trajectory <- wrap_expression(
     counts = expression,
     expression = expression,
-    expression_projected = expression_projected
+    expression_future = expression_future
   ) %>%
     add_trajectory(milestone_network = milestone_network, progressions = progressions)
 
-  # orient the trajectory
-  trajectory_oriented <- dynwrap::orient_topology_to_velocity(trajectory)
-
-  # make sure the first edge is correctly oriented
-  expect_true("A->B" %in% paste0(trajectory_oriented$milestone_network$from, "->", trajectory_oriented$milestone_network$to))
-  expect_false("B->A" %in% paste0(trajectory_oriented$milestone_network$from, "->", trajectory_oriented$milestone_network$to))
+  # TODO: move to scvelo package or re-enable this part of the test?
+  # # orient the trajectory
+  # trajectory_oriented <- dynwrap::orient_topology_to_velocity(trajectory)
+  #
+  # # make sure the first edge is correctly oriented
+  # expect_true("A->B" %in% paste0(trajectory_oriented$milestone_network$from, "->", trajectory_oriented$milestone_network$to))
+  # expect_false("B->A" %in% paste0(trajectory_oriented$milestone_network$from, "->", trajectory_oriented$milestone_network$to))
 })

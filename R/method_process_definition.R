@@ -35,16 +35,17 @@ definition <- function(
   definition <- as.list(environment()) %>%
     add_class("dynwrap::ti_method")
 
-  # parse the inputs
-  utils::data("priors", package = "dynwrap", envir = environment()) # TODO: move to sysdata, avoiding loading of priors
+  inputs <- c(definition$wrapper$input_required, definition$wrapper$input_optional)
+  params <- map_chr(definition$parameters$parameters, "id")
+
   definition$wrapper$inputs <-
     tibble(
-      input_id = c(definition$wrapper$input_required, definition$wrapper$input_optional, map_chr(definition$parameters$parameters, "id")),
+      input_id = c(inputs, params),
       required = input_id %in% definition$wrapper$input_required,
       type = case_when(
-        input_id %in% c("counts", "expression", "expression_projected") ~ "expression",
-        input_id %in% priors$prior_id ~ "prior_information",
-        TRUE ~ "parameter"
+        input_id %in% c("counts", "expression", "expression_future") ~ "expression",
+        input_id %in% params ~ "parameter",
+        TRUE ~ "prior_information"
       )
     )
 
@@ -248,10 +249,11 @@ def_wrapper <- function(
   wrapper <- as.list(environment())
 
   # make sure all inputs are allowed
-  assert_that(
-    wrapper$input_required %all_in% dynwrap::allowed_inputs$input_id,
-    wrapper$input_optional %all_in% dynwrap::allowed_inputs$input_id
-  )
+  # disabling this to allow for custom priors!
+  # assert_that(
+  #   wrapper$input_required %all_in% dynwrap::allowed_inputs$input_id,
+  #   wrapper$input_optional %all_in% dynwrap::allowed_inputs$input_id
+  # )
 
   wrapper
 }
@@ -343,6 +345,8 @@ convert_definition <- function(definition_raw) {
 #' Method process definition
 #' @param definition A definition, see [definition()]
 #' @param return_function Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.
+#'
+#' @importFrom methods formalArgs
 #'
 #' @keywords create_ti_method
 .method_process_definition <- function(definition, return_function) {

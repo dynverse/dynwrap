@@ -50,22 +50,41 @@ list of changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md -->
 
-### Recent changes in dynwrap 1.2 (unreleased)
+### Recent changes in dynwrap 1.2.0
 
-#### Documentation
+  - FUNCTIONALITY: Improved RNA velocity handling. Not all features need
+    to be present in the projected expression, allowing integration with
+    standard velocyto.R pipelines.
 
-  - Added examples to all functions
+  - BUG FIX `calculate_pseudotime()`: Fix pseudotime calculation on
+    branching trajectories (\#139).
 
-#### New features
+  - BUG FIX `flip_edges()`: Also flip `dimred_segment_progressions` if
+    available.
 
-  - Improved RNA velocity handling:
-      - Not all features need to be present in the projected expression,
-        allowing integration with standard velocyto.R pipelines
+  - BUG FIX `add_root()`: Fix rooting for some linear trajectories
+    (\#149)
 
-### Recent changes in dynwrap 1.1.4 (27-06-2019)
+  - SMALL CHANGE: Allow a named vector for groups\_id prior information
+    (\#154)
 
-  - BUG FIX: Fixed \#142 where the error message was
-truncated
+  - SMALL CHANGE: Moved `orient_topology_to_velocity()` to scvelo R
+    package.
+
+  - BUG FIX `simplify_trajectory()`: handle dimred\_milestones and
+    dimred\_segments values (\#153).
+
+  - BUG FIX `add_dimred()`: Do not execute example of dyndimred if is
+    not installed.
+
+### Recent changes in dynwrap 1.1.4 (11-10-2019)
+
+First CRAN release\!
+
+  - BUG FIX: Fixed \#142 where the error message was truncated
+
+  - DOCUMENTATION: Added examples to all
+functions.
 
 ## Dynverse dependencies
 

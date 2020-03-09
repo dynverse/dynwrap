@@ -39,6 +39,7 @@ random_seed <- function() {
 #' @importFrom readr read_file
 #' @importFrom stringr str_length
 #' @importFrom testthat expect_true
+#' @importFrom dynutils extract_row_to_list
 #'
 #' @return
 #'  **`infer_trajectory`**: A trajectory object, which is a list containing
@@ -184,7 +185,7 @@ infer_trajectories <- function(
 }
 
 #' @rdname infer_trajectories
-#' @param ... Any additional parameters given to the method, will be concatednated to the parameters argument
+#' @param ... Any additional parameters given to the method, will be concatenated to the parameters argument
 #' @export
 infer_trajectory <- dynutils::inherit_default_params(
   list(infer_trajectories),

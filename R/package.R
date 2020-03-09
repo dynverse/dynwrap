@@ -4,7 +4,6 @@
 #'
 #' @import dplyr
 #' @import tidyr
-#' @import methods
 #' @import dynutils
 #' @import readr
 #' @import purrr

@@ -21,6 +21,15 @@ test_that("Simple test", {
     "a",            "in",    "want", 0.0,
     "single",       "want",  "must", 0.4
   )
+  dimred_segment_progressions <- tribble(
+     ~from,    ~to, ~percentage,
+     "must",  "be",   0.3,
+    "must",  "be",   1.0,
+    "be",    "in",   0.5,
+    "be",    "in",   0.9,
+    "in",    "want", 0.0,
+    "want",  "must", 0.4
+  )
 
   trajectory<-
     wrap_data(
@@ -32,10 +41,12 @@ test_that("Simple test", {
       milestone_network = milestone_network,
       progressions = progressions
     )
+  trajectory$dimred_segment_progressions <- dimred_segment_progressions
   simp <- simplify_trajectory(trajectory)
 
   # TODO: Add more tests! for more trajectory types! and more parameters!
 
+  expect_true(nrow(trajectory$dimred_segment_progressions) == nrow(simp$dimred_segment_progressions))
 })
 
 
@@ -123,8 +134,8 @@ test_that("Test whether simplify is able to correctly simplify an undirected cyc
 
 
 
-test_that("Test whether simplify is able to correctly simplify a graph", {
-  id <- "I am a graph! "
+test_that("Test whether simplify is able to correctly simplify a graph with a dimred", {
+  id <- "I am a graph!"
   cell_ids <- c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12")
 
   milestone_ids <- c("A", "B", "C", "D", "E", "F")
@@ -150,7 +161,36 @@ test_that("Test whether simplify is able to correctly simplify a graph", {
     "12","B", "F", 0.4
   )
 
-  trajectory<-
+  dimred <-
+    runif(length(cell_ids) * 3) %>%
+    matrix(ncol = 3) %>%
+    magrittr::set_colnames(c("comp_1", "comp_2", "comp_3")) %>%
+    magrittr::set_rownames(cell_ids)
+  dimred_milestones <-
+    runif(length(milestone_ids) * 3) %>%
+    matrix(ncol = 3) %>%
+    magrittr::set_colnames(c("comp_1", "comp_2", "comp_3")) %>%
+    magrittr::set_rownames(milestone_ids)
+  dimred_segment_progressions <-
+    milestone_network %>%
+    mutate(percentage = map(seq_len(n()), ~ c(0, .5, 1))) %>%
+    unnest(percentage) %>%
+    select(from, to, percentage)
+  dimred_segment_points <-
+    dimred_segment_progressions %>%
+    pmap(function(from, to, percentage) {
+      if (percentage == 0) {
+        dimred_milestones[from, , drop = FALSE]
+      } else if (percentage == 1) {
+        dimred_milestones[to, , drop = FALSE]
+      } else {
+        (dimred_milestones[from, , drop = FALSE] + dimred_milestones[to, , drop = FALSE])/2 + runif(3, -.1, .1)
+      }
+    }) %>%
+    do.call(rbind, .) %>%
+    magrittr::set_rownames(NULL)
+
+  trajectory <-
     wrap_data(
       id = id,
       cell_ids = cell_ids
@@ -159,10 +199,26 @@ test_that("Test whether simplify is able to correctly simplify a graph", {
       milestone_ids = milestone_ids,
       milestone_network = milestone_network,
       progressions = progressions
+    ) %>%
+    add_dimred(
+      dimred = dimred,
+      dimred_milestones = dimred_milestones,
+      dimred_segment_progressions = dimred_segment_progressions,
+      dimred_segment_points = dimred_segment_points
     )
   simp <- simplify_trajectory(trajectory)
 
   expect_true(all(cell_ids %in% simp$cell_ids))
   expect_true(all(simp$milestone_network$from == c("A", "B", "A", "B", "A")))
   expect_true(all(simp$milestone_network$to == c("B", "C", "E", "F", "C")))
+
+  # check dimred related values
+  expect_equal(
+    simp$dimred_segment_points %>% as.vector() %>% unique() %>% sort(),
+    trajectory$dimred_segment_points %>% as.vector() %>% unique() %>% sort(),
+    tol = 1e-3
+  )
+  expect_equal(nrow(simp$dimred_segment_points), nrow(simp$dimred_segment_progressions))
+  expect_lte(nrow(simp$dimred_segment_points), nrow(trajectory$dimred_segment_points))
+  expect_equal(simp$dimred_milestones, trajectory$dimred_milestones[simp$milestone_ids, , drop = FALSE])
 })

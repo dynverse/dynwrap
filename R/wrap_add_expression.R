@@ -3,7 +3,7 @@
 #' @inheritParams common_param
 #' @param counts The counts values of genes (columns) within cells (rows). This can be both a dense and sparse matrix.
 #' @param expression The normalised expression values of genes (columns) within cells (rows). This can be both a dense and sparse matrix.
-#' @param expression_projected Projected expression using RNA velocity of genes (columns) within cells (rows).  This can be both a dense and sparse matrix.
+#' @param expression_future Projected expression using RNA velocity of genes (columns) within cells (rows).  This can be both a dense and sparse matrix.
 #' @param feature_info Optional meta-information of the features, a dataframe with at least *feature_id* as column
 #' @param ... extra information to be stored in the dataset
 #' @param expression_source The source of expression, can be "counts", "expression", an expression matrix, or another dataset which contains expression
@@ -32,7 +32,7 @@ add_expression <- function(
   counts,
   expression,
   feature_info = NULL,
-  expression_projected = NULL,
+  expression_future = NULL,
   ...
 ) {
   testthat::expect_true(is_data_wrapper(dataset))
@@ -42,7 +42,7 @@ add_expression <- function(
   # convert expression if needed
   counts <- convert_expression(counts, dataset$cell_ids)
   expression <- convert_expression(expression, dataset$cell_ids)
-  expression_projected <- convert_expression(expression_projected, dataset$cell_ids)
+  expression_future <- convert_expression(expression_future, dataset$cell_ids)
 
   if (!is.null(feature_info)) {
     assert_that(
@@ -60,7 +60,7 @@ add_expression <- function(
     "dynwrap::with_expression",
     counts = counts,
     expression = expression,
-    expression_projected = expression_projected,
+    expression_future = expression_future,
     feature_info = feature_info,
     ...
   )
@@ -102,7 +102,7 @@ get_expression <- function(dataset, expression_source = "expression") {
 
 #' Create a wrapper object with expression and counts
 #'
-#' Projected expression based on RNA velocity can also be added to the wrapper through the `expression_projected` argument
+#' Projected expression based on RNA velocity can also be added to the wrapper through the `expression_future` argument
 #'
 #' Information about the cells and/or features can be added through `cell_info` and `feature_info`
 #'
@@ -115,12 +115,12 @@ get_expression <- function(dataset, expression_source = "expression") {
 #' dataset <- wrap_expression(
 #'   counts = example_dataset$counts,
 #'   expression = example_dataset$expression,
-#'   expression_projected = example_dataset$expression_projected
+#'   expression_future = example_dataset$expression_future
 #' )
 #'
 #' dataset$counts[1:10, 1:3]
 #' dataset$expression[1:10, 1:3]
-#' dataset$expression_projected[1:10, 1:3]
+#' dataset$expression_future[1:10, 1:3]
 #'
 #' @export
 wrap_expression <- function(
@@ -129,7 +129,7 @@ wrap_expression <- function(
   counts,
   cell_info = NULL,
   feature_info = NULL,
-  expression_projected = NULL,
+  expression_future = NULL,
   ...
 ) {
   cell_ids <- rownames(expression) %||% rownames(counts)
@@ -147,13 +147,13 @@ wrap_expression <- function(
     add_expression(
       counts = counts,
       expression = expression,
-      expression_projected = expression_projected,
+      expression_future = expression_future,
       feature_ids = feature_ids,
       feature_info = feature_info
     )
 }
 
-
+#' @importFrom methods as
 convert_expression <- function(x, cell_ids) {
   if (!is.null(x)) {
     if (is.matrix(x)) {

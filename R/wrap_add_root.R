@@ -33,7 +33,12 @@
 #' @importFrom purrr map2_int
 #'
 #' @export
-add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_milestone_id = trajectory$root_milestone_id, flip_edges = TRUE) {
+add_root <- function(
+  trajectory,
+  root_cell_id = trajectory$root_cell_id,
+  root_milestone_id = trajectory$root_milestone_id,
+  flip_edges = TRUE
+) {
   if (!is.null(root_cell_id)) {
     if(!root_cell_id %in% trajectory$cell_ids) {stop("Invalid root_cell_id")}
 
@@ -51,29 +56,45 @@ add_root <- function(trajectory, root_cell_id = trajectory$root_cell_id, root_mi
   }
 
   if (flip_edges) {
-    milestone_order <- igraph::graph_from_data_frame(trajectory$milestone_network) %>%
-      igraph::ego(nodes = root_milestone_id, 999) %>%
-      first() %>%
-      names()
-    milestone_order <- c(milestone_order, setdiff(trajectory$milestone_ids, milestone_order)) # add disconnected milestones
+    gr <- igraph::graph_from_data_frame(
+      trajectory$milestone_network %>% rename(weight = length),
+      directed = any(trajectory$milestone_network$directed)
+    )
+
+    # TODO: allow to add multiple roots for disconnected trajectories??
+
+    # get milestones already downstream of the root
+    ord1 <- igraph::distances(gr, v = root_milestone_id, mode = "out")[1,] %>% keep(is.finite) %>% sort() %>% names()
+
+    # add milestones upstream of the root id
+    ord2 <- igraph::distances(gr, v = root_milestone_id, mode = "all")[1,] %>% keep(is.finite) %>% sort() %>% names()
+    milestone_order <- union(ord1, ord2)
+
+    # why though? should disconnected milestones be reordered?
+    # I'm putting this in comments for now.
+    # # add disconnected milestones.
+    # milestone_order <- intersect(milestone_order, trajectory$milestone_ids)
 
     # determine which edges to flip
-    milestone_network_toflip <- trajectory$milestone_network %>%
+    milestone_network_toflip <-
+      trajectory$milestone_network %>%
       mutate(
         flip = match(from, milestone_order) > match(to, milestone_order)
       ) %>%
-      filter(flip)
+      filter(!is.na(flip), flip)
 
     trajectory <- flip_edges(trajectory, milestone_network_toflip)
 
     # order milestone network
-    milestone_order <- trajectory$milestone_network %>%
+    milestone_order <-
+      trajectory$milestone_network %>%
       igraph::graph_from_data_frame() %>%
       igraph::dfs(root_milestone_id, unreachable = TRUE) %>%
       .$order %>%
       names()
 
-    trajectory$milestone_network <- trajectory$milestone_network %>%
+    trajectory$milestone_network <-
+      trajectory$milestone_network %>%
       arrange(map2_int(from, to, ~max(which(milestone_order %in% c(.x, .y)))))
   }
 
@@ -112,7 +133,10 @@ is_rooted <- function(trajectory) {
 }
 
 
-
+#' @inheritParams add_root
+#' @rdname add_root
+#'
+#' @export
 remove_root <- function(trajectory) {
   trajectory$root_milestone_id <- NULL
   trajectory

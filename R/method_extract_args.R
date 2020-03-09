@@ -17,15 +17,13 @@
   inputs,
   give_priors = NULL
 ) {
-  utils::data("priors", package = "dynwrap", envir = environment()) # TODO: move to sysdata, avoiding loading of priors
-
-  if(any(!give_priors %in% priors$prior_id)) {
-    stop("Invalid priors requested: ", give_priors)
-  }
-
   # extract prior information
   priors <- dataset$prior_information
   priors$dataset <- dataset
+
+  if (!priors %has_names% give_priors) {
+    warning("Unknown priors requested: ", paste(setdiff(give_priors, names(priors)), collapse = ", "))
+  }
 
   # required, check if the prior infirm
   required_prior_ids <-

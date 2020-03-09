@@ -24,7 +24,9 @@ priors <- tribble(
 
   "features_id", "Marker genes", "Genes/features known to be important in the dynamic process", "soft",
 
-  "dataset", "The full dataset", "The full dataset, including (if available) the gold standard", "hard"
+  "dataset", "The full dataset", "The full dataset, including (if available) the gold standard", "hard",
+
+  "dimred", "A dimensionality reduction", "A dimensionality reduction of the cells", "soft"
 )
 
 prior_usages <- tribble(

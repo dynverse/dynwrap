@@ -57,8 +57,8 @@
     if (verbose) {
       cat(
         "Executing '", method$method$id, "' on '", dataset$id, "'\n",
-        "With parameters: ", deparse(parameters), ",\n",
-        "inputs: ", paste0(names(inputs), collapse = ", "), ", and\n",
+        "With parameters: ", deparse(parameters), "\n",
+        "inputs: ", paste0(names(inputs), collapse = ", "), "\n",
         "priors : ", paste0(names(priors), collapse = ", "), "\n",
         sep = ""
       )
@@ -195,4 +195,3 @@
 
   lst(stdout, stderr)
 }
-

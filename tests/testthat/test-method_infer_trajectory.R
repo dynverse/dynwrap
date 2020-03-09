@@ -44,7 +44,7 @@ test_that("Testing infer_trajectory with control methods", {
   trajectory <- infer_trajectory(dataset, method, give_priors = c("start_id"))
   expect_s3_class(trajectory, "dynwrap::with_trajectory")
 
-  expect_error(infer_trajectory(dataset, method, give_priors = c("to be or not to be")))
+  expect_warning(infer_trajectory(dataset, method, give_priors = c("to be or not to be")), "Unknown priors requested: to be or not to be")
 
   # run with multiple datasets and one method
   trajectories <- infer_trajectories(list(dataset, dataset), method)

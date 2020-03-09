@@ -12,3 +12,5 @@
 functions.R
 scripts
 ^cran-comments\.md$
+^LICENSE\.md$
+^LICENSE\.md$

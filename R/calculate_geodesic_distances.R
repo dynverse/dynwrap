@@ -7,7 +7,7 @@
 #' @inheritParams common_param
 #' @param waypoint_cells A vector of waypoint cells. Only the geodesic distances between waypoint cells and all other cells will be calculated.
 #' @param waypoint_milestone_percentages The milestone percentages of non-cell waypoints, containing waypoint_id, milestone_id and percentage columns
-#' @param directed Take into account the directions of the milestone edges. The cells that cannot be reached from a particular waypoint will have distance infinity.
+#' @param directed Take into account the directions of the milestone edges. The cells that cannot be reached from a particular waypoint will have distance infinity. You can also give a character, if it is "forward" it will look forward, if it is "reverse" it will look in the reversed direction
 #'
 #' @return A matrix containing geodesic distances between each waypoint cell (rows) and cell (columns)
 #'
@@ -67,7 +67,7 @@ calculate_geodesic_distances_ <- function(
   }
 
   if (!is.null(waypoint_milestone_percentages)) {
-    waypoint_ids <- c(waypoint_ids, unique(waypoint_milestone_percentages$waypoint_id))
+    waypoint_ids <- unique(c(waypoint_ids, waypoint_milestone_percentages$waypoint_id))
     milestone_percentages <- bind_rows(
       milestone_percentages,
       waypoint_milestone_percentages %>% rename(cell_id = waypoint_id)
@@ -118,7 +118,8 @@ calculate_geodesic_distances_ <- function(
       tent_nomid <- setdiff(tent, mid)
       tent_distances <- igraph::distances(mil_gr, v = mid, to = tent, mode = "out", weights = igraph::E(mil_gr)$length)
 
-      relevant_pct <- milestone_percentages %>%
+      relevant_pct <-
+        milestone_percentages %>%
         group_by(cell_id) %>%
         filter(all(milestone_id %in% tent)) %>%
         ungroup()
@@ -146,7 +147,7 @@ calculate_geodesic_distances_ <- function(
         "manhattan"
       ))
 
-      if (directed) {
+      if (!isFALSE(directed)) {
         # calculate the sign of the distance
         # distance is negative if the cell is closer to the beginning than the waypoint
         begin <- dir %>% filter(is_start) %>% pull(milestone_id)
@@ -160,7 +161,6 @@ calculate_geodesic_distances_ <- function(
 
       distances <- distances %>%
         as.matrix() %>%
-
         reshape2::melt(varnames = c("from", "to"), value.name = "length") %>%
         mutate_at(c("from", "to"), as.character) %>%
         filter(from != to)
@@ -168,9 +168,7 @@ calculate_geodesic_distances_ <- function(
       distances
     })
 
-  cell_in_tent_distances[is.na(cell_in_tent_distances$length), ]
-
-  if (directed) {
+  if (!isFALSE(directed)) {
     # switch from and to if distance is negative
     cell_in_tent_distances$from2 <- cell_in_tent_distances$from
     cell_in_tent_distances$from <- ifelse(
@@ -206,7 +204,11 @@ calculate_geodesic_distances_ <- function(
     igraph::graph_from_data_frame(directed = directed, vertices = unique(c(milestone_ids, cell_ids_trajectory, waypoint_ids)))
 
   # compute cell-to-cell distances across entire graph
-  mode <- ifelse(directed, "out", "all")
+  mode <- dplyr::case_when(
+    isTRUE(directed) || directed == "forward" ~ "out",
+    directed == "reverse" ~ "in",
+    TRUE ~ "all"
+  )
   out <- gr %>%
     igraph::distances(
       v = waypoint_ids,

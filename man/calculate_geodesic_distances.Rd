@@ -25,7 +25,7 @@ compute_tented_geodesic_distances(
 
 \item{waypoint_milestone_percentages}{The milestone percentages of non-cell waypoints, containing waypoint_id, milestone_id and percentage columns}
 
-\item{directed}{Take into account the directions of the milestone edges. The cells that cannot be reached from a particular waypoint will have distance infinity.}
+\item{directed}{Take into account the directions of the milestone edges. The cells that cannot be reached from a particular waypoint will have distance infinity. You can also give a character, if it is "forward" it will look forward, if it is "reverse" it will look in the reversed direction}
 }
 \value{
 A matrix containing geodesic distances between each waypoint cell (rows) and cell (columns)

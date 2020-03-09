@@ -16,6 +16,7 @@
 #' @param leaves_n Number of leaves
 #' @param timecourse_continuous The time for every cell
 #' @param timecourse_discrete The time for every cell in groups
+#' @param dimred A dimensionality reduction of the cells (see [add_dimred()])
 #' @param verbose Whether or not to print informative messages
 #'
 #' @keywords infer_trajectory
@@ -48,6 +49,7 @@ add_prior_information <- function(
   leaves_n = NULL,
   timecourse_continuous = NULL,
   timecourse_discrete = NULL,
+  dimred = NULL,
   verbose = TRUE
 ) {
   prior_information <- lst(
@@ -60,7 +62,8 @@ add_prior_information <- function(
     timecourse_continuous,
     timecourse_discrete,
     start_n,
-    end_n
+    end_n,
+    dimred
   ) %>% discard(is.null)
 
   if (!is.null(start_id)) {
@@ -70,6 +73,11 @@ add_prior_information <- function(
     testthat::expect_true(all(start_id %in% dataset$cell_ids))
   }
   if (!is.null(groups_id)) {
+    if(is.vector(groups_id)) {
+      testthat::expect_true(!is.null(names(groups_id)))
+      groups_id <- enframe(groups_id, "cell_id", "group_id")
+      prior_information$groups_id <- groups_id
+    }
     testthat::expect_true(is.data.frame(groups_id))
     testthat::expect_setequal(colnames(groups_id), c("cell_id", "group_id"))
     testthat::expect_setequal(groups_id$cell_id, dataset$cell_ids)
@@ -94,6 +102,12 @@ add_prior_information <- function(
     testthat::expect_setequal(dataset$cell_ids, names(timecourse_discrete))
 
     prior_information$timecourse_discrete <- timecourse_discrete[dataset$cell_ids]
+  }
+  if (!is.null(dimred)) {
+    testthat::expect_true(is.matrix(dimred))
+    testthat::expect_setequal(dataset$cell_ids, rownames(dimred))
+
+    prior_information$dimred <- dimred[dataset$cell_ids, ]
   }
 
   if (is_wrapper_with_trajectory(dataset) && is_wrapper_with_expression(dataset)) {

@@ -1,8 +1,11 @@
+#' Add attraction of cells using RNA velocity
+#'
+#' @inheritParams common_param
 add_attraction <- function(
   dataset
 ) {
   current <- get_expression(dataset, "expression")
-  projected <- get_expression(dataset, "expression_projected")
+  projected <- get_expression(dataset, "expression_future")
 
   calculate_attraction(current, projected)
 }
