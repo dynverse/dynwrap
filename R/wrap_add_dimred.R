@@ -137,12 +137,18 @@ get_dimred <- function(dataset, dimred = NULL, expression_source = "expression",
 
   if (is.data.frame(dimred)) {
     # dataframe
-    assert_that("cell_id" %all_in% colnames(dimred))
-    rownames(dimred) <- NULL
-    dimred <- dimred %>%
-      as.data.frame() %>%
-      column_to_rownames("cell_id") %>%
-      as.matrix()
+    if ("cell_id" %in% colnames(dimred)) {
+      rownames(dimred) <- NULL
+      dimred <- dimred %>%
+        as.data.frame() %>%
+        column_to_rownames("cell_id")
+    }
+
+    if (all(map_lgl(x, is.numeric))) {
+      dimred <- as.matrix(dimred)
+    } else {
+      stop("if dimred is a data frame, it should have a column 'cell_id' and all other columns should be numeric.")
+    }
   }
 
   if (is.matrix(dimred)) {
