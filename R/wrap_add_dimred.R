@@ -144,7 +144,7 @@ get_dimred <- function(dataset, dimred = NULL, expression_source = "expression",
         column_to_rownames("cell_id")
     }
 
-    if (all(map_lgl(x, is.numeric))) {
+    if (all(map_lgl(dimred, is.numeric))) {
       dimred <- as.matrix(dimred)
     } else {
       stop("if dimred is a data frame, it should have a column 'cell_id' and all other columns should be numeric.")
