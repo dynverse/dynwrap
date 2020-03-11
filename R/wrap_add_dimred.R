@@ -135,27 +135,26 @@ get_dimred <- function(dataset, dimred = NULL, expression_source = "expression",
     dimred <- dimred(expression)
   }
 
+  if (is.data.frame(dimred)) {
+    # dataframe
+    assert_that("cell_id" %all_in% colnames(dimred))
+    rownames(dimred) <- NULL
+    dimred <- dimred %>%
+      as.data.frame() %>%
+      column_to_rownames("cell_id") %>%
+      as.matrix()
+  }
+
   if (is.matrix(dimred)) {
     # matrix
     assert_that(is.numeric(dimred))
-    assert_that(length(rownames(dimred)) == nrow(dimred))
-    assert_that(dataset$cell_ids %all_in% rownames(dimred))
-    assert_that(rownames(dimred) %all_in% dataset$cell_ids)
-
-    colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
-  } else if (is.data.frame(dimred)) {
-    # dataframe
-    if ("cell_id" %in% colnames(dimred)) {
-      rownames(dimred) <- NULL
-      dimred <- dimred %>%
-        as.data.frame() %>%
-        column_to_rownames("cell_id") %>%
-        as.matrix()
+    if (!is.null(rownames(dimred))) {
+      assert_that(
+        length(rownames(dimred)) == nrow(dimred),
+        dataset$cell_ids %all_in% rownames(dimred),
+        rownames(dimred) %all_in% dataset$cell_ids
+      )
     }
-    assert_that(is.numeric(dimred))
-    assert_that(length(rownames(dimred)) == nrow(dimred))
-    assert_that(dataset$cell_ids %all_in% rownames(dimred))
-    assert_that(rownames(dimred) %all_in% dataset$cell_ids)
 
     colnames(dimred) <- paste0("comp_", seq_len(ncol(dimred)))
   } else if (is_wrapper_with_dimred(dataset)) {
