@@ -4,7 +4,7 @@ skip_on_appveyor()
 skip_on_os("mac")
 skip_on_cran()
 
-tags <- c("dynwrapr_tester:v0.1.0") # "dynwrappy_tester:v0.1.0"
+tags <- c("dynwrapr_tester:latest") # "dynwrappy_tester:v0.1.0"
 
 # get example dataset
 data("example_dataset")
