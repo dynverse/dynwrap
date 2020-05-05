@@ -18,7 +18,8 @@ add_waypoints(
   trajectory,
   n_waypoints = 200,
   trafo = sqrt,
-  resolution = sum(trafo(trajectory$milestone_network$length))/n_waypoints
+  resolution = sum(trafo(trajectory$milestone_network$length))/n_waypoints,
+  recompute = FALSE
 )
 
 is_wrapper_with_waypoints(trajectory)

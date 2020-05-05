@@ -113,7 +113,8 @@ add_waypoints <- inherit_default_params(select_waypoints, function(
   trajectory,
   n_waypoints = 200,
   trafo = sqrt,
-  resolution = sum(trafo(trajectory$milestone_network$length))/n_waypoints
+  resolution = sum(trafo(trajectory$milestone_network$length))/n_waypoints,
+  recompute = FALSE
 ) {
   assert_that(is_wrapper_with_trajectory(trajectory))
 

@@ -1,3 +1,9 @@
+# dynwrap 1.2.1
+
+* BUG FIX `project_trajectory()`: Correctly pass parameters.
+
+* SMALL CHANGE `select_waypoints()`: Do not recompute waypoints if trajectory already contains some.
+
 # dynwrap 1.2.0 
 
 * FUNCTIONALITY: Improved RNA velocity handling. Not all features need to be present
