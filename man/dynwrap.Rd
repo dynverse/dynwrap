@@ -5,5 +5,5 @@
 \alias{dynwrap}
 \title{Inferring and adapting single-cell trajectories}
 \description{
-\figure{logo.png}{}
+\figure{logo.png}
 }

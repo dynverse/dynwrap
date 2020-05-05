@@ -4,7 +4,9 @@
 \name{example_trajectory}
 \alias{example_trajectory}
 \title{Example trajectory}
-\format{An object of class \code{dynwrap::with_dimred} (inherits from \code{dynwrap::with_cell_waypoints}, \code{dynwrap::with_prior}, \code{dynwrap::with_trajectory}, \code{dynwrap::with_dimred}, \code{dynwrap::with_expression}, \code{dynwrap::data_wrapper}, \code{list}) of length 22.}
+\format{
+An object of class \code{dynwrap::with_dimred} (inherits from \code{dynwrap::with_cell_waypoints}, \code{dynwrap::with_prior}, \code{dynwrap::with_trajectory}, \code{dynwrap::with_dimred}, \code{dynwrap::with_expression}, \code{dynwrap::data_wrapper}, \code{list}) of length 22.
+}
 \usage{
 example_trajectory
 }

@@ -7,7 +7,7 @@
 project_waypoints(
   trajectory,
   space,
-  waypoints = dynwrap::select_waypoints(trajectory),
+  waypoints = select_waypoints(trajectory),
   trajectory_projection_sd = sum(trajectory$milestone_network$length) * 0.05
 )
 }

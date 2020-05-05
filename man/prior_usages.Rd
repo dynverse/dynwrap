@@ -4,7 +4,9 @@
 \name{prior_usages}
 \alias{prior_usages}
 \title{Metadata on prior usages}
-\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 3 rows and 2 columns.}
+\format{
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 3 rows and 2 columns.
+}
 \usage{
 prior_usages
 }
