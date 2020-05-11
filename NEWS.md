@@ -1,10 +1,12 @@
-# dynwrap 1.2.1
+# dynwrap 1.2.1 (2020-05-11)
 
 * BUG FIX `project_trajectory()`: Correctly pass parameters.
 
-* SMALL CHANGE `select_waypoints()`: Do not recompute waypoints if trajectory already contains some.
+* MINOR CHANGES `select_waypoints()`: Do not recompute waypoints if trajectory already contains some.
 
-# dynwrap 1.2.0 
+* MINOR CHANGES `convert_progressions_to_milestone_percentages()`: Solve tapply issues ahead of dplyr 1.0 release.
+
+# dynwrap 1.2.0 (2020-03-09)
 
 * FUNCTIONALITY: Improved RNA velocity handling. Not all features need to be present
   in the projected expression, allowing integration with standard velocyto.R pipelines.
@@ -15,9 +17,9 @@
 
 * BUG FIX `add_root()`: Fix rooting for some linear trajectories (#149)
 
-* SMALL CHANGE: Allow a named vector for groups_id prior information (#154)
+* MINOR CHANGES: Allow a named vector for groups_id prior information (#154)
 
-* SMALL CHANGE: Moved `orient_topology_to_velocity()` to scvelo R package.
+* MINOR CHANGES: Moved `orient_topology_to_velocity()` to scvelo R package.
 
 * BUG FIX `simplify_trajectory()`: handle dimred_milestones and dimred_segments values (#153).
 
