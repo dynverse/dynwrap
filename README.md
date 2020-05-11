@@ -50,7 +50,17 @@ list of changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md -->
 
-### Recent changes in dynwrap 1.2.0
+### Recent changes in dynwrap 1.2.1 (2020-05-11)
+
+  - BUG FIX `project_trajectory()`: Correctly pass parameters.
+
+  - MINOR CHANGES `select_waypoints()`: Do not recompute waypoints if
+    trajectory already contains some.
+
+  - MINOR CHANGES `convert_progressions_to_milestone_percentages()`:
+    Solve tapply issues ahead of dplyr 1.0 release.
+
+### Recent changes in dynwrap 1.2.0 (2020-03-09)
 
   - FUNCTIONALITY: Improved RNA velocity handling. Not all features need
     to be present in the projected expression, allowing integration with
@@ -65,10 +75,10 @@ list of changes.
   - BUG FIX `add_root()`: Fix rooting for some linear trajectories
     (\#149)
 
-  - SMALL CHANGE: Allow a named vector for groups\_id prior information
+  - MINOR CHANGES: Allow a named vector for groups\_id prior information
     (\#154)
 
-  - SMALL CHANGE: Moved `orient_topology_to_velocity()` to scvelo R
+  - MINOR CHANGES: Moved `orient_topology_to_velocity()` to scvelo R
     package.
 
   - BUG FIX `simplify_trajectory()`: handle dimred\_milestones and
@@ -76,15 +86,6 @@ list of changes.
 
   - BUG FIX `add_dimred()`: Do not execute example of dyndimred if is
     not installed.
-
-### Recent changes in dynwrap 1.1.4 (11-10-2019)
-
-First CRAN release\!
-
-  - BUG FIX: Fixed \#142 where the error message was truncated
-
-  - DOCUMENTATION: Added examples to all
-functions.
 
 ## Dynverse dependencies
 
