@@ -3,7 +3,7 @@ library(dynwrap)
 
 set.seed(1)
 
-ncells <- 1000
+ncells <- 500
 pseudotime <- runif(ncells)
 
 expression <- matrix(
