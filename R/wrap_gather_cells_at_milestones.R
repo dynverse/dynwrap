@@ -20,8 +20,7 @@ gather_cells_at_milestones <- function(trajectory) {
   milestone_percentages <-
     trajectory$milestone_percentages %>%
     group_by(cell_id) %>%
-    arrange(-percentage) %>%
-    slice(1) %>%
+    slice(which.max(percentage)) %>%
     mutate(percentage = 1) %>%
     ungroup()
 
