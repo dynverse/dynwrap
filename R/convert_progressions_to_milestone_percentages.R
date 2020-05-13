@@ -1,4 +1,20 @@
-#' @rdname convert_milestone_percentages_to_progressions
+#' Conversion between milestone percentages and progressions
+#'
+#' @inheritParams wrap_data
+#' @inheritParams add_trajectory
+#'
+#' @return The milestone percentages
+#'
+#' @seealso [add_trajectory()], [convert_milestone_percentages_to_progressions()]
+#'
+#' @examples
+#' milestone_percentages <- convert_progressions_to_milestone_percentages(
+#'   cell_ids = example_trajectory$cell_ids,
+#'   milestone_ids = example_trajectory$milestone_ids,
+#'   milestone_network = example_trajectory$milestone_network,
+#'   progressions = example_trajectory$progressions
+#' )
+#' head(milestone_percentages)
 #'
 #' @export
 convert_progressions_to_milestone_percentages <- function(
