@@ -1,4 +1,20 @@
-#' @rdname convert_milestone_percentages_to_progressions
+#' Conversion between milestone percentages and progressions
+#'
+#' @inheritParams wrap_data
+#' @inheritParams add_trajectory
+#'
+#' @return The milestone percentages
+#'
+#' @seealso [add_trajectory()], [convert_milestone_percentages_to_progressions()]
+#'
+#' @examples
+#' milestone_percentages <- convert_progressions_to_milestone_percentages(
+#'   cell_ids = example_trajectory$cell_ids,
+#'   milestone_ids = example_trajectory$milestone_ids,
+#'   milestone_network = example_trajectory$milestone_network,
+#'   progressions = example_trajectory$progressions
+#' )
+#' head(milestone_percentages)
 #'
 #' @export
 convert_progressions_to_milestone_percentages <- function(
@@ -31,12 +47,12 @@ convert_progressions_to_milestone_percentages <- function(
     filter(from != to)
 
   # determine milestone percentages for 'from' milestones
-  from_mls <- tapply(progressions$from, progressions$cell_id, first)
-  from_pct <- 1 - tapply(progressions$percentage, progressions$cell_id, sum)
+  from_mls <- tapply(progressions$from, progressions$cell_id, first, default = NA_character_)
+  from_pct <- 1 - tapply(progressions$percentage, progressions$cell_id, sum, default = NA_real_)
   froms <- tibble(
     cell_id = names(from_mls) %||% character(),
-    milestone_id = from_mls[cell_id],
-    percentage = from_pct[cell_id]
+    milestone_id = from_mls[cell_id] %>% unname() %>% as.character(),
+    percentage = from_pct[cell_id] %>% unname() %>% as.numeric()
   )
 
   # determine milestone percentages for 'to' milestones

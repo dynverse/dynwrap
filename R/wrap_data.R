@@ -38,6 +38,10 @@ wrap_data <- function(
 
   testthat::expect_false(any(duplicated(cell_ids)))
 
+  if (is.null(cell_info)) {
+    cell_info <- tibble(cell_id = cell_ids)
+  }
+
   if (!is.null(cell_info)) {
     testthat::expect_is(cell_info, "data.frame")
     testthat::expect_equal(cell_info$cell_id, cell_ids)

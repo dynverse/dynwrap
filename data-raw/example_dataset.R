@@ -3,14 +3,14 @@ library(dynwrap)
 
 set.seed(1)
 
-ncells <- 1000
+ncells <- 500
 pseudotime <- runif(ncells)
 
 expression <- matrix(
   c(
-    (pseudotime - 0.5) ** 2,
-    sqrt(pseudotime + 20),
-    pseudotime
+    pseudotime,
+    (.5 - pseudotime) ** 2,
+    sqrt(20 - pseudotime * 2)
   ),
   ncol = 3,
   dimnames = list(as.character(rep(seq_len(ncells))), as.character(c("A", "B", "C")))
@@ -48,6 +48,7 @@ example_trajectory <- example_dataset %>%
 dynplot::plot_graph(example_trajectory)
 dynplot::plot_dimred(example_trajectory)
 dynplot::plot_heatmap(example_trajectory)
+dynplot::plot_dimred(dynwrap::example_trajectory, "feature", feature_oi = "C")
 
 usethis::use_data(example_trajectory, overwrite = TRUE)
 usethis::use_data(example_dataset, overwrite = TRUE)

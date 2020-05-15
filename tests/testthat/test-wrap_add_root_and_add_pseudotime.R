@@ -78,7 +78,7 @@ test_that("Testing add_root on a more complex linear trajectory", {
 
 
 test_that("Testing add_root_using_expression",{
-  rooted <- add_root_using_expression(dynwrap::example_trajectory, "A")
+  rooted <- add_root_using_expression(dynwrap::example_trajectory, "C")
   expect_equal(
     rooted$root_milestone_id,
     "milestone_begin"

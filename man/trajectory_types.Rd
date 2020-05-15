@@ -4,7 +4,9 @@
 \name{trajectory_types}
 \alias{trajectory_types}
 \title{Metadata on the trajectory types}
-\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 9 rows and 6 columns.}
+\format{
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 9 rows and 6 columns.
+}
 \usage{
 trajectory_types
 }

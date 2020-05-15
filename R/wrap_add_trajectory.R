@@ -176,20 +176,23 @@ is_wrapper_with_trajectory <- function(trajectory) {
 
 # Check given trajectory input ----------------------------------------
 check_milestone_network <- function(milestone_ids, milestone_network, allow_self_loops = FALSE) {
-  assert_that(is.data.frame(milestone_network))
-  assert_that(ncol(milestone_network) == 4)
-  assert_that(setequal(colnames(milestone_network), c("from", "to", "length", "directed")))
+  assert_that(
+    is.data.frame(milestone_network),
+    ncol(milestone_network) == 4,
+    setequal(colnames(milestone_network), c("from", "to", "length", "directed"))
+  )
 
   milestone_network <- milestone_network %>% select(from, to, length, directed)
 
-  assert_that(is.character(milestone_network$from))
-  assert_that(is.character(milestone_network$to))
-  assert_that(is.numeric(milestone_network$length))
-  assert_that(is.logical(milestone_network$directed))
-
-  assert_that(milestone_network$from %all_in% milestone_ids)
-  assert_that(milestone_network$to %all_in% milestone_ids)
-  assert_that(!any(duplicated(milestone_network %>% select(from, to))))
+  assert_that(
+    is.character(milestone_network$from),
+    is.character(milestone_network$to),
+    is.numeric(milestone_network$length),
+    is.logical(milestone_network$directed),
+    milestone_network$from %all_in% milestone_ids,
+    milestone_network$to %all_in% milestone_ids,
+    !any(duplicated(milestone_network %>% select(from, to)))
+  )
 
   if (!allow_self_loops) {
     assert_that(!any((milestone_network$from == milestone_network$to) & milestone_network$length > 0))
@@ -244,7 +247,7 @@ check_milestone_percentages <- function(cell_ids, milestone_ids, milestone_perce
   milestone_percentages$percentage[milestone_percentages$percentage < 0 & milestone_percentages$percentage > -1e-6] <- 0
   milestone_percentages$percentage[milestone_percentages$percentage > 1 & milestone_percentages$percentage < 1+1e-6] <- 1
 
-  mp_check <- tapply(milestone_percentages$percentage, milestone_percentages$cell_id, sum)
+  mp_check <- tapply(milestone_percentages$percentage, milestone_percentages$cell_id, sum, default = NA_real_)
   assert_that(all(abs(mp_check - 1) < 1e-6), msg = "Sum of milestone percentages per cell_id should be exactly one")
 
   milestone_percentages
@@ -271,7 +274,7 @@ check_progressions <- function(cell_ids, milestone_ids, milestone_network, progr
   progressions$percentage[progressions$percentage > 1 & progressions$percentage < 1+1e-6] <- 1
 
   # check percentage sum
-  pg_check <- tapply(progressions$percentage, progressions$cell_id, sum)
+  pg_check <- tapply(progressions$percentage, progressions$cell_id, sum, default = NA_real_)
   assert_that(all(pg_check >= 0 & pg_check < (1 + 1e-6)), msg = "Sum of progressions per cell_id should be exactly one")
 
   # check edges

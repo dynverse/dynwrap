@@ -17,7 +17,7 @@
 project_waypoints <- function(
   trajectory,
   space,
-  waypoints = dynwrap::select_waypoints(trajectory),
+  waypoints = select_waypoints(trajectory),
   trajectory_projection_sd = sum(trajectory$milestone_network$length) * 0.05
 ) {
   assert_that(!is.null(space))
@@ -29,7 +29,7 @@ project_waypoints <- function(
     waypoints$geodesic_distances <- calculate_geodesic_distances(
       trajectory,
       waypoint_milestone_percentages = waypoints$milestone_percentages
-    )[unique(waypoints$milestone_percentages$waypoint_id), , drop = F]
+    )[unique(waypoints$milestone_percentages$waypoint_id), , drop = FALSE]
   }
 
   # apply kernel on geodesic distances
@@ -69,13 +69,28 @@ project_waypoints <- function(
 #' @seealso [add_dimred()]
 #'
 #' @export
-project_trajectory <- function(trajectory, dimred, waypoints = select_waypoints(trajectory)) {
-  waypoint_points <- project_waypoints(trajectory, dimred, waypoints = waypoints)
+project_trajectory <- function(
+  trajectory,
+  dimred,
+  waypoints = select_waypoints(trajectory),
+  trajectory_projection_sd = sum(trajectory$milestone_network$length) * 0.05
+) {
+  dimred_segment_points <- project_waypoints(
+    trajectory,
+    dimred,
+    waypoints = waypoints,
+    trajectory_projection_sd = trajectory_projection_sd
+  )
+  dimred_milestones <- project_milestones(
+    trajectory,
+    dimred,
+    trajectory_projection_sd = trajectory_projection_sd
+  )
 
   lst(
-    dimred_segment_points = waypoint_points,
+    dimred_segment_points = dimred_segment_points,
     dimred_segment_progressions = waypoints$progressions %>% select(from, to, percentage),
-    dimred_milestones = project_milestones(trajectory, dimred)
+    dimred_milestones = dimred_milestones
   )
 }
 
@@ -84,7 +99,7 @@ project_trajectory <- function(trajectory, dimred, waypoints = select_waypoints(
 #' @rdname project_trajectory
 #'
 #' @export
-project_milestones <- function(trajectory, dimred) {
+project_milestones <- function(trajectory, dimred, trajectory_projection_sd = sum(trajectory$milestone_network$length) * 0.05) {
   waypoints <- lst(
     milestone_percentages = tibble(
       waypoint_id = trajectory$milestone_ids,
@@ -92,7 +107,10 @@ project_milestones <- function(trajectory, dimred) {
       percentage = 1
     )
   )
-  dimred_milestones <- project_waypoints(trajectory, dimred, waypoints = waypoints)
-
-  dimred_milestones
+  project_waypoints(
+    trajectory,
+    dimred,
+    waypoints = waypoints,
+    trajectory_projection_sd = trajectory_projection_sd
+  )
 }

@@ -8,10 +8,15 @@
 project_trajectory(
   trajectory,
   dimred,
-  waypoints = select_waypoints(trajectory)
+  waypoints = select_waypoints(trajectory),
+  trajectory_projection_sd = sum(trajectory$milestone_network$length) * 0.05
 )
 
-project_milestones(trajectory, dimred)
+project_milestones(
+  trajectory,
+  dimred,
+  trajectory_projection_sd = sum(trajectory$milestone_network$length) * 0.05
+)
 }
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
@@ -24,6 +29,8 @@ project_milestones(trajectory, dimred)
 \item \code{milestone_percentages}: the positions of waypoints withing the trajectory
 \item \code{geodesic_distances}: matrix with precalculated geodesic distances between waypoints (rows) and cells (columns), optional
 }}
+
+\item{trajectory_projection_sd}{The standard deviation of the gaussian kernel}
 }
 \value{
 A list containing
