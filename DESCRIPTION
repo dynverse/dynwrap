@@ -38,7 +38,6 @@ Imports:
   dplyr,
   dynutils (>= 1.0.3),
   dynparam,
-  FNN,
   igraph,
   glue,
   magrittr,
@@ -59,8 +58,4 @@ Suggests:
   pkgload,
   ranger,
   rmarkdown
-Remotes:  
-    dynverse/dynutils@master,
-    dynverse/dynparam@master,
-    dynverse/dyndimred@master
 VignetteBuilder: knitr
