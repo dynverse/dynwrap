@@ -54,6 +54,7 @@ Imports:
   yaml
 Suggests: 
   dyndimred,
+  hdf5r,
   knitr,
   pkgload,
   ranger,
