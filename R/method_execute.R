@@ -13,12 +13,11 @@
   # start the timer
   timings <- list(execution_start = Sys.time())
 
-  # test whether the dataset contains expression
-  testthat::expect_true(is_data_wrapper(dataset))
-  testthat::expect_true(is_wrapper_with_expression(dataset))
-
-  # check method
-  testthat::expect_true(is_ti_method(method))
+  assert_that(
+    is_data_wrapper(dataset),
+    is_wrapper_with_expression(dataset),
+    is_ti_method(method)
+  )
 
   # extract inputs from dataset
   inputs <- .method_extract_inputs(dataset, method$wrapper$inputs)
@@ -97,7 +96,7 @@
 
       NA_character_
     }, error = function(e) {
-      e$message
+      as.character(e)
     })
 
     # run postproc
@@ -139,7 +138,7 @@
     ) %>%
       bind_cols(as.data.frame(as.list(timings_diff)))
   }, error = function(e) {
-    stop("Error produced in dynwrap input/output:\n", e$message)
+    stop("Error produced in dynwrap input/output:\n", as.character(e))
   })
 
   lst(trajectory, summary)
