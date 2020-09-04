@@ -27,7 +27,7 @@ calculate_geodesic_distances <- function(
   waypoint_milestone_percentages = NULL,
   directed = FALSE
 ) {
-  testthat::expect_true(is_wrapper_with_trajectory(trajectory))
+  assert_that(is_wrapper_with_trajectory(trajectory))
 
   if (is.null(waypoint_cells) && is_wrapper_with_waypoint_cells(trajectory)) {
     waypoint_cells <- trajectory$waypoint_cells

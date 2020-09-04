@@ -13,13 +13,11 @@
 #' )
 #'
 #' @export
-#'
-#' @importFrom testthat expect_equal
 add_timings <- function(
   trajectory,
   timings
 ) {
-  testthat::expect_true(is_data_wrapper(trajectory))
+  assert_that(is_data_wrapper(trajectory))
 
   if (is.data.frame(timings)) {
     timings <- tibble::deframe(timings)
@@ -29,7 +27,7 @@ add_timings <- function(
     timings <- as.list(timings)
   }
 
-  testthat::expect_is(timings, "list")
+  assert_that(is.list(timings))
 
   # create output structure
   trajectory %>% extend_with(

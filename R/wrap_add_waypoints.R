@@ -107,8 +107,6 @@ select_waypoints <- function(
 #'
 #' @keywords adapt_trajectory
 #'
-#' @importFrom testthat expect_true
-#'
 #' @export
 add_waypoints <- inherit_default_params(select_waypoints, function(
   trajectory,

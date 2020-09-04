@@ -15,7 +15,6 @@
 #'
 #' @keywords create_trajectory
 #'
-#' @importFrom testthat expect_is expect_true expect_equal
 #'
 #' @examples
 #' library(dplyr)
@@ -52,7 +51,7 @@ add_cell_graph <- function(
   requireNamespace("igraph")
 
   # check data wrapper
-  testthat::expect_true(is_data_wrapper(dataset))
+  assert_that(is_data_wrapper(dataset))
 
   # optionally add length and directed if not specified
   if (!"length" %in% colnames(cell_graph)) {
@@ -69,9 +68,11 @@ add_cell_graph <- function(
   } else {
     cell_ids <- names(to_keep)
   }
-  testthat::expect_is(to_keep, "logical")
-  testthat::expect_true(all(cell_ids %in% dataset$cell_ids))
-  testthat::expect_equal(sort(unique(c(cell_graph$from, cell_graph$to))), sort(names(to_keep)))
+  assert_that(
+    is.logical(to_keep),
+    all(cell_ids %in% dataset$cell_ids),
+    all.equal(sort(unique(c(cell_graph$from, cell_graph$to))), sort(names(to_keep)))
+  )
 
   # check cell_graph
   check_milestone_network(cell_ids, cell_graph)

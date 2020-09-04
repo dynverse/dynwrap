@@ -17,8 +17,6 @@
 #' head(dataset$grouping)
 #'
 #' @export
-#'
-#' @importFrom testthat expect_equal expect_is expect_true
 add_grouping <- function(
   dataset,
   grouping,
@@ -36,19 +34,20 @@ add_grouping <- function(
     names(grouping) <- dataset$cell_ids
   }
 
-  # check whether dataset is a data wrapper
-  testthat::expect_true(is_data_wrapper(dataset))
+  assert_that(
+    # check whether dataset is a data wrapper
+    is_data_wrapper(dataset),
 
-  # check group ids
-  testthat::expect_is(group_ids, "character")
-  testthat::expect_false(any(duplicated(group_ids)))
+    # check group ids
+    is.character(group_ids),
+    !any(duplicated(group_ids)),
 
-  # check cell group
-  testthat::expect_named(grouping)
-  testthat::expect_is(grouping, "character")
-
-  testthat::expect_true(all(names(grouping) %in% dataset$cell_ids))
-  testthat::expect_true(all(grouping[!is.na(grouping)] %in% group_ids))
+    # check cell group
+    !is.null(names(grouping)),
+    is.character(grouping),
+    names(grouping) %all_in% dataset$cell_ids,
+    grouping[!is.na(grouping)] %all_in% group_ids
+  )
 
   # create output structure
   dataset %>% extend_with(

@@ -26,7 +26,6 @@
 #' @export
 #'
 #' @importFrom Matrix Matrix
-#' @importFrom testthat expect_equal expect_is
 add_expression <- function(
   dataset,
   counts,
@@ -35,7 +34,7 @@ add_expression <- function(
   expression_future = NULL,
   ...
 ) {
-  testthat::expect_true(is_data_wrapper(dataset))
+  assert_that(is_data_wrapper(dataset))
 
   assert_that(!(is.null(counts) && is.null(expression)), msg = "counts and expression can't both be NULL")
 

@@ -15,8 +15,6 @@
 #'
 #' @export
 #'
-#' @importFrom testthat expect_is expect_true expect_named
-#'
 #' @examples
 #' library(tibble)
 #' dataset <- wrap_data(cell_ids = letters)
@@ -35,7 +33,7 @@ add_cyclic_trajectory <- function(
   ...
 ) {
   # check data wrapper
-  testthat::expect_true(is_data_wrapper(dataset))
+  assert_that(is_data_wrapper(dataset))
 
   pseudotime <- process_pseudotime(dataset, pseudotime)
 
@@ -43,7 +41,7 @@ add_cyclic_trajectory <- function(
   if (do_scale_minmax) {
     pseudotime <- scale_minmax(pseudotime)
   } else {
-    testthat::expect_true(all(0 <= pseudotime & pseudotime <= 1))
+    assert_that(all(0 <= pseudotime & pseudotime <= 1))
   }
 
   # construct milestones

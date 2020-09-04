@@ -48,10 +48,12 @@ add_pseudotime <- function(trajectory, pseudotime = NULL) {
 
   # check names of pseudotime
   cell_ids <- trajectory$cell_ids
-  testthat::expect_is(pseudotime, "numeric")
-  testthat::expect_named(pseudotime)
-  testthat::expect_setequal(names(pseudotime), cell_ids)
-  testthat::expect_true(length(names(pseudotime) )== length(cell_ids))
+  assert_that(
+    is.numeric(pseudotime),
+    !is.null(names(pseudotime)),
+    setequal(names(pseudotime), cell_ids),
+    length(names(pseudotime) )== length(cell_ids)
+  )
 
   trajectory$pseudotime <- pseudotime[trajectory$cell_ids]
   trajectory

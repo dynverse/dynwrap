@@ -16,8 +16,6 @@
 #'
 #' @export
 #'
-#' @importFrom testthat expect_true
-#'
 #' @examples
 #' dataset <- wrap_data(cell_ids = letters)
 #'
@@ -42,7 +40,7 @@ add_end_state_probabilities <- function(
   ...
 ) {
   # check data wrapper
-  expect_true(is_data_wrapper(dataset))
+  assert_that(is_data_wrapper(dataset))
 
   # process pseudotime
   if (!is.null(pseudotime)) {
@@ -51,16 +49,16 @@ add_end_state_probabilities <- function(
     if (do_scale_minmax) {
       pseudotime <- scale_minmax(pseudotime)
     } else {
-      expect_true(all(0 <= pseudotime & pseudotime <= 1))
+      assert_that(all(0 <= pseudotime & pseudotime <= 1))
     }
     dataset <- dataset %>% add_pseudotime(pseudotime)
   } else {
-    expect_true("pseudotime" %in% names(dataset))
+    assert_that("pseudotime" %in% names(dataset))
     pseudotime <- dataset$pseudotime
   }
 
   # process end_state_probabilities
-  expect_true("cell_id" %in% colnames(end_state_probabilities))
+  assert_that("cell_id" %in% colnames(end_state_probabilities))
 
   if (ncol(end_state_probabilities) == 1) {
     # process as linear of no end_state_probabilities are provided

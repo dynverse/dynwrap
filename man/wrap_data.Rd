@@ -31,6 +31,5 @@ dataset <- wrap_data(
   cell_ids = c("A", "B", "C")
 )
 dataset$cell_ids
-
 }
 \keyword{create_trajectory}

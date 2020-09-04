@@ -18,7 +18,6 @@
 #'    and the location of the milestone within a divergence (*comp_1* and *comp_2*)
 #'
 #' @importFrom igraph graph_from_data_frame layout_with_fr
-#' @importFrom testthat expect_true
 #'
 #' @examples
 #' trajectory_dimred <- calculate_trajectory_dimred(example_trajectory)
@@ -40,8 +39,8 @@ calculate_trajectory_dimred <- function(
   }
 
   # expect traj to contain a trajectory
-  testthat::expect_true(is_data_wrapper(trajectory))
-  testthat::expect_true(is_wrapper_with_trajectory(trajectory))
+  assert_that(is_data_wrapper(trajectory))
+  assert_that(is_wrapper_with_trajectory(trajectory))
 
   # retrieve some objects to work with
   cell_ids <- trajectory$cell_ids

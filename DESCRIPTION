@@ -48,7 +48,6 @@ Imports:
   readr,
   stringr,
   reshape2,
-  testthat,
   tibble,
   tidyr,
   yaml
@@ -58,5 +57,6 @@ Suggests:
   knitr,
   pkgload,
   ranger,
-  rmarkdown
+  rmarkdown,
+  testthat
 VignetteBuilder: knitr

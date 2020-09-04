@@ -16,8 +16,6 @@
 #'   cell_ids = c("A", "B", "C")
 #' )
 #' dataset$cell_ids
-#'
-#' @importFrom testthat expect_is expect_length expect_equal
 wrap_data <- function(
   id = NULL,
   cell_ids,
@@ -28,24 +26,28 @@ wrap_data <- function(
     id <- dynutils::random_time_string("data_wrapper")
   }
 
-  testthat::expect_is(id, "character")
-  testthat::expect_length(id, 1)
+  assert_that(
+    is.character(id),
+    length(id) == 1
+  )
 
   if (is_tibble(cell_ids) && ncol(cell_ids) == 1 && "cell_ids" %in% names(cell_ids)) {
     cell_ids <- cell_ids$cell_ids
   }
-  testthat::expect_is(cell_ids, "character")
 
-  testthat::expect_false(any(duplicated(cell_ids)))
+  assert_that(
+    is.character(cell_ids),
+    !any(duplicated(cell_ids))
+  )
 
   if (is.null(cell_info)) {
     cell_info <- tibble(cell_id = cell_ids)
   }
 
-  if (!is.null(cell_info)) {
-    testthat::expect_is(cell_info, "data.frame")
-    testthat::expect_equal(cell_info$cell_id, cell_ids)
-  }
+  assert_that(
+    is.data.frame(cell_info),
+    all.equal(cell_info$cell_id, cell_ids)
+  )
 
   list() %>% extend_with(
     "dynwrap::data_wrapper",

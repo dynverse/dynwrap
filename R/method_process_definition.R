@@ -293,10 +293,8 @@ def_parameters <- dynparam::parameter_set
 #' @keywords create_ti_method
 #'
 #' @export
-#'
-#' @importFrom testthat expect_true
 get_default_parameters <- function(definition) {
-  testthat::expect_true(is_ti_method(definition))
+  assert_that(is_ti_method(definition))
 
   map(definition$parameters$parameters, ~ .$default)
 }
