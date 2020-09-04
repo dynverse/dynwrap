@@ -5,7 +5,7 @@
 \alias{example_dataset}
 \title{Example dataset}
 \format{
-An object of class \code{dynwrap::with_dimred} (inherits from \code{dynwrap::with_expression}, \code{dynwrap::data_wrapper}, \code{list}) of length 12.
+An object of class \code{dynwrap::with_dimred} (inherits from \code{dynwrap::with_expression}, \code{dynwrap::data_wrapper}, \code{list}) of length 11.
 }
 \usage{
 example_dataset

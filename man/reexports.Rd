@@ -18,7 +18,7 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{babelwhale}{\code{\link[babelwhale]{create_config}}, \code{\link[babelwhale]{create_docker_config}}, \code{\link[babelwhale]{create_singularity_config}}, \code{\link[babelwhale]{get_default_config}}, \code{\link[babelwhale]{set_default_config}}, \code{\link[babelwhale]{test_docker_installation}}, \code{\link[babelwhale]{test_singularity_installation}}}
+  \item{babelwhale}{\code{\link[babelwhale]{create_config}}, \code{\link[babelwhale:create_config]{create_docker_config}}, \code{\link[babelwhale:create_config]{create_singularity_config}}, \code{\link[babelwhale:create_config]{get_default_config}}, \code{\link[babelwhale:create_config]{set_default_config}}, \code{\link[babelwhale]{test_docker_installation}}, \code{\link[babelwhale]{test_singularity_installation}}}
 
   \item{dynutils}{\code{\link[dynutils]{test_h5_installation}}}
 }}

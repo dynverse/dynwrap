@@ -46,7 +46,7 @@ If multiple methods were provided in the \code{method} parameter,
 \code{parameters} must be an unnamed list of the same length.}
 
 \item{give_priors}{All the priors a method is allowed to receive.
-Must be a subset of all available priors (\link[dynwrap:priors]{dynwrap::priors}).}
+Must be a subset of all available priors (\link{priors}).}
 
 \item{seed}{A seed to be passed to the TI method.}
 
