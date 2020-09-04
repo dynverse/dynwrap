@@ -1,14 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<a href="https://travis-ci.org/dynverse/dynwrap"><img src="https://travis-ci.org/dynverse/dynwrap.svg" align="left"></a>
-<a href="https://codecov.io/gh/dynverse/dynwrap">
-<img src="https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg" align="left" /></a>
+# dynwrap: Representing and Inferring Single-Cell Trajectories
+
+[![R-CMD-check](https://github.com/dynverse/dynwrap/workflows/R-CMD-check/badge.svg)](https://github.com/dynverse/dynwrap/actions?query=workflow%3AR-CMD-check)
+[![codecov](https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynwrap)
 [**ℹ️ Tutorials**](https://dynverse.org)     [**ℹ️ Reference
 documentation**](https://dynverse.org/reference/dynwrap)
 <br><img src="man/figures/logo.png" align="right" />
-
-# Tools for inferring and wrapping single-cell trajectories
 
 **dynwrap** contains the code for a common model of single-cell
 trajectories. The package can:
@@ -50,6 +49,11 @@ list of changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md -->
 
+### Recent changes in dynwrap 1.2.2
+
+  - BUG FIX `project_waypoints()`: Rename milestone waypoints such that
+    the names are unique.
+
 ### Recent changes in dynwrap 1.2.1 (2020-05-11)
 
   - BUG FIX `project_trajectory()`: Correctly pass parameters.
@@ -59,33 +63,6 @@ list of changes.
 
   - MINOR CHANGES `convert_progressions_to_milestone_percentages()`:
     Solve tapply issues ahead of dplyr 1.0 release.
-
-### Recent changes in dynwrap 1.2.0 (2020-03-09)
-
-  - FUNCTIONALITY: Improved RNA velocity handling. Not all features need
-    to be present in the projected expression, allowing integration with
-    standard velocyto.R pipelines.
-
-  - BUG FIX `calculate_pseudotime()`: Fix pseudotime calculation on
-    branching trajectories (\#139).
-
-  - BUG FIX `flip_edges()`: Also flip `dimred_segment_progressions` if
-    available.
-
-  - BUG FIX `add_root()`: Fix rooting for some linear trajectories
-    (\#149)
-
-  - MINOR CHANGES: Allow a named vector for groups\_id prior information
-    (\#154)
-
-  - MINOR CHANGES: Moved `orient_topology_to_velocity()` to scvelo R
-    package.
-
-  - BUG FIX `simplify_trajectory()`: handle dimred\_milestones and
-    dimred\_segments values (\#153).
-
-  - BUG FIX `add_dimred()`: Do not execute example of dyndimred if is
-    not installed.
 
 ## Dynverse dependencies
 

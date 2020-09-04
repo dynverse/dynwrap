@@ -1,3 +1,7 @@
+# dynwrap 1.2.2
+
+* BUG FIX `project_waypoints()`: Rename milestone waypoints such that the names are unique.
+
 # dynwrap 1.2.1 (2020-05-11)
 
 * BUG FIX `project_trajectory()`: Correctly pass parameters.
