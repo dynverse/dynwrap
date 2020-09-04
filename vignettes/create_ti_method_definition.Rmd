@@ -99,7 +99,13 @@ if (requireNamespace("dyncli", quietly = TRUE)) {
 ```{r, eval=NOT_CRAN && NOT_TRAVIS}
 # install dynplot to plot the output
 if (requireNamespace("dynplot", quietly = TRUE)) {
-  dynplot::plot_dimred(trajectory, color_cells = "pseudotime", expression_source = as.matrix(dataset$expression))
+  dynplot::plot_graph(trajectory)
+}
+```
+```{r, eval=NOT_CRAN && NOT_TRAVIS}
+# install dynplot to plot the output
+if (requireNamespace("dynplot", quietly = TRUE)) {
+  dynplot::plot_heatmap(trajectory, expression_source = dataset$expression)
 }
 ```
 
