@@ -23,8 +23,8 @@ See \href{../doc/create_ti_method_definition.html}{\code{vignette("create_ti_met
 \examples{
 \donttest{
 # make two temporary files
-definition.yml <- "~/test.yml" #tempfile()
-run.R <- "~/test.R" #tempfile()
+definition.yml <- tempfile()
+run.R <- tempfile()
 
 # determine content
 definition_txt <- "method:
@@ -52,7 +52,6 @@ shebang <-
   } else {
     paste0("#!", Sys.getenv("R_HOME"), "/bin/Rscript")
   }
-cat(shebang, "\n", sep = "")
 run_txt <- paste0(shebang, "
 
 dataset <- dyncli::main()

@@ -13,8 +13,8 @@
 #' @examples
 #' \donttest{
 #' # make two temporary files
-#' definition.yml <- "~/test.yml" #tempfile()
-#' run.R <- "~/test.R" #tempfile()
+#' definition.yml <- tempfile()
+#' run.R <- tempfile()
 #'
 #' # determine content
 #' definition_txt <- "method:
@@ -42,7 +42,6 @@
 #'   } else {
 #'     paste0("#!", Sys.getenv("R_HOME"), "/bin/Rscript")
 #'   }
-#' cat(shebang, "\n", sep = "")
 #' run_txt <- paste0(shebang, "
 #'
 #' dataset <- dyncli::main()
