@@ -1,10 +1,8 @@
-# dynwrap 1.2.1 (2020-05-11)
+# dynwrap 1.2.2
 
-* BUG FIX `project_trajectory()`: Correctly pass parameters.
+* BUG FIX `project_waypoints()`: Rename milestone waypoints such that the names are unique.
 
-* MINOR CHANGES `select_waypoints()`: Do not recompute waypoints if trajectory already contains some.
-
-* MINOR CHANGES `convert_progressions_to_milestone_percentages()`: Solve tapply issues ahead of dplyr 1.0 release.
+* BUG FIX `infer_trajectory()`: Print error message again.
 
 ## Test environments
 * local Fedora install, R 3.6.2
