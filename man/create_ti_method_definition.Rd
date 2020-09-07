@@ -52,7 +52,7 @@ shebang <-
   } else {
     paste0("#!", Sys.getenv("R_HOME"), "/bin/Rscript")
   }
-
+cat(shebang, "\n", sep = "")
 run_txt <- paste0(shebang, "
 
 dataset <- dyncli::main()
