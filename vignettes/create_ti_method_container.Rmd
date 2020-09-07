@@ -15,7 +15,7 @@ vignette: >
 dir <- tempdir()
 knitr::opts_knit$set(root.dir = normalizePath(tempdir(), winslash = '/'))
 
-NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true") && # don't run some chunks on CRAN
+NOT_CRAN <- (Sys.getenv("NOT_CRAN") == "" || identical(tolower(Sys.getenv("NOT_CRAN")), "true")) && # don't run some chunks on CRAN
   dynwrap::test_docker_installation() # also don't run if docker is not available
 
 knitr::opts_knit$get("root.dir")

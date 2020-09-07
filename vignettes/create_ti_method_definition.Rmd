@@ -18,7 +18,7 @@ dir <- tempdir()
 knitr::opts_knit$set(root.dir = normalizePath(tempdir(), winslash = '/'))
 
 # dyncli is not installed on travis or CRAN, so don't run some parts of the vignette there
-NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true")
+NOT_CRAN <- Sys.getenv("NOT_CRAN") == "" || identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 NOT_TRAVIS <- !identical(tolower(Sys.getenv("TRAVIS")), "true")
 ```
 
