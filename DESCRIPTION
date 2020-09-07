@@ -52,6 +52,7 @@ Imports:
   tidyr,
   yaml
 Suggests: 
+  dyncli,
   dyndimred,
   hdf5r,
   fs,
