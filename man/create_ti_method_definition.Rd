@@ -22,11 +22,78 @@ See \href{../doc/create_ti_method_definition.html}{\code{vignette("create_ti_met
 }
 \examples{
 \donttest{
+# make two temporary files
+definition.yml <- "~/test.yml" #tempfile()
+run.R <- "~/test.R" #tempfile()
+
+# determine content
+definition_txt <- "method:
+  id: comp_1
+
+parameters:
+  - id: component
+    default: 1
+    type: integer
+    distribution:
+      type: uniform
+      lower: 1
+      upper: 10
+    description: The nth component to use
+
+wrapper:
+  input_required: expression
+  input_optional: start_id"
+
+# Normally, use #'/usr/bin/env Rscript as shebang
+# but $R_HOME/bin/Rscript when running R CMD check
+shebang <-
+  if (Sys.getenv("_R_CHECK_PACKAGE_NAME_") == "") {
+    "#!/usr/bin/env Rscript"
+  } else {
+    paste0("#!", Sys.getenv("R_HOME"), "/bin/Rscript")
+  }
+
+run_txt <- paste0(shebang, "
+
+dataset <- dyncli::main()
+
+library(dynwrap)
+library(dplyr)
+library(stats)
+library(dyncli)
+
+# infer trajectory
+pca <- prcomp(dataset$expression)
+
+pseudotime <- pca$x[, dataset$parameters$component]
+
+# flip pseudotimes using start_id
+if (!is.null(dataset$priors$start_id)) {
+  if (mean(pseudotime[start_id]) > 0.5) {
+    pseudotime <- 1 - pseudotime
+  }
+}
+
+# build trajectory
+trajectory <- wrap_data(cell_ids = rownames(dataset$expression)) \%>\%
+  add_linear_trajectory(pseudotime = pseudotime)
+
+# save output
+write_output(trajectory, dataset$output)")
+
+# write content to files
+writeLines(definition_txt, definition.yml)
+writeLines(run_txt, run.R)
+
+requireNamespace("fs")
+fs::file_chmod(run.R, "+x")
+
+# run tmethod
 method <- create_ti_method_definition(
-  system.file("examples/script/definition.yml", package = "dynwrap"),
-  system.file("examples/script/run.R", package = "dynwrap")
+  definition.yml,
+  run.R
 )
-trajectory <- infer_trajectory(example_dataset, method())
+trajectory <- infer_trajectory(example_dataset, method(), verbose = TRUE)
 }
 
 }
