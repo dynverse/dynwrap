@@ -96,17 +96,13 @@ if (requireNamespace("dyncli", quietly = TRUE)) {
 ```
 
 
-```{r, eval=NOT_CRAN && NOT_TRAVIS}
-# install dynplot to plot the output
-if (requireNamespace("dynplot", quietly = TRUE)) {
-  dynplot::plot_graph(trajectory)
-}
-```
-```{r, eval=NOT_CRAN && NOT_TRAVIS}
-# install dynplot to plot the output
-if (requireNamespace("dynplot", quietly = TRUE)) {
-  dynplot::plot_heatmap(trajectory, expression_source = dataset$expression)
-}
+If you have dynplot installed, you can also plot the trajectory:
+```{r, eval=FALSE}
+library(dynplot)
+# for now, install from github using:
+# remotes::install_github("dynverse/dynplot")
+plot_graph(trajectory)
+plot_heatmap(trajectory, expression_source = dataset$expression)
 ```
 
 ## Interactive development

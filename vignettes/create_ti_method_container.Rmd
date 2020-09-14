@@ -99,18 +99,12 @@ trajectory <- infer_trajectory(dataset, method(), verbose = TRUE)
 ```
 
 If you have dynplot installed, you can also plot the trajectory:
-
-```{r, eval=NOT_CRAN, error=TRUE}
-# install dynplot to plot the output
-if (requireNamespace("dynplot", quietly = TRUE)) {
-  dynplot::plot_graph(trajectory)
-}
-```
-```{r, eval=NOT_CRAN, error=TRUE}
-# install dynplot to plot the output
-if (requireNamespace("dynplot", quietly = TRUE)) {
-  dynplot::plot_heatmap(trajectory, expression_source = dataset$expression)
-}
+```{r, eval=FALSE}
+library(dynplot)
+# for now, install from github using:
+# remotes::install_github("dynverse/dynplot")
+plot_graph(trajectory)
+plot_heatmap(trajectory, expression_source = dataset$expression)
 ```
 
 Congratulations! You now have a TI method that can be easily installed anywhere without dependency issues, and that can be included within the whole dynverse pipeline.
