@@ -119,11 +119,23 @@ create_ti_method_definition <- function(
     cat("Input saved to ", preproc_meta$dir_dynwrap, "\n", sep = "")
   }
 
-  # run script
-  command <- paste0("./", script_location)
-  args <- c("--dataset", "input.h5", "--output", "output.h5")
+  # determine command
+  if (grepl("*.r$", tolower(script_location))) {
+    command <- "Rscript"
+    args <- script_location
+  } else if (grepl("*.py$", tolower(script_location))) {
+    command <- "python"
+    args <- script_location
+  } else { # don't recognise extension
+    command <- paste0("./", script_location)
+    args <- c()
+  }
+
+  # append extra args
+  args <- c(args, "--dataset", "input.h5", "--output", "output.h5")
   if (preproc_meta$debug) args <- c(args, "--debug")
 
+  # run script
   process <- processx::run(
     command = command,
     args = args,

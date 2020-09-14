@@ -4,6 +4,8 @@
 
 * BUG FIX `infer_trajectory()`: Print error message again.
 
+* MINOR CHANGE `infer_trajectory()`: Try to avoid relying on shebang to identify which command to run.
+
 # dynwrap 1.2.1 (2020-05-11)
 
 * BUG FIX `project_trajectory()`: Correctly pass parameters.
