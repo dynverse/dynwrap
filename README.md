@@ -54,6 +54,14 @@ list of changes.
   - BUG FIX `project_waypoints()`: Rename milestone waypoints such that
     the names are unique.
 
+  - BUG FIX `infer_trajectory()`: Print error message again.
+
+  - MINOR CHANGE `infer_trajectory()`: Try to avoid relying on shebang
+    to identify which command to run.
+
+  - MINOR CHANGE `convert_milestone_percentages_to_progressions()`:
+    Rewrite implementation to attain significant speedup.
+
 ### Recent changes in dynwrap 1.2.1 (2020-05-11)
 
   - BUG FIX `project_trajectory()`: Correctly pass parameters.
