@@ -104,6 +104,7 @@ library(dynplot)
 plot_graph(trajectory)
 plot_heatmap(trajectory, expression_source = dataset$expression)
 ```
+![](heatmap.png)
 
 ## Interactive development
 
