@@ -6,6 +6,8 @@
 
 * MINOR CHANGE `infer_trajectory()`: Try to avoid relying on shebang to identify which command to run.
 
+* MINOR CHANGE `convert_milestone_percentages_to_progressions()`: Rewrite implementation to attain significant speedup.
+
 # dynwrap 1.2.1 (2020-05-11)
 
 * BUG FIX `project_trajectory()`: Correctly pass parameters.

@@ -23,56 +23,44 @@ convert_milestone_percentages_to_progressions <- function(
   milestone_network,
   milestone_percentages
 ) {
-  bind_rows(lapply(cell_ids, function(cid) {
-    relevant_pct <- milestone_percentages %>% filter(cell_id == cid)
+  # for cells that have 2 or more milestones
+  progr_part1 <-
+    milestone_network %>%
+    inner_join(milestone_percentages, by = c("to" = "milestone_id")) %>%
+    inner_join(milestone_percentages %>% select(cell_id, milestone_id), by = c("from" = "milestone_id", "cell_id")) %>%
+    select(cell_id, from, to, percentage)
 
-    # if it is known which edge or tent the cell cid is part of
-    if (nrow(relevant_pct) >= 2) {
-      # simply convert it to progressions
-      relevant_progr <-
-        milestone_network %>%
-        filter(from %in% relevant_pct$milestone_id & to %in% relevant_pct$milestone_id) %>%
-        left_join(relevant_pct, by = c("to" = "milestone_id")) %>%
+  # for cells that have just 1 milestone
+  milnetdf <- bind_rows(
+    milestone_network %>% transmute(milestone_id = to, from, to, percentage = 1),
+    milestone_network %>% transmute(milestone_id = from, from, to, percentage = 0)
+  )
+  milpct_just1 <-
+    milestone_percentages %>%
+    group_by(cell_id) %>%
+    filter(n() == 1)
+
+  progr_part2 <-
+    if (nrow(milpct_just1) > 0) {
+        milpct_just1 %>%
+        select(-percentage) %>%
+        left_join(milnetdf, by = "milestone_id") %>%
+        filter(percentage == max(percentage)) %>% # prefer rows where percentage == 1
+        sample_n(1) %>%
+        ungroup() %>%
         select(cell_id, from, to, percentage)
-
-      start <- relevant_pct$milestone_id %>% setdiff(relevant_progr$to)
-
-      relevant_progr <- relevant_progr %>% filter(from == start)
-
-      # fail check
-      if (nrow(relevant_progr) == 0) {
-        stop("According to milestone_percentages, cell ", sQuote(cid), " is between milestones ",
-             paste(sQuote(relevant_pct$milestone_id), collapse = " and "), ", but this edge does not exist in milestone_network!")
-      }
-
-      # else if cid is in exactly one state
-    } else if (nrow(relevant_pct) == 1) {
-
-      # look for edges where to == cid
-      relevant_net <- milestone_network %>% filter(to %in% relevant_pct$milestone_id)
-
-      if (nrow(relevant_net) > 0) {
-        # if one or more such edges were found, sample one randomly
-        relevant_net <- relevant_net %>% sample_n(1)
-        pct <- 1
-      } else {
-        # if no such edge was found, look for all edges where from == cid and sample one randomly
-        relevant_net <- milestone_network %>%
-          filter(from %in% relevant_pct$milestone_id) %>%
-          sample_n(1)
-        pct <- 0
-      }
-
-      # return generated progressions
-      relevant_progr <- relevant_net %>%
-        mutate(cell_id = cid, percentage = pct) %>%
-        select(cell_id, from, to, percentage)
-
     } else {
-      relevant_progr <- NULL
+      NULL
     }
 
-    relevant_progr
-  }))
+  progr <-
+    bind_rows(progr_part1, progr_part2) %>%
+    arrange(match(cell_id, cell_ids))
 
+  assert_that(
+    unique(milestone_percentages$cell_id) %all_in% progr$cell_id,
+    msg = "Some cells are on edges which are not contained in the milestone network"
+  )
+
+  progr
 }
