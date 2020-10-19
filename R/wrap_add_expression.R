@@ -141,14 +141,14 @@ wrap_expression <- function(
     id = id,
     cell_ids = cell_ids,
     cell_info = cell_info,
+    feature_ids = feature_ids,
+    feature_info = feature_info,
     ...
   ) %>%
     add_expression(
       counts = counts,
       expression = expression,
-      expression_future = expression_future,
-      feature_ids = feature_ids,
-      feature_info = feature_info
+      expression_future = expression_future
     )
 }
 
