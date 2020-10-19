@@ -1,7 +1,7 @@
+dynwrap: Representing and Inferring Single-Cell Trajectories
+================
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-# dynwrap: Representing and Inferring Single-Cell Trajectories
 
 [![R-CMD-check](https://github.com/dynverse/dynwrap/workflows/R-CMD-check/badge.svg)](https://github.com/dynverse/dynwrap/actions?query=workflow%3AR-CMD-check)
 [![codecov](https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynwrap)
@@ -51,16 +51,19 @@ list of changes.
 
 ### Recent changes in dynwrap 1.2.2
 
+  - MAJOR CHANGE `convert_milestone_percentages_to_progressions()`:
+    Rewrite implementation to attain significant speedup.
+
+  - MINOR CHANGE `infer_trajectory()`: Infer command (Rscript/python)
+    from file extension if possible and avoid using shebang to execute
+    script, because R CMD check for R 4.0 puts Rscript and R dummy
+    executables on the path before R CMD check. This means
+    `#!/usr/bin/env Rscript` does not work anymore.
+
   - BUG FIX `project_waypoints()`: Rename milestone waypoints such that
     the names are unique.
 
-  - BUG FIX `infer_trajectory()`: Print error message again.
-
-  - MINOR CHANGE `infer_trajectory()`: Try to avoid relying on shebang
-    to identify which command to run.
-
-  - MINOR CHANGE `convert_milestone_percentages_to_progressions()`:
-    Rewrite implementation to attain significant speedup.
+  - BUG FIX `infer_trajectory()`: Fix error message printing.
 
 ### Recent changes in dynwrap 1.2.1 (2020-05-11)
 
