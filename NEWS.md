@@ -5,6 +5,8 @@
 * MINOR CHANGE `infer_trajectory()`: Infer command (Rscript/python) from file extension if possible and avoid using
   shebang to execute script, because R CMD check for R 4.0 puts Rscript and R dummy executables on the path before 
   R CMD check. This means `#!/usr/bin/env Rscript` does not work anymore.
+  
+* MINOR CHANGE `add_feature_importance()`: Add a function for adding feature importance scores to a trajectory.
 
 * BUG FIX `project_waypoints()`: Rename milestone waypoints such that the names are unique.
 
