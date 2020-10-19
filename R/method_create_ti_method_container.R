@@ -13,6 +13,8 @@
 #' @keywords create_ti_method
 #'
 #' @examples
+#' library(babelwhale)
+#'
 #' # only run if docker works on this platform
 #' if (test_docker_installation()) {
 #'   method <- create_ti_method_container("dynverse/ti_angle")
