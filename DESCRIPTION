@@ -54,7 +54,6 @@ Imports:
 Suggests: 
   dyndimred,
   hdf5r,
-  fs,
   knitr,
   pkgload,
   ranger,

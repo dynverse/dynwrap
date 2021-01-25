@@ -68,8 +68,8 @@ knitr::asis_output(paste0("```r\n", run_r_string, "\n```"))
 
 Make sure this script is executable!
 
-```{r, eval=NOT_CRAN && NOT_TRAVIS}
-fs::file_chmod("run.R", "+x")
+```{bash, eval=NOT_CRAN && NOT_TRAVIS}
+chmod +x run.R
 ```
 
 and for Python:

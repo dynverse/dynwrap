@@ -53,8 +53,8 @@ knitr::asis_output(paste0("```python\n", run_py_script, "\n```"))
 
 Make sure it is executable.
 
-```{r, eval=NOT_CRAN}
-fs::file_chmod("run.py", "+x")
+```{bash, eval=NOT_CRAN}
+chmod +x run.py
 ```
 
 Assuming that the _definition.yml_ and _run.R_ are located in current directory, a minimal _Dockerfile_ would look like:
@@ -142,9 +142,9 @@ You can also add extra parameters and a fixed seed to the example data, e.g.: `d
 
 Now run the example script and test it:
 
-```{r, eval=NOT_CRAN}
-fs::file_chmod("run.py", "+x")
-system("./example.sh example.h5")
+```{bash, eval=NOT_CRAN}
+chmod +x example.sh
+./example.sh example.h5
 ```
 
 ```{r, eval=NOT_CRAN, error=TRUE}
