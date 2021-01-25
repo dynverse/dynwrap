@@ -33,10 +33,10 @@ dynwrap was used to wrap 50+ trajectory inference method within docker container
 
 The advantage of using a common model is that it allows:
 
-* Comparison between a prediction and a gold standard, eg. using [dyneval](https://www.github.com/dynverse/dyneval)
+* Comparison between a prediction and a gold standard, eg. using [dyneval](https://github.com/dynverse/dyneval)
 * Comparing two predictions
-* Easily visualise the trajectory, eg. using [dynplot](https://www.github.com/dynverse/dynplot)
-* Extracting relevant features/genes, eg. using [dynfeature](https://www.github.com/dynverse/dynfeature)
+* Easily visualise the trajectory, eg. using [dynplot](https://github.com/dynverse/dynplot)
+* Extracting relevant features/genes, eg. using [dynfeature](https://github.com/dynverse/dynfeature)
 
 
 ## Latest changes
