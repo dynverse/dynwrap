@@ -12,7 +12,7 @@
 
 * BUG FIX `infer_trajectory()`: Fix error message printing.
 
-* BUG FIX: `dyndimred` should be used conditionally.
+* BUG FIX: `dyndimred` is used conditionally.
 
 * BUG FIX: `wrap_expression()` and `add_expression()`: Do not override feature_info when it already exists in dataset.
 
