@@ -12,6 +12,8 @@
 
 * BUG FIX `infer_trajectory()`: Fix error message printing.
 
+* BUG FIX: `dyndimred` should be used conditionally.
+
 # dynwrap 1.2.1 (2020-05-11)
 
 * BUG FIX `project_trajectory()`: Correctly pass parameters.

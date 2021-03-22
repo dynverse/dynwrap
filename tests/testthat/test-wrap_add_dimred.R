@@ -107,6 +107,7 @@ test_that("Testing add_dimred", {
 
 
 test_that("Testing add_dimred including calculation of dimred", {
+  skip_if_not_installed("dyndimre2d")
   wr <- wr_orig %>% add_dimred(dimred = dyndimred::dimred_pca)
 
   # testing is_ti_data_wrapper
