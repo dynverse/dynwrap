@@ -43,6 +43,10 @@ add_expression <- function(
   expression <- convert_expression(expression, dataset$cell_ids)
   expression_future <- convert_expression(expression_future, dataset$cell_ids)
 
+  if (is.null(feature_info) && !is.null(dataset$feature_info)) {
+    feature_info <- dataset$feature_info
+  }
+
   if (!is.null(feature_info)) {
     assert_that(
       is.data.frame(feature_info),

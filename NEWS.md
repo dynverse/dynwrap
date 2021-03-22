@@ -14,6 +14,8 @@
 
 * BUG FIX: `dyndimred` should be used conditionally.
 
+* BUG FIX: `wrap_expression()` and `add_expression()`: Do not override feature_info when it already exists in dataset.
+
 # dynwrap 1.2.1 (2020-05-11)
 
 * BUG FIX `project_trajectory()`: Correctly pass parameters.
