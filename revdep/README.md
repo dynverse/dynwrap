@@ -10,7 +10,7 @@
 |collate  |en_GB.UTF-8                     |
 |ctype    |en_GB.UTF-8                     |
 |tz       |Europe/Brussels                 |
-|date     |2021-03-22                      |
+|date     |2021-03-23                      |
 
 # Dependencies
 
@@ -28,7 +28,7 @@
 |cpp11         |0.2.6      |0.2.6      |   |
 |crayon        |1.4.1      |1.4.1      |   |
 |desc          |1.3.0      |1.3.0      |   |
-|diffobj       |0.3.3      |NA         |*  |
+|diffobj       |0.3.4      |NA         |*  |
 |digest        |NA         |0.6.27     |*  |
 |dplyr         |1.0.5      |1.0.5      |   |
 |dynparam      |1.0.2      |1.0.2      |   |

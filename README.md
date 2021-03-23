@@ -6,8 +6,8 @@ dynwrap: Representing and Inferring Single-Cell Trajectories
 [![R-CMD-check](https://github.com/dynverse/dynwrap/workflows/R-CMD-check/badge.svg)](https://github.com/dynverse/dynwrap/actions?query=workflow%3AR-CMD-check)
 [![codecov](https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynwrap)
 [**ℹ️ Tutorials**](https://dynverse.org)     [**ℹ️ Reference
-documentation**](https://dynverse.org/reference/dynwrap)
-<br><img src="man/figures/logo.png" align="right" />
+documentation**](https://dynverse.org/reference/dynwrap) </br>
+<img src="man/figures/logo.png" align="right" />
 
 **dynwrap** contains the code for a common model of single-cell
 trajectories. The package can:
@@ -68,7 +68,10 @@ list of changes.
 
 -   BUG FIX `infer_trajectory()`: Fix error message printing.
 
--   BUG FIX: `dyndimred` should be used conditionally.
+-   BUG FIX: `dyndimred` is used conditionally.
+
+-   BUG FIX: `wrap_expression()` and `add_expression()`: Do not override
+    feature\_info when it already exists in dataset.
 
 ### Recent changes in dynwrap 1.2.1 (2020-05-11)
 
