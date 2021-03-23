@@ -12,8 +12,6 @@
 #'
 #' @keywords create_trajectory
 #'
-#' @importFrom testthat expect_is expect_true expect_equal
-#'
 #' @export
 #'
 #' @examples
@@ -41,11 +39,11 @@ add_cluster_graph <- function(
   ...
 ) {
   # check data wrapper
-  testthat::expect_true(is_data_wrapper(dataset))
+  assert_that(is_data_wrapper(dataset))
 
   # get grouping from dataset if not provided
   if (is.null(grouping)) {
-    testthat::expect_true(is_wrapper_with_grouping(dataset))
+    assert_that(is_wrapper_with_grouping(dataset))
   } else {
     dataset <- dataset %>% add_grouping(grouping)
   }

@@ -14,3 +14,5 @@ scripts
 ^cran-comments\.md$
 ^LICENSE\.md$
 ^LICENSE\.md$
+^\.github$
+^revdep$

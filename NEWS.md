@@ -1,3 +1,21 @@
+# dynwrap 1.2.2
+
+* MAJOR CHANGE `convert_milestone_percentages_to_progressions()`: Rewrite implementation to attain significant speedup.
+
+* MINOR CHANGE `infer_trajectory()`: Infer command (Rscript/python) from file extension if possible and avoid using
+  shebang to execute script, because R CMD check for R 4.0 puts Rscript and R dummy executables on the path before 
+  R CMD check. This means `#!/usr/bin/env Rscript` does not work anymore.
+  
+* MINOR CHANGE `add_feature_importance()`: Add a function for adding feature importance scores to a trajectory.
+
+* BUG FIX `project_waypoints()`: Rename milestone waypoints such that the names are unique.
+
+* BUG FIX `infer_trajectory()`: Fix error message printing.
+
+* BUG FIX: `dyndimred` is used conditionally.
+
+* BUG FIX: `wrap_expression()` and `add_expression()`: Do not override feature_info when it already exists in dataset.
+
 # dynwrap 1.2.1 (2020-05-11)
 
 * BUG FIX `project_trajectory()`: Correctly pass parameters.

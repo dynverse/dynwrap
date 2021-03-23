@@ -99,16 +99,3 @@ test_that("Testing add_linear_trajectory with some cells filtered", {
   expect_true(all(wr$progressions$cell_id %in% cell_ids))
   expect_equivalent(nrow(wr$progressions)+1, length(cell_ids))
 })
-
-
-test_that("Testing add_linear_trajectory fails when expected", {
-  expect_error(
-    wr_orig %>%
-    add_linear_trajectory(
-      pseudotime = pseudotime %>% set_names(NULL),
-      do_scale_minmax = TRUE,
-      directed = FALSE,
-      extras = extras
-    )
-  )
-})

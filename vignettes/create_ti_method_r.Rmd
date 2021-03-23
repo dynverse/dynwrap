@@ -15,7 +15,7 @@ vignette: >
 library(dynwrap)
 
 # dyncli is not installed on travis or CRAN, so don't run some parts of the vignette there
-NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true")
+NOT_CRAN <- Sys.getenv("NOT_CRAN") == "" || identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 NOT_TRAVIS <- !identical(tolower(Sys.getenv("TRAVIS")), "true")
 ```
 
@@ -81,7 +81,7 @@ run_fun <- function(expression, priors, parameters, seed, verbose) {
 }
 ```
 
-This function returns a trajectory object as described in [create a trajectory](../create_ti_method_wrappers). You may also add other relevant information to this output, often some timing checkpoints (`add_timings`), dimensionality reduction (`add_dimred`) or a cell clustering (`add_grouping`). Check out the [reference](https://dynverse.org/reference/dynwrap) for an overview or [post an issue or pull request](https://github.com/dynverse/dynwrap) if you want a type of output to be added.
+This function returns a trajectory object as described in [create a trajectory](../create_ti_method_wrappers). You may also add other relevant information to this output, often some timing checkpoints (`add_timings`), dimensionality reduction (`add_dimred`) or a cell clustering (`add_grouping`). Check out the [reference](https://dynverse.org/reference/dynwrap/) for an overview or [post an issue or pull request](https://github.com/dynverse/dynwrap) if you want a type of output to be added.
 
 ## Testing it out
 
@@ -98,15 +98,18 @@ dataset <- dynwrap::example_dataset
 trajectory <- infer_trajectory(dataset, ti_comp1())
 ```
 
-```{r, eval=NOT_CRAN && NOT_TRAVIS}
-if (requireNamespace("dynplot", quietly = TRUE)) {
-  dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
-}
+If you have dynplot installed, you can also plot the trajectory:
+```{r, eval=FALSE}
+library(dynplot)
+# for now, install from github using:
+# remotes::install_github("dynverse/dynplot")
+plot_graph(trajectory)
+plot_heatmap(trajectory, expression_source = dataset$expression)
 ```
 
 ## Making your method available for other users
 
-The easiest way to make this method available to others is to put it in an [R package which exports the `ti_*` function](http://r-pkgs.had.co.nz/). Here you can also provide documentation using roxygen2. The parameters can be automatically documented from the information provided in the description using `@eval dynwrap::generate_parameter_documentation(definition)` (adapt the name of definition if necessary).
+The easiest way to make this method available to others is to put it in an [R package which exports the `ti_*` function](https://r-pkgs.org). Here you can also provide documentation using roxygen2. The parameters can be automatically documented from the information provided in the description using `@eval dynwrap::generate_parameter_documentation(definition)` (adapt the name of definition if necessary).
 ```{r}
 #' Infer a trajectory from the first principal component
 #' 

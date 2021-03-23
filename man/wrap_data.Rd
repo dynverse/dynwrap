@@ -5,7 +5,14 @@
 \alias{is_data_wrapper}
 \title{A data wrapper for datasets and trajectories}
 \usage{
-wrap_data(id = NULL, cell_ids, cell_info = NULL, ...)
+wrap_data(
+  id = NULL,
+  cell_ids,
+  cell_info = NULL,
+  feature_ids = NULL,
+  feature_info = NULL,
+  ...
+)
 
 is_data_wrapper(dataset)
 }
@@ -15,6 +22,10 @@ is_data_wrapper(dataset)
 \item{cell_ids}{The identifiers of the cells.}
 
 \item{cell_info}{Optional meta-information pertaining the cells.}
+
+\item{feature_ids}{The identifiers of the features.}
+
+\item{feature_info}{Optional meta-information pertaining the features.}
 
 \item{...}{Extra information to be stored in the wrapper.}
 
@@ -31,6 +42,5 @@ dataset <- wrap_data(
   cell_ids = c("A", "B", "C")
 )
 dataset$cell_ids
-
 }
 \keyword{create_trajectory}

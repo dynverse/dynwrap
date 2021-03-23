@@ -53,7 +53,7 @@ get_ti_methods <- function(
     list_as_tibble()
 
   if (!is.null(method_ids)) {
-    testthat::expect_true(all(method_ids %in% ti_methods$id | grepl("/", method_ids)))
+    assert_that(all(method_ids %in% ti_methods$id | grepl("/", method_ids)))
     ti_methods <- ti_methods %>% slice(match(method_ids, id))
 
     docker_repos <-

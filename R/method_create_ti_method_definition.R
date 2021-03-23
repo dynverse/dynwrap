@@ -11,13 +11,13 @@
 #' @keywords create_ti_method
 #'
 #' @examples
-#' \donttest{
-#' method <- create_ti_method_definition(
-#'   system.file("examples/script/definition.yml", package = "dynwrap"),
-#'   system.file("examples/script/run.R", package = "dynwrap")
-#' )
-#' trajectory <- infer_trajectory(example_dataset, method())
-#' }
+#'
+#' # See the vignette "create_ti_method_definition" to get a good idea on how
+#' # to use this function.
+#'
+#' # create a definition.yaml file and a run.R/py script.
+#' # method <- create_ti_method_definition("definition.yml", "run.R")
+#' # trajectory <- infer_trajectory(example_dataset, method(), verbose = TRUE)
 #'
 #' @importFrom yaml read_yaml
 #'
@@ -53,11 +53,23 @@ create_ti_method_definition <- function(
     cat("Input saved to ", preproc_meta$dir_dynwrap, "\n", sep = "")
   }
 
-  # run script
-  command <- paste0("./", script_location)
-  args <- c("--dataset", "input.h5", "--output", "output.h5")
+  # determine command
+  if (grepl("*.r$", tolower(script_location))) {
+    command <- "Rscript"
+    args <- script_location
+  } else if (grepl("*.py$", tolower(script_location))) {
+    command <- "python"
+    args <- script_location
+  } else { # don't recognise extension
+    command <- paste0("./", script_location)
+    args <- c()
+  }
+
+  # append extra args
+  args <- c(args, "--dataset", "input.h5", "--output", "output.h5")
   if (preproc_meta$debug) args <- c(args, "--debug")
 
+  # run script
   process <- processx::run(
     command = command,
     args = args,

@@ -38,7 +38,6 @@ random_seed <- function() {
 #' @importFrom utils capture.output adist installed.packages
 #' @importFrom readr read_file
 #' @importFrom stringr str_length
-#' @importFrom testthat expect_true
 #' @importFrom dynutils extract_row_to_list
 #'
 #' @return

@@ -89,7 +89,7 @@ Type: Data frame(divergence_id = character, milestone_id = character, is_start =
 
 \item{expression}{The normalised expression values of genes (columns) within cells (rows). This can be both a dense and sparse matrix.}
 
-\item{feature_info}{Optional meta-information of the features, a dataframe with at least \emph{feature_id} as column}
+\item{feature_info}{Optional meta-information pertaining the features.}
 
 \item{cell_info}{Optional meta-information pertaining the cells.}
 

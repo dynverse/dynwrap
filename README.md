@@ -1,26 +1,25 @@
+dynwrap: Representing and Inferring Single-Cell Trajectories
+================
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<a href="https://travis-ci.org/dynverse/dynwrap"><img src="https://travis-ci.org/dynverse/dynwrap.svg" align="left"></a>
-<a href="https://codecov.io/gh/dynverse/dynwrap">
-<img src="https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg" align="left" /></a>
+[![R-CMD-check](https://github.com/dynverse/dynwrap/workflows/R-CMD-check/badge.svg)](https://github.com/dynverse/dynwrap/actions?query=workflow%3AR-CMD-check)
+[![codecov](https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynwrap)
 [**ℹ️ Tutorials**](https://dynverse.org)     [**ℹ️ Reference
-documentation**](https://dynverse.org/reference/dynwrap)
-<br><img src="man/figures/logo.png" align="right" />
-
-# Tools for inferring and wrapping single-cell trajectories
+documentation**](https://dynverse.org/reference/dynwrap/) </br>
+<img src="man/figures/logo.png" align="right" />
 
 **dynwrap** contains the code for a common model of single-cell
 trajectories. The package can:
 
-  - Wrap the input data of a trajectory inference method, such as
+-   Wrap the input data of a trajectory inference method, such as
     expression and prior information
-  - Run a trajectory inference method in R, in a docker container or a
+-   Run a trajectory inference method in R, in a docker container or a
     singularity container
-  - Wrap the output of a trajectory inference method, such as the
+-   Wrap the output of a trajectory inference method, such as the
     pseudotime, a clustering or a branch network, and convert it into a
     common trajectory model
-  - Further postprocess and adapt the trajectory model, such as
+-   Further postprocess and adapt the trajectory model, such as
     labelling the milestones and rooting the trajectory
 
 ![](man/figures/trajectory_model.png)
@@ -35,13 +34,13 @@ containers in [dynmethods](https://github.com/dynverse/dynmethods).
 
 The advantage of using a common model is that it allows:
 
-  - Comparison between a prediction and a gold standard, eg. using
-    [dyneval](https://www.github.com/dynverse/dyneval)
-  - Comparing two predictions
-  - Easily visualise the trajectory, eg. using
-    [dynplot](https://www.github.com/dynverse/dynplot)
-  - Extracting relevant features/genes, eg. using
-    [dynfeature](https://www.github.com/dynverse/dynfeature)
+-   Comparison between a prediction and a gold standard, eg. using
+    [dyneval](https://github.com/dynverse/dyneval)
+-   Comparing two predictions
+-   Easily visualise the trajectory, eg. using
+    [dynplot](https://github.com/dynverse/dynplot)
+-   Extracting relevant features/genes, eg. using
+    [dynfeature](https://github.com/dynverse/dynfeature)
 
 ## Latest changes
 
@@ -50,42 +49,39 @@ list of changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md -->
 
+### Recent changes in dynwrap 1.2.2
+
+-   MAJOR CHANGE `convert_milestone_percentages_to_progressions()`:
+    Rewrite implementation to attain significant speedup.
+
+-   MINOR CHANGE `infer_trajectory()`: Infer command (Rscript/python)
+    from file extension if possible and avoid using shebang to execute
+    script, because R CMD check for R 4.0 puts Rscript and R dummy
+    executables on the path before R CMD check. This means
+    `#!/usr/bin/env Rscript` does not work anymore.
+
+-   MINOR CHANGE `add_feature_importance()`: Add a function for adding
+    feature importance scores to a trajectory.
+
+-   BUG FIX `project_waypoints()`: Rename milestone waypoints such that
+    the names are unique.
+
+-   BUG FIX `infer_trajectory()`: Fix error message printing.
+
+-   BUG FIX: `dyndimred` is used conditionally.
+
+-   BUG FIX: `wrap_expression()` and `add_expression()`: Do not override
+    feature\_info when it already exists in dataset.
+
 ### Recent changes in dynwrap 1.2.1 (2020-05-11)
 
-  - BUG FIX `project_trajectory()`: Correctly pass parameters.
+-   BUG FIX `project_trajectory()`: Correctly pass parameters.
 
-  - MINOR CHANGES `select_waypoints()`: Do not recompute waypoints if
+-   MINOR CHANGES `select_waypoints()`: Do not recompute waypoints if
     trajectory already contains some.
 
-  - MINOR CHANGES `convert_progressions_to_milestone_percentages()`:
+-   MINOR CHANGES `convert_progressions_to_milestone_percentages()`:
     Solve tapply issues ahead of dplyr 1.0 release.
-
-### Recent changes in dynwrap 1.2.0 (2020-03-09)
-
-  - FUNCTIONALITY: Improved RNA velocity handling. Not all features need
-    to be present in the projected expression, allowing integration with
-    standard velocyto.R pipelines.
-
-  - BUG FIX `calculate_pseudotime()`: Fix pseudotime calculation on
-    branching trajectories (\#139).
-
-  - BUG FIX `flip_edges()`: Also flip `dimred_segment_progressions` if
-    available.
-
-  - BUG FIX `add_root()`: Fix rooting for some linear trajectories
-    (\#149)
-
-  - MINOR CHANGES: Allow a named vector for groups\_id prior information
-    (\#154)
-
-  - MINOR CHANGES: Moved `orient_topology_to_velocity()` to scvelo R
-    package.
-
-  - BUG FIX `simplify_trajectory()`: handle dimred\_milestones and
-    dimred\_segments values (\#153).
-
-  - BUG FIX `add_dimred()`: Do not execute example of dyndimred if is
-    not installed.
 
 ## Dynverse dependencies
 

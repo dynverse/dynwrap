@@ -38,7 +38,7 @@ calculate_average_by_milestone_percentages <- function(x, milestone_percentages)
   milpct_m <- sweep(milpct_m, 2, stat, "/")
 
   # check data objects
-  testthat::expect_equal(sort(rownames(x)), sort(rownames(milpct_m)))
+  assert_that(all.equal(sort(rownames(x)), sort(rownames(milpct_m))))
 
   # get same order
   milpct_m <- milpct_m[rownames(x), , drop = F]

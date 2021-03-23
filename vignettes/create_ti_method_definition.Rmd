@@ -18,7 +18,7 @@ dir <- tempdir()
 knitr::opts_knit$set(root.dir = normalizePath(tempdir(), winslash = '/'))
 
 # dyncli is not installed on travis or CRAN, so don't run some parts of the vignette there
-NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true")
+NOT_CRAN <- Sys.getenv("NOT_CRAN") == "" || identical(tolower(Sys.getenv("NOT_CRAN")), "true")
 NOT_TRAVIS <- !identical(tolower(Sys.getenv("TRAVIS")), "true")
 ```
 
@@ -68,8 +68,8 @@ knitr::asis_output(paste0("```r\n", run_r_string, "\n```"))
 
 Make sure this script is executable!
 
-```{r, eval=NOT_CRAN && NOT_TRAVIS}
-Sys.chmod("run.R", mode = "0770")
+```{bash, eval=NOT_CRAN && NOT_TRAVIS}
+chmod +x run.R
 ```
 
 and for Python:
@@ -84,30 +84,28 @@ knitr::asis_output(paste0("```python\n", run_py_script, "\n```"))
 
 ## Testing it out
 
-```{r, eval=NOT_CRAN && NOT_TRAVIS}
-if (requireNamespace("dyncli", quietly = TRUE)) {
-  method <- create_ti_method_definition(
-    "definition.yml",
-    "run.R"
-  )
-  dataset <- dynwrap::example_dataset
-  trajectory <- infer_trajectory(dataset, method(), verbose = TRUE)
-}
+```{r, eval=FALSE}
+method <- create_ti_method_definition("definition.yml", "run.R")
+dataset <- dynwrap::example_dataset
+trajectory <- infer_trajectory(dataset, method(), verbose = TRUE)
 ```
 
 
-```{r, eval=NOT_CRAN && NOT_TRAVIS}
-# install dynplot to plot the output
-if (requireNamespace("dynplot", quietly = TRUE)) {
-  dynplot::plot_dimred(trajectory, color_cells = "pseudotime", expression_source = as.matrix(dataset$expression))
-}
+If you have dynplot installed, you can also plot the trajectory:
+```{r, eval=FALSE}
+library(dynplot)
+# for now, install from github using:
+# remotes::install_github("dynverse/dynplot")
+plot_graph(trajectory)
+plot_heatmap(trajectory, expression_source = dataset$expression)
 ```
+![](heatmap.png)
 
 ## Interactive development
 
 With the debug parameter, it is possible to enter the script interactively. This makes it easier to develop TI method as you can just load in the input data, and code!
 
-```{r, error = TRUE, eval=NOT_CRAN && NOT_TRAVIS}
+```{r, error = TRUE, eval = FALSE}
 trajectory <- infer_trajectory(dataset, method(), debug = TRUE)
 ```
 

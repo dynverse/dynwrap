@@ -26,7 +26,6 @@
 #' @export
 #'
 #' @importFrom Matrix Matrix
-#' @importFrom testthat expect_equal expect_is
 add_expression <- function(
   dataset,
   counts,
@@ -35,7 +34,7 @@ add_expression <- function(
   expression_future = NULL,
   ...
 ) {
-  testthat::expect_true(is_data_wrapper(dataset))
+  assert_that(is_data_wrapper(dataset))
 
   assert_that(!(is.null(counts) && is.null(expression)), msg = "counts and expression can't both be NULL")
 
@@ -43,6 +42,10 @@ add_expression <- function(
   counts <- convert_expression(counts, dataset$cell_ids)
   expression <- convert_expression(expression, dataset$cell_ids)
   expression_future <- convert_expression(expression_future, dataset$cell_ids)
+
+  if (is.null(feature_info) && !is.null(dataset$feature_info)) {
+    feature_info <- dataset$feature_info
+  }
 
   if (!is.null(feature_info)) {
     assert_that(
@@ -142,14 +145,14 @@ wrap_expression <- function(
     id = id,
     cell_ids = cell_ids,
     cell_info = cell_info,
+    feature_ids = feature_ids,
+    feature_info = feature_info,
     ...
   ) %>%
     add_expression(
       counts = counts,
       expression = expression,
-      expression_future = expression_future,
-      feature_ids = feature_ids,
-      feature_info = feature_info
+      expression_future = expression_future
     )
 }
 

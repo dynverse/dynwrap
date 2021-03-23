@@ -13,9 +13,12 @@
 #' @keywords create_ti_method
 #'
 #' @examples
-#' \donttest{
-#' method <- create_ti_method_container("dynverse/ti_angle")
-#' trajectory <- infer_trajectory(example_dataset, method())
+#' library(babelwhale)
+#'
+#' # only run if docker works on this platform
+#' if (test_docker_installation()) {
+#'   method <- create_ti_method_container("dynverse/ti_angle")
+#'   trajectory <- infer_trajectory(example_dataset, method())
 #' }
 #'
 #' @importFrom babelwhale get_default_config pull_container test_docker_installation test_singularity_installation list_docker_images

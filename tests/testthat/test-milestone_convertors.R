@@ -65,7 +65,7 @@ test_that("Testing convert_milestone_percentages_to_progressions", {
     )
   expect_true(all(prog_control$check))
 
-  # expect error because cells are position on edges that are not in the milestone_network
+  # expect error because cells are positioned on edges that are not in the milestone_network
   expect_error(convert_milestone_percentages_to_progressions(cell_ids, milestone_ids, milestone_network %>% slice(-1), milestone_percentages))
 })
 

@@ -32,11 +32,12 @@ select_waypoints <- function(
     group_by(from, to, percentage) %>% # remove duplicate waypoints
     filter(row_number() == 1) %>%
     ungroup() %>%
-    mutate(waypoint_id = case_when(
-      percentage == 0 ~ paste0("MILESTONE_W", from),
-      percentage == 1 ~ paste0("MILESTONE_W", to),
-      TRUE ~ paste0("W", row_number())
-    )
+    mutate(
+      waypoint_id = case_when(
+        percentage == 0 ~ paste0("MILESTONE_BEGIN_W", from, "_", to),
+        percentage == 1 ~ paste0("MILESTONE_END_W", from, "_", to),
+        TRUE ~ paste0("W", row_number())
+      )
     )
 
   # create waypoint percentages from progressions
@@ -105,8 +106,6 @@ select_waypoints <- function(
 #' **`select_waypoints` returns the list as mentioned in `add_waypoints`
 #'
 #' @keywords adapt_trajectory
-#'
-#' @importFrom testthat expect_true
 #'
 #' @export
 add_waypoints <- inherit_default_params(select_waypoints, function(

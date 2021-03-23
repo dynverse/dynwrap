@@ -15,7 +15,8 @@ vignette: >
 dir <- tempdir()
 knitr::opts_knit$set(root.dir = normalizePath(tempdir(), winslash = '/'))
 
-NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true") # don't run some chunks on CRAN
+NOT_CRAN <- (Sys.getenv("NOT_CRAN") == "" || identical(tolower(Sys.getenv("NOT_CRAN")), "true")) && # don't run some chunks on CRAN
+  dynwrap::test_docker_installation() # also don't run if docker is not available
 
 knitr::opts_knit$get("root.dir")
 ```
@@ -50,7 +51,7 @@ readr::write_file(run_py_script, "run.py")
 knitr::asis_output(paste0("```python\n", run_py_script, "\n```"))
 ```
 
-Make sure it is executable
+Make sure it is executable.
 
 ```{bash, eval=NOT_CRAN}
 chmod +x run.py
@@ -83,8 +84,8 @@ Do not specify this entrypoint using `ENTRYPOINT /code/run.R`, because this will
 
 That's it! Assuming that you have a functioning docker installation, you can build this container using
 
-```{bash, eval=NOT_CRAN}
-docker build -t my_ti_method .
+```{r, eval=NOT_CRAN}
+system("docker build -t my_ti_method .")
 ```
 
 ## Testing it out
@@ -98,12 +99,12 @@ trajectory <- infer_trajectory(dataset, method(), verbose = TRUE)
 ```
 
 If you have dynplot installed, you can also plot the trajectory:
-
-```{r, eval=NOT_CRAN, error=TRUE}
-# install dynplot to plot the output
-if (requireNamespace("dynplot", quietly = TRUE)) {
-  dynplot::plot_dimred(trajectory, color_cells = "pseudotime" , expression_source = as.matrix(dataset$expression))
-}
+```{r, eval=FALSE}
+library(dynplot)
+# for now, install from github using:
+# remotes::install_github("dynverse/dynplot")
+plot_graph(trajectory)
+plot_heatmap(trajectory, expression_source = dataset$expression)
 ```
 
 Congratulations! You now have a TI method that can be easily installed anywhere without dependency issues, and that can be included within the whole dynverse pipeline.
@@ -153,6 +154,6 @@ trajectory <- infer_trajectory(dataset, method())
 
 ### Continuous integration
 
-To automate the testing (and building) of containers, you'll have to use continuous integration. We use [travis-ci](https://travis-ci.com) for this, a free service for open-source projects. Because the exact code to use this continuous integration requires some manual steps, we suggest you create an issue at [dynmethods](https://github.com/dynverse/dynmethods/issues/new) so that we can help you further. If you're really adventurous, you can have a look at some of our _.travis.yml_ files, e.g.: https://github.com/dynverse/ti_paga/blob/master/.travis.yml
+To automate the testing (and building) of containers, you'll have to use continuous integration. We use [travis-ci](https://travis-ci.com) for this, a free service for open-source projects. Because the exact code to use this continuous integration requires some manual steps, we suggest you create an issue at [dynmethods](https://github.com/dynverse/dynmethods/issues/new) so that we can help you further. If you're really adventurous, you can have a look at some of our _GitHub Actions Workflow_ files, e.g.: [https://github.com/dynverse/ti_paga/blob/master/.github/workflows/make.yml](https://github.com/dynverse/ti_paga/blob/master/.github/workflows/make.yml).
 
 Once the continuous integration works, you're method is ready to be included in [dynmethods](https://github.com/dynverse/dynmethods/issues/new)!

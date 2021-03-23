@@ -24,9 +24,12 @@ A function that can be used to adapt the parameters of the method. This function
 These functions create a TI method from a container using \code{babelwhale}. Supports both docker and singularity as a backend. See \href{../doc/create_ti_method_container.html}{\code{vignette("create_ti_method_container", "dynwrap")}} for a tutorial on how to create a containerized TI method.
 }
 \examples{
-\donttest{
-method <- create_ti_method_container("dynverse/ti_angle")
-trajectory <- infer_trajectory(example_dataset, method())
+library(babelwhale)
+
+# only run if docker works on this platform
+if (test_docker_installation()) {
+  method <- create_ti_method_container("dynverse/ti_angle")
+  trajectory <- infer_trajectory(example_dataset, method())
 }
 
 }

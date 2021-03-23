@@ -82,6 +82,6 @@ if (requireNamespace("dyndimred", quietly = TRUE)) {
 
 }
 \seealso{
-\code{\link[dyndimred:list_dimred_methods]{dyndimred::list_dimred_methods()}}, \code{\link[=project_trajectory]{project_trajectory()}}
+\code{dyndimred::list_dimred_methods()}, \code{\link[=project_trajectory]{project_trajectory()}}
 }
 \keyword{adapt_trajectory}

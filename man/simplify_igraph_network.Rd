@@ -13,7 +13,7 @@ simplify_igraph_network(
 )
 }
 \arguments{
-\item{gr}{An igraph object, see \code{\link[igraph:graph]{igraph::graph()}}}
+\item{gr}{An igraph object, see \code{\link[igraph:make_graph]{igraph::graph()}}}
 
 \item{allow_duplicated_edges}{Whether or not to allow duplicated edges between nodes.}
 

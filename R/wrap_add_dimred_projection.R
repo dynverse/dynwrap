@@ -14,8 +14,6 @@
 #'
 #' @export
 #'
-#' @importFrom testthat expect_is expect_true expect_equal expect_false
-#'
 #' @examples
 #' library(tibble)
 #' dataset <- wrap_data(cell_ids = letters)
@@ -58,7 +56,7 @@ add_dimred_projection <- function(
   ...
 ) {
   # check data wrapper
-  testthat::expect_true(is_data_wrapper(dataset))
+  assert_that(is_data_wrapper(dataset))
 
   cell_ids <- dataset$cell_ids
 
@@ -75,7 +73,7 @@ add_dimred_projection <- function(
   # add dimred and dimred_milestones
   dimred <- process_dimred(dataset, dimred)
   dimred_milestones <- process_dimred(dataset, dimred_milestones, "milestone_id")
-  testthat::expect_setequal(milestone_ids, rownames(dimred_milestones))
+  assert_that(setequal(milestone_ids, rownames(dimred_milestones)))
 
   # check milestone_network
   check_milestone_network(milestone_ids, milestone_network)

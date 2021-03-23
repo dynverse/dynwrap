@@ -43,8 +43,8 @@
 #'     }
 #'   }
 #'
-#'   dynwrap::wrap_data(cell_ids = rownames(expression)) %>%
-#'     dynwrap::add_linear_trajectory(pseudotime = pseudotime)
+#'   wrap_data(cell_ids = rownames(expression)) %>%
+#'     add_linear_trajectory(pseudotime = pseudotime)
 #' }
 #'
 #' method <- create_ti_method_r(definition, run_fun, package_loaded = "dplyr")

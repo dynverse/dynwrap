@@ -14,11 +14,9 @@
 #'
 #' @keywords adapt_trajectory
 #'
-#' @importFrom testthat expect_true
-#'
 #' @export
 add_cell_waypoints <- function(trajectory, num_cells_selected = 100) {
-  testthat::expect_true(is_wrapper_with_trajectory(trajectory))
+  assert_that(is_wrapper_with_trajectory(trajectory))
 
   waypoint_cells <- with(trajectory, select_waypoint_cells(
     milestone_ids = milestone_ids,

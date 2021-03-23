@@ -36,7 +36,7 @@
 #'   head(dataset$dimred)
 #' }
 #'
-#' @seealso [dyndimred::list_dimred_methods()], [project_trajectory()]
+#' @seealso `dyndimred::list_dimred_methods()`, [project_trajectory()]
 #'
 #' @export
 add_dimred <- function(

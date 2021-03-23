@@ -21,13 +21,13 @@ The local method definition file describes a method that is runnable on the loca
 See \href{../doc/create_ti_method_definition.html}{\code{vignette("create_ti_method_definition", "dynwrap")}} for a tutorial on how to create a containerized TI method.
 }
 \examples{
-\donttest{
-method <- create_ti_method_definition(
-  system.file("examples/script/definition.yml", package = "dynwrap"),
-  system.file("examples/script/run.R", package = "dynwrap")
-)
-trajectory <- infer_trajectory(example_dataset, method())
-}
+
+# See the vignette "create_ti_method_definition" to get a good idea on how
+# to use this function.
+
+# create a definition.yaml file and a run.R/py script.
+# method <- create_ti_method_definition("definition.yml", "run.R")
+# trajectory <- infer_trajectory(example_dataset, method(), verbose = TRUE)
 
 }
 \keyword{create_ti_method}
