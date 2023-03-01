@@ -7,8 +7,7 @@
 get_ti_methods(
   method_ids = NULL,
   as_tibble = TRUE,
-  ti_packages = ifelse(requireNamespace("dynmethods", quietly = TRUE), "dynmethods",
-    "dynwrap"),
+  ti_packages = ifelse(is_dynmethods_installed(), "dynmethods", "dynwrap"),
   evaluate = FALSE
 )
 }

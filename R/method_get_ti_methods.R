@@ -1,3 +1,15 @@
+is_dynmethods_installed <- function() {
+  tryCatch(
+    {
+      find.package("dynmethods")
+      TRUE
+    },
+    error = function(e) {
+      FALSE
+    }
+  )
+}
+
 #' Return all TI that are installed in one or more packages
 #'
 #' @param method_ids The method identifiers. NULL if listing all methods
@@ -18,7 +30,7 @@
 get_ti_methods <- function(
   method_ids = NULL,
   as_tibble = TRUE,
-  ti_packages = ifelse(requireNamespace("dynmethods", quietly = TRUE), "dynmethods", "dynwrap"),
+  ti_packages = ifelse(is_dynmethods_installed(), "dynmethods", "dynwrap"),
   evaluate = FALSE
 ) {
   ti_methods <- map(ti_packages, function(package) {

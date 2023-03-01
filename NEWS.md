@@ -2,6 +2,8 @@
 
 * MINOR CHANGE: Fixes to metadata (documentation, citation entry, broken links).
 
+* MINOR CHANGE: Use alternative method for checking whether dynmethods is installed.
+
 # dynwrap 1.2.2
 
 * MAJOR CHANGE `convert_milestone_percentages_to_progressions()`: Rewrite implementation to attain significant speedup.

@@ -52,12 +52,12 @@ Imports:
   tidyr,
   yaml
 Suggests: 
-    covr,
-    dyndimred,
-    hdf5r,
-    knitr,
-    pkgload,
-    ranger,
-    rmarkdown,
-    testthat
+  covr,
+  dyndimred,
+  hdf5r,
+  knitr,
+  pkgload,
+  ranger,
+  rmarkdown,
+  testthat
 VignetteBuilder: knitr
