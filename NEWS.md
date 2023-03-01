@@ -1,3 +1,7 @@
+# dynwrap 1.2.3
+
+* MINOR CHANGE: Fixes to metadata (documentation, citation entry, broken links).
+
 # dynwrap 1.2.2
 
 * MAJOR CHANGE `convert_milestone_percentages_to_progressions()`: Rewrite implementation to attain significant speedup.

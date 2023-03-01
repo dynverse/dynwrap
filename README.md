@@ -4,7 +4,7 @@ dynwrap: Representing and Inferring Single-Cell Trajectories
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 [![R-CMD-check](https://github.com/dynverse/dynwrap/workflows/R-CMD-check/badge.svg)](https://github.com/dynverse/dynwrap/actions?query=workflow%3AR-CMD-check)
-[![codecov](https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynwrap)
+[![codecov](https://app.codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://app.codecov.io/gh/dynverse/dynwrap)
 [**ℹ️ Tutorials**](https://dynverse.org)     [**ℹ️ Reference
 documentation**](https://dynverse.org/reference/dynwrap/) </br>
 <img src="man/figures/logo.png" align="right" />
@@ -49,6 +49,11 @@ list of changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md -->
 
+### Recent changes in dynwrap 1.2.3
+
+-   MINOR CHANGE: Fixes to metadata (documentation, citation entry,
+    broken links).
+
 ### Recent changes in dynwrap 1.2.2
 
 -   MAJOR CHANGE `convert_milestone_percentages_to_progressions()`:
@@ -71,17 +76,7 @@ list of changes.
 -   BUG FIX: `dyndimred` is used conditionally.
 
 -   BUG FIX: `wrap_expression()` and `add_expression()`: Do not override
-    feature\_info when it already exists in dataset.
-
-### Recent changes in dynwrap 1.2.1 (2020-05-11)
-
--   BUG FIX `project_trajectory()`: Correctly pass parameters.
-
--   MINOR CHANGES `select_waypoints()`: Do not recompute waypoints if
-    trajectory already contains some.
-
--   MINOR CHANGES `convert_progressions_to_milestone_percentages()`:
-    Solve tapply issues ahead of dplyr 1.0 release.
+    feature_info when it already exists in dataset.
 
 ## Dynverse dependencies
 

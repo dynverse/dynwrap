@@ -154,6 +154,6 @@ trajectory <- infer_trajectory(dataset, method())
 
 ### Continuous integration
 
-To automate the testing (and building) of containers, you'll have to use continuous integration. We use [travis-ci](https://travis-ci.com) for this, a free service for open-source projects. Because the exact code to use this continuous integration requires some manual steps, we suggest you create an issue at [dynmethods](https://github.com/dynverse/dynmethods/issues/new) so that we can help you further. If you're really adventurous, you can have a look at some of our _GitHub Actions Workflow_ files, e.g.: [https://github.com/dynverse/ti_paga/blob/master/.github/workflows/make.yml](https://github.com/dynverse/ti_paga/blob/master/.github/workflows/make.yml).
+To automate the testing (and building) of containers, you'll have to use continuous integration. Because the exact code to use this continuous integration requires some manual steps, we suggest you create an issue at [dynmethods](https://github.com/dynverse/dynmethods/issues/new) so that we can help you further. Here is an example of one of our CI scripts: [https://github.com/dynverse/ti_paga/blob/master/.github/workflows/make.yml](https://github.com/dynverse/ti_paga/blob/master/.github/workflows/make.yml).
 
 Once the continuous integration works, you're method is ready to be included in [dynmethods](https://github.com/dynverse/dynmethods/issues/new)!
