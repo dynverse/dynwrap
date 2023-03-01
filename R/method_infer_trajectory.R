@@ -15,7 +15,7 @@ random_seed <- function() {
 #' @param dataset One or more datasets as created by [wrap_data()] or [wrap_expression()]. Prior information can be added using [add_prior_information()].
 #' @param method One or more methods. Must be one of:
 #' \itemize{
-#'   \item{an object or list of ti_... objects (eg. `dynmethods::ti_comp1()`),}
+#'   \item{an object or list of ti_... objects (eg. the `ti_comp1()` function in `dynmethods`),}
 #'   \item{a character vector containing the names of methods to execute (e.g. `"scorpius"`),}
 #'   \item{a character vector containing dockerhub repositories (e.g. `dynverse/paga`), or}
 #'   \item{a dynguidelines data frame.}
