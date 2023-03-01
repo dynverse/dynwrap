@@ -16,3 +16,4 @@ scripts
 ^LICENSE\.md$
 ^\.github$
 ^revdep$
+^codecov\.yml$

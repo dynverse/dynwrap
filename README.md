@@ -2,11 +2,15 @@ dynwrap: Representing and Inferring Single-Cell Trajectories
 ================
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- badges: start -->
 
-[![R-CMD-check](https://github.com/dynverse/dynwrap/workflows/R-CMD-check/badge.svg)](https://github.com/dynverse/dynwrap/actions?query=workflow%3AR-CMD-check)
-[![codecov](https://app.codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://app.codecov.io/gh/dynverse/dynwrap)
-[**ℹ️ Tutorials**](https://dynverse.org)     [**ℹ️ Reference
-documentation**](https://dynverse.org/reference/dynwrap/) </br>
+[![R-CMD-check](https://github.com/dynverse/dynwrap/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dynverse/dynwrap/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://app.codecov.io/gh/dynverse/dynwrap?branch=master)
+[**Tutorials**](https://dynverse.org) [**Reference
+documentation**](https://dynverse.org/reference/dynwrap/)
+<!-- badges: end -->
+
 <img src="man/figures/logo.png" align="right" />
 
 **dynwrap** contains the code for a common model of single-cell
