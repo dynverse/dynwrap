@@ -1,3 +1,7 @@
+# dynwrap 1.2.4
+
+Resubmission after babelwhale was removed from CRAN.
+
 # dynwrap 1.2.3
 
 * MINOR CHANGE: Fixes to metadata (documentation, citation entry, broken links).
