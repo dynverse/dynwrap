@@ -1,6 +1,8 @@
 #' Generate a random seed
 #'
 #' From the current seed.
+#' 
+#' @return A random seed
 #'
 #' @examples
 #' random_seed()

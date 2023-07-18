@@ -7,6 +7,7 @@
 #' @param milestone_network_toflip A dataframe with a from and to column, containing the subset of the milestone network #'
 #' @keywords adapt_trajectory
 #'
+#' @return A trajectory object
 #'
 #' @importFrom methods is
 #'

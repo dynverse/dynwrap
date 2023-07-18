@@ -24,7 +24,7 @@ consists of.
 Type: Data frame(cell_id = character, milestone_id = character, percentage = numeric).}
 }
 \value{
-The progressions
+A data frame with columns \code{cell_id}, \code{from}, \code{to}, \code{percentage}.
 }
 \description{
 Conversion between milestone percentages and progressions

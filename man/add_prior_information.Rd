@@ -97,6 +97,9 @@ Type: Data frame(divergence_id = character, milestone_id = character, is_start =
 
 \item{given}{Prior information already calculated}
 }
+\value{
+A dynwrap object with the prior information added.
+}
 \description{
 If you specify
 

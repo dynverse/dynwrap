@@ -23,6 +23,9 @@ simplify_igraph_network(
 
 \item{edge_points}{Points that are on edges}
 }
+\value{
+An igraph object, or a list with an igraph object and a data frame with edge points
+}
 \description{
 \itemize{
 \item Nodes with degree 2 (or indegree 1 and outdegree 1) are removed: A -> B -> C becomes A -> C

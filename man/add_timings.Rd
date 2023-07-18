@@ -19,6 +19,9 @@ add_timing_checkpoint(timings, name)
 
 \item{name}{The name of the timings checkpoint.}
 }
+\value{
+A dynwrap object with the timings added.
+}
 \description{
 Add timings to a trajectory
 

@@ -3,7 +3,7 @@
 #' @inheritParams wrap_data
 #' @inheritParams add_trajectory
 #'
-#' @return The milestone percentages
+#' @return A data frame with columns `cell_id`, `milestone_id`, and `percentage`.
 #'
 #' @seealso [add_trajectory()], [convert_milestone_percentages_to_progressions()]
 #'

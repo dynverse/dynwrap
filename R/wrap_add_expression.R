@@ -9,6 +9,8 @@
 #' @param expression_source The source of expression, can be "counts", "expression", an expression matrix, or another dataset which contains expression
 #'
 #' @keywords adapt_trajectory
+#' 
+#' @return A dynwrap object with the expression added.
 #'
 #' @examples
 #' cell_ids <- c("A", "B", "C")

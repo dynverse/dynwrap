@@ -23,7 +23,7 @@ Type: Data frame(from = character, to = character, length = numeric, directed = 
 Type: Data frame(cell_id = character, from = character, to = character, percentage = numeric).}
 }
 \value{
-The milestone percentages
+A data frame with columns \code{cell_id}, \code{milestone_id}, and \code{percentage}.
 }
 \description{
 Conversion between milestone percentages and progressions

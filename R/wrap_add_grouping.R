@@ -6,6 +6,8 @@
 #' @param ... Extra information to be stored in the dataset
 #'
 #' @keywords adapt_trajectory
+#' 
+#' @return A dynwrap object with the grouping added.
 #'
 #' @examples
 #' dataset <- example_dataset

@@ -26,6 +26,9 @@ add_regulatory_network(
 
 \item{...}{Extra arguments to be saved in the model.}
 }
+\value{
+A dynwrap object with the regulatory network added.
+}
 \description{
 Add a GRN to a dynwrap object
 }

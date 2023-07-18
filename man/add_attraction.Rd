@@ -9,6 +9,9 @@ add_attraction(dataset)
 \arguments{
 \item{dataset}{A dataset created by \code{\link[=wrap_data]{wrap_data()}} or \code{\link[=wrap_expression]{wrap_expression()}}}
 }
+\value{
+A dynwrap object with the attraction added.
+}
 \description{
 Add attraction of cells using RNA velocity
 }

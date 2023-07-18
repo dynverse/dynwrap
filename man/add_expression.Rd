@@ -34,6 +34,9 @@ get_expression(dataset, expression_source = "expression")
 
 \item{expression_source}{The source of expression, can be "counts", "expression", an expression matrix, or another dataset which contains expression}
 }
+\value{
+A dynwrap object with the expression added.
+}
 \description{
 Add count and normalised expression values to a dataset
 }

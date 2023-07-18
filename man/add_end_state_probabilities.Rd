@@ -25,14 +25,7 @@ Otherwise, will assume the values are already within that range.}
 \item{...}{Extras to be added to the trajectory}
 }
 \value{
-The dataset object with trajectory information, including:
-\itemize{
-\item \emph{milestone_ids}: The names of the milestones, a character vector.
-\item \emph{milestone_network}: The network between the milestones, a dataframe with the \emph{from} milestone, \emph{to} milestone, \emph{length} of the edge, and whether it is \emph{directed}.
-\item \emph{divergence_regions}: The regions between three or more milestones where cells are diverging, a dataframe with the divergence id (\emph{divergence_id}), the milestone id (\emph{milestone_id}) and whether this milestone is the start of the divergence (\emph{is_start})
-\item \emph{milestone_percentages}: For each cell its closeness to a particular milestone, a dataframe with the cell id (\emph{cell_id}), the milestone id (\emph{milestone_id}), and its \emph{percentage} (a number between 0 and 1 where higher values indicate that a cell is close to the milestone).
-\item \emph{progressions}: For each cell its progression along a particular edge of the \emph{milestone_network}. Contains the same information as \emph{milestone_percentages}. A dataframe with cell id (\emph{cell_id}), \emph{from} milestone, \emph{to} milestone, and its \emph{percentage} (a number between 0 and 1 where higher values indicate that a cell is close to the \emph{to} milestone and far from the \emph{from} milestone).
-}
+A trajectory object
 }
 \description{
 Constructs a multifurcating trajectory using the pseudotime values of each cell and their end state probabilities.

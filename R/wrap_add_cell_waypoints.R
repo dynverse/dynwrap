@@ -13,6 +13,8 @@
 #' **`select_waypoint_cells`** returns a character vector containing the cell ids of the waypoint cells
 #'
 #' @keywords adapt_trajectory
+#' 
+#' @return A dynwrap object with the waypoint cells added.
 #'
 #' @export
 add_cell_waypoints <- function(trajectory, num_cells_selected = 100) {

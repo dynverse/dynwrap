@@ -9,6 +9,8 @@
 #' @inherit create_ti_method_container return
 #'
 #' @keywords create_ti_method
+#' 
+#' @return A method definition
 #'
 #' @examples
 #' # define the parameters and other metadata

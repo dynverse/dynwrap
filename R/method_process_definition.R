@@ -12,6 +12,8 @@
 #' @param parameters Meta information on the parameters of the TI method (see [def_parameters()]).
 #'
 #' @keywords create_ti_method
+#' 
+#' @return A method definition
 #'
 #' @export
 #'

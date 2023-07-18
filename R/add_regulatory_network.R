@@ -7,6 +7,8 @@
 #' @param regulators The feature ids of the regulators.
 #' @param targets The feature ids of the targets.
 #' @param ... Extra arguments to be saved in the model.
+#' 
+#' @return A dynwrap object with the regulatory network added.
 #'
 #' @export
 add_regulatory_network <- function(dataset, regulatory_network, regulatory_network_sc = NULL, regulators = NULL, targets = NULL, ...) {

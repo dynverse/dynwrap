@@ -11,6 +11,8 @@
 #' @param force_keep Nodes that will not be removed under any condition
 #' @param edge_points Points that are on edges
 #'
+#' @return An igraph object, or a list with an igraph object and a data frame with edge points
+#'
 #' @importFrom igraph V E are_adjacent is_directed degree graph_from_data_frame distances %--% %->%
 #'
 #' @export

@@ -14,7 +14,7 @@ create_ti_method_definition(definition, script, return_function = TRUE)
 \item{return_function}{Whether to return a function that allows you to override the default parameters, or just return the method meta data as is.}
 }
 \value{
-A function that can be used to adapt the parameters of the method. This functions returns a list containing all metadata of the method, and can be used to \link[=infer_trajectory]{infer a trajectory}
+A method definition
 }
 \description{
 The local method definition file describes a method that is runnable on the local system.

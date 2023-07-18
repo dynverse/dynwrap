@@ -5,6 +5,8 @@
 #'
 #' @keywords adapt_trajectory
 #'
+#' @return A dynwrap object with the timings added.
+#'
 #' @examples
 #' trajectory <- example_trajectory
 #' trajectory <- add_timings(

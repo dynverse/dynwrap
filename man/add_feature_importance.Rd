@@ -16,6 +16,9 @@ is_wrapper_with_feature_importance(dataset)
 
 \item{...}{Extra information to be stored in the dataset}
 }
+\value{
+A dynwrap object with the feature importance added.
+}
 \description{
 Add a feature importance to a dataset
 }

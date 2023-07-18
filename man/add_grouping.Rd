@@ -21,6 +21,9 @@ get_grouping(dataset, grouping = NULL)
 
 \item{...}{Extra information to be stored in the dataset}
 }
+\value{
+A dynwrap object with the grouping added.
+}
 \description{
 Add a cell grouping to a dataset
 }

@@ -5,6 +5,8 @@
 #' - Loops are converted to a cycle, unless `allow_self_loops = TRUE`
 #'
 #' The positions of the cells within the trajectory remain the same.
+#' 
+#' @return A trajectory object
 #'
 #' @inheritParams common_param
 #' @inheritParams simplify_igraph_network

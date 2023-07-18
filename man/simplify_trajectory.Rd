@@ -11,6 +11,9 @@ simplify_trajectory(trajectory, allow_self_loops = FALSE)
 
 \item{allow_self_loops}{Whether or not to allow self loops.}
 }
+\value{
+A trajectory object
+}
 \description{
 \itemize{
 \item Milestones that are not a leaf or a branching point are removed: A -> B -> C becomes A -> C

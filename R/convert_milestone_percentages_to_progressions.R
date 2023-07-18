@@ -3,7 +3,7 @@
 #' @inheritParams wrap_data
 #' @inheritParams add_trajectory
 #'
-#' @return The progressions
+#' @return A data frame with columns `cell_id`, `from`, `to`, `percentage`.
 #'
 #' @seealso [add_trajectory()], [convert_progressions_to_milestone_percentages]
 #'

@@ -10,6 +10,8 @@
 #' @keywords create_trajectory
 #'
 #' @inherit add_trajectory return
+#' 
+#' @return 
 #'
 #' @export
 #'

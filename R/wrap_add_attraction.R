@@ -1,6 +1,8 @@
 #' Add attraction of cells using RNA velocity
 #'
 #' @inheritParams common_param
+#' 
+#' @return A dynwrap object with the attraction added.
 add_attraction <- function(
   dataset
 ) {
@@ -37,10 +39,6 @@ calculate_attraction <- function(
   k <- min(n_waypoints, k)
   waypoint_cells <- sample(cells, n_waypoints)
 
-  # prepare for correlation calculation
-  # em = expression
-  # nd = velocity
-
   em <- as.matrix(current)
   ccells <- cells
   em <- em[, ccells]
@@ -59,18 +57,6 @@ calculate_attraction <- function(
   cell <- cells[[1]]
 
   emw <- em[, waypoint_cells]
-
-  # cors <- map(cells, function(cell) {
-  #   print(cell)
-  #   diff <- transfo(emw - em[, cell])
-  #   cors <- cor(diff, nd2[, cell])
-  #   colnames(cors) <- cell
-  #   cors[is.na(cors)] <- 0
-  #   cors
-  # })
-  # attraction <- do.call(cbind, cors)
-  # attraction
-
 
   cors <- map(waypoint_cells, function(waypoint) {
     print(waypoint)

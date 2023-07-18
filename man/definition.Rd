@@ -29,6 +29,9 @@ is_ti_method(method)
 
 \item{parameters}{Meta information on the parameters of the TI method (see \code{\link[=def_parameters]{def_parameters()}}).}
 }
+\value{
+A method definition
+}
 \description{
 A definition contains meta information on a TI method and various aspects thereof.
 For brevity, the example only contains a minimum example, check the documentation

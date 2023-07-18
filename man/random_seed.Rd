@@ -6,6 +6,9 @@
 \usage{
 random_seed()
 }
+\value{
+A random seed
+}
 \description{
 From the current seed.
 }

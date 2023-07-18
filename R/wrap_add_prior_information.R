@@ -20,6 +20,8 @@
 #' @param verbose Whether or not to print informative messages
 #'
 #' @keywords infer_trajectory
+#' 
+#' @return A dynwrap object with the prior information added.
 #'
 #' @examples
 #' # add some prior information manually

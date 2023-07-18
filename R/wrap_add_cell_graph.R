@@ -15,7 +15,8 @@
 #'
 #' @keywords create_trajectory
 #'
-#'
+#' @return A trajectory object
+#' 
 #' @examples
 #' library(dplyr)
 #' dataset <- wrap_data(cell_ids = letters)
