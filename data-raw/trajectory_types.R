@@ -78,7 +78,4 @@ trajectory_types$ancestors <- trajectory_type_ancestors[trajectory_types$id]
 ## Save all objects ##
 ######################
 
-devtools::use_data(trajectory_types, trajectory_type_dag, overwrite = TRUE)
-
-
-
+usethis::use_data(trajectory_types, trajectory_type_dag, overwrite = TRUE)
