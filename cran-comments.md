@@ -1,6 +1,8 @@
 # dynwrap 1.2.4
 
-Resubmission after babelwhale was removed from CRAN.
+* Resubmission after babelwhale was removed from CRAN.
+
+* MINOR CHANGE: Added `@return` documentation to all functions.
 
 ## Test environments
 * local Fedora install, R 4.2
