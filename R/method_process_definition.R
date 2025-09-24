@@ -320,12 +320,12 @@ is_ti_method <- function(method) {
 #' @export
 convert_definition <- function(definition_raw) {
   definition(
-    method = purrr::invoke(def_method, definition_raw$method %||% list()),
-    wrapper = purrr::invoke(def_wrapper, definition_raw$wrapper %||% list()),
-    container = purrr::invoke(def_container, definition_raw$container %||% list()),
-    package = purrr::invoke(def_package, definition_raw$package %||% list()),
-    manuscript = purrr::invoke(def_manuscript, definition_raw$manuscript %||% list()),
-    parameters = dynparam::as_parameter_set(definition_raw$parameters %||% list())
+    method = purrr::exec(def_method, !!!definition_raw$method),
+    wrapper = purrr::exec(def_wrapper, !!!definition_raw$wrapper),
+    container = purrr::exec(def_container, !!!definition_raw$container),
+    package = purrr::exec(def_package, !!!definition_raw$package),
+    manuscript = purrr::exec(def_manuscript, !!!definition_raw$manuscript),
+    parameters = dynparam::as_parameter_set(definition_raw$parameters)
   )
 }
 
