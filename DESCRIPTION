@@ -43,7 +43,7 @@ Imports:
   magrittr,
   Matrix,
   methods,
-  purrr,
+  purrr (>= 1.0.0),
   processx,
   readr,
   stringr,
