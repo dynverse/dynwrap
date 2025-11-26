@@ -3,6 +3,7 @@ context("Testing create_ti_method_container")
 skip_on_appveyor()
 skip_on_os("mac")
 skip_on_cran()
+skip_if_not(test_docker_installation(), "Docker is not available")
 
 tags <- c("dynwrapr_tester:latest") # "dynwrappy_tester:v0.1.0"
 
