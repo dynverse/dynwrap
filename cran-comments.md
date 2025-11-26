@@ -1,10 +1,9 @@
-# dynwrap 1.2.4
+# dynwrap 1.2.5
 
-* Resubmission after babelwhale was removed from CRAN.
+* BUG FIX `convert_definition()`: Fix for purrr having deprecated `invoke` in favour of `exec` (PR #166).
 
-* MINOR CHANGE: Added `@return` documentation to all functions.
 
 ## Test environments
-* local Fedora install, R 4.2
-* ubuntu 22.04, mac os x, windows (on github actions), R 4.2
+* local Fedora install, R 4.5
+* ubuntu, mac os x, windows (on github actions), multiple r versions
 * win-builder (devel and release)

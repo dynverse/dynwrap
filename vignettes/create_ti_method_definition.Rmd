@@ -68,7 +68,7 @@ knitr::asis_output(paste0("```r\n", run_r_string, "\n```"))
 
 Make sure this script is executable!
 
-```{bash, eval=NOT_CRAN && NOT_TRAVIS}
+```{bash, eval=NOT_CRAN && NOT_TRAVIS && .Platform$OS.type != "windows"}
 chmod +x run.R
 ```
 

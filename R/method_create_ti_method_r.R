@@ -135,7 +135,12 @@ generate_parameter_documentation <- function(definition) {
     parameter_ids,
     function(parameter_id) {
       parameter <- definition$parameters$parameters[[parameter_id]]
-      paste0("@param ", parameter$id, " ", dynparam::get_description(parameter, sep = ". "), ".")
+      param_desc <- dynparam::get_description(parameter, sep = ". ")
+      # escape { and } to avoid roxygen issues
+      param_desc_escaped <- param_desc %>%
+        stringr::str_replace_all("\\{", "\\\\{") %>%
+        stringr::str_replace_all("\\}", "\\\\}")
+      paste0("@param ", parameter$id, " ", param_desc_escaped, ".")
     }
   )
 }
