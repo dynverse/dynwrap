@@ -14,7 +14,7 @@ library(tidyverse)
 ```
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/dynverse/dynwrap/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dynverse/dynwrap/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/dynverse/dynwrap/branch/master/graph/badge.svg)](https://app.codecov.io/gh/dynverse/dynwrap?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/dynverse/dynwrap/graph/badge.svg)](https://app.codecov.io/gh/dynverse/dynwrap)
 [**Tutorials**](https://dynverse.org)
 [**Reference documentation**](https://dynverse.org/reference/dynwrap/)
 <!-- badges: end -->
