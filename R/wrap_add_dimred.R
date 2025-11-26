@@ -58,8 +58,8 @@ add_dimred <- function(
   if (is.matrix(dimred) || is.data.frame(dimred)) {
     dimred <- process_dimred(dataset, dimred)
     assert_that(
-      rownames(dimred) %all_in% dataset$cell_id,
-      dataset$cell_id %all_in% rownames(dimred)
+      rownames(dimred) %all_in% dataset$cell_ids,
+      dataset$cell_ids %all_in% rownames(dimred)
     )
 
   } else {

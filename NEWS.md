@@ -1,3 +1,7 @@
+# dynwrap 1.2.5
+
+* BUG FIX `convert_definition()`: Fix for purrr having deprecated `invoke` in favour of `exec` (PR #166).
+
 # dynwrap 1.2.4
 
 * Resubmission after babelwhale was removed from CRAN.
