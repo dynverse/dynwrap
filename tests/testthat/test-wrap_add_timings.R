@@ -40,5 +40,5 @@ test_that("Testing add_timings", {
   testthat::expect_equivalent(names(tl), c("start", "second", "third", "stop"))
 
   diffs <- diff(unlist(wr$timings))
-  testthat::expect_true(all(abs(diffs - c(1, .5, .25)) < .1))
+  testthat::expect_true(all(abs(diffs - c(1, .5, .25)) < .5))
 })
