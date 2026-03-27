@@ -13,7 +13,7 @@ counts <- matrix(
 )
 expression <- log2(counts + 1)
 
-wr_orig <- wrap_data(id = id, cell_ids = cell_ids) %>%
+wr_orig <- wrap_data(id = id, cell_ids = cell_ids) |>
   add_expression(counts = counts, expression = expression)
 
 # trajectory data
@@ -55,9 +55,9 @@ progressions <- tribble(
   "single", "fortune", "must", .4
 )
 progressions_notent <-
-  progressions %>%
-  group_by(cell_id) %>%
-  slice(1) %>%
+  progressions |>
+  group_by(cell_id) |>
+  slice(1) |>
   ungroup()
 divergence_regions <- tribble(
   ~divergence_id, ~milestone_id, ~is_start,
@@ -66,7 +66,7 @@ divergence_regions <- tribble(
   "be", "of", FALSE
 )
 
-wr_withtraj <- wr_orig %>%
+wr_withtraj <- wr_orig |>
   add_trajectory(
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
@@ -87,10 +87,10 @@ colnames(dimred_segment_points) <- dim_names
 dimred_segment_progressions <- tibble(from = "man", to = "in", percentage = seq(0, 1, length.out = nrow(dimred_segment_points)))
 
 # clustering data
-grouping <- sample(milestone_ids, length(cell_ids), replace = TRUE) %>% set_names(cell_ids)
+grouping <- sample(milestone_ids, length(cell_ids), replace = TRUE) |> set_names(cell_ids)
 
 test_that("Testing add_dimred", {
-  wr <- wr_orig %>%
+  wr <- wr_orig |>
     add_dimred(
       dimred = dimred
 
@@ -108,7 +108,7 @@ test_that("Testing add_dimred", {
 
 test_that("Testing add_dimred including calculation of dimred", {
   skip_if_not_installed("dyndimre2d")
-  wr <- wr_orig %>% add_dimred(dimred = dyndimred::dimred_pca)
+  wr <- wr_orig |> add_dimred(dimred = dyndimred::dimred_pca)
 
   # testing is_ti_data_wrapper
   expect_true(is_wrapper_with_dimred(wr))
@@ -120,7 +120,7 @@ test_that("Testing add_dimred including calculation of dimred", {
 
 
 test_that("Testing add_dimred with traj dimred", {
-  wr <- wr_withtraj %>%
+  wr <- wr_withtraj |>
     add_dimred(
       dimred = dimred,
       dimred_milestones = dimred_milestones,
@@ -138,11 +138,11 @@ test_that("Testing add_dimred with traj dimred", {
 })
 
 test_that("Testing add_dimred with cell group", {
-  wr <- wr_orig %>%
+  wr <- wr_orig |>
     add_grouping(
       group_ids = milestone_ids,
       grouping = grouping
-    ) %>%
+    ) |>
     add_dimred(
       dimred = dimred,
       dimred_milestones = dimred_milestones
@@ -158,28 +158,28 @@ test_that("Testing add_dimred with cell group", {
 
 test_that("Expect failure on wrong dimred parameter", {
   expect_error(
-    wr_withtraj %>%
+    wr_withtraj |>
       add_dimred(
         dimred = NULL
       )
   )
 
   expect_error(
-    wr_withtraj %>%
+    wr_withtraj |>
       add_dimred(
         dimred = 1
       )
   )
 
   expect_error(
-    wr_withtraj %>%
+    wr_withtraj |>
       add_dimred(
         dimred = tibble(1, 2)
       )
   )
 
   expect_error(
-    wr_withtraj %>%
+    wr_withtraj |>
       add_dimred(
         dimred = as.data.frame(dimred)
       )
@@ -189,7 +189,7 @@ test_that("Expect failure on wrong dimred parameter", {
 
 test_that("Expect failure on wrong dimred_milestones parameter", {
   expect_error(
-    wr_withtraj %>%
+    wr_withtraj |>
       add_dimred(
         dimred = dimred,
         dimred_milestones = "vbwoc"
@@ -200,7 +200,7 @@ test_that("Expect failure on wrong dimred_milestones parameter", {
 
 test_that("Expect failure on wrong dimred_segment_progressions parameter", {
   expect_error(
-    wr_withtraj %>%
+    wr_withtraj |>
       add_dimred(
         dimred = dimred,
         dimred_segment_progressions = "hdcoew",
@@ -209,7 +209,7 @@ test_that("Expect failure on wrong dimred_segment_progressions parameter", {
   )
 
   expect_error(
-    wr_withtraj %>%
+    wr_withtraj |>
       add_dimred(
         dimred = dimred,
         dimred_segment_progressions = dimred_segment_progressions,
@@ -218,7 +218,7 @@ test_that("Expect failure on wrong dimred_segment_progressions parameter", {
   )
 
   expect_error(
-    wr_withtraj %>%
+    wr_withtraj |>
       add_dimred(
         dimred = dimred,
         dimred_segment_progressions = dimred_segment_progressions,
@@ -227,7 +227,7 @@ test_that("Expect failure on wrong dimred_segment_progressions parameter", {
   )
 
   expect_error(
-    wr_withtraj %>%
+    wr_withtraj |>
       add_dimred(
         dimred = dimred,
         dimred_segment_progressions = dimred_segment_progressions,
@@ -236,7 +236,7 @@ test_that("Expect failure on wrong dimred_segment_progressions parameter", {
   )
 
   expect_error(
-    wr_withtraj %>%
+    wr_withtraj |>
       add_dimred(
         dimred = dimred,
         dimred_segment_progressions = dimred_segment_progressions[-1,],
@@ -245,7 +245,7 @@ test_that("Expect failure on wrong dimred_segment_progressions parameter", {
   )
 
   expect_error(
-    wr_withtraj %>%
+    wr_withtraj |>
       add_dimred(
         dimred = dimred,
         dimred_segment_progressions = dimred_segment_progressions[,-1],
@@ -256,7 +256,7 @@ test_that("Expect failure on wrong dimred_segment_progressions parameter", {
 
 
 test_that("Test add_dimred with projection", {
-  wr_withdimred <- wr_withtraj %>%
+  wr_withdimred <- wr_withtraj |>
     add_dimred(
       dimred = dimred,
       project_trajectory = TRUE
@@ -268,7 +268,7 @@ test_that("Test add_dimred with projection", {
 
 
 test_that("Test get_dimred", {
-  wr_withdimred <- wr_withtraj %>% add_dimred(dimred)
+  wr_withdimred <- wr_withtraj |> add_dimred(dimred)
 
   # from trajectory
   expect_error(get_dimred(wr_orig))
@@ -284,7 +284,7 @@ test_that("Test get_dimred", {
   expect_equivalent(dimred, dimred2)
 
   # df
-  dimred_df <- dimred %>% as.data.frame() %>% rownames_to_column("cell_id")
+  dimred_df <- dimred |> as.data.frame() |> rownames_to_column("cell_id")
   dimred2 <- get_dimred(wr_withdimred, dimred = dimred_df)
   expect_equivalent(dimred, dimred2)
 

@@ -45,17 +45,17 @@ ti_comp1 <- dynwrap::create_ti_method_r(
     names(pseudotime) <- rownames(expression)
 
     # TIMING: done with method
-    tl <- tl %>% add_timing_checkpoint("method_aftermethod")
+    tl <- tl |> add_timing_checkpoint("method_aftermethod")
 
     # return output
     wrap_data(
       cell_ids = rownames(expression)
-    ) %>% add_linear_trajectory(
+    ) |> add_linear_trajectory(
       pseudotime = pseudotime
-    ) %>% add_dimred(
+    ) |> add_dimred(
       dimred = dimred
-    ) %>% add_timings(
-      timings = tl %>% add_timing_checkpoint("method_afterpostproc")
+    ) |> add_timings(
+      timings = tl |> add_timing_checkpoint("method_afterpostproc")
     )
   },
 

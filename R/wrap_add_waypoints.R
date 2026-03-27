@@ -25,13 +25,13 @@ select_waypoints <- function(
 
   # create uniform progressions
   # waypoints which lie on a milestone will get a special name, so that they are the same between milestone network edges
-  waypoint_progressions <- trajectory$milestone_network %>%
-    mutate(percentage = map(trafo(length), ~c(seq(0, ., min(resolution, .))/., 1))) %>%
-    select(-length, -directed) %>%
-    unnest(percentage) %>%
-    group_by(from, to, percentage) %>% # remove duplicate waypoints
-    filter(row_number() == 1) %>%
-    ungroup() %>%
+  waypoint_progressions <- trajectory$milestone_network |>
+    mutate(percentage = map(trafo(length), ~c(seq(0, ., min(resolution, .))/., 1))) |>
+    select(-length, -directed) |>
+    unnest(percentage) |>
+    group_by(from, to, percentage) |> # remove duplicate waypoints
+    filter(row_number() == 1) |>
+    ungroup() |>
     mutate(
       waypoint_id = case_when(
         percentage == 0 ~ paste0("MILESTONE_BEGIN_W", from, "_", to),
@@ -41,17 +41,17 @@ select_waypoints <- function(
     )
 
   # create waypoint percentages from progressions
-  waypoint_milestone_percentages <- waypoint_progressions %>%
-    group_by(waypoint_id) %>%
-    filter(row_number() == 1) %>%
-    ungroup() %>%
-    rename(cell_id = waypoint_id) %>%
-    convert_progressions_to_milestone_percentages(
-      "this argument is unnecessary, I can put everything I want in here!",
-      trajectory$milestone_ids,
-      trajectory$milestone_network,
-      .
-    ) %>%
+  waypoint_progressions_filtered <- waypoint_progressions |>
+    group_by(waypoint_id) |>
+    filter(row_number() == 1) |>
+    ungroup() |>
+    rename(cell_id = waypoint_id)
+  waypoint_milestone_percentages <- convert_progressions_to_milestone_percentages(
+    "this argument is unnecessary, I can put everything I want in here!",
+    trajectory$milestone_ids,
+    trajectory$milestone_network,
+    waypoint_progressions_filtered
+  ) |>
     rename(waypoint_id = cell_id)
 
   # calculate distance
@@ -61,20 +61,20 @@ select_waypoints <- function(
   )[waypoint_progressions$waypoint_id, ]
 
   # also create network between waypoints
-  waypoint_network <- waypoint_progressions %>%
-    group_by(from, to) %>%
-    mutate(from_waypoint = waypoint_id, to_waypoint = lead(waypoint_id, 1)) %>%
-    drop_na() %>%
-    ungroup() %>%
+  waypoint_network <- waypoint_progressions |>
+    group_by(from, to) |>
+    mutate(from_waypoint = waypoint_id, to_waypoint = lead(waypoint_id, 1)) |>
+    drop_na() |>
+    ungroup() |>
     select(from = from_waypoint, to = to_waypoint, from_milestone_id = from, to_milestone_id = to)
 
   # create waypoints and their properties
-  waypoints <- waypoint_milestone_percentages %>%
-    group_by(waypoint_id) %>%
-    arrange(-percentage) %>%
-    filter(row_number() == 1) %>%
-    ungroup() %>%
-    mutate(milestone_id = ifelse(percentage == 1, milestone_id, NA)) %>%
+  waypoints <- waypoint_milestone_percentages |>
+    group_by(waypoint_id) |>
+    arrange(-percentage) |>
+    filter(row_number() == 1) |>
+    ungroup() |>
+    mutate(milestone_id = ifelse(percentage == 1, milestone_id, NA)) |>
     select(-percentage)
 
   lst(
@@ -126,7 +126,7 @@ add_waypoints <- inherit_default_params(select_waypoints, function(
   ))
 
   # create output structure
-  trajectory %>% extend_with(
+  trajectory |> extend_with(
     "dynwrap::with_waypoints",
     waypoints = waypoints
   )

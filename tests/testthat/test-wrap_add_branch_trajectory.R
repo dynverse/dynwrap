@@ -28,7 +28,7 @@ wr_orig <- wrap_data(
 
 test_that("Testing add_trajectory with milestone_percentages", {
   wr <-
-    wr_orig %>%
+    wr_orig |>
     add_branch_trajectory(
       branch_ids = branch_ids,
       branch_network = branch_network,
@@ -80,7 +80,7 @@ wr_orig <- wrap_data(
 
 test_that("Testing add_trajectory with milestone_percentages", {
   wr <-
-    wr_orig %>%
+    wr_orig |>
     add_branch_trajectory(
       branch_ids = branch_ids,
       branch_network = branch_network,

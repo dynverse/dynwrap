@@ -39,7 +39,7 @@ milestone_percentages <- tribble(
 trajectory <- wrap_data(
   id = "test",
   cell_ids = cell_ids
-) %>% add_trajectory(
+) |> add_trajectory(
   milestone_ids = milestone_ids,
   milestone_network = milestone_network,
   milestone_percentages = milestone_percentages,
@@ -63,7 +63,7 @@ test_that("Testing add_root on simple linear trajectory", {
 
 
 test_that("Testing add_root on a more complex linear trajectory", {
-  trajectory2 <- wrap_data(cell_ids = "a") %>%
+  trajectory2 <- wrap_data(cell_ids = "a") |>
     add_trajectory(
       milestone_network = tibble(from = c("2", "1", "4", "3"), to = c("1", "4", "3", "5"), length = 1, directed = TRUE),
       progressions = tibble(cell_id = "a", from = "2", to = "1", percentage = 0)

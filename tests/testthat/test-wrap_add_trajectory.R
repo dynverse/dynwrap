@@ -40,7 +40,7 @@ divergence_regions <- tribble(
 trajectory <- wrap_data(
   id = id,
   cell_ids = cell_ids
-) %>% add_trajectory(
+) |> add_trajectory(
   milestone_network = milestone_network,
   divergence_regions = divergence_regions,
   milestone_percentages = milestone_percentages

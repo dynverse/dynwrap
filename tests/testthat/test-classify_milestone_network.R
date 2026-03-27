@@ -56,12 +56,12 @@ all_networks <- list(
         to2 = c(ord[2:5], ord[6:10], ord[c(11,12:16)]),
         length = 1,
         directed = FALSE
-      ) %>%
+      ) |>
         mutate(
           mix = sample(c(T, F), n(), replace = TRUE),
           from = ifelse(mix, from2, to2),
           to = ifelse(mix, to2, from2)
-        ) %>%
+        ) |>
         select(from, to, length, directed)
     }
   ),
@@ -97,38 +97,38 @@ all_networks <- list(
         to2 = c(ord[2:5], ord[6:10], ord[c(11,12:16)], ord[c(17, 18:21)]),
         length = 1,
         directed = FALSE
-      ) %>%
+      ) |>
         mutate(
           mix = sample(c(T, F), n(), replace = TRUE),
           from = ifelse(mix, from2, to2),
           to = ifelse(mix, to2, from2)
-        ) %>%
-        sample_n(nrow(.)) %>%
+        ) |>
+        (\(x) sample_n(x, nrow(x)))() |>
         select(from, to, length, directed)
     }
   ),
   "tree" = list(
     "simple_binary" = tibble(from = c("A", "B", "B", "C", "C"), to = c("B", "C", "D", "E", "F"), length = 2, directed = TRUE),
     "intermediate" = tibble(from = c(rep("root", 6), LETTERS[1:6], LETTERS[1:6]), to = c(LETTERS[1:6], LETTERS[7:12], LETTERS[13:18]), length = 1.5, directed = TRUE),
-    "shuffled" = tibble(from = c(rep("root", 6), rep("A", 10), rep("B", 3)), to = LETTERS[1:19], length = 1, directed = TRUE) %>% sample_n(nrow(.)),
+    "shuffled" = (\(x) sample_n(x, nrow(x)))(tibble(from = c(rep("root", 6), rep("A", 10), rep("B", 3)), to = LETTERS[1:19], length = 1, directed = TRUE)),
     "simple_binary" = tibble(from = c("A", "B", "B", "C", "C"), to = c("B", "C", "D", "E", "F"), length = 2, directed = FALSE),
     "intermediate" = tibble(from = c(rep("root", 6), LETTERS[1:6], LETTERS[1:6]), to = c(LETTERS[1:6], LETTERS[7:12], LETTERS[13:18]), length = 1.5, directed = FALSE),
     "shuffled" = tibble(
       from2 = c(rep("root", 6), rep("A", 10), rep("B", 3)),
       to2 = LETTERS[1:19], length = 1, directed = FALSE
-    ) %>%
+    ) |>
       mutate(
         mix = sample(c(T, F), n(), replace = TRUE),
         from = ifelse(mix, from2, to2),
         to = ifelse(mix, to2, from2)
-      ) %>%
-      sample_n(nrow(.)) %>%
+      ) |>
+      (\(x) sample_n(x, nrow(x)))() |>
       select(from, to, length, directed)
   ),
   "acyclic_graph" = list(
     "bifur_conv_from_start" = tibble(from = c("A", "A", "B", "C"), to = c("B", "C", "D", "D"), length = 0.4, directed = TRUE),
     "bifur_conv" = tibble(from = c("A", "B", "B", "C", "D", "E"), to = c("B", "C", "D", "E", "E", "F"), length = 0.4, directed = TRUE),
-    "directed_complete" = crossing(from = LETTERS, to = LETTERS, length = 1, directed = TRUE) %>% filter(from < to),
+    "directed_complete" = crossing(from = LETTERS, to = LETTERS, length = 1, directed = TRUE) |> filter(from < to),
     "conv_bifur" = tibble(from = c("A", "B", "C", "C"), to = c("C", "C", "D", "E"), length = 1, directed = TRUE),
     "conv_bifur_big" = tibble(from = c("A", "B", "C", "D", "D", "D"), to = c("D", "D", "D", "E", "F", "G"), length = 1, directed = TRUE)
   ),
@@ -161,8 +161,8 @@ for (network_type in names(all_networks)) {
 
 
 test_that("Example trajectories match", {
-  example_trajectory_types <- map(trajectory_types$example_network, mutate, directed = TRUE, length = 1) %>%
-    map(classify_milestone_network) %>%
+  example_trajectory_types <- map(trajectory_types$example_network, mutate, directed = TRUE, length = 1) |>
+    map(classify_milestone_network) |>
     map_chr("network_type")
 
   testthat::expect_equal(trajectory_types$id, example_trajectory_types)

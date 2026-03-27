@@ -57,8 +57,8 @@ progressions <- tribble(
 
 test_that("Testing convert_milestone_percentages_to_progressions", {
   progressions_calc <- convert_milestone_percentages_to_progressions(cell_ids, milestone_ids, milestone_network, milestone_percentages)
-  prog_control <- progressions %>% rename(orig = percentage) %>%
-    full_join(progressions_calc %>% rename(calc = percentage), by = c("cell_id", "from", "to")) %>%
+  prog_control <- progressions |> rename(orig = percentage) |>
+    full_join(progressions_calc |> rename(calc = percentage), by = c("cell_id", "from", "to")) |>
     mutate(
       diff = abs(orig - calc),
       check = !is.na(orig) & !is.na(calc) & diff < 1e-6
@@ -66,13 +66,13 @@ test_that("Testing convert_milestone_percentages_to_progressions", {
   expect_true(all(prog_control$check))
 
   # expect error because cells are positioned on edges that are not in the milestone_network
-  expect_error(convert_milestone_percentages_to_progressions(cell_ids, milestone_ids, milestone_network %>% slice(-1), milestone_percentages))
+  expect_error(convert_milestone_percentages_to_progressions(cell_ids, milestone_ids, milestone_network |> slice(-1), milestone_percentages))
 })
 
 test_that("Testing convert_progressions_to_milestone_percentages", {
   milestone_percentages_calc <- convert_progressions_to_milestone_percentages(cell_ids, milestone_ids, milestone_network, progressions)
-  perc_control <- milestone_percentages %>% rename(orig = percentage) %>%
-    full_join(milestone_percentages_calc %>% rename(calc = percentage), by = c("cell_id", "milestone_id")) %>%
+  perc_control <- milestone_percentages |> rename(orig = percentage) |>
+    full_join(milestone_percentages_calc |> rename(calc = percentage), by = c("cell_id", "milestone_id")) |>
     mutate(
       diff = abs(orig - calc),
       orig_check = !is.na(orig) | calc == 0,
@@ -81,11 +81,11 @@ test_that("Testing convert_progressions_to_milestone_percentages", {
   expect_true(all(perc_control$check))
 
   # expect error because cells are position on edges that are not in the milestone_network
-  expect_error(convert_progressions_to_milestone_percentages(cell_ids, milestone_ids, milestone_network %>% slice(-1), progressions))
+  expect_error(convert_progressions_to_milestone_percentages(cell_ids, milestone_ids, milestone_network |> slice(-1), progressions))
 
   # expect error because cell k is in two different 'from' progressions.
   expect_error(convert_progressions_to_milestone_percentages(
     cell_ids, milestone_ids, milestone_network,
-    progressions %>% add_row(cell_id = c("k", "k"), from = c("A", "B"), to = c("C", "D"), percentage = c(.1, .2))
+    progressions |> add_row(cell_id = c("k", "k"), from = c("A", "B"), to = c("C", "D"), percentage = c(.1, .2))
   ))
 })

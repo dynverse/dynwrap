@@ -9,10 +9,10 @@ cell_info <- tibble(
   info3 = 1:6
 )
 
-wrapper1 <- wrap_data(id, cell_ids) %>% add_grouping(cell_info$info1)
-wrapper2 <- wrap_data(id, cell_ids) %>% add_grouping(unique(cell_info$info1), cell_info$info1)
-wrapper3 <- wrap_data(id, cell_ids) %>% add_grouping(tibble(cell_id = cell_ids, group_id = cell_info$info1))
-wrapper4 <- wrap_data(id, cell_ids) %>% add_prior_information(groups_id = tibble(cell_id = cell_ids, group_id = cell_info$info1))
+wrapper1 <- wrap_data(id, cell_ids) |> add_grouping(cell_info$info1)
+wrapper2 <- wrap_data(id, cell_ids) |> add_grouping(unique(cell_info$info1), cell_info$info1)
+wrapper3 <- wrap_data(id, cell_ids) |> add_grouping(tibble(cell_id = cell_ids, group_id = cell_info$info1))
+wrapper4 <- wrap_data(id, cell_ids) |> add_prior_information(groups_id = tibble(cell_id = cell_ids, group_id = cell_info$info1))
 wrapper5 <- wrap_data(id, cell_ids, cell_info)
 
 test_that("Testing add_grouping", {
@@ -41,12 +41,12 @@ test_that("Testing get_grouping", {
 milestone_network <- tibble(from = c("A", "B"), to = c("B", "C"), directed = TRUE, length = 1)
 progressions <- tibble(cell_id = cell_ids, from = c(rep("A", 3), rep("B", 3)), to = c(rep("B", 3), rep("C", 3)), percentage = c(0, 0.5, 1, 0, 0.5, 1))
 
-trajectory <- wrap_data(id, cell_ids) %>% add_trajectory(milestone_network = milestone_network, progressions = progressions)
+trajectory <- wrap_data(id, cell_ids) |> add_trajectory(milestone_network = milestone_network, progressions = progressions)
 
 test_that("Testing group_onto_trajectory_edges", {
   grouping <- group_onto_trajectory_edges(trajectory)
 
   expect_equal(length(grouping), length(cell_ids))
   expect_equal(names(grouping), cell_ids)
-  expect_equal(grouping %>% unname(), c("A->B", "A->B", "A->B", "B->C", "B->C", "B->C"))
+  expect_equal(grouping |> unname(), c("A->B", "A->B", "A->B", "B->C", "B->C", "B->C"))
 })

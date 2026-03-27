@@ -53,23 +53,23 @@ get_ti_methods <- function(
       fun <- get(function_name, env)
 
       if (evaluate) {
-        meth_metadata <- fun() %>% discard(is.function)
+        meth_metadata <- fun() |> discard(is.function)
       } else {
-        meth_metadata <- list(id = function_name %>% stringr::str_replace("^ti_", ""))
+        meth_metadata <- list(id = function_name |> stringr::str_replace("^ti_", ""))
       }
       meth_metadata$fun <- fun
       meth_metadata
     })
-  }) %>%
-    unlist(recursive = FALSE) %>%
+  }) |>
+    unlist(recursive = FALSE) |>
     list_as_tibble()
 
   if (!is.null(method_ids)) {
     assert_that(all(method_ids %in% ti_methods$id | grepl("/", method_ids)))
-    ti_methods <- ti_methods %>% slice(match(method_ids, id))
+    ti_methods <- ti_methods |> slice(match(method_ids, id))
 
     docker_repos <-
-      method_ids %>%
+      method_ids |>
       keep(~ grepl("/", .))
 
     ti_methods2 <- list_as_tibble(map(docker_repos, function(repo) {

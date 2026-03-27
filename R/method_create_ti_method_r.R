@@ -45,7 +45,7 @@
 #'     }
 #'   }
 #'
-#'   wrap_data(cell_ids = rownames(expression)) %>%
+#'   wrap_data(cell_ids = rownames(expression)) |>
 #'     add_linear_trajectory(pseudotime = pseudotime)
 #' }
 #'
@@ -137,8 +137,8 @@ generate_parameter_documentation <- function(definition) {
       parameter <- definition$parameters$parameters[[parameter_id]]
       param_desc <- dynparam::get_description(parameter, sep = ". ")
       # escape { and } to avoid roxygen issues
-      param_desc_escaped <- param_desc %>%
-        stringr::str_replace_all("\\{", "\\\\{") %>%
+      param_desc_escaped <- param_desc |>
+        stringr::str_replace_all("\\{", "\\\\{") |>
         stringr::str_replace_all("\\}", "\\\\}")
       paste0("@param ", parameter$id, " ", param_desc_escaped, ".")
     }

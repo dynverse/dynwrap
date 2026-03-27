@@ -30,7 +30,7 @@ dataset <-
     feature_info,
     extras1 = extras1,
     extras2 = extras2
-  ) %>%
+  ) |>
   add_prior_information(start_id = cell_ids[[1]])
 
 test_that("Testing infer_trajectory with control methods", {

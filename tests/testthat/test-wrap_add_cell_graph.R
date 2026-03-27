@@ -30,7 +30,7 @@ test_that("Testing add_cell_graph", {
   )
   to_keep <- c(A = T, B = T, C = T, D = T, E = T, "F" = T, G = T, H = T, a = F, b = F, bb = F, c = F, cc = F, d = F)
 
-  wr <- wr_orig %>% add_cell_graph(
+  wr <- wr_orig |> add_cell_graph(
     cell_graph = cell_graph,
     to_keep = to_keep,
     milestone_prefix = "ML_"
@@ -48,17 +48,17 @@ test_that("Testing add_cell_graph", {
 
   expect_equal(wr$milestone_ids, paste0("ML_", c("A", "D", "F", "G", "H")))
 
-  test_strs <- wr$milestone_network %>% {paste(.$from, .$to, .$length, .$directed, sep = "|")} %>% sort
+  test_strs <- wr$milestone_network |> (\(.x) paste(.x$from, .x$to, .x$length, .x$directed, sep = "|"))() |> sort()
   expected_strs <- c(
     "ML_A|ML_D|1.8|FALSE",
     "ML_D|ML_F|0.9|FALSE",
     "ML_D|ML_G|1.3|FALSE",
     "ML_F|ML_G|0.1|FALSE",
     "ML_G|ML_H|1|FALSE"
-  ) %>% sort
+  ) |> sort()
   expect_equal(test_strs, expected_strs)
 
-  test_strs <- wr$progressions %>% {paste(.$cell_id, .$from, .$to, round(.$percentage, 2), sep = "|")} %>% sort
+  test_strs <- wr$progressions |> (\(.x) paste(.x$cell_id, .x$from, .x$to, round(.x$percentage, 2), sep = "|"))() |> sort()
   expected_strs <- c(
     'a|ML_A|ML_D|0',
     'A|ML_A|ML_D|0',
@@ -74,6 +74,6 @@ test_that("Testing add_cell_graph", {
     'F|ML_D|ML_F|1',
     'G|ML_D|ML_G|1',
     'H|ML_G|ML_H|1'
-  ) %>% sort
+  ) |> sort()
   expect_equal(test_strs, expected_strs)
 })

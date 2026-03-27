@@ -18,13 +18,13 @@ gather_cells_at_milestones <- function(trajectory) {
   assert_that(is_wrapper_with_trajectory(trajectory))
 
   milestone_percentages <-
-    trajectory$milestone_percentages %>%
-    group_by(cell_id) %>%
-    slice(which.max(percentage)) %>%
-    mutate(percentage = 1) %>%
+    trajectory$milestone_percentages |>
+    group_by(cell_id) |>
+    slice(which.max(percentage)) |>
+    mutate(percentage = 1) |>
     ungroup()
 
-  trajectory %>%
+  trajectory |>
     add_trajectory(
       milestone_network = trajectory$milestone_network,
       divergence_regions = trajectory$divergence_regions,

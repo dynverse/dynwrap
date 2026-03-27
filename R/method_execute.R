@@ -123,7 +123,7 @@
     timings <- map_dbl(timings, as.numeric)
 
     # calculate timing differences
-    timings_diff <- diff(timings[c("execution_start", "method_beforepreproc", "method_afterpreproc", "method_aftermethod", "method_afterpostproc", "execution_stop")]) %>%
+    timings_diff <- diff(timings[c("execution_start", "method_beforepreproc", "method_afterpreproc", "method_aftermethod", "method_afterpostproc", "execution_stop")]) |>
       set_names(c("time_sessionsetup", "time_preprocessing", "time_method", "time_postprocessing", "time_sessioncleanup"))
 
     # create a summary tibble
@@ -134,8 +134,8 @@
       stdout = stds$stdout,
       stderr = stds$stderr,
       error = error,
-      prior_df = list(method$wrapper$inputs %>% rename(prior_id = input_id) %>% mutate(given = prior_id %in% names(inputs)))
-    ) %>%
+      prior_df = list(method$wrapper$inputs |> rename(prior_id = input_id) |> mutate(given = prior_id %in% names(inputs)))
+    ) |>
       bind_cols(as.data.frame(as.list(timings_diff)))
   }, error = function(e) {
     stop("Error produced in dynwrap input/output:\n", as.character(e))

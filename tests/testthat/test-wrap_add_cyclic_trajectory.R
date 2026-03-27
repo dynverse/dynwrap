@@ -4,7 +4,7 @@ id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
 extras <- list("man")
 
-pseudotime <- c(0, .1, .4, .5, .8, 1) %>% set_names(cell_ids)
+pseudotime <- c(0, .1, .4, .5, .8, 1) |> set_names(cell_ids)
 
 wr_orig <- wrap_data(
   id = id,
@@ -13,7 +13,7 @@ wr_orig <- wrap_data(
 
 test_that("Testing add_cyclic_trajectory", {
   wr <-
-    wr_orig %>%
+    wr_orig |>
     add_cyclic_trajectory(
       pseudotime = pseudotime,
       do_scale_minmax = TRUE,
@@ -40,7 +40,7 @@ test_that("Testing add_cyclic_trajectory", {
 
 test_that("Testing add_cyclic_trajectory", {
   wr <-
-    wr_orig %>%
+    wr_orig |>
     add_cyclic_trajectory(
       pseudotime = pseudotime,
       do_scale_minmax = TRUE,
@@ -54,7 +54,7 @@ test_that("Testing add_cyclic_trajectory", {
 
 test_that("Testing add_cyclic_trajectory", {
   wr <-
-    wr_orig %>%
+    wr_orig |>
     add_cyclic_trajectory(
       pseudotime = pseudotime/10 + .45,
       do_scale_minmax = FALSE,
@@ -70,9 +70,9 @@ test_that("Testing add_cyclic_trajectory", {
 
 test_that("Testing add_cyclic_trajectory fails when expected", {
   expect_error(
-    wr_orig %>%
+    wr_orig |>
     add_cyclic_trajectory(
-      pseudotime = pseudotime %>% set_names(NULL),
+      pseudotime = pseudotime |> set_names(NULL),
       do_scale_minmax = TRUE,
       directed = FALSE,
       extras = extras

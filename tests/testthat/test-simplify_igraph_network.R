@@ -156,20 +156,20 @@ for (test in tests) {
 
     newgr <- simplify_igraph_network(gr, allow_duplicated_edges = TRUE)
     newnet <- igraph::as_data_frame(newgr)
-    expected <- test$expected_net %>%
+    expected <- test$expected_net |>
       mutate(from = as.character(from), to = as.character(to))
 
-    exp2 <- bind_rows(expected, expected %>% rename(from = to, to = from)) %>% mutate(left = TRUE)
-    new2 <- bind_rows(newnet, newnet %>% rename(from = to, to = from)) %>% mutate(right = TRUE)
+    exp2 <- bind_rows(expected, expected |> rename(from = to, to = from)) |> mutate(left = TRUE)
+    new2 <- bind_rows(newnet, newnet |> rename(from = to, to = from)) |> mutate(right = TRUE)
     control <- full_join(exp2, new2, by = c("from", "to", "weight", "directed"))
 
     pass_check <- all(!is.na(control$left) & !is.na(control$right))
 
     # cat(ifelse(pass_check, "SUCCEEDED!", "FAILED!"), " ", test$name, " ", ifelse(test$directed, "(directed)", "(undirected)"), "\n", sep = "")
     # cat("Original:\n")
-    # print(test$net %>% as.data.frame)
+    # print(test$net |> as.data.frame)
     # cat("Expected:\n")
-    # print(test$expected_net %>% as.data.frame)
+    # print(test$expected_net |> as.data.frame)
     # cat("Got:\n")
     # print(newnet)
     # cat("============================\n")

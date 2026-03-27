@@ -88,12 +88,12 @@ add_dimred_projection <- function(
       segment_end = dimred_milestones[milestone_network$to, , drop = FALSE]
     )
     progressions <-
-      milestone_network %>%
-      slice(proj$segment) %>%
+      milestone_network |>
+      slice(proj$segment) |>
       mutate(
         cell_id = names(proj$segment),
         percentage = proj$progression
-      ) %>%
+      ) |>
       select(cell_id, from, to, percentage)
   } else {
     # if grouping / clusterings are given, project cells only to segments
@@ -105,7 +105,7 @@ add_dimred_projection <- function(
 
       # select all cells in this group
       if (length(cids) > 0) {
-        mns <- milestone_network %>% filter(from == group_id | to == group_id)
+        mns <- milestone_network |> filter(from == group_id | to == group_id)
 
         if (nrow(mns) > 0) {
           # project to segments
@@ -135,23 +135,23 @@ add_dimred_projection <- function(
     })
 
     # add missing group ids as clusters to the milestone network
-    missing_gids <- group_ids %>% setdiff(c(milestone_network$from, milestone_network$to))
-    milestone_network <- milestone_network %>%
+    missing_gids <- group_ids |> setdiff(c(milestone_network$from, milestone_network$to))
+    milestone_network <- milestone_network |>
       bind_rows(tibble(from = missing_gids, to = missing_gids, length = 0, directed = FALSE))
   }
 
   dimred_segment_progressions <-
-    milestone_network %>%
-    select(from, to) %>%
-    mutate(zero = from, one = to) %>%
-    gather(percentage, milestone_id, zero, one) %>%
+    milestone_network |>
+    select(from, to) |>
+    mutate(zero = from, one = to) |>
+    gather(percentage, milestone_id, zero, one) |>
     mutate(percentage = c(zero = 0, one = 1)[percentage])
 
   dimred_segment_points <-
     dimred_milestones[dimred_segment_progressions$milestone_id, , drop = FALSE]
 
   dimred_segment_progressions <-
-    dimred_segment_progressions %>%
+    dimred_segment_progressions |>
     select(from, to, percentage)
 
   # construct output
@@ -162,7 +162,7 @@ add_dimred_projection <- function(
     divergence_regions = NULL,
     progressions = progressions,
     ...
-  ) %>% add_dimred(
+  ) |> add_dimred(
     dimred = dimred,
     dimred_milestones = dimred_milestones,
     dimred_segment_points = dimred_segment_points,
@@ -171,7 +171,7 @@ add_dimred_projection <- function(
 
   # add cell grouping of a milestone_assignment was given
   if (!is.null(grouping)) {
-    out <- out %>% add_grouping(
+    out <- out |> add_grouping(
       group_ids = milestone_ids,
       grouping = grouping
     )

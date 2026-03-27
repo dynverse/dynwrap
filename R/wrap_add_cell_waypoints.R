@@ -30,7 +30,7 @@ add_cell_waypoints <- function(trajectory, num_cells_selected = 100) {
   ))
 
   # create output structure
-  trajectory %>% extend_with(
+  trajectory |> extend_with(
     "dynwrap::with_cell_waypoints",
     waypoint_cells = waypoint_cells
   )
@@ -52,43 +52,43 @@ determine_cell_trajectory_positions <- function(
   progressions,
   divergence_regions
 ) {
-  divergence_ids <- divergence_regions$divergence_id %>% unique
+  divergence_ids <- divergence_regions$divergence_id |> unique()
 
-  cells_in_milestone <- milestone_percentages %>%
-    filter(percentage > 1-1e-6) %>%
+  cells_in_milestone <- milestone_percentages |>
+    filter(percentage > 1-1e-6) |>
     mutate(index = match(milestone_id, milestone_ids))
 
   cells_in_divergence <-
     map_df(seq_along(divergence_ids), function(dii) {
-      mid <- divergence_regions %>%
-        filter(divergence_id == divergence_ids[[dii]]) %>%
-        filter(!is_start) %>%
+      mid <- divergence_regions |>
+        filter(divergence_id == divergence_ids[[dii]]) |>
+        filter(!is_start) |>
         pull(milestone_id)
 
-      mid_start <- divergence_regions %>%
-        filter(divergence_id == divergence_ids[[dii]]) %>%
-        filter(is_start) %>%
+      mid_start <- divergence_regions |>
+        filter(divergence_id == divergence_ids[[dii]]) |>
+        filter(is_start) |>
         pull(milestone_id)
 
-      cells <- progressions %>%
-        filter(percentage < 1-1e-6, percentage > 1e-6) %>%
-        filter(from == mid_start, to %in% mid) %>%
-        filter(cell_id %in% cell_id[duplicated(cell_id)]) %>%
-        pull(cell_id) %>%
+      cells <- progressions |>
+        filter(percentage < 1-1e-6, percentage > 1e-6) |>
+        filter(from == mid_start, to %in% mid) |>
+        filter(cell_id %in% cell_id[duplicated(cell_id)]) |>
+        pull(cell_id) |>
         unique()
 
       tibble(index = dii, cell_id = cells, divergence_id = divergence_ids[dii])
     })
 
-  cells_on_edge <- progressions %>%
-    filter(percentage < 1-1e-6, percentage > 1e-6) %>%
-    filter(!cell_id %in% cell_id[duplicated(cell_id)]) %>%
-    left_join(milestone_network %>% mutate(index = seq_len(n())) %>% select(from, to, index), by = c("from", "to"))
+  cells_on_edge <- progressions |>
+    filter(percentage < 1-1e-6, percentage > 1e-6) |>
+    filter(!cell_id %in% cell_id[duplicated(cell_id)]) |>
+    left_join(milestone_network |> mutate(index = seq_len(n())) |> select(from, to, index), by = c("from", "to"))
 
   places <- bind_rows(
-    cells_in_milestone %>% mutate(type = "in_milestone"),
-    cells_on_edge %>% mutate(type = "on_edge"),
-    cells_in_divergence %>% mutate(type = "in_divergence")
+    cells_in_milestone |> mutate(type = "in_milestone"),
+    cells_on_edge |> mutate(type = "on_edge"),
+    cells_in_divergence |> mutate(type = "in_divergence")
   )
 }
 
@@ -108,10 +108,10 @@ select_waypoint_cells <- function(
     milestone_percentages,
     progressions,
     divergence_regions
-  ) %>%
-    group_by(type, index) %>%
-    summarise(num_cells = n(), cells = list(cell_id)) %>%
-    ungroup() %>%
+  ) |>
+    group_by(type, index) |>
+    summarise(num_cells = n(), cells = list(cell_id)) |>
+    ungroup() |>
     mutate(
       percentage = num_cells / sum(num_cells),
       num_cells_to_select = pmin(ceiling(percentage * num_cells_selected), num_cells)

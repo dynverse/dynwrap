@@ -30,7 +30,7 @@ ti_random <- dynwrap::create_ti_method_r(
     tl <- add_timing_checkpoint(NULL, "method_afterpreproc")
 
     gr <- igraph::ba.game(num_milestones)
-    milestone_network <- igraph::as_data_frame(gr) %>%
+    milestone_network <- igraph::as_data_frame(gr) |>
       mutate(
         from = paste0("milestone_", from),
         to = paste0("milestone_", to),
@@ -49,18 +49,18 @@ ti_random <- dynwrap::create_ti_method_r(
     )
 
     # TIMING: done with method
-    tl <- tl %>% add_timing_checkpoint("method_aftermethod")
+    tl <- tl |> add_timing_checkpoint("method_aftermethod")
 
     # return output
     wrap_data(
       cell_ids = cell_ids
-    ) %>% add_trajectory(
+    ) |> add_trajectory(
       milestone_ids = milestone_ids,
       milestone_network = milestone_network,
       progressions = progressions,
       divergence_regions = NULL
-    ) %>% add_timings(
-      timings = tl %>% add_timing_checkpoint("method_afterpostproc")
+    ) |> add_timings(
+      timings = tl |> add_timing_checkpoint("method_afterpostproc")
     )
   }
 )

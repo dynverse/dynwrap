@@ -10,12 +10,10 @@
 #' @import assertthat
 #' @import dynparam
 #' @importFrom tibble is_tibble as_tibble tibble enframe deframe lst tribble rownames_to_column column_to_rownames
-#' @importFrom magrittr %<>% %$% set_rownames set_colnames
 #' @importFrom glue glue
 #'
-#' @docType package
-#' @name dynwrap
-NULL
+#' @keywords internal
+"_PACKAGE"
 
 
 
@@ -44,6 +42,7 @@ if(getRversion() >= "2.15.1") {
     "ix", "label", "length1", "length2", "milestone_id", "new_milestone_id",
     "new_new_milestone_id", "node", "node1", "node2", "num_cells",
     "one", "percentage", "PREDICT", "prior_id", "required", "rowname",
+    "id", "match", "membership", "order", "path",
     "sd", "start", "waypoint_id", "weight", "zero", "time", "to", "to_waypoint",
     "triangle_id", "triangle_part", "type", "comp_1_from", "comp_2_from",
     "comp_1_to", "comp_2_to", "str_subset"))

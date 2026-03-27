@@ -34,7 +34,7 @@ definition <- function(
   package = NULL,
   parameters = parameter_set()
 ) {
-  definition <- as.list(environment()) %>%
+  definition <- as.list(environment()) |>
     add_class("dynwrap::ti_method")
 
   inputs <- c(definition$wrapper$input_required, definition$wrapper$input_optional)

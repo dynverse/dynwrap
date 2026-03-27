@@ -14,11 +14,11 @@ test_that("Testing add_timings", {
 
   tl <- add_timing_checkpoint(NULL, "start")
   Sys.sleep(1)
-  tl <- tl %>% add_timing_checkpoint("second")
+  tl <- tl |> add_timing_checkpoint("second")
   Sys.sleep(.5)
-  tl <- tl %>% add_timing_checkpoint("third")
+  tl <- tl |> add_timing_checkpoint("third")
   Sys.sleep(.25)
-  tl <- tl %>% add_timing_checkpoint("stop")
+  tl <- tl |> add_timing_checkpoint("stop")
 
   wr <-
     wrap_data(
@@ -27,7 +27,7 @@ test_that("Testing add_timings", {
       cell_info = cell_info,
       extras1 = extras1,
       extras2 = extras2
-    ) %>%
+    ) |>
     add_timings(
       timings = tl
     )

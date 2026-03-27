@@ -47,7 +47,7 @@ calculate_trajectory_dimred <- function(
   milestone_ids <- trajectory$milestone_ids
   num_milestones <- length(milestone_ids)
   milestone_network <-
-    trajectory$milestone_network %>%
+    trajectory$milestone_network |>
     filter(to != "FILTERED_CELLS")
   milestone_percentages <- trajectory$milestone_percentages
   is_directed <- any(trajectory$milestone_network$directed)
@@ -58,23 +58,23 @@ calculate_trajectory_dimred <- function(
   # for better layout results
   if (!is.null(trajectory$divergence_regions) && nrow(trajectory$divergence_regions) > 0) {
     divergence_edges <-
-      get_divergence_triangles(trajectory$divergence_regions) %>%
-      left_join(milestone_network %>% select(start = from, node1 = to, length1 = length, directed), by = c("start", "node1")) %>%
-      left_join(milestone_network %>% select(start = from, node2 = to, length2 = length), by = c("start", "node2")) %>%
-      mutate(length = (length1 + length2) / 2) %>%
+      get_divergence_triangles(trajectory$divergence_regions) |>
+      left_join(milestone_network |> select(start = from, node1 = to, length1 = length, directed), by = c("start", "node1")) |>
+      left_join(milestone_network |> select(start = from, node2 = to, length2 = length), by = c("start", "node2")) |>
+      mutate(length = (length1 + length2) / 2) |>
       select(from = node1, to = node2, length, directed)
     structure <- bind_rows(structure, divergence_edges)
   }
 
   # adjust weights on structure to make it easier to plot
   if (adjust_weights && min(structure$length) * 3 < max(structure$length)) {
-    structure <- structure %>% mutate(
+    structure <- structure |> mutate(
       length = sqrt(dynutils::scale_minmax(length) + .5)
     )
   }
 
   # add weights as length
-  structure <- structure %>%
+  structure <- structure |>
     mutate(weight = pmax(length, 1e-5))
 
   # round weights to some closest value
@@ -83,35 +83,33 @@ calculate_trajectory_dimred <- function(
 
   # reduce dimensionality on milestone_network
   gr <- igraph::graph_from_data_frame(structure, vertices = milestone_ids)
-  layout <-
-    igraph::layout_with_kk(gr, dim = 2, maxiter = 10000) %>%
-    dynutils::scale_uniform() %>%
-    set_rownames(milestone_ids) %>%
-    set_colnames(paste0("comp_", seq_len(ncol(.))))
-  space_milest_df <- layout %>%
-    as.data.frame() %>%
+  layout <- igraph::layout_with_kk(gr, dim = 2, maxiter = 10000) |>
+    dynutils::scale_uniform()
+  rownames(layout) <- milestone_ids
+  colnames(layout) <- paste0("comp_", seq_len(ncol(layout)))
+  space_milest_df <- layout |>
+    as.data.frame() |>
     rownames_to_column()
 
   # project dimensionality to samples
   mix_dimred <- function(milid, milpct) {
-    apply(layout[milid,,drop = FALSE], 2, function(x) sum(x * milpct)) %>% t %>% as_tibble
+    apply(layout[milid,,drop = FALSE], 2, function(x) sum(x * milpct)) |> t() |> as_tibble()
   }
 
   # create output for samples
-  cell_positions <- milestone_percentages %>%
-    group_by(cell_id) %>%
-    do(mix_dimred(.$milestone_id, .$percentage)) %>%
-    ungroup %>%
+  cell_positions <- milestone_percentages |>
+    group_by(cell_id) |>
+    reframe(mix_dimred(milestone_id, percentage)) |>
     slice(match(cell_ids, cell_id))
 
   # create output for milestones
-  milestone_positions <- space_milest_df %>%
+  milestone_positions <- space_milest_df |>
     rename(milestone_id = rowname)
 
   # create output for edges between milestones
-  edge_positions <- milestone_network %>%
-    left_join(space_milest_df %>% select(from = rowname, comp_1_from = comp_1, comp_2_from = comp_2), by = "from") %>%
-    left_join(space_milest_df %>% select(to = rowname, comp_1_to = comp_1, comp_2_to = comp_2), by = "to") %>%
+  edge_positions <- milestone_network |>
+    left_join(space_milest_df |> select(from = rowname, comp_1_from = comp_1, comp_2_from = comp_2), by = "from") |>
+    left_join(space_milest_df |> select(to = rowname, comp_1_to = comp_1, comp_2_to = comp_2), by = "to") |>
     select(from, to, length, directed, comp_1_from, comp_2_from, comp_1_to, comp_2_to)
 
   # extra lines and polygons for divergence regions
@@ -120,17 +118,17 @@ calculate_trajectory_dimred <- function(
     triags <- get_divergence_triangles(trajectory$divergence_regions)
 
     divergence_edge_positions <-
-      triags %>%
-      select(from = node1, to = node2) %>%
-      left_join(space_milest_df %>% select(from = rowname, comp_1_from = comp_1, comp_2_from = comp_2), by = "from") %>%
-      left_join(space_milest_df %>% select(to = rowname, comp_1_to = comp_1, comp_2_to = comp_2), by = "to")
+      triags |>
+      select(from = node1, to = node2) |>
+      left_join(space_milest_df |> select(from = rowname, comp_1_from = comp_1, comp_2_from = comp_2), by = "from") |>
+      left_join(space_milest_df |> select(to = rowname, comp_1_to = comp_1, comp_2_to = comp_2), by = "to")
 
     # define polygon triangles
     divergence_polygon_positions <-
-      triags %>%
-      mutate(triangle_id = paste0("triangle_", row_number())) %>%
-      select(-divergence_id) %>%
-      gather(triangle_part, milestone_id, -triangle_id) %>%
+      triags |>
+      mutate(triangle_id = paste0("triangle_", row_number())) |>
+      select(-divergence_id) |>
+      gather(triangle_part, milestone_id, -triangle_id) |>
       left_join(milestone_positions, "milestone_id")
   } else {
     divergence_edge_positions <- tibble(from = character(0), to = character(0), comp_1_from = numeric(0), comp_2_from = numeric(0), comp_1_to = numeric(0), comp_2_to = numeric(0))
@@ -161,20 +159,20 @@ calculate_trajectory_dimred <- function(
 #' @noRd
 get_divergence_triangles <- function(divergence_regions) {
   map_df(unique(divergence_regions$divergence_id), function(did) {
-    rel_did <- divergence_regions %>% filter(divergence_id == did)
+    rel_did <- divergence_regions |> filter(divergence_id == did)
 
-    fr <- rel_did %>% filter(is_start) %>% pull(milestone_id)
-    tos <- rel_did %>% filter(!is_start) %>% pull(milestone_id)
+    fr <- rel_did |> filter(is_start) |> pull(milestone_id)
+    tos <- rel_did |> filter(!is_start) |> pull(milestone_id)
 
     crossing(
       node1 = tos,
       node2 = tos
-    ) %>%
-      filter(node1 > node2) %>%
+    ) |>
+      filter(node1 > node2) |>
       mutate(
         divergence_id = did,
         start = fr
-      ) %>%
+      ) |>
       select(divergence_id, start, node1, node2)
   })
 }

@@ -62,7 +62,7 @@ simplify_igraph_network <- function(
   # make sure all from -> to are present in edge points in the same directions as the graph
   if (!is.null(edge_points)) {
     edge_points <- bind_rows(
-      anti_join(edge_points, igraph::as_data_frame(gr), c("from", "to")) %>% rename(from = to, to = from) %>% mutate(percentage = 1 - percentage),
+      anti_join(edge_points, igraph::as_data_frame(gr), c("from", "to")) |> rename(from = to, to = from) |> mutate(percentage = 1 - percentage),
       semi_join(edge_points, igraph::as_data_frame(gr), c("from", "to"))
     )
   }
@@ -73,7 +73,7 @@ simplify_igraph_network <- function(
     force_keep <- paste0("#M#", force_keep)
   }
   if (!is.null(edge_points)) {
-    edge_points <- edge_points %>% mutate_at(c("from", "to"), ~ paste0("#M#", .))
+    edge_points <- edge_points |> mutate_at(c("from", "to"), ~ paste0("#M#", .))
   }
 
   # add weight attribute if not already present
@@ -95,8 +95,8 @@ simplify_igraph_network <- function(
     keep_v <- simplify_determine_nodes_to_keep(subgr = subgr, is_directed = is_directed, force_keep = force_keep)
     sub_edge_points <-
       if (!is.null(edge_points)) {
-        edge <- igraph::as_data_frame(subgr) %>% select(from, to)
-        edges_bothdir <- bind_rows(edge, edge %>% select(from = to, to = from)) %>% unique()
+        edge <- igraph::as_data_frame(subgr) |> select(from, to)
+        edges_bothdir <- bind_rows(edge, edge |> select(from = to, to = from)) |> unique()
         inner_join(edges_bothdir, edge_points, by = c("from", "to"))
       } else {
         NULL
@@ -107,7 +107,7 @@ simplify_igraph_network <- function(
       keep_v[[1]] <- TRUE
     }
 
-    num_vs <- igraph::V(subgr) %>% length
+    num_vs <- igraph::V(subgr) |> length()
     neighs <- simplify_get_neighbours(subgr, is_directed)
     to_process <- !keep_v
 
@@ -147,10 +147,10 @@ simplify_igraph_network <- function(
           right_path[[length(right_path) + 1]] <- tibble(from = j_prev, to = j, weight = simplify_get_edge(subgr, j_prev, j)$weight)
         }
 
-        left_path <- bind_rows(rev(left_path)) %>%
-          mutate_at(c("from", "to"), ~ igraph::V(subgr)$name[.])
-        right_path <- bind_rows(right_path) %>%
-          mutate_at(c("from", "to"), ~ igraph::V(subgr)$name[.])
+        left_path <- bind_rows(rev(left_path)) |>
+          mutate(across(c("from", "to"), ~ igraph::V(subgr)$name[.]))
+        right_path <- bind_rows(right_path) |>
+          mutate(across(c("from", "to"), ~ igraph::V(subgr)$name[.]))
 
         if (i == j && !allow_self_loops) {
           path <- bind_rows(left_path, right_path)
@@ -168,21 +168,21 @@ simplify_igraph_network <- function(
             igraph::V(subgr)[[v_rem]]$name <- naml
 
             # add new milestone
-            sub_edge_points <- sub_edge_points %>% mutate_at(c("from", "to"), ~ ifelse(. == nam, namr, .))
-            subgr <- subgr %>% igraph::add_vertices(1, attr = list(name = namr))
+            sub_edge_points <- sub_edge_points |> mutate(across(c("from", "to"), ~ ifelse(. == nam, namr, .)))
+            subgr <- subgr |> igraph::add_vertices(1, attr = list(name = namr))
             v_add <- igraph::V(subgr)[[namr]]
 
             # remove edge between v_rem and j
-            subgr <- subgr %>%
-              igraph::add.edges(
-                c(v_rem, v_add, v_add, j), attr = list(weight = c(0, simplify_get_edge(subgr, v_rem, j)$weight), directed = is_directed)
-              ) %>%
-              {igraph::delete.edges(., simplify_get_edge(., v_rem, j))}
+            subgr <- igraph::add.edges(
+              subgr,
+              c(v_rem, v_add, v_add, j), attr = list(weight = c(0, simplify_get_edge(subgr, v_rem, j)$weight), directed = is_directed)
+            )
+            subgr <- igraph::delete.edges(subgr, simplify_get_edge(subgr, v_rem, j))
             keep_v[nam] <- TRUE
           } else if (nrow(path) > 3) {
             # remove nodes, except for i_prev and j_prev
             nami <- igraph::V(subgr)[[i]]$name
-            rem_path <- path %>% filter(from != nami & to != nami)
+            rem_path <- path |> filter(from != nami & to != nami)
 
             rplcd <- simplify_replace_edges(subgr, sub_edge_points, i_prev, j_prev, rem_path, is_directed)
             subgr <- rplcd$subgr
@@ -211,7 +211,7 @@ simplify_igraph_network <- function(
       }
     }
 
-    subgr <- subgr %>% igraph::delete.vertices(which(!keep_v))
+    subgr <- subgr |> igraph::delete.vertices(which(!keep_v))
     lst(subgr, sub_edge_points)
   })
 
@@ -228,7 +228,7 @@ simplify_igraph_network <- function(
   if (is.null(edge_points)) {
     outgr
   } else {
-    seps <- seps %>% mutate_at(c("from", "to"), ~ gsub("^#M#", "", .))
+    seps <- seps |> mutate(across(c("from", "to"), ~ gsub("^#M#", "", .)))
     lst(gr = outgr, edge_points = seps)
   }
 }
@@ -236,7 +236,7 @@ simplify_igraph_network <- function(
 simplify_determine_nodes_to_keep <- function(subgr, is_directed, force_keep) {
   name_check <- igraph::V(subgr)$name %in% force_keep
 
-  loop_check <- igraph::V(subgr) %>%
+  loop_check <- igraph::V(subgr) |>
     map_lgl(~ igraph::are_adjacent(subgr, ., .))
 
   degr_check <-
@@ -250,17 +250,17 @@ simplify_determine_nodes_to_keep <- function(subgr, is_directed, force_keep) {
 }
 
 simplify_get_neighbours <- function(subgr, is_directed) {
-  num_vs <- igraph::V(subgr) %>% length
+  num_vs <- igraph::V(subgr) |> length()
 
   if (is_directed) {
-    neighs_in <- seq_len(num_vs) %>% map(~igraph::neighbors(subgr, ., mode = "in") %>% as.integer)
-    neighs_out <- seq_len(num_vs) %>% map(~igraph::neighbors(subgr, ., mode = "out") %>% as.integer)
+    neighs_in <- seq_len(num_vs) |> map(~igraph::neighbors(subgr, ., mode = "in") |> as.integer())
+    neighs_out <- seq_len(num_vs) |> map(~igraph::neighbors(subgr, ., mode = "out") |> as.integer())
     lst(
       neighs_in,
       neighs_out
     )
   } else {
-    neighs <- seq_len(num_vs) %>% map(~igraph::neighbors(subgr, .) %>% as.integer)
+    neighs <- seq_len(num_vs) |> map(~igraph::neighbors(subgr, .) |> as.integer())
     lst(
       neighs
     )
@@ -294,21 +294,21 @@ simplify_get_next <- function(neighs, v_rem, is_directed, left = NA, prev = NA) 
 }
 
 simplify_get_edge_points_on_path <- function(sub_edge_points, path) {
-  rev_path <- path %>% select(from = to, to = from)
+  rev_path <- path |> select(from = to, to = from)
 
-  sepaj <- sub_edge_points %>%
+  sepaj <- sub_edge_points |>
     anti_join(path, by = c("from", "to"))
-  toflip <- sepaj %>%
+  toflip <- sepaj |>
     inner_join(rev_path, by = c("from", "to"))
 
   on_path <- bind_rows(
     sub_edge_points,
-    toflip %>% rename(from = to, to = from) %>% mutate(percentage = 1 - percentage)
-  ) %>%
+    toflip |> rename(from = to, to = from) |> mutate(percentage = 1 - percentage)
+  ) |>
     inner_join(path, by = c("from", "to"))
 
   not_on_path <-
-    sepaj %>%
+    sepaj |>
     anti_join(rev_path, by = c("from", "to"))
 
   lst(on_path, not_on_path)
@@ -326,23 +326,23 @@ simplify_replace_edges <- function(subgr, sub_edge_points, i, j, path, is_direct
   }
 
   path_len <- sum(path$weight)
-  subgr <- subgr %>% igraph::add.edges(
+  subgr <- subgr |> igraph::add.edges(
     c(i, j), attr = list(weight = path_len, directed = is_directed)
   )
 
   if (!is.null(sub_edge_points)) {
-    path <- path %>% mutate(cs = cumsum(weight) - weight)
+    path <- path |> mutate(cs = cumsum(weight) - weight)
 
     out <- simplify_get_edge_points_on_path(sub_edge_points, path)
 
     processed_edge_points <-
-      out$on_path %>%
-      mutate(from = igraph::V(subgr)$name[[i]], to = igraph::V(subgr)$name[[j]]) %>%
-      mutate(percentage = case_when(path_len == 0 ~ 0.5, TRUE ~ (cs + percentage * weight) / path_len)) %>%
+      out$on_path |>
+      mutate(from = igraph::V(subgr)$name[[i]], to = igraph::V(subgr)$name[[j]]) |>
+      mutate(percentage = case_when(path_len == 0 ~ 0.5, TRUE ~ (cs + percentage * weight) / path_len)) |>
       select(id, from, to, percentage)
 
     if (swap) {
-      processed_edge_points <- processed_edge_points %>% mutate(percentage = 1 - percentage)
+      processed_edge_points <- processed_edge_points |> mutate(percentage = 1 - percentage)
     }
 
     sub_edge_points <- bind_rows(out$not_on_path, processed_edge_points)

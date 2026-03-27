@@ -4,7 +4,7 @@ id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
 extras <- list("man")
 
-pseudotime <- c(0, .1, .4, .5, .8, 1) %>% set_names(cell_ids)
+pseudotime <- c(0, .1, .4, .5, .8, 1) |> set_names(cell_ids)
 
 wr_orig <- wrap_data(
   id = id,
@@ -12,7 +12,7 @@ wr_orig <- wrap_data(
 )
 
 test_that("add_pseudotime works as expected", {
-  trajectory <- wr_orig %>% add_pseudotime(pseudotime = pseudotime)
+  trajectory <- wr_orig |> add_pseudotime(pseudotime = pseudotime)
 
   expect_equal(trajectory$pseudotime, pseudotime)
 

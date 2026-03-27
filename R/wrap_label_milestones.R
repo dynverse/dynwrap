@@ -57,7 +57,7 @@ label_milestones <- function(trajectory, labelling) {
   # add labelling to wrapper
   trajectory$milestone_labelling <- milestone_labelling
 
-  trajectory %>% extend_with(
+  trajectory |> extend_with(
     "dynwrap::with_milestone_labelling",
     milestone_labelling = milestone_labelling
   )
@@ -75,9 +75,9 @@ label_milestones_markers <- function(trajectory, markers, expression_source = "e
     map_df(milestone_ids, function(milestone_id) {
       assert_that(all_in(features_oi, colnames(expression)))
 
-      cells_oi <- trajectory$milestone_percentages %>%
-        filter(milestone_id == !!milestone_id) %>%
-        top_n(n_nearest_cells, percentage) %>%
+      cells_oi <- trajectory$milestone_percentages |>
+        filter(milestone_id == !!milestone_id) |>
+        top_n(n_nearest_cells, percentage) |>
         pull(cell_id)
 
       tibble(
@@ -85,27 +85,27 @@ label_milestones_markers <- function(trajectory, markers, expression_source = "e
         new_milestone_id = new_milestone_id,
         expression = mean(expression[cells_oi, features_oi])
       )
-    }) %>%
+    }) |>
       mutate(new_milestone_id = new_milestone_id)
   })
 
   # select top old milestone id
-  mapping <- local_expression %>%
-    group_by(new_milestone_id) %>%
-    top_n(1, expression) %>%
+  mapping <- local_expression |>
+    group_by(new_milestone_id) |>
+    top_n(1, expression) |>
     ungroup()
 
   # multiple mappings
   if (any(table(mapping$new_milestone_id) > 1)) {
-    too_many <- table(mapping$new_milestone_id) %>% keep(~. > 1) %>% names()
+    too_many <- table(mapping$new_milestone_id) |> keep(~. > 1) |> names()
     warning(stringr::str_glue("{too_many} was mapped to multiple milestones, adding integer suffices"))
 
-    mapping <- mapping %>%
-      group_by(new_milestone_id) %>%
+    mapping <- mapping |>
+      group_by(new_milestone_id) |>
       mutate(
         new_new_milestone_id = ifelse(n() > 1, new_milestone_id, paste0(new_milestone_id, "_", row_number()))
-      ) %>%
-      ungroup() %>%
+      ) |>
+      ungroup() |>
       select(new_milestone_id = new_new_milestone_id)
   }
 
@@ -121,7 +121,7 @@ label_milestones_markers <- function(trajectory, markers, expression_source = "e
   # add labelling to wrapper
   trajectory$milestone_labelling <- milestone_labelling
 
-  trajectory %>% extend_with(
+  trajectory |> extend_with(
     "dynwrap::with_milestone_labelling",
     milestone_labelling = milestone_labelling
   )

@@ -44,9 +44,9 @@
 classify_milestone_network <- function(milestone_network) {
   is_directed <- any(milestone_network$directed)
 
-  gr <- milestone_network %>%
-    mutate(weight = length) %>%
-    igraph::graph_from_data_frame(directed = is_directed) %>%
+  gr <- milestone_network |>
+    mutate(weight = length) |>
+    igraph::graph_from_data_frame(directed = is_directed) |>
     simplify_igraph_network()
 
   props <- determine_milenet_props(gr)
@@ -222,7 +222,7 @@ has_cycle_function <- function(gr) {
   } else {
     for (from in names(igraph::V(gr))) {
       # if two nodes are connected by multiple edges, return true
-      if (any(duplicated(igraph::neighbors(gr, from) %>% names))) {
+      if (any(duplicated(igraph::neighbors(gr, from) |> names()))) {
         return(TRUE)
       }
       # if there are two different paths between two distinct nodes, return true

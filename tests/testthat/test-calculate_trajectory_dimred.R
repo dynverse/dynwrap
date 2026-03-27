@@ -40,7 +40,7 @@ divergence_regions <- tribble(
 trajectory <- wrap_data(
   id = id,
   cell_ids = cell_ids
-) %>% add_trajectory(
+) |> add_trajectory(
   milestone_network = milestone_network,
   divergence_regions = divergence_regions,
   milestone_percentages = milestone_percentages
@@ -53,7 +53,7 @@ test_that("calculate_trajectory_dimred output format is correct", {
 
   edge_positions <- dimred$edge_positions
   expect_equal(colnames(edge_positions), c("from", "to", "length", "directed", "comp_1_from", "comp_2_from", "comp_1_to", "comp_2_to"))
-  join_check <- edge_positions %>% inner_join(milestone_network, by = c("from", "to"))
+  join_check <- edge_positions |> inner_join(milestone_network, by = c("from", "to"))
   expect_equal(join_check$length.x, join_check$length.y)
 
   milestone_positions <- dimred$milestone_positions

@@ -58,7 +58,7 @@ add_regulatory_network <- function(dataset, regulatory_network, regulatory_netwo
     regulatory_network_sc$target <- factor(regulatory_network_sc$target, targets)
   }
 
-  dataset <- dataset %>% extend_with(
+  dataset <- dataset |> extend_with(
     "dynwrap::with_regulatory_network",
     regulatory_network = regulatory_network,
     regulatory_network_sc = regulatory_network_sc,

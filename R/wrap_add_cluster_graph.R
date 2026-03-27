@@ -47,7 +47,7 @@ add_cluster_graph <- function(
   if (is.null(grouping)) {
     assert_that(is_wrapper_with_grouping(dataset))
   } else {
-    dataset <- dataset %>% add_grouping(grouping)
+    dataset <- dataset |> add_grouping(grouping)
   }
   grouping <- get_grouping(dataset)
   grouping <- grouping[!is.na(grouping)]
@@ -67,18 +67,18 @@ add_cluster_graph <- function(
   # prefer to put a cell at the end of a transition, but put it at the start
   # if there is no other option.
   both_directions <- bind_rows(
-    milestone_network %>% select(from, to) %>% mutate(label = from, percentage = 0),
-    milestone_network %>% select(from, to) %>% mutate(label = to, percentage = 1)
+    milestone_network |> select(from, to) |> mutate(label = from, percentage = 0),
+    milestone_network |> select(from, to) |> mutate(label = to, percentage = 1)
   )
   progressions <- tibble(
     cell_id = names(grouping),
     label = grouping
-  ) %>%
-    left_join(both_directions, by = "label") %>%
-    group_by(cell_id) %>%
-    arrange(desc(percentage)) %>%
-    slice(1) %>%
-    ungroup() %>%
+  ) |>
+    left_join(both_directions, by = "label") |>
+    group_by(cell_id) |>
+    arrange(desc(percentage)) |>
+    slice(1) |>
+    ungroup() |>
     select(-label)
 
   # return output
@@ -97,14 +97,14 @@ add_cluster_graph <- function(
 
 cluster_graph_add_explicit_splits <- function(milestone_network) {
   # add extra splits
-  milestone_ids_implicit_split <- table(milestone_network$from) %>% keep(~.>=2) %>% names() %>% discard(~. %in% milestone_network$to)
+  milestone_ids_implicit_split <- table(milestone_network$from) |> keep(~.>=2) |> names() |> discard(~. %in% milestone_network$to)
 
   if (length(milestone_ids_implicit_split) > 0) {
-    milestone_ids_explicit_split <- paste0("split_", milestone_ids_implicit_split) %>% set_names(milestone_ids_implicit_split)
-    milestone_network <- milestone_network %>%
+    milestone_ids_explicit_split <- paste0("split_", milestone_ids_implicit_split) |> set_names(milestone_ids_implicit_split)
+    milestone_network <- milestone_network |>
       mutate(
         from = ifelse(from %in% names(milestone_ids_explicit_split), milestone_ids_explicit_split[from], from)
-      ) %>%
+      ) |>
       bind_rows(
         tibble(
           from = names(milestone_ids_explicit_split),
@@ -116,14 +116,14 @@ cluster_graph_add_explicit_splits <- function(milestone_network) {
   }
 
   # add extra convergences
-  milestone_ids_implicit_convergence <- table(milestone_network$to) %>% keep(~.>=2) %>% names() %>% discard(~. %in% milestone_network$from)
+  milestone_ids_implicit_convergence <- table(milestone_network$to) |> keep(~.>=2) |> names() |> discard(~. %in% milestone_network$from)
 
   if (length(milestone_ids_implicit_convergence) > 0) {
-    milestone_ids_explicit_convergence <- paste0("convergence_", milestone_ids_implicit_convergence) %>% set_names(milestone_ids_implicit_convergence)
-    milestone_network <- milestone_network %>%
+    milestone_ids_explicit_convergence <- paste0("convergence_", milestone_ids_implicit_convergence) |> set_names(milestone_ids_implicit_convergence)
+    milestone_network <- milestone_network |>
       mutate(
         to = ifelse(to %in% names(milestone_ids_explicit_convergence), milestone_ids_explicit_convergence[to], to)
-      ) %>%
+      ) |>
       bind_rows(
         tibble(
           from = milestone_ids_explicit_convergence,

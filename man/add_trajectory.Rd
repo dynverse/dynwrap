@@ -70,12 +70,12 @@ milestone_network <- tribble(
   "B", "D", 1, FALSE,
 )
 milestone_network
-progressions <- milestone_network \%>\%
-  sample_n(length(dataset$cell_ids), replace = TRUE, weight = length) \%>\%
+progressions <- milestone_network |>
+  sample_n(length(dataset$cell_ids), replace = TRUE, weight = length) |>
   mutate(
     cell_id = dataset$cell_ids,
     percentage = runif(n())
-  ) \%>\%
+  ) |>
   select(cell_id, from, to, percentage)
 progressions
 divergence_regions <- tribble(

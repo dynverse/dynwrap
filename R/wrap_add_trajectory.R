@@ -40,12 +40,12 @@
 #'   "B", "D", 1, FALSE,
 #' )
 #' milestone_network
-#' progressions <- milestone_network %>%
-#'   sample_n(length(dataset$cell_ids), replace = TRUE, weight = length) %>%
+#' progressions <- milestone_network |>
+#'   sample_n(length(dataset$cell_ids), replace = TRUE, weight = length) |>
 #'   mutate(
 #'     cell_id = dataset$cell_ids,
 #'     percentage = runif(n())
-#'   ) %>%
+#'   ) |>
 #'   select(cell_id, from, to, percentage)
 #' progressions
 #' divergence_regions <- tribble(
@@ -130,17 +130,17 @@ add_trajectory <- function(
   }
 
   # check whether cells in tents are explicitly mentioned in divergence_regions
-  tents <- progressions %>%
-    filter(cell_id %in% cell_id[duplicated(cell_id)]) %>% # cell_id must occur multiple times
-    group_by(from, to) %>%
-    summarise(n = n()) %>%
+  tents <- progressions |>
+    filter(cell_id %in% cell_id[duplicated(cell_id)]) |> # cell_id must occur multiple times
+    group_by(from, to) |>
+    summarise(n = n()) |>
     ungroup()
 
   for (fr in unique(tents$from)) {
-    te <- tents %>% filter(from == fr)
-    divreg <- divergence_regions %>% filter(is_start, milestone_id == fr)
+    te <- tents |> filter(from == fr)
+    divreg <- divergence_regions |> filter(is_start, milestone_id == fr)
     if (nrow(divreg) >= 1) {
-      divreg2 <- divergence_regions %>% filter(divergence_id == divreg$divergence_id)
+      divreg2 <- divergence_regions |> filter(divergence_id == divreg$divergence_id)
       assert_that(te$to %all_in% divreg2$milestone_id, msg = "All divergence regions need to be explicitly defined")
     } else {
       stop("Not all divergence regions are specified; check progressions or divergence regions")
@@ -148,7 +148,7 @@ add_trajectory <- function(
   }
 
   # create output structure
-  dataset <- dataset %>% extend_with(
+  dataset <- dataset |> extend_with(
     "dynwrap::with_trajectory",
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
@@ -182,7 +182,7 @@ check_milestone_network <- function(milestone_ids, milestone_network, allow_self
     setequal(colnames(milestone_network), c("from", "to", "length", "directed"))
   )
 
-  milestone_network <- milestone_network %>% select(from, to, length, directed)
+  milestone_network <- milestone_network |> select(from, to, length, directed)
 
   assert_that(
     is.character(milestone_network$from),
@@ -191,7 +191,7 @@ check_milestone_network <- function(milestone_ids, milestone_network, allow_self
     is.logical(milestone_network$directed),
     milestone_network$from %all_in% milestone_ids,
     milestone_network$to %all_in% milestone_ids,
-    !any(duplicated(milestone_network %>% select(from, to)))
+    !any(duplicated(milestone_network |> select(from, to)))
   )
 
   if (!allow_self_loops) {
@@ -199,11 +199,11 @@ check_milestone_network <- function(milestone_ids, milestone_network, allow_self
   }
 
   check1 <- milestone_network
-  if (allow_self_loops) check1 <- check1 %>% filter(from != to)
+  if (allow_self_loops) check1 <- check1 |> filter(from != to)
   check <-
     inner_join(
-      check1 %>% transmute(from, to, left = "left"),
-      check1 %>% transmute(from = to, to = from, right = "right"),
+      check1 |> transmute(from, to, left = "left"),
+      check1 |> transmute(from = to, to = from, right = "right"),
       by = c("from", "to")
     )
   assert_that(nrow(check) == 0, msg = "Milestone network should not contain A->B B->A edges")
@@ -216,14 +216,14 @@ check_divergence_regions <- function(milestone_ids, divergence_regions) {
   assert_that(ncol(divergence_regions) == 3)
   assert_that(setequal(colnames(divergence_regions), c("divergence_id", "milestone_id", "is_start")))
 
-  divergence_regions <- divergence_regions %>% select(divergence_id, milestone_id, is_start)
+  divergence_regions <- divergence_regions |> select(divergence_id, milestone_id, is_start)
 
   assert_that(is.character(divergence_regions$divergence_id))
   assert_that(is.character(divergence_regions$milestone_id))
   assert_that(is.logical(divergence_regions$is_start))
   assert_that(divergence_regions$milestone_id %all_in% milestone_ids)
 
-  dr_check <- divergence_regions %>% group_by(divergence_id) %>% summarise(num_starts = sum(is_start))
+  dr_check <- divergence_regions |> group_by(divergence_id) |> summarise(num_starts = sum(is_start))
   assert_that(all(dr_check$num_starts == 1))
 
   divergence_regions
@@ -234,7 +234,7 @@ check_milestone_percentages <- function(cell_ids, milestone_ids, milestone_perce
   assert_that(ncol(milestone_percentages) == 3)
   assert_that(setequal(colnames(milestone_percentages), c("cell_id", "milestone_id", "percentage")))
 
-  milestone_percentages <- milestone_percentages %>% select(cell_id, milestone_id, percentage)
+  milestone_percentages <- milestone_percentages |> select(cell_id, milestone_id, percentage)
 
   assert_that(is.character(milestone_percentages$cell_id))
   assert_that(is.character(milestone_percentages$milestone_id))
@@ -258,7 +258,7 @@ check_progressions <- function(cell_ids, milestone_ids, milestone_network, progr
   assert_that(ncol(progressions) == 4)
   assert_that(setequal(colnames(progressions), c("cell_id", "from", "to", "percentage")))
 
-  progressions <- progressions %>% select(cell_id, from, to, percentage)
+  progressions <- progressions |> select(cell_id, from, to, percentage)
 
   assert_that(is.character(progressions$cell_id))
   assert_that(is.character(progressions$from))
@@ -278,7 +278,7 @@ check_progressions <- function(cell_ids, milestone_ids, milestone_network, progr
   assert_that(all(pg_check >= 0 & pg_check < (1 + 1e-6)), msg = "Sum of progressions per cell_id should be exactly one")
 
   # check edges
-  pg_check <- progressions %>% left_join(milestone_network, by = c("from", "to"))
+  pg_check <- progressions |> left_join(milestone_network, by = c("from", "to"))
   assert_that(all(!is.na(pg_check$directed)), msg = "All progressions (from, to) edges need to be part of the milestone network")
 
   progressions

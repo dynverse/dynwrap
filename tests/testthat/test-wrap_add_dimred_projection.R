@@ -33,7 +33,7 @@ milestone_network <- tribble(
 )
 
 # grouping info
-grouping <- sample(milestone_ids, length(cell_ids), replace = T) %>% set_names(cell_ids)
+grouping <- sample(milestone_ids, length(cell_ids), replace = T) |> set_names(cell_ids)
 
 # dimred data
 num_dims <- round(runif(1, 3, 10))
@@ -46,7 +46,7 @@ dimred_milestones <- matrix(runif(num_dims * length(milestone_ids), 0, 1), nrow 
 
 
 test_that("Testing add_dimred_projection", {
-  wr <- wr_orig %>%
+  wr <- wr_orig |>
     add_dimred_projection(
       milestone_ids = milestone_ids,
       milestone_network = milestone_network,
@@ -74,7 +74,7 @@ test_that("Testing add_dimred_projection", {
 
 
 test_that("Testing add_dimred_projection with grouping", {
-  wr <- wr_orig %>%
+  wr <- wr_orig |>
     add_dimred_projection(
       milestone_ids = milestone_ids,
       milestone_network = milestone_network,

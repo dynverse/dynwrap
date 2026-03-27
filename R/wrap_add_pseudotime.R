@@ -62,7 +62,7 @@ add_pseudotime <- function(trajectory, pseudotime = NULL) {
 process_pseudotime <- function(data_wrapper, pseudotime) {
   # convert to named vector if necessary
   if(is.data.frame(pseudotime) && all(c("cell_id", "pseudotime") %in% colnames(pseudotime))) {
-    pseudotime <- pseudotime %>% select(cell_id, pseudotime) %>% deframe()
+    pseudotime <- pseudotime |> select(cell_id, pseudotime) |> deframe()
   }
   pseudotime
 }
