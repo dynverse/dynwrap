@@ -285,7 +285,7 @@ connect_dimred_segments <- function(dimred_segment_progressions, dimred_segment_
   })
 
   connecting_progressions <- connections |> map_dfr("progressions")
-  connecting_points <- connections |> map("points") |> do.call(rbind, .)
+  connecting_points <- connections |> map("points") |> do.call(rbind)
 
   list(
     dimred_segment_progressions = bind_rows(dimred_segment_progressions, connecting_progressions),
