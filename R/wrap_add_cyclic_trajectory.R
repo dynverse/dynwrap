@@ -62,13 +62,13 @@ add_cyclic_trajectory <- function(
   progressions <- tibble(
     time = 3 * pseudotime,
     cell_id = names(pseudotime)
-  ) %>%
-    mutate(edge_id = ifelse(time <= 1, 1L, ifelse(time <= 2, 2L, 3L))) %>%
-    left_join(milestone_network, by = "edge_id") %>%
-    mutate(percentage = time - (edge_id - 1)) %>%
+  ) |>
+    mutate(edge_id = ifelse(time <= 1, 1L, ifelse(time <= 2, 2L, 3L))) |>
+    left_join(milestone_network, by = "edge_id") |>
+    mutate(percentage = time - (edge_id - 1)) |>
     select(cell_id, from, to, percentage)
 
-  milestone_network <- milestone_network %>%
+  milestone_network <- milestone_network |>
     select(from, to, length, directed)
 
   # return output

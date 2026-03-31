@@ -28,12 +28,12 @@ expression <- matrix(
 wr_orig <- wrap_data(
   id = id,
   cell_ids = cell_ids
-) %>%
+) |>
   add_trajectory(milestone_network = milestone_network, progressions = progressions)
 
 
 test_that("Testing milestone labelling manually", {
-  wr <- wr_orig %>% label_milestones(
+  wr <- wr_orig |> label_milestones(
     labelling = c(
       "one" = "end",
       "two" = "begin"
@@ -55,7 +55,7 @@ test_that("Testing milestone labelling with expression", {
     "begin" = "G1",
     "end" = "G2"
   )
-  wr <- wr_orig %>% label_milestones_markers(
+  wr <- wr_orig |> label_milestones_markers(
     markers = markers,
     expression_source = expression,
     n_nearest_cells = 2
@@ -69,7 +69,7 @@ test_that("Testing milestone labelling with expression", {
 
   # warning when multiple labels are mapped to the same milestone
   expect_warning(
-    wr_orig %>% label_milestones_markers(
+    wr_orig |> label_milestones_markers(
       markers = list(begin = "G1"),
       expression_source = expression,
       n_nearest_cells = 20

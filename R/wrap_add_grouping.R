@@ -52,7 +52,7 @@ add_grouping <- function(
   )
 
   # create output structure
-  dataset %>% extend_with(
+  dataset |> extend_with(
     "dynwrap::with_grouping",
     group_ids = group_ids,
     grouping = grouping,
@@ -75,8 +75,8 @@ get_grouping <- function(dataset, grouping = NULL) {
       grouping <- set_names(dataset$grouping, dataset$cell_ids)
     } else if (is_wrapper_with_prior_information(dataset)) {
       if("groups_id" %in% names(dataset$prior_information)) {
-        grouping <- dataset$prior_information$groups_id %>%
-          {set_names(.$group_id, .$cell_id)}
+        grouping <- dataset$prior_information$groups_id |>
+          (\(x) set_names(x$group_id, x$cell_id))()
       }
     } else {
       stop("Wrapper does not contain a grouping, provide grouping or add a grouping to wrapper using add_grouping")
@@ -142,23 +142,23 @@ NULL
 group_onto_trajectory_edges <- function(trajectory, group_template = "{from}->{to}") {
   # first map cells to largest percentage (in case of divergence regions)
   progressions <-
-    trajectory$progressions %>%
-    group_by(cell_id) %>%
-    arrange(-percentage) %>%
-    slice(1) %>%
+    trajectory$progressions |>
+    group_by(cell_id) |>
+    arrange(-percentage) |>
+    slice(1) |>
     ungroup()
 
   # do the actual grouping
   grouping <-
-    progressions %>%
-    group_by(from, to) %>%
-    mutate(group_id = as.character(glue::glue(group_template))) %>%
-    ungroup() %>%
-    select(cell_id, group_id) %>%
+    progressions |>
+    group_by(from, to) |>
+    mutate(group_id = as.character(glue::glue(group_template))) |>
+    ungroup() |>
+    select(cell_id, group_id) |>
     deframe()
 
   cell_ids <- trajectory$cell_ids
-  ifelse(cell_ids %in% names(grouping), grouping[cell_ids], NA) %>%
+  ifelse(cell_ids %in% names(grouping), grouping[cell_ids], NA) |>
     set_names(cell_ids)
 }
 
@@ -166,17 +166,17 @@ group_onto_trajectory_edges <- function(trajectory, group_template = "{from}->{t
 #' @rdname group_from_trajectory
 #' @export
 group_onto_nearest_milestones <- function(trajectory) {
-  grouping <- trajectory$milestone_percentages %>%
-    group_by(cell_id) %>%
-    arrange(-percentage) %>%
-    slice(1) %>%
-    mutate(percentage = 1) %>%
-    ungroup() %>%
-    select(cell_id, milestone_id) %>%
+  grouping <- trajectory$milestone_percentages |>
+    group_by(cell_id) |>
+    arrange(-percentage) |>
+    slice(1) |>
+    mutate(percentage = 1) |>
+    ungroup() |>
+    select(cell_id, milestone_id) |>
     deframe()
 
   cell_ids <- trajectory$cell_ids
-  ifelse(cell_ids %in% names(grouping), grouping[cell_ids], NA) %>%
+  ifelse(cell_ids %in% names(grouping), grouping[cell_ids], NA) |>
     set_names(cell_ids)
 }
 

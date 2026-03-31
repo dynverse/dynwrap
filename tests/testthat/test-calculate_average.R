@@ -20,7 +20,7 @@ test_that("Testing function", {
 })
 
 test_that("Testing edge cases", {
-  x_grouped <- calculate_average_by_group(x["C1", , drop = FALSE], cell_grouping %>% filter(cell_id == "C1"))
+  x_grouped <- calculate_average_by_group(x["C1", , drop = FALSE], cell_grouping |> filter(cell_id == "C1"))
   expect_equal(nrow(x_grouped), 1)
   expect_equal(ncol(x_grouped), 10)
   expect_equal(rownames(x_grouped), group_ids[[1]])

@@ -103,21 +103,21 @@
 #
 # par_set <- parse_parameter_definition(parameter_definition)
 #
-# sampled_parameters <- ParamHelpers::generateDesign(1000, par_set, trafo = TRUE) %>%
-#   ParamHelpers::dfRowsToList(par_set) %>%
+# sampled_parameters <- ParamHelpers::generateDesign(1000, par_set, trafo = TRUE) |>
+#   ParamHelpers::dfRowsToList(par_set) |>
 #   dynutils::list_as_tibble()
 #
 # test_that("Parameters can be parsed and sampled", {
 #   testthat::expect_setequal(sampled_parameters$fixed, 42)
 #
-#   numbers <- sampled_parameters[, c("integer", "numeric", "integer_vector", "numeric_vector")] %>% unlist()
+#   numbers <- sampled_parameters[, c("integer", "numeric", "integer_vector", "numeric_vector")] |> unlist()
 #   testthat::expect_true(all(numbers >= 10))
 #   testthat::expect_true(all(numbers <= 20))
 #
-#   discretes <- sampled_parameters[, c("discrete", "discrete_vector")] %>% unlist()
+#   discretes <- sampled_parameters[, c("discrete", "discrete_vector")] |> unlist()
 #   testthat::expect_true(all(discretes %in% c("a", "b", "c")))
 #
-#   logicals <- sampled_parameters[, c("logical", "logical_vector")] %>% unlist()
+#   logicals <- sampled_parameters[, c("logical", "logical_vector")] |> unlist()
 #   testthat::expect_true(all(logicals %in% c(TRUE, FALSE)))
 # })
 #
@@ -125,13 +125,13 @@
 #
 # test_that("Parameters are sampled from the correct distributions", {
 #   for(col in c("numeric", "numeric_vector")) {
-#     numbers <- sampled_parameters[,col ] %>% unlist()
+#     numbers <- sampled_parameters[,col ] |> unlist()
 #
 #     expect_gt(ks.test(numbers, runif(10000, 10, 20))$p.value, 0.1)
 #   }
 #
 #   for(col in c("integer",  "integer_vector")) {
-#     numbers <- sampled_parameters[,col ] %>% unlist()
+#     numbers <- sampled_parameters[,col ] |> unlist()
 #
 #     suppressWarnings(
 #       expect_gt(ks.test(numbers, round(runif(10000, 10, 20)))$p.value, 0.1)
@@ -139,17 +139,17 @@
 #   }
 #
 #   col <- "numeric_norm"
-#   numbers <- sampled_parameters[,col ] %>% unlist()
+#   numbers <- sampled_parameters[,col ] |> unlist()
 #   expect_gt(ks.test(numbers, rnorm(10000, 15, 0.5))$p.value, 0.1)
 #
 #   col <- "integer_norm"
-#   numbers <- sampled_parameters[,col ] %>% unlist()
+#   numbers <- sampled_parameters[,col ] |> unlist()
 #   suppressWarnings(
 #     expect_gt(ks.test(numbers, round(rnorm(10000, 15, 0.5)))$p.value, 0.1)
 #   )
 #
 #   col <- "numeric_exp"
-#   numbers <- sampled_parameters[,col ] %>% unlist()
+#   numbers <- sampled_parameters[,col ] |> unlist()
 #   numbers2 <- rexp(100000, 1) + 10
 #   numbers2 <- numbers2[numbers2 < 20]
 #   suppressWarnings(
@@ -157,7 +157,7 @@
 #   )
 #
 #   col <- "integer_exp"
-#   numbers <- sampled_parameters[,col ] %>% unlist()
+#   numbers <- sampled_parameters[,col ] |> unlist()
 #   numbers2 <- rexp(100000, 1) + 10
 #   numbers2 <- round(numbers2[numbers2 < 20])
 #   suppressWarnings(

@@ -25,45 +25,45 @@ flip_edges <- function(
       paste0(trajectory$milestone_network$from, trajectory$milestone_network$to)
   ), msg = "All edges in the milestone_network_toflip should also be present in the trajectory milestone network")
 
-  milestone_network_toflip <- milestone_network_toflip %>%
+  milestone_network_toflip <- milestone_network_toflip |>
     select(from, to)
 
   # flip edge if from is later than to
-  trajectory$milestone_network <- trajectory$milestone_network %>%
-    left_join(milestone_network_toflip %>% mutate(flip = TRUE), c("from", "to")) %>%
+  trajectory$milestone_network <- trajectory$milestone_network |>
+    left_join(milestone_network_toflip |> mutate(flip = TRUE), c("from", "to")) |>
     mutate(flip = ifelse(is.na(flip), FALSE, flip))
 
   # flip milestone network & progressions
-  trajectory$progressions <- trajectory$progressions %>%
-    left_join(trajectory$milestone_network %>% select(from, to, flip), c("from", "to")) %>%
+  trajectory$progressions <- trajectory$progressions |>
+    left_join(trajectory$milestone_network |> select(from, to, flip), c("from", "to")) |>
     mutate(
       from2 = from,
       from = ifelse(flip, to, from),
       to = ifelse(flip, from2, to),
       percentage = ifelse(flip, 1-percentage, percentage)
-    ) %>%
+    ) |>
     select(-flip, -from2)
 
   if (!is.null(trajectory$dimred_segment_progressions)) {
     trajectory$dimred_segment_progressions <-
-      trajectory$dimred_segment_progressions %>%
-      left_join(trajectory$milestone_network %>% select(from, to, flip), c("from", "to")) %>%
+      trajectory$dimred_segment_progressions |>
+      left_join(trajectory$milestone_network |> select(from, to, flip), c("from", "to")) |>
       mutate(
         from2 = from,
         from = ifelse(flip, to, from),
         to = ifelse(flip, from2, to),
         percentage = ifelse(flip, 1-percentage, percentage)
-      ) %>%
+      ) |>
       select(-flip, -from2)
   }
 
-  trajectory$milestone_network <- trajectory$milestone_network %>%
+  trajectory$milestone_network <- trajectory$milestone_network |>
     mutate(
       from2 = from,
       from = ifelse(flip, to, from),
       to = ifelse(flip, from2, to),
       directed = TRUE
-    ) %>%
+    ) |>
     select(-flip, -from2)
 
   trajectory

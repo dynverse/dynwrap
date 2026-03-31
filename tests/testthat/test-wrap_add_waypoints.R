@@ -32,12 +32,12 @@ milestone_percentages <- tribble(
   "e", "Z", .5,
   "f", "Z", .8,
   "f", "A", .2
-) %>%
-  crossing(i = 1:100) %>%
-  mutate(cell_id = paste0(cell_id, i)) %>%
+) |>
+  crossing(i = 1:100) |>
+  mutate(cell_id = paste0(cell_id, i)) |>
   select(-i)
 
-trajectory <- wrap_data("", cell_ids) %>%
+trajectory <- wrap_data("", cell_ids) |>
   add_trajectory(milestone_ids, milestone_network, divergence_regions, milestone_percentages = milestone_percentages)
 
 
@@ -59,7 +59,7 @@ test_that("Testing select_waypoints", {
 
 
 test_that("Testing add_cell_waypoints", {
-  trajectory <- trajectory %>% add_waypoints()
+  trajectory <- trajectory |> add_waypoints()
 
   expect_true(!is.null(trajectory$waypoints))
 })

@@ -76,7 +76,7 @@ wrap_data <- function(
 
 
 
-  list() %>% extend_with(
+  list() |> extend_with(
     "dynwrap::data_wrapper",
     id = id,
     cell_ids = cell_ids,

@@ -61,7 +61,7 @@ add_expression <- function(
   }
 
   # create output structure
-  dataset %>% extend_with(
+  dataset |> extend_with(
     "dynwrap::with_expression",
     counts = counts,
     expression = expression,
@@ -150,7 +150,7 @@ wrap_expression <- function(
     feature_ids = feature_ids,
     feature_info = feature_info,
     ...
-  ) %>%
+  ) |>
     add_expression(
       counts = counts,
       expression = expression,

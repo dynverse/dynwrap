@@ -34,7 +34,7 @@ project_waypoints <- function(
 
   # apply kernel on geodesic distances
   # in theory, many kernels are possible here, but for now this is fixed to a normal kernel
-  weights <- waypoints$geodesic_distances %>%
+  weights <- waypoints$geodesic_distances |>
     stats::dnorm(sd = trajectory_projection_sd)
   assert_that(all(!is.na(weights)))
 
@@ -89,7 +89,7 @@ project_trajectory <- function(
 
   lst(
     dimred_segment_points = dimred_segment_points,
-    dimred_segment_progressions = waypoints$progressions %>% select(from, to, percentage),
+    dimred_segment_progressions = waypoints$progressions |> select(from, to, percentage),
     dimred_milestones = dimred_milestones
   )
 }

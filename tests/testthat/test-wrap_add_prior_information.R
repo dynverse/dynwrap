@@ -32,9 +32,9 @@ milestone_percentages <- tribble(
   "e", "Z", .5,
   "f", "Z", .8,
   "f", "A", .2
-) %>%
-  crossing(i = 1:100) %>%
-  mutate(cell_id = paste0(cell_id, i)) %>%
+) |>
+  crossing(i = 1:100) |>
+  mutate(cell_id = paste0(cell_id, i)) |>
   select(-i)
 
 progressions <- convert_milestone_percentages_to_progressions(
@@ -99,21 +99,21 @@ test_that("Testing generate_prior_information", {
 
   testthat::expect_equal(gsub("[0-9]+", "", prior_info$start_id), "a")
 
-  testthat::expect_equal(prior_info$end_milestones %>% sort, c("A", "Y"))
+  testthat::expect_equal(prior_info$end_milestones |> sort(), c("A", "Y"))
 
   testthat::expect_equal(gsub("[0-9]+", "", prior_info$end_id), c("b", "f"))
 
   join_check <-
-    milestone_percentages %>%
-    group_by(cell_id) %>%
-    arrange(desc(percentage)) %>%
-    slice(1) %>%
-    select(-percentage) %>%
-    ungroup() %>%
+    milestone_percentages |>
+    group_by(cell_id) |>
+    arrange(desc(percentage)) |>
+    slice(1) |>
+    select(-percentage) |>
+    ungroup() |>
     full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
-  testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
+  testthat::expect_equal(prior_info$groups_network, milestone_network |> select(from, to))
 
   testthat::expect_true(all(prior_info$features_id %in% gene_ids))
 
@@ -137,12 +137,12 @@ test_that("Testing add_prior_information", {
       id = "test",
       cell_ids = cell_ids,
       cell_info = cell_info
-    ) %>% add_trajectory(
+    ) |> add_trajectory(
       milestone_ids = milestone_ids,
       milestone_network = milestone_network,
       milestone_percentages = milestone_percentages,
       divergence_regions = divergence_regions
-    ) %>% add_expression(
+    ) |> add_expression(
       counts = expression,
       expression = expression,
       feature_info = feature_info
@@ -178,21 +178,21 @@ test_that("Testing add_prior_information", {
 
   testthat::expect_equal(gsub("[0-9]+", "", prior_info$start_id), "a")
 
-  testthat::expect_equal(prior_info$end_milestones %>% sort, c("A", "Y"))
+  testthat::expect_equal(prior_info$end_milestones |> sort(), c("A", "Y"))
 
   testthat::expect_equal(gsub("[0-9]+", "", prior_info$end_id), c("b", "f"))
 
   join_check <-
-    milestone_percentages %>%
-    group_by(cell_id) %>%
-    arrange(desc(percentage)) %>%
-    slice(1) %>%
-    select(-percentage) %>%
-    ungroup() %>%
+    milestone_percentages |>
+    group_by(cell_id) |>
+    arrange(desc(percentage)) |>
+    slice(1) |>
+    select(-percentage) |>
+    ungroup() |>
     full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
-  testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
+  testthat::expect_equal(prior_info$groups_network, milestone_network |> select(from, to))
 
   testthat::expect_true(all(prior_info$features_id %in% gene_ids))
 
@@ -214,7 +214,7 @@ test_that("Testing add_prior_information", {
 
 # with undirected cyclical dataset
 orig_cell_ids <- c("a", "b", "c", "d", "e", "f")
-cell_ids <- orig_cell_ids %>% map(~paste0(., seq_len(20))) %>% unlist()
+cell_ids <- orig_cell_ids |> map(~paste0(., seq_len(20))) |> unlist()
 orig_map <- set_names(gsub("[0-9]+", "", cell_ids), cell_ids)
 milestone_ids <- c("X", "Y", "Z")
 
@@ -237,12 +237,12 @@ orig_progressions <- tribble(
   "f", "Z", "X", .6
 )
 progressions <-
-  tibble(cell_id = cell_ids, orig_cell_id = orig_map) %>%
-  left_join(orig_progressions, by = "orig_cell_id") %>%
+  tibble(cell_id = cell_ids, orig_cell_id = orig_map) |>
+  left_join(orig_progressions, by = "orig_cell_id") |>
   mutate(
     percentage = percentage + runif(n(), -.3, .3),
     percentage = ifelse(percentage > 1, 1, ifelse(percentage < 0, 0, percentage))
-  ) %>%
+  ) |>
   select(-orig_cell_id)
 
 milestone_percentages <-
@@ -257,7 +257,7 @@ num_genes <- 20
 orig_gene_ids <- paste0("Gene", seq_len(num_genes))
 orig_expression <- matrix(rbinom(num_genes * length(cell_ids), 10000, .01), ncol = num_genes, dimnames = list(cell_ids, orig_gene_ids))
 
-milpct <- milestone_percentages %>% reshape2::acast(cell_id ~ milestone_id, value.var = "percentage", fill = 0)
+milpct <- milestone_percentages |> reshape2::acast(cell_id ~ milestone_id, value.var = "percentage", fill = 0)
 expression <- cbind(orig_expression, milpct) * 100 + 2
 gene_ids <- colnames(expression)
 
@@ -290,16 +290,16 @@ test_that("Testing generate_prior_information", {
   testthat::expect_true(all(expected_prior %in% names(prior_info)))
 
   join_check <-
-    milestone_percentages %>%
-    group_by(cell_id) %>%
-    arrange(desc(percentage)) %>%
-    slice(1) %>%
-    select(-percentage) %>%
-    ungroup() %>%
+    milestone_percentages |>
+    group_by(cell_id) |>
+    arrange(desc(percentage)) |>
+    slice(1) |>
+    select(-percentage) |>
+    ungroup() |>
     full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
-  testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
+  testthat::expect_equal(prior_info$groups_network, milestone_network |> select(from, to))
 
   testthat::expect_true(all(prior_info$features_id %in% gene_ids))
 
@@ -312,12 +312,12 @@ test_that("Testing add_prior_information", {
     wrap_data(
       id = "test",
       cell_ids = cell_ids
-    ) %>% add_trajectory(
+    ) |> add_trajectory(
       milestone_ids = milestone_ids,
       milestone_network = milestone_network,
       milestone_percentages = milestone_percentages,
       divergence_regions = divergence_regions
-    ) %>% add_expression(
+    ) |> add_expression(
       expression = expression,
       counts = expression
     )
@@ -351,16 +351,16 @@ test_that("Testing add_prior_information", {
   testthat::expect_true(all(expected_prior %in% names(prior_info)))
 
   join_check <-
-    milestone_percentages %>%
-    group_by(cell_id) %>%
-    arrange(desc(percentage)) %>%
-    slice(1) %>%
-    select(-percentage) %>%
-    ungroup() %>%
+    milestone_percentages |>
+    group_by(cell_id) |>
+    arrange(desc(percentage)) |>
+    slice(1) |>
+    select(-percentage) |>
+    ungroup() |>
     full_join(prior_info$groups_id, by = "cell_id")
   testthat::expect_equal(join_check$group_id, join_check$milestone_id)
 
-  testthat::expect_equal(prior_info$groups_network, milestone_network %>% select(from, to))
+  testthat::expect_equal(prior_info$groups_network, milestone_network |> select(from, to))
 
   testthat::expect_true(all(prior_info$features_id %in% gene_ids))
 

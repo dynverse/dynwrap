@@ -30,24 +30,24 @@ ti_shuffle <- dynwrap::create_ti_method_r(
 
     # permute cell labels
     allcells <- rownames(counts)
-    mapper <- magrittr::set_names(sample(allcells), allcells)
-    progressions <- dataset$progressions %>% mutate(
+    mapper <- set_names(sample(allcells), allcells)
+    progressions <- dataset$progressions |> mutate(
       cell_id = mapper[cell_id]
     )
 
     # TIMING: done with method
-    tl <- tl %>% add_timing_checkpoint("method_aftermethod")
+    tl <- tl |> add_timing_checkpoint("method_aftermethod")
 
     # return output
     wrap_data(
       cell_ids = dataset$cell_ids
-    ) %>% add_trajectory(
+    ) |> add_trajectory(
       milestone_ids = dataset$milestone_ids,
       milestone_network = dataset$milestone_network,
       progressions = progressions,
       divergence_regions = dataset$divergence_regions
-    ) %>% add_timings(
-      timings = tl %>% add_timing_checkpoint("method_afterpostproc")
+    ) |> add_timings(
+      timings = tl |> add_timing_checkpoint("method_afterpostproc")
     )
   }
 )

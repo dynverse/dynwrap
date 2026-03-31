@@ -39,7 +39,7 @@ add_feature_importance <- function(
   )
 
   # create output structure
-  dataset %>% extend_with(
+  dataset |> extend_with(
     "dynwrap::with_feature_importance",
     feature_importance = feature_importance,
     ...

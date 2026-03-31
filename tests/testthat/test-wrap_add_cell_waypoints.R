@@ -32,9 +32,9 @@ milestone_percentages <- tribble(
   "e", "Z", .5,
   "f", "Z", .8,
   "f", "A", .2
-) %>%
-  crossing(i = 1:100) %>%
-  mutate(cell_id = paste0(cell_id, i)) %>%
+) |>
+  crossing(i = 1:100) |>
+  mutate(cell_id = paste0(cell_id, i)) |>
   select(-i)
 
 progressions <- convert_milestone_percentages_to_progressions(
@@ -55,10 +55,7 @@ test_that("Testing select_waypoint_cells", {
       num_cells_selected = length(orig_cell_ids) * num_samp
     )
 
-  waypoint_cells_table <-
-    waypoint_cells %>%
-    gsub("[0-9]+", "", .) %>%
-    table()
+  waypoint_cells_table <- gsub("[0-9]+", "", waypoint_cells) |> table()
 
   expect_equal(names(waypoint_cells_table), orig_cell_ids)
   expect_true(all(waypoint_cells_table == num_samp))
@@ -70,7 +67,7 @@ test_that("Testing add_cell_waypoints", {
     wrap_data(
       id = "test",
       cell_ids = cell_ids
-    ) %>% add_trajectory(
+    ) |> add_trajectory(
       milestone_ids = milestone_ids,
       milestone_network = milestone_network,
       milestone_percentages = milestone_percentages,
@@ -84,10 +81,7 @@ test_that("Testing add_cell_waypoints", {
   waypoint_cells <-
     trajectory2$waypoint_cells
 
-  waypoint_cells_table <-
-    waypoint_cells %>%
-    gsub("[0-9]+", "", .) %>%
-    table()
+  waypoint_cells_table <- gsub("[0-9]+", "", waypoint_cells) |> table()
 
   expect_equal(names(waypoint_cells_table), orig_cell_ids)
   expect_true(all(waypoint_cells_table == num_samp))

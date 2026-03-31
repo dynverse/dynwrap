@@ -26,7 +26,7 @@ NOT_TRAVIS <- !identical(tolower(Sys.getenv("TRAVIS")), "true")
 library(dynwrap)
 ```
 
-An alternative to wrapping a script inside R, is to wrap it using an external script. Because this does not provide any dependency management, this is not really useful for method end-users, but rather as a way to easily develop a TI method and to ultimately step up towards [containerised wrapping](../create_ti_method_container).
+An alternative to wrapping a script inside R, is to wrap it using an external script. Because this does not provide any dependency management, this is not really useful for method end-users, but rather as a way to easily develop a TI method and to ultimately step up towards [containerised wrapping](create_ti_method_container.html).
 
 Similarly as a wrapper written in R, you'll need to provide both a definition (= a _definition.yml_) and a way to run the methods (= a script).
 
@@ -53,7 +53,7 @@ The wrapper script will typically have the following structure:
 - A shebang, such as `#!/usr/bin/env Rscript` or `#!/usr/bin/env python`
 - A call to dyncli(py) to load in the data, such as `dataset <- dyncli::main()` or `dataset = dynclipy.main()`
 - All you need to infer the trajectory
-- Constructing the trajectory model using [any of the wrapping methods](../create_ti_method_wrappers)
+- Constructing the trajectory model using [any of the wrapping methods](create_ti_method_wrappers.html)
 - A call to dyncli(py) to write the data, such as `dyncli::write_output(trajectory)` or `trajectory.write_output()`
 
 A minimal example script for R:
@@ -111,7 +111,7 @@ trajectory <- infer_trajectory(dataset, method(), debug = TRUE)
 
 ## Making your method available for other users
 
-Wrapping a method inside a script does not have any dependency management, and is therefore only meant for development purposes. To deploy your method to other users, check out the [containerisation tutorial](../create_ti_method_container)!
+Wrapping a method inside a script does not have any dependency management, and is therefore only meant for development purposes. To deploy your method to other users, check out the [containerisation tutorial](create_ti_method_container.html)!
 
 ## Wrapping a method without dyncli(py)
 

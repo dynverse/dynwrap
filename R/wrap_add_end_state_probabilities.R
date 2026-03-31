@@ -53,7 +53,7 @@ add_end_state_probabilities <- function(
     } else {
       assert_that(all(0 <= pseudotime & pseudotime <= 1))
     }
-    dataset <- dataset %>% add_pseudotime(pseudotime)
+    dataset <- dataset |> add_pseudotime(pseudotime)
   } else {
     assert_that("pseudotime" %in% names(dataset))
     pseudotime <- dataset$pseudotime
@@ -64,7 +64,7 @@ add_end_state_probabilities <- function(
 
   if (ncol(end_state_probabilities) == 1) {
     # process as linear of no end_state_probabilities are provided
-    dataset %>%
+    dataset |>
       add_linear_trajectory(
         pseudotime = pseudotime,
         directed = TRUE,
@@ -91,11 +91,11 @@ add_end_state_probabilities <- function(
     )
 
     # construct progressions
-    progressions <- end_state_probabilities %>%
-      gather("to", "percentage", -cell_id) %>%
-      mutate(from = start_milestone_id) %>%
-      group_by(cell_id) %>%
-      mutate(percentage = percentage / sum(percentage) * pseudotime[cell_id]) %>%  # scale percentage so that sum = 1
+    progressions <- end_state_probabilities |>
+      gather("to", "percentage", -cell_id) |>
+      mutate(from = start_milestone_id) |>
+      group_by(cell_id) |>
+      mutate(percentage = percentage / sum(percentage) * pseudotime[cell_id]) |>  # scale percentage so that sum = 1
       ungroup()
 
     # return output

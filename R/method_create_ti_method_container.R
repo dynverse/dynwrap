@@ -126,7 +126,7 @@ create_ti_method_container <- function(
     container_id = method$run$container_id,
     command = NULL,
     args = args,
-    volumes = paste0(preproc_meta$dir_dynwrap %>% fix_windows_path(), ":/ti"),
+    volumes = paste0(preproc_meta$dir_dynwrap |> fix_windows_path(), ":/ti"),
     workspace = "/ti/workspace",
     verbose = preproc_meta$verbose,
     debug = preproc_meta$debug
@@ -155,8 +155,8 @@ fix_windows_path <- function(path) {
   path <- gsub("\\\\", "/", path)
 
   start <-
-    gsub("^([a-zA-Z]):/.*", "/\\1", path) %>%
-    tolower
+    gsub("^([a-zA-Z]):/.*", "/\\1", path) |>
+    tolower()
 
   gsub("[^:/]:", start, path)
 }

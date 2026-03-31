@@ -65,7 +65,7 @@ add_cell_graph <- function(
   # check to_keep
   if (is.character(to_keep)) {
     cell_ids <- unique(c(cell_graph$from, cell_graph$to))
-    to_keep <- (cell_ids %in% to_keep) %>% set_names(cell_ids)
+    to_keep <- (cell_ids %in% to_keep) |> set_names(cell_ids)
   } else {
     cell_ids <- names(to_keep)
   }
@@ -83,7 +83,7 @@ add_cell_graph <- function(
 
   # make igraph object
   ids <- names(to_keep)
-  gr <- igraph::graph_from_data_frame(cell_graph %>% rename(weight = length), directed = is_directed, vertices = ids)
+  gr <- igraph::graph_from_data_frame(cell_graph |> rename(weight = length), directed = is_directed, vertices = ids)
 
   # STEP 1: for each cell, find closest milestone
   v_keeps <- names(to_keep)[to_keep]
@@ -91,7 +91,7 @@ add_cell_graph <- function(
   closest_trajpoint <- v_keeps[apply(dists, 1, which.min)]
 
   # STEP 2: simplify backbone
-  gr <- gr %>%
+  gr <- gr |>
     igraph::induced.subgraph(v_keeps)
 
   milestone_ids <- igraph::V(gr)$name
@@ -99,51 +99,50 @@ add_cell_graph <- function(
   # STEP 3: Calculate progressions of cell_ids
   # determine which nodes were on each path
   milestone_network_proto <-
-    igraph::as_data_frame(gr) %>%
-    as_tibble() %>%
-    rowwise() %>%
+    igraph::as_data_frame(gr) |>
+    as_tibble() |>
+    rowwise() |>
     mutate(
-      path = igraph::shortest_paths(gr, from, to, mode = "out")$vpath %>% map(names)
-    ) %>%
+      path = igraph::shortest_paths(gr, from, to, mode = "out")$vpath |> map(names)
+    ) |>
     ungroup()
 
   # for each node, find an edge which contains the node and
   # calculate its progression along that edge
   progressions <-
-    milestone_network_proto %>%
-    rowwise() %>%
-    do(with(., tibble(from, to, weight, node = path))) %>%
-    ungroup %>%
-    group_by(node) %>%
-    slice(1) %>%
+    milestone_network_proto |>
+    rowwise() |>
+    reframe(from = from, to = to, weight = weight, node = unlist(path)) |>
+    group_by(node) |>
+    slice(1) |>
     mutate(
       percentage = ifelse(weight == 0, 0, igraph::distances(gr, from, node) / weight)
-    ) %>%
-    ungroup() %>%
+    ) |>
+    ungroup() |>
     right_join(
       tibble(cell_id = ids, node = closest_trajpoint),
       by = "node"
-    ) %>%
+    ) |>
     select(cell_id, from, to, percentage)
 
   # create output
-  milestone_network <- milestone_network_proto %>%
-    select(from, to, length = weight) %>%
+  milestone_network <- milestone_network_proto |>
+    select(from, to, length = weight) |>
     mutate(directed = is_directed)
 
   # rename milestones so the milestones don't have the
   # same names as the nodes
   renamefun <- function(x) {
-    paste0(milestone_prefix, x) %>%
+    paste0(milestone_prefix, x) |>
       set_names(names(x))
   }
 
-  milestone_network <- milestone_network %>%
-    mutate_at(c("from", "to"), renamefun)
-  milestone_ids <- milestone_ids %>%
-    renamefun
-  progressions <- progressions %>%
-    mutate_at(c("from", "to"), renamefun)
+  milestone_network <- milestone_network |>
+    mutate(across(c("from", "to"), renamefun))
+  milestone_ids <- milestone_ids |>
+    renamefun()
+  progressions <- progressions |>
+    mutate(across(c("from", "to"), renamefun))
 
   # return output
   add_trajectory(
@@ -153,6 +152,6 @@ add_cell_graph <- function(
     divergence_regions = NULL,
     progressions = progressions,
     ...
-  ) %>%
+  ) |>
     simplify_trajectory()
 }

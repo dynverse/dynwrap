@@ -27,19 +27,19 @@ ti_identity <- dynwrap::create_ti_method_r(
     tl <- add_timing_checkpoint(NULL, "method_afterpreproc")
 
     # TIMING: done with method
-    tl <- tl %>% add_timing_checkpoint("method_aftermethod")
+    tl <- tl |> add_timing_checkpoint("method_aftermethod")
 
     # return output
     wrap_data(
       cell_ids = dataset$cell_ids,
       cell_info = dataset$cell_info
-    ) %>% add_trajectory(
+    ) |> add_trajectory(
       milestone_ids = dataset$milestone_ids,
       milestone_network = dataset$milestone_network,
       divergence_regions = dataset$divergence_regions,
       progressions = dataset$progressions
-    ) %>% add_timings(
-      timings = tl %>% add_timing_checkpoint("method_afterpostproc")
+    ) |> add_timings(
+      timings = tl |> add_timing_checkpoint("method_afterpostproc")
     )
   }
 )

@@ -4,7 +4,7 @@ context("Testing add_cluster_graph")
 id <- "a"
 cell_ids <- letters
 group_ids <- LETTERS[1:5]
-grouping <- sample(group_ids, length(cell_ids), replace = T) %>% set_names(cell_ids)
+grouping <- sample(group_ids, length(cell_ids), replace = T) |> set_names(cell_ids)
 extras <- "banana"
 
 wr_without_grouping <- wrap_data(
@@ -12,7 +12,7 @@ wr_without_grouping <- wrap_data(
   cell_ids = cell_ids
 )
 
-wr_orig <- wr_without_grouping %>% add_grouping(
+wr_orig <- wr_without_grouping |> add_grouping(
   group_ids = group_ids,
   grouping = grouping,
   extras = extras
@@ -26,7 +26,7 @@ milestone_network <- tibble(
 )
 
 test_that("Testing add_cluster_graph", {
-  wr <- wr_orig %>%
+  wr <- wr_orig |>
     add_cluster_graph(
       milestone_network = milestone_network
     )
@@ -47,7 +47,7 @@ test_that("Testing add_cluster_graph", {
   expect_true(all(abs(abs(wr$milestone_percentages$percentage - .5) - .5) < 1e-6))
 
   # test with providing a grouping in cluster_graph
-  wr <- wr_without_grouping %>%
+  wr <- wr_without_grouping |>
     add_cluster_graph(
       milestone_network = milestone_network,
       grouping = grouping

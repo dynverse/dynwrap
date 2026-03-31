@@ -40,7 +40,7 @@ test_that("Testing calculate_geodesic_distances", {
   trajectory <- wrap_data(
     id = "test",
     cell_ids = cell_ids
-  ) %>% add_trajectory(
+  ) |> add_trajectory(
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
     milestone_percentages = milestone_percentages,
@@ -126,7 +126,7 @@ test_that("Testing calculate_geodesic_distances with a gap in the middle", {
   trajectory <- wrap_data(
     id = "test",
     cell_ids = cell_ids
-  ) %>% add_trajectory(
+  ) |> add_trajectory(
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
     milestone_percentages = milestone_percentages,
@@ -174,7 +174,7 @@ test_that("Testing calculate_geodesic_distances with filtered cells", {
   trajectory <- wrap_data(
     id = "test",
     cell_ids = cell_ids
-  ) %>% add_trajectory(
+  ) |> add_trajectory(
     milestone_ids = milestone_ids,
     milestone_network = milestone_network,
     milestone_percentages = milestone_percentages,
@@ -193,7 +193,7 @@ test_that("Testing calculate_geodesic_distances with filtered cells", {
 
 test_that("Testing calculate_geodesic_distances with zero length self loops", {
   trajectory <-
-    wrap_data(cell_ids = c("A", "B", "C")) %>%
+    wrap_data(cell_ids = c("A", "B", "C")) |>
     add_trajectory(
       milestone_network = tibble(from = "a", to = "a", length = 0, directed = TRUE),
       progressions = tibble(from = "a", to = "a", cell_id = c("A", "B", "C"), percentage = 1),
@@ -227,7 +227,7 @@ test_that("Testing calculate_geodesic_distances while taking into account direct
     "g", "C", "A", 0,
     "h", "C", "A", 0.5,
   )
-  dataset <- wrap_data(cell_ids = progressions$cell_id) %>%
+  dataset <- wrap_data(cell_ids = progressions$cell_id) |>
     add_trajectory(
       milestone_network = milestone_network,
       progressions = progressions
@@ -252,7 +252,7 @@ test_that("Testing calculate_geodesic_distances while taking into account direct
     "e", "B", "C", 0.5,
     "f", "B", "C", 1
   )
-  dataset <- wrap_data(cell_ids = progressions$cell_id) %>%
+  dataset <- wrap_data(cell_ids = progressions$cell_id) |>
     add_trajectory(
       milestone_network = milestone_network,
       progressions = progressions
@@ -289,7 +289,7 @@ test_that("Testing calculate_geodesic_distances with a disconnected graph and wh
     "g", "D", "E", 0,
     "h", "D", "E", 0.5,
   )
-  dataset <- wrap_data(cell_ids = progressions$cell_id) %>%
+  dataset <- wrap_data(cell_ids = progressions$cell_id) |>
     add_trajectory(
       milestone_network = milestone_network,
       progressions = progressions

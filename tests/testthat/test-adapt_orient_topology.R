@@ -19,7 +19,7 @@ test_that("flip_edges works correctly", {
 
   trajectory <- wrap_data(
     cell_ids = cell_ids
-  ) %>%
+  ) |>
     add_trajectory(milestone_network = milestone_network, progressions = progressions)
 
   trajectory$dimred_segment_progressions <- tribble(
@@ -28,7 +28,7 @@ test_that("flip_edges works correctly", {
     "B", "C", 1
   )
 
-  trajectory_flipped <- flip_edges(trajectory, milestone_network %>% filter(from == "B", to == "A"))
+  trajectory_flipped <- flip_edges(trajectory, milestone_network |> filter(from == "B", to == "A"))
 
   expect_true(all(
     c("A->B", "B->C") %in%
@@ -81,7 +81,7 @@ test_that("orient_topology_to_velocity orients a linear trajectory correctly", {
     counts = expression,
     expression = expression,
     expression_future = expression_future
-  ) %>%
+  ) |>
     add_trajectory(milestone_network = milestone_network, progressions = progressions)
 
   # TODO: move to scvelo package or re-enable this part of the test?

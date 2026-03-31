@@ -107,7 +107,7 @@ add_dimred <- function(
   }
 
   # create output structure
-  dataset %>% extend_with(
+  dataset |> extend_with(
     "dynwrap::with_dimred",
     dimred = dimred,
     dimred_milestones = dimred_milestones,
@@ -139,8 +139,8 @@ get_dimred <- function(dataset, dimred = NULL, expression_source = "expression",
     # dataframe
     if ("cell_id" %in% colnames(dimred)) {
       rownames(dimred) <- NULL
-      dimred <- dimred %>%
-        as.data.frame() %>%
+      dimred <- dimred |>
+        as.data.frame() |>
         column_to_rownames("cell_id")
     }
 
@@ -222,14 +222,14 @@ process_dimred <- function(dataset, dimred, identifier = "cell_id", has_rownames
         dimred[[identifier]] <- as.character(dimred[[identifier]])
         rownames(dimred) <- NULL
         dimred <-
-          dimred %>%
-          as.data.frame() %>%
-          column_to_rownames(identifier) %>%
+          dimred |>
+          as.data.frame() |>
+          column_to_rownames(identifier) |>
           as.matrix()
       }
       assert_that(length(rownames(dimred)) == nrow(dimred))
     } else {
-      dimred <- dimred %>% as.matrix()
+      dimred <- dimred |> as.matrix()
     }
 
     assert_that(is.numeric(dimred))
@@ -247,18 +247,18 @@ process_dimred <- function(dataset, dimred, identifier = "cell_id", has_rownames
 
 connect_dimred_segments <- function(dimred_segment_progressions, dimred_segment_points, milestone_network) {
   milestone_ids <- unique(c(milestone_network$from, milestone_network$to))
-  connections <- milestone_ids %>% map(function(milestone_id) {
+  connections <- milestone_ids |> map(function(milestone_id) {
     # find the indices of the segment points that are closest to the milestone
-    ixs <- dimred_segment_progressions %>%
-      mutate(ix = row_number()) %>%
-      group_by(from, to) %>%
-      arrange(percentage) %>%
+    ixs <- dimred_segment_progressions |>
+      mutate(ix = row_number()) |>
+      group_by(from, to) |>
+      arrange(percentage) |>
       filter(
         xor(
           (row_number() == 1) & (from == !!milestone_id),
           (row_number() == n()) & (to == !!milestone_id)
         )
-      ) %>%
+      ) |>
       pull(ix)
 
     if (length(ixs) > 0) {
@@ -266,11 +266,11 @@ connect_dimred_segments <- function(dimred_segment_progressions, dimred_segment_
 
       # create progressions for each new point
       progressions <- bind_rows(
-        milestone_network %>% filter(from == !!milestone_id) %>% select(from, to) %>% mutate(percentage = 0),
-        milestone_network %>% filter(to == !!milestone_id) %>% select(from, to) %>% mutate(percentage = 1)
+        milestone_network |> filter(from == !!milestone_id) |> select(from, to) |> mutate(percentage = 0),
+        milestone_network |> filter(to == !!milestone_id) |> select(from, to) |> mutate(percentage = 1)
       )
 
-      points <- dimred_segment_points[ixs, , drop = FALSE] %>% colMeans() %>% rep(nrow(progressions)) %>% matrix(nrow = nrow(progressions), byrow = TRUE)
+      points <- dimred_segment_points[ixs, , drop = FALSE] |> colMeans() |> rep(nrow(progressions)) |> matrix(nrow = nrow(progressions), byrow = TRUE)
 
       list(
         progressions = progressions,
@@ -284,8 +284,8 @@ connect_dimred_segments <- function(dimred_segment_progressions, dimred_segment_
     }
   })
 
-  connecting_progressions <- connections %>% map_dfr("progressions")
-  connecting_points <- connections %>% map("points") %>% do.call(rbind, .)
+  connecting_progressions <- connections |> map_dfr("progressions")
+  connecting_points <- connections |> map("points") |> do.call(rbind)
 
   list(
     dimred_segment_progressions = bind_rows(dimred_segment_progressions, connecting_progressions),

@@ -70,7 +70,7 @@ calculate_geodesic_distances_ <- function(
     waypoint_ids <- unique(c(waypoint_ids, waypoint_milestone_percentages$waypoint_id))
     milestone_percentages <- bind_rows(
       milestone_percentages,
-      waypoint_milestone_percentages %>% rename(cell_id = waypoint_id)
+      waypoint_milestone_percentages |> rename(cell_id = waypoint_id)
     )
   }
 
@@ -80,20 +80,19 @@ calculate_geodesic_distances_ <- function(
 
   # rename milestones to avoid name conflicts between cells and milestones
   milestone_trafo_fun <- function(x) paste0("MILESTONE_", x)
-  milestone_network <- milestone_network %>% mutate(from = milestone_trafo_fun(from), to = milestone_trafo_fun(to))
-  milestone_ids <- milestone_ids %>% milestone_trafo_fun()
-  milestone_percentages <- milestone_percentages %>% mutate(milestone_id = milestone_trafo_fun(milestone_id))
-  divergence_regions <- divergence_regions %>% mutate(milestone_id = milestone_trafo_fun(milestone_id))
+  milestone_network <- milestone_network |> mutate(from = milestone_trafo_fun(from), to = milestone_trafo_fun(to))
+  milestone_ids <- milestone_ids |> milestone_trafo_fun()
+  milestone_percentages <- milestone_percentages |> mutate(milestone_id = milestone_trafo_fun(milestone_id))
+  divergence_regions <- divergence_regions |> mutate(milestone_id = milestone_trafo_fun(milestone_id))
 
   # add 'extra' divergences for transitions not in a divergence
   extra_divergences <-
-    milestone_network %>%
-    # filter(from != to) %>% # filter self edges
-    rowwise() %>%
-    mutate(in_divergence = divergence_regions %>% group_by(divergence_id) %>% summarise(match = all(c(from, to) %in% milestone_id)) %>% {any(.$match)}) %>%
-    filter(!in_divergence) %>%
-    do({tibble(divergence_id = paste0(.$from, "__", .$to), milestone_id = c(.$from, .$to), is_start = c(T, F))}) %>%
-    ungroup() %>%
+    milestone_network |>
+    # filter(from != to) |> # filter self edges
+    rowwise() |>
+    mutate(in_divergence = divergence_regions |> group_by(divergence_id) |> summarise(match = all(c(from, to) %in% milestone_id)) |> (\(x) any(x$match))()) |>
+    filter(!in_divergence) |>
+    reframe(tibble(divergence_id = paste0(from, "__", to), milestone_id = c(from, to), is_start = c(TRUE, FALSE))) |>
     distinct(divergence_id, milestone_id, .keep_all = TRUE)
 
   divergence_regions <- bind_rows(
@@ -111,17 +110,17 @@ calculate_geodesic_distances_ <- function(
   # calculate cell-cell distances for pairs of cells that are in the same transition, i.e. an edge or a divergence region
   cell_in_tent_distances <-
     map_df(divergence_ids, function(did) {
-      dir <- divergence_regions %>% filter(divergence_id == did)
-      mid <- dir %>% filter(is_start) %>% .$milestone_id
+      dir <- divergence_regions |> filter(divergence_id == did)
+      mid <- dir |> filter(is_start) |> pull(milestone_id)
       tent <- dir$milestone_id
 
       tent_nomid <- setdiff(tent, mid)
       tent_distances <- igraph::distances(mil_gr, v = mid, to = tent, mode = "out", weights = igraph::E(mil_gr)$length)
 
       relevant_pct <-
-        milestone_percentages %>%
-        group_by(cell_id) %>%
-        filter(all(milestone_id %in% tent)) %>%
+        milestone_percentages |>
+        group_by(cell_id) |>
+        filter(all(milestone_id %in% tent)) |>
         ungroup()
 
       if (nrow(relevant_pct) <= 1) {
@@ -129,14 +128,14 @@ calculate_geodesic_distances_ <- function(
       }
 
       scaled_dists <-
-        relevant_pct %>%
+        relevant_pct |>
         mutate(dist = percentage * tent_distances[mid, milestone_id])
 
       pct_mat <-
         bind_rows(
-          scaled_dists %>% select(from = cell_id, to = milestone_id, length = dist),
-          tent_distances %>% as.data.frame() %>% gather(from, length) %>% mutate(to = from)
-        ) %>%
+          scaled_dists |> select(from = cell_id, to = milestone_id, length = dist),
+          tent_distances |> as.data.frame() |> gather(from, length) |> mutate(to = from)
+        ) |>
         reshape2::acast(from ~ to, value.var = "length", fill = 0)
 
       wp_cells <- rownames(pct_mat)[rownames(pct_mat) %in% waypoint_ids]
@@ -150,7 +149,7 @@ calculate_geodesic_distances_ <- function(
       if (!isFALSE(directed)) {
         # calculate the sign of the distance
         # distance is negative if the cell is closer to the beginning than the waypoint
-        begin <- dir %>% filter(is_start) %>% pull(milestone_id)
+        begin <- dir |> filter(is_start) |> pull(milestone_id)
 
         signs <- sign(-outer(distances[, begin], distances[begin, ], "-"))
         signs[is.na(signs)] <- 1 # when disconnected, sign will be NaN, so that distance remains + Inf
@@ -159,10 +158,10 @@ calculate_geodesic_distances_ <- function(
         distances <- distances * signs
       }
 
-      distances <- distances %>%
-        as.matrix() %>%
-        reshape2::melt(varnames = c("from", "to"), value.name = "length") %>%
-        mutate_at(c("from", "to"), as.character) %>%
+      distances <- distances |>
+        as.matrix() |>
+        reshape2::melt(varnames = c("from", "to"), value.name = "length") |>
+        mutate(across(c("from", "to"), as.character)) |>
         filter(from != to)
 
       distances
@@ -181,26 +180,26 @@ calculate_geodesic_distances_ <- function(
       cell_in_tent_distances$from2,
       cell_in_tent_distances$to
     )
-    cell_in_tent_distances <- cell_in_tent_distances %>% select(-from2)
+    cell_in_tent_distances <- cell_in_tent_distances |> select(-from2)
     cell_in_tent_distances$length <- abs(cell_in_tent_distances$length)
 
     # add reverse edges if distance approx. zero
     # this is necessary because the direction will be taken into account
     cell_in_tent_distances <- bind_rows(
       cell_in_tent_distances,
-      cell_in_tent_distances %>%
-        filter(length <= 1e-20) %>%
-        mutate(from2 = from, from = to, to = from2) %>%
+      cell_in_tent_distances |>
+        filter(length <= 1e-20) |>
+        mutate(from2 = from, from = to, to = from2) |>
         select(-from2)
     )
   }
 
   # combine all networks into one graph
   gr <-
-    bind_rows(milestone_network, cell_in_tent_distances) %>%
-    group_by(from, to) %>%
-    summarise(length = min(length)) %>%
-    ungroup() %>%
+    bind_rows(milestone_network, cell_in_tent_distances) |>
+    group_by(from, to) |>
+    summarise(length = min(length)) |>
+    ungroup() |>
     igraph::graph_from_data_frame(directed = directed, vertices = unique(c(milestone_ids, cell_ids_trajectory, waypoint_ids)))
 
   # compute cell-to-cell distances across entire graph
@@ -209,7 +208,7 @@ calculate_geodesic_distances_ <- function(
     directed == "reverse" ~ "in",
     TRUE ~ "all"
   )
-  out <- gr %>%
+  out <- gr |>
     igraph::distances(
       v = waypoint_ids,
       to = cell_ids_trajectory,

@@ -65,7 +65,7 @@ run_fun <- function(expression, priors, parameters, seed, verbose) {
     }
   }
 
-  wrap_data(cell_ids = rownames(expression)) \%>\%
+  wrap_data(cell_ids = rownames(expression)) |>
     add_linear_trajectory(pseudotime = pseudotime)
 }
 

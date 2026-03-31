@@ -27,7 +27,7 @@ library(dynwrap)
 library(dplyr)
 ```
 
-Once [you have wrapped a method using a script and definition](../create_ti_method_script), all you need to share your method is a _Dockerfile_ which lists all the dependencies that need to be installed.
+Once [you have wrapped a method using a script and definition](create_ti_method_definition.html), all you need to share your method is a _Dockerfile_ which lists all the dependencies that need to be installed.
 
 We'll work with the following _definition.yml_:
 
@@ -68,7 +68,7 @@ readr::write_file(docker_file, "Dockerfile")
 knitr::asis_output(paste0("```Dockerfile\n", docker_file, "\n```"))
 ```
 
-`dynverse/dynwrappy` is here the base image, which contains the latest version of R, python, dynwrap, dyncli and most tidyverse dependencies. For R methods, you can use the `dynverse/dynwrapr` base. While not required, it's recommended to start from these base images, because dyncli provides an interface to run each method using the docker container from the command line. [As discussed before](../create_ti_method_script), wrapping is also a lot easier using dynwrap.
+`dynverse/dynwrappy` is here the base image, which contains the latest version of R, python, dynwrap, dyncli and most tidyverse dependencies. For R methods, you can use the `dynverse/dynwrapr` base. While not required, it's recommended to start from these base images, because dyncli provides an interface to run each method using the docker container from the command line. [As discussed before](create_ti_method_definition.html), wrapping is also a lot easier using dynwrap.
 
 <div class="notices tip">
 For reproducibility, it's best to specify the tag of the base image. You can find this these tags on dockerhub: https://hub.docker.com/r/dynverse/dynwrapr/tags.

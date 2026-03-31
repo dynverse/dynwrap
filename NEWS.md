@@ -1,3 +1,21 @@
+# dynwrap 1.3.0
+
+* MODERNISATION: Replace `%>%` pipes with native `|>` pipe throughout.
+
+* MODERNISATION: Remove `magrittr` dependency; replace `set_rownames()`/`set_colnames()` with base R assignments.
+
+* MODERNISATION: Replace deprecated `dplyr::do()` with `reframe()`.
+
+* MODERNISATION: Replace deprecated `mutate_at()` with `mutate(across())`.
+
+* FIX: Add missing `"id"` to `globalVariables()` to silence R CMD check NOTE about no visible binding for global variable `id`.
+
+* FIX: Replace relative cross-vignette URLs (`../create_ti_method_xxx`) with proper file-relative links to silence R CMD check NOTE.
+
+* MINOR CHANGE: Update GitHub Actions workflows to use `actions/checkout@v6` and `actions/upload-artifact@v7`.
+
+* MINOR CHANGE: Add `pkgdown.yaml` GitHub Actions workflow for website deployment.
+
 # dynwrap 1.2.5
 
 * BUG FIX `convert_definition()`: Fix for purrr having deprecated `invoke` in favour of `exec` (PR #166).

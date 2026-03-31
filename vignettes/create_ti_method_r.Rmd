@@ -81,7 +81,7 @@ run_fun <- function(expression, priors, parameters, seed, verbose) {
 }
 ```
 
-This function returns a trajectory object as described in [create a trajectory](../create_ti_method_wrappers). You may also add other relevant information to this output, often some timing checkpoints (`add_timings`), dimensionality reduction (`add_dimred`) or a cell clustering (`add_grouping`). Check out the [reference](https://dynverse.org/reference/dynwrap/) for an overview or [post an issue or pull request](https://github.com/dynverse/dynwrap) if you want a type of output to be added.
+This function returns a trajectory object as described in [create a trajectory](create_ti_method_wrappers.html). You may also add other relevant information to this output, often some timing checkpoints (`add_timings`), dimensionality reduction (`add_dimred`) or a cell clustering (`add_grouping`). Check out the [reference](https://dynverse.org/reference/dynwrap/) for an overview or [post an issue or pull request](https://github.com/dynverse/dynwrap) if you want a type of output to be added.
 
 ## Testing it out
 

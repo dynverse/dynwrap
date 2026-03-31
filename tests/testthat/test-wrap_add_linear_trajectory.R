@@ -4,7 +4,7 @@ id <- "a"
 cell_ids <- c("truth", "universally", "acknowledged", "that", "a", "single")
 extras <- list("man")
 
-pseudotime <- c(0, .1, .4, .5, .8, 1) %>% set_names(cell_ids)
+pseudotime <- c(0, .1, .4, .5, .8, 1) |> set_names(cell_ids)
 
 wr_orig <- wrap_data(
   id = id,
@@ -13,7 +13,7 @@ wr_orig <- wrap_data(
 
 test_that("Testing add_linear_trajectory", {
   wr <-
-    wr_orig %>%
+    wr_orig |>
     add_linear_trajectory(
       pseudotime = pseudotime,
       do_scale_minmax = TRUE,
@@ -41,7 +41,7 @@ test_that("Testing add_linear_trajectory", {
 
 test_that("Testing add_linear_trajectory", {
   wr <-
-    wr_orig %>%
+    wr_orig |>
     add_linear_trajectory(
       pseudotime = pseudotime,
       do_scale_minmax = TRUE,
@@ -69,7 +69,7 @@ test_that("Testing add_linear_trajectory", {
 
 test_that("Testing add_linear_trajectory", {
   wr <-
-    wr_orig %>%
+    wr_orig |>
     add_linear_trajectory(
       pseudotime = pseudotime/10 + .45,
       do_scale_minmax = FALSE,
@@ -84,7 +84,7 @@ test_that("Testing add_linear_trajectory", {
 
 test_that("Testing add_linear_trajectory with some cells filtered", {
   wr <-
-    wr_orig %>%
+    wr_orig |>
     add_linear_trajectory(
       pseudotime = pseudotime[-1],
       do_scale_minmax = TRUE,

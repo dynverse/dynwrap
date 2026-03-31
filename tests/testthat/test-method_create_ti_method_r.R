@@ -20,7 +20,7 @@ dummy_definition <- definition(
 dummy_run_fun = function(counts, parameters) {
   wrap_data(
     cell_ids = parameters$fruit
-  ) %>%
+  ) |>
     add_linear_trajectory(
       pseudotime = set_names(0, parameters$fruit)
     )
@@ -38,8 +38,8 @@ dummy <- create_ti_method_r(
 dummy_instance <- dummy()
 
 dataset <-
-  wrap_data(cell_ids = "a") %>%
-  add_linear_trajectory(pseudotime = c(a = 1)) %>%
+  wrap_data(cell_ids = "a") |>
+  add_linear_trajectory(pseudotime = c(a = 1)) |>
   add_expression(
     counts = matrix(0:1, ncol = 2, dimnames = list("a", c("A", "B"))),
     expression = matrix(0:1, ncol = 2, dimnames = list("a", c("A", "B")))

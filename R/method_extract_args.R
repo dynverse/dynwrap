@@ -3,11 +3,11 @@
   inputs
 ) {
   input_ids_dataset <-
-    inputs %>%
-    filter(required, type == "expression") %>%
+    inputs |>
+    filter(required, type == "expression") |>
     pull(input_id)
 
-  map(input_ids_dataset, get_expression, dataset = dataset) %>%
+  map(input_ids_dataset, get_expression, dataset = dataset) |>
     set_names(input_ids_dataset)
 }
 
@@ -27,8 +27,8 @@
 
   # required, check if the prior infirm
   required_prior_ids <-
-    inputs %>%
-    filter(required, type == "prior_information") %>%
+    inputs |>
+    filter(required, type == "prior_information") |>
     pull(input_id)
 
   if (!all(required_prior_ids %in% names(priors))) {
@@ -36,7 +36,7 @@
     missing_priors <- setdiff(required_prior_ids, names(priors))
     missing_priors_text <- glue::glue_collapse(crayon::bold(missing_priors), sep = ", ", last = " and ")
 
-    add_prior_information_params_text <- glue::glue("{missing_priors} = <prior>") %>% glue::glue_collapse(", ")
+    add_prior_information_params_text <- glue::glue("{missing_priors} = <prior>") |> glue::glue_collapse(", ")
     add_prior_information_text <- crayon::italic(glue::glue("add_prior_information(dataset, {add_prior_information_params_text})"))
 
     stop(
@@ -53,8 +53,8 @@
 
   # optional
   optional_prior_ids <-
-    inputs %>%
-    filter(!required, type == "prior_information", input_id %in% give_priors) %>%
+    inputs |>
+    filter(!required, type == "prior_information", input_id %in% give_priors) |>
     pull(input_id)
 
   if (!all(optional_prior_ids %in% names(priors))) {

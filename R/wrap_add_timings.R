@@ -32,7 +32,7 @@ add_timings <- function(
   assert_that(is.list(timings))
 
   # create output structure
-  trajectory %>% extend_with(
+  trajectory |> extend_with(
     "dynwrap::with_timings",
     timings = timings
   )

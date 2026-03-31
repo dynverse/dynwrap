@@ -24,7 +24,7 @@ wrapper1 <-
     cell_ids = cell_ids,
     cell_info = cell_info,
     extras1 = extras1
-  ) %>%
+  ) |>
   add_expression(
     counts = counts,
     expression = expression,
@@ -63,19 +63,19 @@ test_that("Testing add_expression and get_expression", {
     expect_is(get_expression(wr, "counts"), "dgCMatrix")
     expect_is(get_expression(wr, "expression"), "dgCMatrix")
 
-    expect_equivalent(get_expression(wr, "counts") %>% as.matrix, counts)
-    expect_equivalent(get_expression(wr) %>% as.matrix, expression)
-    expect_equivalent(get_expression("whatever", wr) %>% as.matrix, expression)
-    expect_equivalent(get_expression(wr, expression) %>% as.matrix, expression)
-    expect_equivalent(get_expression(wr, counts) %>% as.matrix, counts)
+    expect_equivalent(get_expression(wr, "counts") |> as.matrix(), counts)
+    expect_equivalent(get_expression(wr) |> as.matrix(), expression)
+    expect_equivalent(get_expression("whatever", wr) |> as.matrix(), expression)
+    expect_equivalent(get_expression(wr, expression) |> as.matrix(), expression)
+    expect_equivalent(get_expression(wr, counts) |> as.matrix(), counts)
     expect_error(get_expression(wr, "say what"))
     expect_error(get_expression("you don't say"))
   }
 })
 
 test_that("Testing add tde_overall", {
-  tde_overall <- tibble(feature_id = feature_info$feature_id) %>% mutate(differentially_expressed = runif(n()) > 0.5)
-  wrapper_tde <- wrapper1 %>% add_tde_overall(tde_overall)
+  tde_overall <- tibble(feature_id = feature_info$feature_id) |> mutate(differentially_expressed = runif(n()) > 0.5)
+  wrapper_tde <- wrapper1 |> add_tde_overall(tde_overall)
 
   expect_equal(tde_overall, wrapper_tde$tde_overall)
 })

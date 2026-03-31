@@ -65,7 +65,7 @@ add_prior_information <- function(
     start_n,
     end_n,
     dimred
-  ) %>% discard(is.null)
+  ) |> discard(is.null)
 
   if (!is.null(start_id)) {
     assert_that(all(start_id %in% dataset$cell_ids))
@@ -133,7 +133,7 @@ add_prior_information <- function(
     prior_information <- purrr::list_modify(calculated_prior_information, !!!prior_information)
   }
 
-  dataset %>% extend_with(
+  dataset |> extend_with(
     "dynwrap::with_prior",
     prior_information = prior_information
   )
@@ -230,7 +230,7 @@ generate_prior_information <- function(
       wrap_data(
         id = "tmp",
         cell_ids = c(cell_ids, pseudocell)
-      ) %>%
+      ) |>
       add_trajectory(
         milestone_ids = milestone_ids,
         milestone_network = milestone_network,
@@ -276,8 +276,8 @@ generate_prior_information <- function(
   } else {
     if (verbose) cat("Computing groups id\n")
     groups_id <-
-      milestone_percentages %>%
-      group_by(cell_id) %>%
+      milestone_percentages |>
+      group_by(cell_id) |>
       summarise(group_id = milestone_id[which.max(percentage)])
   }
 
@@ -285,7 +285,7 @@ generate_prior_information <- function(
     groups_network <- given$groups_network
   } else {
     if (verbose) cat("Computing groups network\n")
-    groups_network <- milestone_network %>% select(from, to)
+    groups_network <- milestone_network |> select(from, to)
   }
 
   ## MARKER GENES ##
@@ -295,13 +295,13 @@ generate_prior_information <- function(
     if (verbose) cat("Computing features id\n")
 
     if (!is.null(feature_info) && "housekeeping" %in% colnames(feature_info)) {
-      features_id <- feature_info %>%
-        filter(!housekeeping) %>%
+      features_id <- feature_info |>
+        filter(!housekeeping) |>
         pull(feature_id)
     } else {
       requireNamespace("ranger")
       data <- data.frame(
-        PREDICT = groups_id %>% slice(match(rownames(expression), cell_id)) %>% pull(group_id) %>% as.factor,
+        PREDICT = groups_id |> slice(match(rownames(expression), cell_id)) |> pull(group_id) |> as.factor(),
         as.matrix(expression), ## TODO: can this work with a sparse matrix, somehow?
         check.names = FALSE,
         stringsAsFactors = FALSE
@@ -318,7 +318,7 @@ generate_prior_information <- function(
         verbose = FALSE
       )
       rfsh <- ranger::ranger(
-        data = data %>% mutate(PREDICT = sample(PREDICT)),
+        data = data |> mutate(PREDICT = sample(PREDICT)),
         num.trees = 2000,
         mtry = min(50, ncol(expression)),
         sample.fraction = min(250 / nrow(expression), 1),
@@ -329,9 +329,9 @@ generate_prior_information <- function(
         verbose = FALSE
       )
       features_id <-
-        rf$variable.importance %>%
-        sort(decreasing = TRUE) %>%
-        keep(~ . > quantile(rfsh$variable.importance, .75)) %>%
+        rf$variable.importance |>
+        sort(decreasing = TRUE) |>
+        keep(~ . > quantile(rfsh$variable.importance, .75)) |>
         names()
     }
   }

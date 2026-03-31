@@ -4,7 +4,7 @@ context("Testing add_grouping")
 id <- "a"
 cell_ids <- letters
 group_ids <- LETTERS[1:5]
-grouping <- sample(group_ids, length(cell_ids), replace = T) %>% set_names(cell_ids)
+grouping <- sample(group_ids, length(cell_ids), replace = T) |> set_names(cell_ids)
 extras <- "banana"
 
 wr_orig <- wrap_data(
@@ -13,7 +13,7 @@ wr_orig <- wrap_data(
 )
 
 test_that("Testing add_grouping", {
-  wr <- wr_orig %>%
+  wr <- wr_orig |>
     add_grouping(
       group_ids = group_ids,
       grouping = grouping,
@@ -34,7 +34,7 @@ test_that("Testing add_grouping", {
 
 
 test_that("Testing add_grouping with a subset of cells", {
-  wr <- wr_orig %>%
+  wr <- wr_orig |>
     add_grouping(
       group_ids = group_ids,
       grouping = grouping[1:10],
@@ -55,7 +55,7 @@ test_that("Testing add_grouping with a subset of cells", {
 
 test_that("Testing add_grouping fails when groupings is not in the correct format", {
   expect_error(
-    wr_orig %>%
+    wr_orig |>
       add_grouping(
         group_ids = group_ids,
         grouping = paste0("HUO", grouping),
@@ -64,16 +64,16 @@ test_that("Testing add_grouping fails when groupings is not in the correct forma
   )
 
   expect_error(
-    wr_orig %>%
+    wr_orig |>
       add_grouping(
         group_ids = group_ids,
-        grouping = rep(1, length(cell_ids)) %>% set_names(cell_ids),
+        grouping = rep(1, length(cell_ids)) |> set_names(cell_ids),
         extras = extras
       )
   )
 
   expect_error(
-    wr_orig %>%
+    wr_orig |>
       add_grouping(
         group_ids = group_ids,
         grouping = tibble(grouping),
